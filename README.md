@@ -1,40 +1,6 @@
 # Tiny Refuel v0.1
 
-Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer og scraping i én HACS-integration.
-
-## Eksempler fra v0.1
-
-Udsnit fra en faktisk Home Assistant-installation. Priser og datastatus er øjebliksbilleder fra 8. oktober 2026.
-
-<table>
-  <tr><th>Benzin</th><th>Hybrid uden stik</th></tr>
-  <tr>
-    <td valign="top"><img src="docs/images/benzin-v0.1.png" alt="Benzinpriser med selskabslogoer, adresser og bilvalg" width="380"></td>
-    <td valign="top"><img src="docs/images/hybrid-v0.1.png" alt="Hybrid uden stik med benzinpriser og bilvalg" width="380"></td>
-  </tr>
-</table>
-
-### EL og datastatus
-
-Ladepriser, generelle selskabstakster og knapper til ladesteder. Position er ikke valgt i dette eksempel. Den viste datastatus omfatter en fejl hos Tesla.
-
-<img src="docs/images/el-v0.1.png" alt="EL-oversigt med priser og ladeoplysninger fra flere selskaber" width="390">
-
-<img src="docs/images/el-datastatus-v0.1.png" alt="Fortsættelse af EL-oversigten med antal ladesteder, lokale elpriser og Tesla-fejl" width="390">
-
-### Visuel editor
-
-Vælg drivmidler, selskaber og biler med forhåndsvisning af kortet.
-
-<img src="docs/images/editor-v0.1.png" alt="Tiny Refuels visuelle editor med drivmidler, selskabsvalg, biler og forhåndsvisning" width="800">
-
-### Navigation og bilkatalog
-
-Vælg Waze eller Google Maps til navigation ved tryk på selskabets logo. Bilkataloget hjælper med valg af mærke og model.
-
-<img src="docs/images/navigation-v0.1.png" alt="Editorens valg af Waze eller Google Maps samt positionsenhed" width="500">
-
-<img src="docs/images/bilkatalog-v0.1.png" alt="Bilkatalog med bilmærker og mulighed for egen katalogkilde" width="500">
+Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, bilkatalog og scraping i én HACS-integration.
 
 ## Installation
 
@@ -52,13 +18,20 @@ Brug knappen til at åbne Tiny Refuel direkte i HACS:
 2. Åbn HACS i Home Assistant.
 3. Vælg **menuen med tre prikker → Brugerdefinerede repositories**.
 4. Tilføj `https://github.com/Salvationdk/tiny-refuel` med typen **Integration**.
-5. Søg efter **Tiny Refuel**, og tryk på **Download**. ⬇️
+5. Søg efter **Tiny Refuel**, og tryk på **Download**.
 
 ### Opsætning efter download
 
 1. Genstart Home Assistant.
-2. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**. Vælg interval, som standard 6 timer.
-3. Genindlæs browseren med **Ctrl+F5**. Tilføj **Tiny Refuel** i dashboardets kortvælger eller brug:
+2. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**.
+3. Vælg opdateringsinterval. Standard er hver 6. time.
+4. Genindlæs browseren med **Ctrl+F5**.
+5. Tilføj **Tiny Refuel** fra dashboardets kortvælger.
+6. Vælg din positionsenhed, biler og Waze eller Google Maps i den visuelle editor.
+
+Kort, editor, selskabslogoer, bilkatalog og scraper følger med integrationen. Kortets JavaScript indlæses automatisk.
+
+Kortet kan også tilføjes med YAML:
 
 ```yaml
 type: custom:tiny-refuel-card
@@ -68,56 +41,142 @@ vis_el: true
 vis_andet: true
 ```
 
-4. Vælg din telefon/positions-enhed, biler og Waze eller Google Maps i den visuelle editor. Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Scrape alle data** i kortet eller integrationens knap starter en fælles opdatering.
+Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Scrape alle data** i kortet eller integrationens knap starter en fælles opdatering.
 
-Kortets JavaScript indlæses af integrationen. Hvis kortet ikke findes efter genindlæsning, kan denne JavaScript-modulressource tilføjes manuelt under dashboardets ressourcer:
+Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
-`/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.0`
+```text
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.0
+```
+
+## Eksempler fra v0.1
+
+Billeder fra en faktisk Home Assistant-installation. Priser og datastatus er øjebliksbilleder fra 8. oktober 2026.
+
+### Benzin
+
+Selskabslogoer, priser, adresser og bilvalg.
+
+![Benzinpriser](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/benzin-v0.1.png)
+
+### Hybrid uden stik
+
+Hybrid uden stik viser benzin. Plug-in-hybrid kan vise både benzin og opladning.
+
+![Hybrid med benzinpriser](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/hybrid-v0.1.png)
+
+### EL
+
+Ladepriser, generelle selskabstakster og knapper til ladesteder. Position er ikke valgt i dette eksempel.
+
+![Ladepriser og ladesteder](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/el-v0.1.png)
+
+### Datastatus
+
+Antal ladesteder, steder med lokal elpris og status for datakilder. Eksemplet viser en fejl hos Tesla.
+
+![Antal ladesteder og datastatus](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/el-datastatus-v0.1.png)
+
+### Visuel editor
+
+Vælg drivmidler, selskaber og biler med forhåndsvisning af kortet.
+
+![Kortets visuelle editor](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/editor-v0.1.png)
+
+### Navigation
+
+Vælg Waze eller Google Maps. Navigation åbnes ved tryk på selskabets logo.
+
+![Valg af Waze eller Google Maps](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/navigation-v0.1.png)
+
+### Bilkatalog
+
+Vælg bilmærke og model fra kataloget, eller indtast bilen manuelt.
+
+![Valg af bilmærke fra kataloget](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/bilkatalog-v0.1.png)
 
 ## Funktioner
 
-- Benzin, diesel og EL efter valgt bil. Hybrid uden stik viser benzin; plug-in-hybrid viser benzin og opladning.
-- Adresser og nærmeste sted med afstand **i luftlinje**. Waze/Google Maps beregner køreruten, når du trykker på selskabets logo.
-- **Ladesteder** pr. selskab: nærmeste først, relevante AC/DC/Normal/Hurtig/Lyn-filtre, 10 ladevalg ad gangen og **Vis 10 mere**.
-- Q8 samlet i én EL-celle. Generelle OK/Q8-takster er mærket som generelle og bliver ikke tilskrevet et bestemt ladested.
-- **Fordele** med vilkår, hvor der findes relevante oplysninger. Medlemsrabat trækkes ikke automatisk fra priser.
-- Antal unikke ladesteder, selskaber og steder med konkret lokal elpris. AC/DC på samme sted tælles én gang pr. selskab. Generelle takster tæller ikke som lokale priser.
-- Én opdateringshandling for alle kilder. Gentagne klik deler den igangværende hentning; de starter ikke parallelle scraperkørsler.
-- Tre status-sensorer: antal ladesteder, antal steder med lokal elpris og seneste hentning. En fælles opdateringsknap og handlingen `tiny_refuel.refresh`.
+- Benzin, diesel og EL efter valgt bil.
+- Hybrid uden stik viser benzin; plug-in-hybrid viser benzin og opladning.
+- Adresser og nærmeste sted med afstand i luftlinje.
+- Navigation gennem Waze eller Google Maps ved tryk på selskabets logo.
+- **Ladesteder** pr. selskab med nærmeste først og relevante AC/DC/Normal/Hurtig/Lyn-filtre.
+- 10 ladevalg ad gangen med mulighed for at vise flere.
+- Q8 samlet i én EL-celle.
+- Generelle OK/Q8-takster vises særskilt fra konkrete lokale priser.
+- **Fordele** med vilkår, hvor der findes relevante oplysninger.
+- Antal unikke ladesteder, selskaber og steder med konkret lokal elpris.
+- Én opdateringshandling for alle kilder.
+- Gentagne klik deler den igangværende hentning.
+- Tre status-sensorer: antal ladesteder, antal steder med lokal elpris og seneste hentning.
+- En fælles opdateringsknap og handlingen `tiny_refuel.refresh`.
 
-## Kilder og begrænsninger
+AC og DC på samme sted tælles én gang pr. selskab. Generelle selskabstakster tæller ikke som lokale priser. Medlemsrabat trækkes ikke automatisk fra priserne.
 
-Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges. Der kræves ikke en konto hos ladeselskaberne for indsamlingen. Betaling og adgang ved selve ladestedet følger selskabets vilkår.
+## Datakilder
+
+Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges.
 
 | Selskab | Oplysninger fra anvendt kilde |
 |---|---|
 | Circle K / INGO | Offentlige brændstofpriser; Circle K også danske ladesteder, stiktyper og effekt |
 | Q8 / F24 | Stationspriser inklusive HPC, når oplyst; Q8's generelle ladetakster vises særskilt |
-| Go'on / Shell / Uno-X | Eksisterende offentlige brændstofkilder; Shell og Uno-X også ladesteder |
+| Go'on / Shell / Uno-X | Offentlige brændstofkilder; Shell og Uno-X også ladesteder |
 | OK / OIL | Lokale brændstofpriser og ladeadresser; generelle OK-ladetakster særskilt |
 | Clever / E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst |
 | Tesla | Offentlige danske steder åbne for andre bilmærker; hentning kan blive afvist med HTTP 403 |
 | IONITY | Aktive danske steder, koordinater og effekt/antal, når oplyst; ingen gadeadresse i udtrækket |
 
-Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevares eventuelle tidligere data fra **denne installation**, tydeligt markeret som gemte data. En downloaddato er ikke en garanti for selskabets egen kontroltid. En første hentning kan give data fra nogle selskaber og fejl fra andre; fejlene vises i kortet.
+Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevares eventuelle tidligere data fra denne installation, tydeligt markeret som gemte data.
 
-Adressekoordinater, der ikke findes i selskabets kilde, kan slås op med Nominatim, maksimalt 30 nye adresser pr. kørsel. Det er stationsadresser, ikke din GPS-position. Din valgte telefonposition bruges i browseren til afstande. Den ønskede destination sendes til Waze/Maps ved navigation.
+En downloaddato er ikke en garanti for selskabets egen kontroltid. En hentning kan give data fra nogle selskaber og fejl fra andre; fejlene vises i kortet.
+
+Adressekoordinater, der ikke findes i selskabets kilde, kan slås op med Nominatim, maksimalt 30 nye adresser pr. kørsel. Det er stationsadresser, ikke din GPS-position.
+
+Din valgte telefonposition bruges i browseren til afstande. Den ønskede destination sendes til Waze eller Google Maps ved navigation.
 
 ## Filer og opdateringer
 
-HACS installerer al kode og alle medfølgende aktiver under `custom_components/tiny_refuel/`. Genererede prisdata, ny historik og koordinatcacher gemmes privat under `.storage/tiny_refuel/` og overlever kodeopdateringer. Der skrives ikke i HACS' kodefiler under scraping. Data til kortet leveres gennem en Home Assistant-API, der kræver login.
+HACS installerer kode og medfølgende aktiver under:
 
-Bilkatalog og standardlogoer ligger under integrationens `frontend/`. Direkte ændringer dér kan blive overskrevet af en HACS-opdatering. Eget bilkatalog kan i stedet vælges med en brugerdefineret URL i korteditoren.
+```text
+custom_components/tiny_refuel/
+```
 
-For en bevidst ren start: fjern integrationen under Enheder og tjenester, og slet kun mappen `.storage/tiny_refuel/`, mens integrationen er stoppet. Tilføj integrationen igen. HACS-afinstallation eller fjernelse af integrationen sletter ikke automatisk dataene.
+Genererede prisdata, ny historik og koordinatcacher gemmes privat under:
+
+```text
+.storage/tiny_refuel/
+```
+
+Disse data overlever kodeopdateringer. Scraping ændrer ikke HACS' kodefiler. Data til kortet leveres gennem en Home Assistant-API, der kræver login.
+
+Bilkatalog og standardlogoer ligger under integrationens `frontend/`. Direkte ændringer dér kan blive overskrevet af en HACS-opdatering. Eget bilkatalog kan vælges med en brugerdefineret URL i korteditoren.
+
+Efter en opdatering gennem HACS: genstart Home Assistant, og genindlæs browseren.
+
+### Ren start
+
+1. Fjern integrationen under **Enheder og tjenester**.
+2. Slet kun mappen `.storage/tiny_refuel/`, mens integrationen er stoppet.
+3. Tilføj integrationen igen.
+
+HACS-afinstallation eller fjernelse af integrationen sletter ikke automatisk de gemte data.
 
 ## Udvikling og test
 
-Minimum Home Assistant: **2025.11.0**. Teknisk version: **0.1.0**; kortets footer viser **Tiny Refuel v0.1**.
+Minimum Home Assistant: **2025.11.2**.
+
+Automatiske tests bestået med Home Assistant **2026.10.0**.
+
+Teknisk integrationsversion: **0.1.0**. Kortets footer viser **Tiny Refuel v0.1**.
+
+GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
 ```bash
 python -m unittest discover -s tests -v
 node tests/frontend.test.js
 ```
 
-Automatiske checks kører gennem GitHub Actions. Versionsnummer, HACS-struktur og integrationens manifest følger med. Faktisk layout, telefonnavigation og selskabernes fortsatte datatilgængelighed skal afprøves i installationen.
+Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
