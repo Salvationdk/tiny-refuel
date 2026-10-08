@@ -2,17 +2,29 @@
 
 Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer og scraping i én HACS-integration.
 
-## Installation gennem HACS
+## Installation
 
-[![Add to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
+### HACS
 
-HACS skal være installeret. Knappen åbner Tiny Refuel i HACS på din Home Assistant; bekræft tilføjelsen og download dér.
+Tiny Refuel kan installeres gennem [HACS](https://hacs.xyz/) (Home Assistant Community Store).
 
-1. Tryk på **Installér med HACS** ovenfor.
-2. Bekræft tilføjelsen af **Tiny Refuel** i HACS.
-3. Download **Tiny Refuel**, og genstart Home Assistant.
-4. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**. Vælg interval, som standard 6 timer.
-5. Genindlæs browseren med **Ctrl+F5**. Tilføj **Tiny Refuel** i dashboardets kortvælger eller brug:
+Brug knappen til at åbne Tiny Refuel direkte i HACS:
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
+
+*eller*
+
+1. Installér HACS, hvis du ikke allerede har det.
+2. Åbn HACS i Home Assistant.
+3. Vælg **menuen med tre prikker → Brugerdefinerede repositories**.
+4. Tilføj `https://github.com/Salvationdk/tiny-refuel` med typen **Integration**.
+5. Søg efter **Tiny Refuel**, og tryk på **Download**. ⬇️
+
+### Opsætning efter download
+
+1. Genstart Home Assistant.
+2. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**. Vælg interval, som standard 6 timer.
+3. Genindlæs browseren med **Ctrl+F5**. Tilføj **Tiny Refuel** i dashboardets kortvælger eller brug:
 
 ```yaml
 type: custom:tiny-refuel-card
@@ -22,13 +34,11 @@ vis_el: true
 vis_andet: true
 ```
 
-6. Vælg din telefon/positions-enhed, biler og Waze eller Google Maps i den visuelle editor. Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Scrape alle data** i kortet eller integrationens knap starter en fælles opdatering.
+4. Vælg din telefon/positions-enhed, biler og Waze eller Google Maps i den visuelle editor. Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Scrape alle data** i kortet eller integrationens knap starter en fælles opdatering.
 
 Kortets JavaScript indlæses af integrationen. Hvis kortet ikke findes efter genindlæsning, kan denne JavaScript-modulressource tilføjes manuelt under dashboardets ressourcer:
 
 `/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.0`
-
-Repository'et installeres som et brugerdefineret HACS-repository. Det er ikke optaget på HACS' standardliste.
 
 ## Funktioner
 
