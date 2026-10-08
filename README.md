@@ -26,14 +26,6 @@ Kortets JavaScript indlæses af integrationen. Hvis kortet ikke findes efter gen
 
 Repository'et installeres som et brugerdefineret HACS-repository. Det er ikke optaget på HACS' standardliste.
 
-## Fra den tidligere manuelle version
-
-Fjern eller deaktiver den gamle Command Line-sensor, som kører `fuelprices_self.py` eller `tiny-refuel-scraper-v0.1.py`. Fjern også den tidligere Tiny Gas/Tiny Refuel-kortressource fra `frontend.extra_module_url` eller dashboardets ressourcer, så browseren bruger integrationens kortfil. Dette kræver en Home Assistant-genstart ved ændringer i YAML.
-
-Et eksisterende kort beholder sine bil-, visnings- og navigationsindstillinger. Skift typen til `custom:tiny-refuel-card`, hvis den endnu hedder `custom:selvforsyning-card`. `scrape_entity` er ikke længere nødvendig og kan fjernes. Gamle standard-URL'er til bilkataloget bruger automatisk det medfølgende nye katalog; egne katalog-URL'er respekteres.
-
-Denne HACS-version importerer **ingen gammel historik eller data** fra `www/fuelprices`, `www/tiny-gas` eller `www/tiny-refuel`. Efter afprøvning kan de gamle projektmapper fjernes, hvis andre kort ikke bruger dem.
-
 ## Funktioner
 
 - Benzin, diesel og EL efter valgt bil. Hybrid uden stik viser benzin; plug-in-hybrid viser benzin og opladning.
