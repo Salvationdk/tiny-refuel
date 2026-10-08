@@ -9,6 +9,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch, AsyncMock, Mock
 
+import homeassistant  # Initialiserer Home Assistants valideringsbibliotek først.
 import voluptuous as vol
 from custom_components import tiny_refuel
 from custom_components.tiny_refuel import scraper, sensor, button
