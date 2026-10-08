@@ -46,7 +46,7 @@ Første scraping starter automatisk i baggrunden og kan tage flere minutter. **S
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.0
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.1
 ```
 
 ## Eksempler fra v0.1
@@ -170,7 +170,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.1.0**. Kortets footer viser **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.1.1**. Kortets footer viser **Tiny Refuel v0.1**.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
@@ -180,3 +180,8 @@ node tests/frontend.test.js
 ```
 
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
+
+
+## Rettelser i 0.1.1
+
+Priser og adresser vises også uden koordinater. Kortet angiver, når nærmeste station ikke kan bestemmes eller kun er valgt blandt stationer med kendte koordinater. Op til 30 nye adresseopslag pr. kørsel fordeles på skift mellem selskaberne efter frasortering af cachede og gentagne adresser.

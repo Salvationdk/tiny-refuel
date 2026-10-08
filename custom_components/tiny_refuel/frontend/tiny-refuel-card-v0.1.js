@@ -591,10 +591,15 @@
         var near = this._nearestIn(cands, loc);
         if (near) {
           picked = { st: near.st, km: near.km };
-        } else if (cands.length && !loc) {
+        } else if (cands.length) {
           picked = { st: cands[0], km: null };
         }
         if (picked) {
+          if (loc && !near) {
+            row.locationNote = 'Koordinater mangler · nærmeste station kan ikke bestemmes';
+          } else if (loc && cands.some(function (station) { return !this._evCoords(station); }, this)) {
+            row.locationNote = 'Nærmeste blandt stationer med kendte koordinater';
+          }
           var pst = picked.st;
           row.v95 = typeof pst.p95 === 'number' && pst.p95 > 0 ? pst.p95 : null;
           row.v100 = b.has100 && typeof pst.p100 === 'number' && pst.p100 > 0 ? pst.p100 : null;
@@ -770,6 +775,9 @@
               this._altTitle(row.alt, visBenzin, visDiesel) + "</span>" + fbtn + "</div>";
           } else if (fbtn) {
             sub = '<div class="trf-station"><span class="trf-subtxt"></span>' + fbtn + "</div>";
+          }
+          if (row.locationNote) {
+            sub += '<div class="trf-station"><span class="trf-subtxt">' + esc(row.locationNote) + '</span></div>';
           }
           if (this._openFordel === row.b.key && FORDELE[row.b.key]) {
             sub += '<div class="trf-fordel-box"><b>' + esc(row.b.brand) +

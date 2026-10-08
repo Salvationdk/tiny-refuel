@@ -15,6 +15,7 @@ Coordinates for address-only stations via Nominatim, cached in adresse-cache.jso
 Intended schedule: every 6 hours (providers switch prices ~00:00).
 """
 import html
+from collections import deque
 import json
 import math
 import os
@@ -1119,12 +1120,32 @@ def fetch_oil(errors):
 
 # ---------- Nominatim geocoding (cached, bounded) ----------
 
-def geocode_new(addresses, errors):
+def geocode_new(addresses, errors, brands=None):
     cache = load_json(ADDRESS_CACHE, {})
     now = int(time.time())
     fresh = dict(cache)
+    # Filter cached and duplicate addresses before sharing the budget fairly.
+    queues = {}
+    seen = set()
+    for i, addr in enumerate(addresses):
+        key = norm_addr(addr)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        hit = cache.get(key)
+        if hit and (hit.get("lat") or now - hit.get("ts", 0) < 7 * 86400):
+            continue
+        brand = brands[i] if brands is not None else "all"
+        queues.setdefault(brand, deque()).append(addr)
+    pending = []
+    active = deque(queues.values())
+    while active and len(pending) < NOM_MAX_NEW:
+        queue = active.popleft()
+        pending.append(queue.popleft())
+        if queue:
+            active.append(queue)
     made = 0
-    for addr in addresses:
+    for addr in pending:
         if made >= NOM_MAX_NEW:
             break
         key = norm_addr(addr)
@@ -1227,8 +1248,9 @@ def _collect():
                 fresh.append(s)
             errors.append({"stale_reused": src})
 
-    cache = geocode_new([s["address"] for s in fresh if s.get("address")
-                         and s.get("lat") is None], errors)
+    missing_coords = [s for s in fresh if s.get("address") and s.get("lat") is None]
+    cache = geocode_new([s["address"] for s in missing_coords], errors,
+                        brands=[s["brand"] for s in missing_coords])
     stations = []
     for s in fresh:
         if s.get("lat") is None and s.get("address"):

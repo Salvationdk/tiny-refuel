@@ -84,3 +84,30 @@ for (const nav of ['waze', 'google']) {
   assert.equal(card._scraping, false);
   console.log('PASS: frontend grouping, counts, navigation, authenticated API and shared refresh');
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
+// Keep fuel rows visible while coordinate lookup is incomplete.
+{
+  const fuel = new Card();
+  fuel._config = { vis_benzin: true, vis_diesel: false, vis_el: false };
+  fuel._data = { stations: [
+    { brand: "Go'on", name: 'Go on A', address: 'A vej 1', p95: 14.5, lat: null, lon: null },
+    { brand: 'Shell', name: 'Shell A', address: 'B vej 2', p95: 15, lat: null, lon: null },
+  ] };
+  for (const loc of [null, { lat: 55.6, lon: 12.1 }]) {
+    const rows = fuel._buildRows(loc).filter(r => ['goon', 'shell'].includes(r.b.key));
+    assert.equal(rows.length, 2);
+    for (const row of rows) {
+      assert.ok(row.v95 > 0);
+      assert.ok(row.stAddr);
+      assert.equal(row.km, null);
+      assert.equal(Boolean(row.locationNote), Boolean(loc));
+    }
+  }
+  fuel._data.stations.push({ brand: 'Shell', name: 'Shell B', address: 'C vej 3', p95: 16, lat: 55.61, lon: 12.11 });
+  const row = fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell');
+  assert.equal(row.stAddr, 'C vej 3');
+  assert.ok(row.km > 0);
+  assert.ok(row.locationNote.includes('kendte koordinater'));
+  fuel._data.stations = [];
+  assert.equal(fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell').v95, null);
+}
