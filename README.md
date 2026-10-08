@@ -28,6 +28,14 @@ Vælg drivmidler, selskaber og biler med forhåndsvisning af kortet.
 
 <img src="docs/images/editor-v0.1.png" alt="Tiny Refuels visuelle editor med drivmidler, selskabsvalg, biler og forhåndsvisning" width="800">
 
+### Navigation og bilkatalog
+
+Vælg Waze eller Google Maps til navigation ved tryk på selskabets logo. Bilkataloget hjælper med valg af mærke og model.
+
+<img src="docs/images/navigation-v0.1.png" alt="Editorens valg af Waze eller Google Maps samt positionsenhed" width="500">
+
+<img src="docs/images/bilkatalog-v0.1.png" alt="Bilkatalog med bilmærker og mulighed for egen katalogkilde" width="500">
+
 ## Installation
 
 ### HACS
