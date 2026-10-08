@@ -2,6 +2,32 @@
 
 Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer og scraping i én HACS-integration.
 
+## Eksempler fra v0.1
+
+Udsnit fra en faktisk Home Assistant-installation. Priser og datastatus er øjebliksbilleder fra 8. oktober 2026.
+
+<table>
+  <tr><th>Benzin</th><th>Hybrid uden stik</th></tr>
+  <tr>
+    <td valign="top"><img src="docs/images/benzin-v0.1.png" alt="Benzinpriser med selskabslogoer, adresser og bilvalg" width="380"></td>
+    <td valign="top"><img src="docs/images/hybrid-v0.1.png" alt="Hybrid uden stik med benzinpriser og bilvalg" width="380"></td>
+  </tr>
+</table>
+
+### EL og datastatus
+
+Ladepriser, generelle selskabstakster og knapper til ladesteder. Position er ikke valgt i dette eksempel. Den viste datastatus omfatter en fejl hos Tesla.
+
+<img src="docs/images/el-v0.1.png" alt="EL-oversigt med priser og ladeoplysninger fra flere selskaber" width="390">
+
+<img src="docs/images/el-datastatus-v0.1.png" alt="Fortsættelse af EL-oversigten med antal ladesteder, lokale elpriser og Tesla-fejl" width="390">
+
+### Visuel editor
+
+Vælg drivmidler, selskaber og biler med forhåndsvisning af kortet.
+
+<img src="docs/images/editor-v0.1.png" alt="Tiny Refuels visuelle editor med drivmidler, selskabsvalg, biler og forhåndsvisning" width="800">
+
 ## Installation
 
 ### HACS
