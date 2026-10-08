@@ -1,0 +1,3 @@
+refresh:
+  name: Scrape alle data
+  description: Starter en fælles opdatering af benzin, diesel og EL i baggrunden. Gentagne kald deler den igangværende hentning.

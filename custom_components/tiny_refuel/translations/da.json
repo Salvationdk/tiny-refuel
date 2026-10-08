@@ -1,0 +1,17 @@
+{
+  "title": "Tiny Refuel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tiny Refuel",
+        "description": "Benzin, diesel og opladning fra frit tilgængelige kilder. Første hentning starter i baggrunden og kan tage flere minutter.",
+        "data": {
+          "scan_hours": "Timer mellem automatiske hentninger"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Tiny Refuel er allerede konfigureret."
+    }
+  }
+}

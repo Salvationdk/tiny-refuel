@@ -1,0 +1,17 @@
+{
+  "title": "Tiny Refuel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tiny Refuel",
+        "description": "Petrol, diesel and EV charging from public sources. Initial collection runs in the background and can take several minutes.",
+        "data": {
+          "scan_hours": "Hours between automatic collections"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Tiny Refuel is already configured."
+    }
+  }
+}

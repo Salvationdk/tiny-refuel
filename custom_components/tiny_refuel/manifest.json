@@ -1,0 +1,13 @@
+{
+  "domain": "tiny_refuel",
+  "name": "Tiny Refuel",
+  "version": "0.1.0",
+  "config_flow": true,
+  "documentation": "https://github.com/Salvationdk/tiny-refuel",
+  "issue_tracker": "https://github.com/Salvationdk/tiny-refuel/issues",
+  "codeowners": ["@Salvationdk"],
+  "dependencies": ["frontend", "http"],
+  "iot_class": "cloud_polling",
+  "integration_type": "service",
+  "requirements": []
+}

@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.storage/
+priser-og-ladesteder.json
+adresse-cache.json
+stations-cache.json
