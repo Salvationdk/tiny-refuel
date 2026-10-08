@@ -4,8 +4,12 @@ Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort,
 
 ## Installation gennem HACS
 
-1. Åbn **HACS → menuen med tre prikker → Brugerdefinerede repositories**.
-2. Tilføj `https://github.com/Salvationdk/tiny-refuel` med typen **Integration**.
+[![Installér med HACS](https://img.shields.io/badge/Install%C3%A9r_med-HACS-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
+
+HACS skal være installeret. Knappen åbner Tiny Refuel i HACS på din Home Assistant; bekræft tilføjelsen og download dér.
+
+1. Tryk på **Installér med HACS** ovenfor.
+2. Bekræft tilføjelsen af **Tiny Refuel** i HACS.
 3. Download **Tiny Refuel**, og genstart Home Assistant.
 4. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**. Vælg interval, som standard 6 timer.
 5. Genindlæs browseren med **Ctrl+F5**. Tilføj **Tiny Refuel** i dashboardets kortvælger eller brug:
@@ -50,8 +54,6 @@ Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges. D
 | Clever / E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst |
 | Tesla | Offentlige danske steder åbne for andre bilmærker; hentning kan blive afvist med HTTP 403 |
 | IONITY | Aktive danske steder, koordinater og effekt/antal, når oplyst; ingen gadeadresse i udtrækket |
-
-Spirii er udeladt, da der ikke er tilkoblet en egnet fri kilde. **Pris i app** betyder, at den anvendte kilde ikke har en konkret lokal pris. Der indsamles ikke live-belægning. Kontrollér pris, adgang og driftsstatus hos ladeoperatøren.
 
 Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevares eventuelle tidligere data fra **denne installation**, tydeligt markeret som gemte data. En downloaddato er ikke en garanti for selskabets egen kontroltid. En første hentning kan give data fra nogle selskaber og fejl fra andre; fejlene vises i kortet.
 
