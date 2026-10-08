@@ -4,7 +4,7 @@ Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort,
 
 ## Installation gennem HACS
 
-[![Installér med HACS](https://img.shields.io/badge/Install%C3%A9r_med-HACS-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
+[![Add to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
 
 HACS skal være installeret. Knappen åbner Tiny Refuel i HACS på din Home Assistant; bekræft tilføjelsen og download dér.
 
