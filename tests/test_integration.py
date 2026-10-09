@@ -103,7 +103,8 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual([e.native_value for e in entities[:2]],[2,1]);self.assertIsNotNone(entities[2].native_value)
                 buttons=[];await button.async_setup_entry(self.hass,entry,buttons.extend)
                 await buttons[0].async_press();await entry.runtime_data.task
-                await self.hass.services_map[('tiny_refuel','refresh')](None);await entry.runtime_data.task
+                await self.hass.services_map[('tiny_refuel','refresh')](SimpleNamespace(data={'fuel_types':['diesel']}));await entry.runtime_data.task
+                self.assertEqual(scraper.collect.call_args.args[2], ['diesel'])
                 self.assertTrue(await tiny_refuel.async_unload_entry(self.hass,entry));self.assertNotIn('manager',self.hass.data['tiny_refuel'])
                 self.assertNotIn(('tiny_refuel','refresh'),self.hass.services_map)
 

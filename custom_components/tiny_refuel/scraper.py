@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 18334)
+Total output lines: 1609
+
 #!/usr/bin/env python3
 """Tiny Refuel v0.1 – self-scraped petrol, diesel and EV charging data.
 
@@ -703,42 +706,7 @@ def fetch_ck_ingo(errors):
                     if pr is not None:
                         alt[label] = pr
         else:
-            p95 = norm.get("benzin95", {})
-            diesel = norm.get("diesel", {})
-            if "upgrade95" in norm:
-                pr = to_float(norm["upgrade95"].get("price"))
-                if pr is not None:
-                    alt["UPGRADE 95"] = pr
-        lat, lon = coords.get(str(site.get("id")), (None, None))
-        stations.append({
-            "brand": brand,
-            "name": name, "address": address,
-            "lat": lat, "lon": lon,
-            "p95": to_float(p95.get("price")),
-            "p100": None,
-            "diesel": to_float(diesel.get("price")),
-            "kwh": None,
-            "alt": alt or None,
-            "lu": p95.get("lastUpdated"),
-            "source": "api.circlek.com",
-        })
-    return stations, True
-
-
-def load_station_cache(errors):
-    """id -> (lat, lon) from circlek.dk station-search, cached 7 days."""
-    cache = load_json(STATION_CACHE, None)
-    now = time.time()
-    if cache and now - cache.get("updated_epoch", 0) < 7 * 86400:
-        return {k: tuple(v) for k, v in cache["coords"].items()}
-    try:
-        page = get_text(CK_SEARCH)
-        pairs = re.findall(
-            r'"(1\d{4})":\{.*?/location":\{"lat":"([0-9.]+)","lng":"([0-9.]+)"', page)
-        coords = {sid: (round(float(la), 5), round(float(lo), 5))
-                  for sid, la, lo in pairs}
-        if not coords:
-            raise ValueError("no coords parsed")
+            p95 = norm.get("benzin95",…334 tokens truncated…   raise ValueError("no coords parsed")
         save_json(STATION_CACHE, {"updated_epoch": now, "coords": coords})
         return coords
     except Exception as exc:  # noqa: BLE001
@@ -1251,7 +1219,7 @@ def fetch_oil_fuel(errors):
         errors.append({"oil_fuel_api": str(exc)[:160]})
         return [], False
 
-def fetch_ok(errors):
+def fetch_ok(errors, include_el=True):
     out = []
     try:
         page = get_text(OK_URL)
@@ -1276,6 +1244,11 @@ def fetch_ok(errors):
     except Exception as exc:  # noqa: BLE001
         errors.append({"ok": str(exc)[:120]})
         ok = False
+    return out, fetch_ok_el(errors) if include_el else [], ok
+
+
+def fetch_ok_el(errors):
+    """Fetch OK's public charging tariffs independently from fuel prices."""
     ev = []
     try:
         el_raw = get_text(OK_EL_URL)
@@ -1289,7 +1262,7 @@ def fetch_ok(errors):
                            "kwh": to_float(m.group(1)), "source": "ok.dk"})
     except Exception as exc:  # noqa: BLE001
         errors.append({"ok_el": str(exc)[:120]})
-    return out, ev, ok
+    return ev
 
 
 def fetch_oil(errors):
@@ -1394,7 +1367,52 @@ def fetch_benefits(previous=None, progress_callback=None):
                                   progress_callback=progress_callback, fallback=previous)
 
 
-def _collect(progress_callback=None):
+def _station_identity(row):
+    """Return a stable station key for partial refreshes."""
+    source = str(row.get("source") or row.get("brand") or "")
+    location_id = row.get("location_id")
+    if location_id:
+        identity = "id:" + str(location_id)
+    elif row.get("address"):
+        identity = "address:" + norm_addr(row.get("address"))
+    else:
+        identity = "name:" + norm_addr(row.get("name"))
+    return source + "|" + identity
+
+
+def _preserve_unselected_fuels(fresh, previous, selected):
+    """Keep cached prices/history for fuels omitted from a partial scrape."""
+    preserved_fields = set()
+    if "benzin" not in selected:
+        preserved_fields.update(("p95", "p100", "h95", "h100", "prev95"))
+    if "diesel" not in selected:
+        preserved_fields.add("diesel")
+    old_by_key = {_station_identity(row): row for row in previous if isinstance(row, dict)}
+    seen = set()
+    rows = []
+    for row in fresh:
+        row = dict(row)
+        key = _station_identity(row)
+        old = old_by_key.get(key)
+        if old:
+            for field in preserved_fields:
+                if field in old:
+                    row[field] = old[field]
+            seen.add(key)
+        rows.append(row)
+    # A provider can temporarily omit a cached station while returning prices
+    # for other stations. Keep it when it still has a price for an unselected fuel.
+    for key, old in old_by_key.items():
+        if key in seen:
+            continue
+        has_preserved_price = any(old.get(field) is not None for field in preserved_fields
+                                  if field in ("p95", "p100", "diesel"))
+        if has_preserved_price:
+            rows.append(dict(old))
+    return rows
+
+
+def _collect(progress_callback=None, fuel_types=None):
     errors = []
     prev = load_json(OUT, {})
     prev_prices = {}
@@ -1409,11 +1427,22 @@ def _collect(progress_callback=None):
             prev_hist[key + "|100"] = s["h100"][-30:]
     today = time.strftime("%Y-%m-%d", time.gmtime())
 
+    selected = {"benzin", "diesel", "el"} if fuel_types is None else set(fuel_types)
+    selected &= {"benzin", "diesel", "el"}
+    if not selected:
+        selected = {"benzin", "diesel", "el"}
     api = sys.modules.get(__name__) or SimpleNamespace(**globals())
-    fuel_data = fuel_providers.collect(api, errors, progress_callback)
-    electric_data = electric_providers.collect(
+    fuel_data = (fuel_providers.collect(api, errors, progress_callback)
+                 if selected & {"benzin", "diesel"} else
+                 {"stations": [], "source_ok": {}, "unox_chargers": [], "ok_tariffs": []})
+    electric_data = (electric_providers.collect(
         api, prev.get("ev", []), errors, progress_callback)
+        if "el" in selected else
+        {"tariffs": [], "q8_tariffs": [], "circlek_tariffs": [], "eon_tariffs": [],
+         "ionity_tariffs": [], "locations": [], "tesla": [], "statuses": prev.get("ev_sources", {})})
     ok_ev = fuel_data["ok_tariffs"]
+    if "el" in selected and not (selected & {"benzin", "diesel"}):
+        ok_ev = api.fetch_ok_el(errors)
     unox_chargers = fuel_data["unox_chargers"]
     src_ok = fuel_data["source_ok"]
     q8_ev = electric_data["q8_tariffs"]
@@ -1437,11 +1466,26 @@ def _collect(progress_callback=None):
                 fresh.append(s)
             errors.append({"stale_reused": src})
 
-    missing_coords = [s for s in fresh if s.get("address") and s.get("lat") is None]
-    geocode_args = {"brands": [s["brand"] for s in missing_coords]}
-    if progress_callback is not None:
-        geocode_args["progress_callback"] = progress_callback
-    cache = geocode_new([s["address"] for s in missing_coords], errors, **geocode_args)
+    if "benzin" in selected or "diesel" in selected:
+        fresh = _preserve_unselected_fuels(fresh, prev.get("stations", []), selected)
+    else:
+        fresh = [dict(row) for row in prev.get("stations", [])]
+
+    if "el" not in selected:
+        ev_locations = list(prev.get("ev", []))
+        ev = []
+        ok_ev = q8_ev = circlek_ev = eon_tariffs = ionity_tariffs = []
+        unox_chargers = []
+
+    missing_coords = ([s for s in fresh if s.get("address") and s.get("lat") is None]
+                      if selected & {"benzin", "diesel"} else [])
+    if missing_coords:
+        geocode_args = {"brands": [s["brand"] for s in missing_coords]}
+        if progress_callback is not None:
+            geocode_args["progress_callback"] = progress_callback
+        cache = geocode_new([s["address"] for s in missing_coords], errors, **geocode_args)
+    else:
+        cache = load_json(ADDRESS_CACHE, {})
     stations = []
     for s in fresh:
         if s.get("lat") is None and s.get("address"):
@@ -1521,13 +1565,13 @@ def _collect(progress_callback=None):
     return 0 if stations or ev else 1
 
 
-def collect(data_dir, progress_callback=None):
+def collect(data_dir, progress_callback=None, fuel_types=None):
     """Called only in the integration's executor job, never on HA's event loop."""
     global WWW_DIR, OUT, ADDRESS_CACHE, STATION_CACHE
     WWW_DIR = str(data_dir)
     OUT = os.path.join(WWW_DIR, "priser-og-ladesteder.json")
     ADDRESS_CACHE = os.path.join(WWW_DIR, "adresse-cache.json")
     STATION_CACHE = os.path.join(WWW_DIR, "stations-cache.json")
-    if _collect(progress_callback) != 0:
+    if _collect(progress_callback, fuel_types) != 0:
         raise ValueError("Ingen brugbare priser eller ladesteder")
     return load_json(OUT, {})

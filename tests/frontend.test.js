@@ -29,6 +29,7 @@ const editor = new (registry.get('tiny-refuel-card-editor'))();
 editor.setConfig({ vis_scrape_knap: false });
 assert.ok(editor.innerHTML.includes('data-key="vis_scrape_knap"'));
 assert.ok(editor.innerHTML.includes('Vis knappen på kortet'));
+assert.ok(editor.innerHTML.includes('data-key="scrape_valgt_bil"'));
 const card = new Card();
 assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');
 assert.equal(card._progressText({ phase: 'el', provider: 'Tesla', station: 'Supercharger Aarhus', current: 2, total: 7 }),
@@ -93,6 +94,12 @@ for (const nav of ['waze', 'google']) {
   assert.equal(card._scraping, false);
   assert.ok(card._scrapeMessage.includes('1 fejl'));
   assert.ok(apiCalls.every(args => args[0] === 'GET' && args[1] === 'tiny_refuel/data'));
+  const scoped = new Card();
+  scoped._config = { biler: [{ navn: 'Min dieselbil', brændstof: 'diesel' }] };
+  scoped._hass = { callService: (...args) => { calls.push(args); return Promise.resolve(); } };
+  scoped._scrapeAll();
+  assert.equal(JSON.stringify(calls[calls.length - 1][2]), JSON.stringify({ fuel_types: ['diesel'] }));
+  scoped.disconnectedCallback();
   card._scrapeAll();
   response = { ...response, last_attempt: new Date().toISOString(), last_error: 'Failed source', refreshing: false };
   card._pollScrape(card._scrapeRun);

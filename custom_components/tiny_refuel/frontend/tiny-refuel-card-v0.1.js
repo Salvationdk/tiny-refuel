@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 22412)
+Total output lines: 1690
+
 !function (window) {
   "use strict";
   if (window.customElements.get("tiny-refuel-card")) return;
@@ -447,7 +450,7 @@
 
     _progressText(progress) {
       if (!progress) return "";
-      if (progress.phase === "starting") return "Starter hentning af benzin-, diesel- og elpriser…";
+      if (progress.phase === "starting") return "Starter hentning…";
       var place = progress.station ? " · " + progress.station : "";
       var count = progress.current && progress.total ? " (" + progress.current + "/" + progress.total + ")" : "";
       return "Henter " + (progress.phase || "data") + " fra " + (progress.provider || "udbyder") + place + count + "…";
@@ -461,14 +464,25 @@
         return;
       }
       this._scraping = true;
-      this._scrapeMessage = "Starter hentning af benzin-, diesel- og elpriser…";
+      var fuelTypes = null;
+      var selectedCar = this._car();
+      if (cfgGet(this._config, "scrape_valgt_bil", true) && selectedCar && selectedCar.brændstof) {
+        var fuelMap = {
+          benzin: ["benzin"], diesel: ["diesel"], el: ["el"],
+          hybrid: ["benzin"], plug_in_hybrid: ["benzin", "el"]
+        };
+        fuelTypes = fuelMap[selectedCar.brændstof] || null;
+      }
+      var scopeText = fuelTypes ? fuelTypes.join(" og ") : "benzin, diesel og el";
+      this._scrapeMessage = "Starter hentning af " + scopeText + "…";
       this._scrapeBaseline = this._data && this._data.updated;
       this._scrapeStarted = Date.now();
       this._scrapeRun = (this._scrapeRun || 0) + 1;
       var self = this, run = this._scrapeRun;
       this._render();
       try {
-        Promise.resolve(this._hass.callService("tiny_refuel", "refresh", {})).catch(function (err) {
+        var serviceData = fuelTypes ? { fuel_types: fuelTypes } : {};
+        Promise.resolve(this._hass.callService("tiny_refuel", "refresh", serviceData)).catch(function (err) {
           if (self._scraping && self._scrapeRun === run) self._finishScrape("Opdateringskaldet fejlede: " + String(err && err.message || err));
         });
         this._scrapeTimer = setTimeout(function () { self._pollScrape(run); }, 5000);
@@ -728,323 +742,7 @@
           var nearBest = null;
           for (var nb = 0; nb < rows.length; nb++) {
             if (rows[nb].liste || rows[nb].km === null) continue;
-            if (!nearBest || rows[nb].km < nearBest.km) nearBest = rows[nb];
-          }
-          if (nearBest) {
-            bestHtml += '<div class="trf-em">Nærmeste lige nu: <b>' + esc(nearBest.b.brand) + "</b> · " +
-              esc(nearBest.stName || "") + " — <b>" + this._fmtKm(nearBest.km) +
-              " km</b> fra din placering. Tryk på et logo for navigation.</div>";
-          }
-        }
-
-        var head = '<div class="trf-head" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '"><span></span>';
-        if (visBenzin) head += '<span class="trf-p">95</span><span class="trf-p">100</span>';
-        if (visDiesel) head += '<span class="trf-p">Diesel</span>';
-        head += '<span class="trf-km" title="Afstand fra telefonens placering til nærmeste station">km</span></div>';
-        body += bestHtml + head;
-
-        for (var r = 0; r < rows.length; r++) {
-          var row = rows[r];
-          var g95 = visBenzin && min95 !== null && row.v95 !== null && row.v95 === min95;
-          var g100 = visBenzin && row.b.has100 && min100 !== null && row.v100 !== null && row.v100 === min100;
-          var cls = "trf-row";
-          var cells = "";
-          if (visBenzin) {
-            cells += row.v95 === null
-              ? '<div class="trf-pcol"><span class="trf-price trf-na">–</span></div>'
-              : '<div class="trf-pcol"><span class="trf-price' + (g95 ? " trf-g95" : "") + '">' + this._fmt(row.v95) + "</span>" + row.chg + "</div>";
-            cells += (!row.b.has100 || row.v100 === null)
-              ? '<div class="trf-pcol"><span class="trf-price trf-na">–</span></div>'
-              : '<div class="trf-pcol"><span class="trf-price' + (g100 ? " trf-g100" : "") + '">' + this._fmt(row.v100) + "</span></div>";
-          }
-          if (visDiesel) {
-            cells += row.diesel === null
-              ? '<div class="trf-pcol"><span class="trf-price trf-na">–</span></div>'
-              : '<div class="trf-pcol"><span class="trf-price">' + this._fmt(row.diesel) + "</span></div>";
-          }
-          var kmCell, link, title;
-          if (row.liste) {
-            kmCell = '<span class="trf-km" style="font-weight:400;font-size:11px;">liste</span>';
-            link = this._navHref(null, row.b.brand);
-            title = row.b.brand + " listepris" + (row.stAgeRaw ? " · " + row.stAgeRaw : "");
-          } else if (row.ll) {
-            var kmTxt = row.km !== null ? this._fmtKm(row.km) : "–";
-            var kmShow = row.km !== null ? kmTxt + " km" : kmTxt;
-            var kmCls = row.km !== null && row.km > 15 ? "trf-km trf-far" : "trf-km";
-            kmCell = row.stAge
-              ? '<span class="' + kmCls + '">' + kmShow + '<span class="trf-age">' + esc(row.stAge) + "</span></span>"
-              : '<span class="' + kmCls + '">' + kmShow + "</span>";
-            link = this._navHref(row.ll, row.b.brand);
-            title = row.b.brand + " — " + (row.km !== null ? kmTxt + " km · " : "") + (row.stName || "") +
-              (row.stAgeRaw ? " · prisinfo: " + row.stAgeRaw : "") + this._altTitle(row.alt, visBenzin, visDiesel);
-          } else {
-            kmCell = '<span class="trf-km">–</span>';
-            link = this._navHref(null, row.b.brand);
-            title = row.b.brand;
-          }
-          var logo = '<div class="trf-logo"><a class="trf-navlink" data-waze="' + esc(row.b.brand) +
-            '" href="' + link + '" rel="noopener" title="' + esc(title) + '"><img src="/tiny_refuel/static/logos/' +
-            row.b.img + '" alt="' + esc(row.b.brand) + '"></a></div>';
-          var sub = "";
-          var benefitEntry = this._benefitEntry(row.b.key);
-          var fbtn = (visAndet && benefitEntry)
-            ? '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(row.b.key) + '" title="Se kundefordele">★ Fordele</a>'
-            : "";
-          if (row.liste) {
-            sub = '<div class="trf-station"><span class="trf-subtxt"><span class="trf-pill">Listepris</span>' +
-              (row.stAgeRaw && this._fmtAge(row.stAgeRaw, true) === null ? " · " + esc(row.stAgeRaw) : "") + "</span>" + fbtn + "</div>";
-          } else if (row.stName || row.stAddr) {
-            sub = '<div class="trf-station"><span class="trf-subtxt">' + esc(row.stName || "") +
-              (row.stName && row.stAddr ? " · " : "") + esc(row.stAddr || "") +
-              this._altTitle(row.alt, visBenzin, visDiesel) + "</span>" + fbtn + "</div>";
-          } else if (fbtn) {
-            sub = '<div class="trf-station"><span class="trf-subtxt"></span>' + fbtn + "</div>";
-          }
-          if (row.locationNote) {
-            sub += '<div class="trf-station"><span class="trf-subtxt">' + esc(row.locationNote) + '</span></div>';
-          }
-          if (benefitEntry) sub += this._benefitBox(row.b.key, row.b.brand, benefitEntry);
-          body += '<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
-            logo + cells + kmCell + sub + "</div>";
-        }
-      }
-
-      if (hasData) {
-        if (visEl && !visBenzin && !visDiesel) body += this._nearestEvHtml(loc);
-        if (visEl) {
-          body += this._evHtml(loc);
-        }
-
-        if (visAndet) {
-          var _carFuel = null;
-          var _carBatt = NaN;
-          try {
-            var _cc = this._car();
-            _carFuel = _cc && _cc.brændstof;
-            _carBatt = _cc ? parseFloat(_cc.batteri_kwh) : NaN;
-          } catch (e) {}
-          if (_carFuel !== "el" && visBenzin) {
-            var tankL = this._tankLiters();
-          var priced = [];
-          for (var m = 0; m < rows.length; m++) {
-            if (!rows[m].liste && isFinite(rows[m].v95)) {
-              priced.push({ brand: rows[m].b.brand, v: rows[m].v95 });
-            }
-          }
-          if (priced.length >= 2) {
-            var cheap = priced[0], dear = priced[0];
-            for (var n2 = 1; n2 < priced.length; n2++) {
-              if (priced[n2].v < cheap.v) cheap = priced[n2];
-              if (priced[n2].v > dear.v) dear = priced[n2];
-            }
-            body += '<div class="trf-tank">Fuld tank (' + String(tankL).replace(".", ",") + ' L' +
-              (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + ') 95: <b>' +
-              esc(cheap.brand) + " " + Math.round(cheap.v * tankL) + " kr</b> → " + esc(dear.brand) + " " +
-              Math.round(dear.v * tankL) + " kr · spar <b>" + Math.round((dear.v - cheap.v) * tankL) + " kr</b></div>";
-          }
-          } else if (_carFuel === "el" && visEl && isFinite(_carBatt) && _carBatt > 0 && this._data && Array.isArray(this._data.ev)) {
-            var kwhs = [];
-            for (var me = 0; me < this._data.ev.length; me++) {
-              var _ev = this._data.ev[me];
-              if (typeof _ev.kwh === "number" && isFinite(_ev.kwh) && _ev.kwh > 0 && _ev.address && showBrand(cfg, this._evBrandKey(_ev.brand))) kwhs.push(_ev.kwh);
-            }
-            if (kwhs.length >= 2) {
-              var kmin = Math.min.apply(null, kwhs), kmax = Math.max.apply(null, kwhs);
-              var bkwh = Math.min(200, Math.max(10, _carBatt));
-              body += '<div class="trf-tank">Fuld opladning (' + String(bkwh).replace(".", ",") + ' kWh' +
-                (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + '): <b>' +
-                Math.round(kmin * bkwh) + " kr</b> → " + Math.round(kmax * bkwh) +
-                " kr · spar <b>" + Math.round((kmax - kmin) * bkwh) + " kr</b></div>";
-            }
-          }
-          var snit = this._data && this._data.snittet;
-          var snitKey = visBenzin ? "p95" : (visDiesel ? "diesel" : null);
-          var snitLbl = visBenzin ? "95" : "Diesel";
-          if (snitKey && snit && snit[snitKey]) {
-            var snitTxt = "Landsnit (" + snit[snitKey].n + " stationer): " + snitLbl + " <b>" + this._fmt(snit[snitKey].v) + "</b>";
-            var snitMin = visBenzin ? min95 : null;
-            if (visBenzin && snitMin === null && rows.length) {
-              snitMin = null;
-            }
-            if (!visBenzin && visDiesel) {
-              var dvals = [];
-              for (var md = 0; md < rows.length; md++) {
-                if (isFinite(rows[md].diesel)) dvals.push(rows[md].diesel);
-              }
-              snitMin = dvals.length ? Math.min.apply(null, dvals) : null;
-            }
-            if (snitMin !== null) {
-              var sdiff = Math.round((snitMin - snit[snitKey].v) * 100) / 100;
-              snitTxt += sdiff <= -0.005
-                ? " · billigst nær dig <b>" + Math.abs(sdiff).toFixed(2).replace(".", ",") + " under</b>"
-                : (sdiff >= 0.005
-                  ? " · billigst nær dig " + sdiff.toFixed(2).replace(".", ",") + " over"
-                  : " · billigst nær dig = snit");
-            }
-            body += '<div class="trf-tank">' + snitTxt + "</div>";
-          }
-        }
-
-      }
-
-      var upd = "–";
-      var src = this._data;
-      if (src && src.updated) {
-        var dt = new Date(src.updated);
-        if (!isNaN(dt.getTime()) && window.Intl) {
-          upd = new Intl.DateTimeFormat("da-DK", { timeZone: "Europe/Copenhagen", hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }).format(dt);
-        }
-      }
-      var cars = this._cars();
-      var carHtml = "";
-      if (cars.length > 1) {
-        var sel = this._carIdx();
-        carHtml = '<div class="trf-cars">';
-        for (var ci = 0; ci < cars.length; ci++) {
-          carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '">' +
-            esc(cars[ci].navn) + "</button>";
-        }
-        carHtml += "</div>";
-      }
-
-      var legends = [];
-      if (visBenzin) legends.push('<b>95</b> = Blyfri 95 (E10) · <b>100</b> = 100-oktan · <b>Premium 95</b> = benzin med additiver · <b>92</b> = Blyfri 92');
-      if (visDiesel) legends.push('<b>Diesel</b> = standard diesel · <b>Extra</b> = opgraderet diesel · <b>HVO100</b> = alternativt dieselbrændstof · <b>AdBlue</b> = væske til dieselbilens udstødningsrensning');
-      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>pris i app</b> = prisen findes ikke i udtrækket · <b>km</b> = afstand i luftlinje');
-      var legendHtml = legends.length ? '<div class="trf-legend"><b>Energityper:</b> ' + legends.join(' · ') + '</div>' : '';
-      if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
-      var selectedFuel = this._car() && this._car().brændstof;
-      var cardTitle = selectedFuel === 'plug_in_hybrid' && visBenzin && visEl ? 'Hybrid – benzin og opladning' :
-        (selectedFuel === 'hybrid' && visBenzin && !visEl ? 'Hybrid – benzin' :
-        (visEl && !visBenzin && !visDiesel ? 'Ladepriser' :
-        (visEl ? 'Brændstof og ladepriser' : (visDiesel && !visBenzin ? 'Dieselpriser' : 'Benzinpriser'))));
-
-      var scrapeStatus = this._data && this._data.refreshing && this._data.progress
-        ? this._progressText(this._data.progress) : (this._scrapeMessage || "");
-      this.innerHTML =
-        "<style>" + CSS + "</style>" +
-        '<div class="trf">' +
-        '<div class="trf-titlebar"><div class="trf-title">' + cardTitle + '</div>' +
-        '<button class="trf-refresh' + (this._locRefreshing ? " trf-spin" : "") + '" data-refresh title="Hent frisk GPS-position fra telefonen">⟳</button></div>' +
-        '<div class="trf-rule"></div>' +
-        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Scrape alle data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() +
-        carHtml +
-        (visAndet
-          ? '<div class="trf-pos">Position: ' + (this._locRefreshing ? "opdaterer…" : esc(this._posAge() || "ukendt")) + "</div>"
-          : "") +
-        body +
-        legendHtml +
-        '<div class="trf-foot"><span>Hentet fra selskabernes egne lister: ' + esc(upd) + '</span><span>Tiny Refuel v0.1</span></div>' +
-        "</div>" + this._evPopupHtml(loc);
-      var popup = this.querySelector && this.querySelector(".trf-ev-dialog");
-      if (popup) {
-        if (typeof popup.showModal === "function") popup.showModal();
-        else popup.setAttribute("open", "");
-        var popupList = popup.querySelector(".trf-ev-list");
-        if (popupList) popupList.scrollTop = popupScroll;
-      }
-      this._maybeLoad();
-    }
-
-    _brandImg(brand) {
-      if (!brand) return null;
-      var bl = String(brand).toLowerCase();
-      for (var i = 0; i < BRANDS.length; i++) {
-        if (BRANDS[i].brand.toLowerCase() === bl) return BRANDS[i].img;
-      }
-      return null;
-    }
-
-    _altTitle(alt, showBenzin, showDiesel) {
-      if (!alt) return "";
-      if (showBenzin === false && showDiesel === false) return "";
-      var parts = [];
-      for (var k in alt) {
-        if (!isFinite(alt[k])) continue;
-        var kl = k.toLowerCase();
-        var isDiesel = kl.indexOf("diesel") >= 0 || kl.indexOf("hvo") >= 0 ||
-          kl.indexOf("adblue") >= 0 || kl.indexOf("ad-blue") >= 0;
-        if (isDiesel && showDiesel === false) continue;
-        if (!isDiesel && showBenzin === false) continue;
-        parts.push(k + " " + alt[k].toFixed(2).replace(".", ","));
-      }
-      return parts.length ? " · også: " + parts.join(", ") : "";
-    }
-
-    _evBrandKey(brand) {
-      for (var i = 0; i < BRANDS.length; i++) {
-        if (BRANDS[i].brand.toLowerCase() === String(brand).toLowerCase()) return BRANDS[i].key;
-      }
-      return null;
-    }
-
-    _evEntries() {
-      var self = this;
-      return this._data && Array.isArray(this._data.ev) ? this._data.ev.filter(function (ev) {
-        return ev && ev.brand && self._evBrandKey(ev.brand) && showBrand(self._config, self._evBrandKey(ev.brand));
-      }) : [];
-    }
-
-    _evCoords(ev) {
-      if (ev.lat === null || ev.lat === undefined || ev.lat === '' || ev.lon === null || ev.lon === undefined || ev.lon === '') return null;
-      var lat = Number(ev.lat), lon = Number(ev.lon);
-      if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180 || (lat === 0 && lon === 0)) return null;
-      return { lat: lat, lon: lon };
-    }
-
-    _evHasLocation(ev) {
-      return !!(ev.address || (ev.name && this._evCoords(ev)));
-    }
-
-    _benefitEntry(key, fallbackText) {
-      var all = this._data && this._data.benefits;
-      var item = all && all[key];
-      if (item && (item.summary || item.source_url)) return item;
-      return fallbackText ? { summary: fallbackText, source_url: null, status: "source_only" } : null;
-    }
-
-    _benefitBox(key, brand, item) {
-      if (!item) return "";
-      var text = item.summary || "Se udbyderens officielle side for aktuelle fordele, app og abonnementsvilkår.";
-      var checked = item.fetched_at ? "<br><small>Hentet: " + esc(item.fetched_at.slice(0, 10)) +
-        (item.status === "stale" ? " · gemte oplysninger" : "") + "</small>" : "";
-      var source = item.source_url ? ' <a href="' + esc(item.source_url) + '" target="_blank" rel="noopener">Officiel kilde</a>' : "";
-      return this._openFordel === key ? '<div class="trf-fordel-box"><b>' + esc(brand) + " · fordele, app og abonnement:</b><br>" +
-        esc(text) + source + checked + "</div>" : "";
-    }
-
-    _nearestEvHtml(loc) {
-      if (!loc) return '<div class="trf-em">Nærmeste ladested: position mangler. Vælg en positions-enhed i kortets editor.</div>';
-      var entries = this._evEntries(), nearest = null;
-      for (var i = 0; i < entries.length; i++) {
-        var ev = entries[i], coords = this._evCoords(ev);
-        if (!this._evHasLocation(ev) || !coords) continue;
-        var km = this._haversineKm(loc.lat, loc.lon, coords.lat, coords.lon);
-        if (!nearest || km < nearest.km) nearest = { ev: ev, km: km };
-      }
-      return nearest ? '<div class="trf-em">Nærmeste lige nu: <b>' + esc(nearest.ev.brand) + '</b> ' +
-        esc(nearest.ev.address || nearest.ev.name) + (nearest.ev.stale ? ' (gemte data)' : '') + ' — <b>' + this._fmtKm(nearest.km) +
-        ' km</b> fra din placering. Tryk på et logo for navigation.</div>' :
-        '<div class="trf-em">Nærmeste ladested kan ikke beregnes: ingen valgte ladesteder med koordinater.</div>';
-    }
-
-    _evBenefits(ev, part) {
-      if (!this._effVis().andet) return '';
-      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand, ev.benefits);
-      if (!item) return '';
-      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(brand) + '" title="Se ladefordele">★ Fordele</a>';
-      if (part === 'button') return button;
-      if (part === 'box') return this._benefitBox(brand, ev.brand, item);
-      return button + this._benefitBox(brand, ev.brand, item);
-    }
-
-    _teslaPricesHtml(ev) {
-      var self = this, prices = ev.tesla_prices || {};
-      var result = [['member', 'Tesla/medlemmer'], ['non_member', 'Andre biler uden medlemskab']].map(function (pair) {
-        var rates = Array.isArray(prices[pair[0]]) ? prices[pair[0]].filter(function (r) {
-          return r && typeof r.price === 'number' && isFinite(r.price) && r.price > 0;
-        }) : [];
-        var values = rates.map(function (r) { return r.price; });
+            if (!nearBest || rows[nb].km < nea…4412 tokens truncated…; });
         var text = values.length ? self._fmt(Math.min.apply(null, values)) : 'Pris ikke oplyst';
         if (values.length && Math.max.apply(null, values) !== Math.min.apply(null, values)) text += '–' + self._fmt(Math.max.apply(null, values));
         if (values.length) text += ' kr/kWh';
@@ -1659,9 +1357,10 @@
       html += '<label><input type="radio" name="trf-nav" data-key="navigation" value="google"' +
         (nv === "google" ? " checked" : "") + "><span>Google Maps</span></label>";
       html += '<div class="trfe-hint">Åbner navigation til den nærmeste station ved tryk på logo.</div>';
-      html += '<h4>Scrape alle data</h4>';
+      html += '<h4>Hent data</h4>';
       html += cb("vis_scrape_knap", "Vis knappen på kortet", this._bool("vis_scrape_knap", true));
-      html += '<div class="trfe-hint">Tiny Refuel-integrationen opdaterer alle selskaber med én handling. Automatisk interval vælges, når integrationen tilføjes under Enheder og tjenester.</div>';
+      html += cb("scrape_valgt_bil", "Begræns hentning til den valgte bil", this._bool("scrape_valgt_bil", true));
+      html += '<div class="trfe-hint">Manuel hentning følger bilens drivmiddel: benzinbil henter benzin, dieselbil diesel, elbil el og plug-in-hybrid benzin samt el. Slå valget fra for at hente alle typer. Automatisk intervalhentning henter altid alle typer, så biler du tilføjer senere også får data.</div>';
       html += "<details><summary>Avanceret</summary>";
       html += '<div class="trfe-hint">Positions-enhed</div><input type="text" data-key="location_entity" value="' +
         esc(c.location_entity || "") + '" placeholder="device_tracker.din_telefon">';

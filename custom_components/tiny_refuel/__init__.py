@@ -49,7 +49,7 @@ async def async_setup_entry(hass: HomeAssistant, entry) -> bool:
     entry.runtime_data = manager
 
     async def refresh(call: ServiceCall):
-        manager.start_refresh()
+        manager.start_refresh(getattr(call, "data", {}).get("fuel_types"))
 
     hass.services.async_register(DOMAIN, "refresh", refresh)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

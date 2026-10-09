@@ -46,10 +46,19 @@ class RefuelManager:
             except Exception:  # One entity must not break the collection job.
                 _LOGGER.exception("Tiny Refuel listener failed")
 
-    def start_refresh(self):
+    def start_refresh(self, fuel_types=None):
         """Schedule once; repeated button/service calls share the running job."""
         if self.closed or self.refreshing:
             return
+        if fuel_types is not None:
+            allowed = {"benzin", "diesel", "el"}
+            if not isinstance(fuel_types, (list, tuple, set)):
+                fuel_types = None
+            else:
+                fuel_types = sorted(set(fuel_types) & allowed)
+            if not fuel_types:
+                fuel_types = None
+        self._requested_fuel_types = fuel_types
         self.refreshing = True
         self.progress = {"phase": "starting", "provider": "Tiny Refuel", "station": None}
         self.last_error = None
@@ -61,7 +70,8 @@ class RefuelManager:
         try:
             if self._collector_supports_progress:
                 data = await self.hass.async_add_executor_job(
-                    self.collector, self.data_dir, self._update_progress)
+                    self.collector, self.data_dir, self._update_progress,
+                    getattr(self, "_requested_fuel_types", None))
             else:
                 data = await self.hass.async_add_executor_job(self.collector, self.data_dir)
             if not isinstance(data, dict) or not data.get("updated") or not (data.get("stations") or data.get("ev")):

@@ -41,11 +41,11 @@ vis_el: true
 vis_andet: true
 ```
 
-Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Scrape alle data** i kortet eller integrationens knap starter en fælles opdatering.
+Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Hent data** i kortet eller integrationens knap starter en fælles opdatering.
 
 Under hentning viser kortet den aktuelle udbyder og, når stationer eller adresser behandles enkeltvis, den aktuelle station/adresse. Status dækker benzin, diesel og el. Kortets layout tilpasser sig kortets bredde samt skærmens stående eller liggende format. I UI-editoren kan hele kortets YAML vises og kopieres.
 
-Scrape-knappen kan skjules under punktet **Scrape alle data** i UI-editoren. Bilvælgerens knapper er gjort mindre, så de bruger mindre plads.
+Hent-knappen kan skjules under punktet **Hent data** i UI-editoren. Her kan du også begrænse en manuel hentning til den valgte bils drivmiddel. En benzinbil henter benzin, en dieselbil diesel, en elbil el og en plug-in-hybrid både benzin og el. Slås begrænsningen fra, hentes alle typer. Automatisk intervalhentning henter fortsat alle typer, så nye biler også får data. Data for fravalgte typer bevares mellem hentninger. Nogle brændstofkilder leverer benzin- og dieselpriser samlet, så de kan stadig blive hentet sammen.
 
 Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps og abonnementer hentes fra officielle udbydersider højst én gang om ugen og vises med kilde og hentetid. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
 
