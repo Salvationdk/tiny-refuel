@@ -47,6 +47,8 @@ Under hentning viser kortet den aktuelle udbyder og, når stationer eller adress
 
 Scrape-knappen kan skjules under punktet **Scrape alle data** i UI-editoren. Bilvælgerens knapper er gjort mindre, så de bruger mindre plads.
 
+Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps og abonnementer hentes fra officielle udbydersider højst én gang om ugen og vises med kilde og hentetid. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
+
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text

@@ -150,17 +150,7 @@
     { key: "ionity", brand: "Ionity", img: "logo-ionity.svg", has100: false, electricOnly: true },
   ];
 
-  var FORDELE = {
-    circle_k: "extra-app: op til 20 øre/L efter besøgstal",
-    ok: "OK-app + Coop-medlemskab: bonus pr. liter",
-    q8: "Q8 Smile-point kan veksles til brændstofrabat",
-    shell: "Shell App/Card: faste øre-rabatter pr. liter",
-    goon: "Go'on App + Klubkort støtter lokal forening",
-    uno_x: "Uno-X app + Forbrugsforeningskort: rabat i procent",
-    ingo: "Ingen bonusordning — altid lav pris",
-    f24: "Lavpriskæde uden bonusprogram",
-    oil: "OIL Kundekort til hurtig selvbetjening",
-  };
+  var FORDELE = {};
 
   function cfgGet(cfg, key, def) {
     if (cfg && cfg[key] !== undefined && cfg[key] !== null) return cfg[key];
@@ -796,7 +786,8 @@
             '" href="' + link + '" rel="noopener" title="' + esc(title) + '"><img src="/tiny_refuel/static/logos/' +
             row.b.img + '" alt="' + esc(row.b.brand) + '"></a></div>';
           var sub = "";
-          var fbtn = (visAndet && FORDELE[row.b.key])
+          var benefitEntry = this._benefitEntry(row.b.key);
+          var fbtn = (visAndet && benefitEntry)
             ? '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(row.b.key) + '" title="Se kundefordele">★ Fordele</a>'
             : "";
           if (row.liste) {
@@ -812,10 +803,7 @@
           if (row.locationNote) {
             sub += '<div class="trf-station"><span class="trf-subtxt">' + esc(row.locationNote) + '</span></div>';
           }
-          if (this._openFordel === row.b.key && FORDELE[row.b.key]) {
-            sub += '<div class="trf-fordel-box"><b>' + esc(row.b.brand) +
-              " kundefordele:</b><br>" + esc(FORDELE[row.b.key]) + "</div>";
-          }
+          if (benefitEntry) sub += this._benefitBox(row.b.key, row.b.brand, benefitEntry);
           body += '<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
             logo + cells + kmCell + sub + "</div>";
         }
@@ -1008,6 +996,23 @@
       return !!(ev.address || (ev.name && this._evCoords(ev)));
     }
 
+    _benefitEntry(key, fallbackText) {
+      var all = this._data && this._data.benefits;
+      var item = all && all[key];
+      if (item && (item.summary || item.source_url)) return item;
+      return fallbackText ? { summary: fallbackText, source_url: null, status: "source_only" } : null;
+    }
+
+    _benefitBox(key, brand, item) {
+      if (!item) return "";
+      var text = item.summary || "Se udbyderens officielle side for aktuelle fordele, app og abonnementsvilkår.";
+      var checked = item.fetched_at ? "<br><small>Hentet: " + esc(item.fetched_at.slice(0, 10)) +
+        (item.status === "stale" ? " · gemte oplysninger" : "") + "</small>" : "";
+      var source = item.source_url ? ' <a href="' + esc(item.source_url) + '" target="_blank" rel="noopener">Officiel kilde</a>' : "";
+      return this._openFordel === key ? '<div class="trf-fordel-box"><b>' + esc(brand) + " · fordele, app og abonnement:</b><br>" +
+        esc(text) + source + checked + "</div>" : "";
+    }
+
     _nearestEvHtml(loc) {
       if (!loc) return '<div class="trf-em">Nærmeste ladested: position mangler. Vælg en positions-enhed i kortets editor.</div>';
       var entries = this._evEntries(), nearest = null;
@@ -1025,24 +1030,12 @@
 
     _evBenefits(ev, part) {
       if (!this._effVis().andet) return '';
-      var brand = this._evBrandKey(ev.brand), key = 'el_' + brand;
-      // Oplysninger kontrolleret 2026-10-08; aktuelle betingelser findes hos selskabet.
-      var benefits = {
-        circle_k: { text: 'Circle K extra giver medlemsfordele på opladning. Se den aktuelle medlemspris og betingelser hos Circle K.',
-          url: 'https://www.circlek.dk/opladning/opladningskort' },
-        ok: { text: '10 % rabat på offentlig opladning kræver OK Ladepakke med serviceaftale, OK Kort og betaling via OK-appen.',
-          url: 'https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat' },
-        uno_x: { text: 'Opladning uden abonnement. Uno-X Privatkort giver automatisk rabat på lynladning; se gældende vilkår hos Uno-X.',
-          url: 'https://www.unoxmobility.dk/privat/produkter/opladning/lad-uden-abonnement' }
-      };
-      var b = benefits[brand];
-      if (!b && typeof ev.benefits === 'string' && ev.benefits.trim()) b = { text: ev.benefits };
-      if (!b) return '';
-      var html = part === 'box' ? '' : '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(key) + '" title="Se ladefordele">★ Fordele</a>';
-      if (part === 'button') return html;
-      if (this._openFordel === key) html += '<div class="trf-fordel-box"><b>' + esc(ev.brand) + ' ladefordele:</b><br>' + esc(b.text) +
-        (b.url ? ' <a href="' + esc(b.url) + '" target="_blank" rel="noopener">Se vilkår</a>' : '') + '</div>';
-      return html;
+      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand, ev.benefits);
+      if (!item) return '';
+      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(brand) + '" title="Se ladefordele">★ Fordele</a>';
+      if (part === 'button') return button;
+      if (part === 'box') return this._benefitBox(brand, ev.brand, item);
+      return button + this._benefitBox(brand, ev.brand, item);
     }
 
     _teslaPricesHtml(ev) {

@@ -26,6 +26,19 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
+from types import SimpleNamespace
+
+if __package__:
+    from . import benefits as benefit_sources
+    from .providers import electric as electric_providers
+    from .providers import fuel as fuel_providers
+else:  # Keep the scraper's standalone test/CLI import path working.
+    _PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.insert(0, _PACKAGE_DIR)
+    import benefits as benefit_sources
+    from providers import electric as electric_providers
+    from providers import fuel as fuel_providers
+    sys.path.pop(0)
 
 ROOT = os.environ.get("TINY_REFUEL_ROOT", "/config")
 WWW_DIR = os.path.join(ROOT, ".storage", "tiny_refuel")
@@ -1374,6 +1387,13 @@ def _report_progress(callback, phase, provider, station=None, current=None, tota
               "current": current, "total": total})
 
 
+def fetch_benefits(previous=None, progress_callback=None):
+    """Refresh separate provider benefit snippets and retain the last good cache."""
+    return benefit_sources.update(get_text, load_json, save_json,
+                                  os.path.join(WWW_DIR, "fordele-cache.json"),
+                                  progress_callback=progress_callback, fallback=previous)
+
+
 def _collect(progress_callback=None):
     errors = []
     prev = load_json(OUT, {})
@@ -1389,75 +1409,25 @@ def _collect(progress_callback=None):
             prev_hist[key + "|100"] = s["h100"][-30:]
     today = time.strftime("%Y-%m-%d", time.gmtime())
 
-    _report_progress(progress_callback, "benzin/diesel", "Circle K og Ingo")
-    ck_ingo, ck_ok = fetch_ck_ingo(errors)
-    _report_progress(progress_callback, "benzin/diesel", "F24 og Q8")
-    f24q8, fq_ok = fetch_f24q8(errors)
-    _report_progress(progress_callback, "benzin/diesel", "Go'on")
-    goon, go_ok = fetch_goon(errors)
-    _report_progress(progress_callback, "benzin/diesel/el", "Uno-X")
-    (unox, unox_chargers), ux_ok = fetch_unox(errors)
-    _report_progress(progress_callback, "benzin/diesel", "Shell")
-    shell, sh_ok = fetch_shell(errors)
-    _report_progress(progress_callback, "benzin/diesel/el", "OK")
-    ok_list, ok_ev, ok_list_ok = fetch_ok(errors)
-    _report_progress(progress_callback, "benzin/diesel", "OK")
-    ok_rows, ok_ok = fetch_ok_fuel(errors)
-    if not ok_rows:
-        ok_rows = ok_list
-    _report_progress(progress_callback, "el", "Q8")
-    q8_ev = fetch_q8_el(errors)
-    _report_progress(progress_callback, "el", "Circle K")
-    circlek_ev = fetch_circlek_ev_prices(errors)
-    _report_progress(progress_callback, "el", "E.ON")
-    eon_tariffs = fetch_eon_ev_tariffs(errors)
-    _report_progress(progress_callback, "el", "IONITY")
-    ionity_tariffs = fetch_ionity_ev_tariffs(errors)
-    _report_progress(progress_callback, "benzin/diesel", "OIL")
-    oil_rows, oil_ok = fetch_oil_fuel(errors)
-    oil_list_ok = True
-    if not oil_rows:
-        oil_rows, oil_list_ok = fetch_oil(errors)
-    _report_progress(progress_callback, "el", "Clever")
-    clever_ev, clever_status = fetch_public_ev_locations(
-        CLEVER_LOCATIONS_URL, normalize_clever_locations, "clever.dk", prev.get("ev", []), errors)
-    _report_progress(progress_callback, "el", "E.ON")
-    eon_ev, eon_status = fetch_public_ev_locations(
-        EON_LOCATIONS_URL, normalize_eon_locations, "edri.com", prev.get("ev", []), errors)
-    _report_progress(progress_callback, "el", "Tesla")
-    tesla_ev, tesla_status = fetch_public_ev_locations(
-        TESLA_LOCATIONS_URL, normalize_tesla_locations, "tesla.com", prev.get("ev", []), errors, json_feed=False)
-    enrich_tesla_prices(tesla_ev, tesla_status, prev.get("ev", []), errors, progress_callback)
-    _report_progress(progress_callback, "el", "IONITY")
-    ionity_ev, ionity_status = fetch_public_ev_locations(
-        IONITY_LOCATIONS_URL, normalize_ionity_locations, "ionity.eu", prev.get("ev", []), errors)
-    _report_progress(progress_callback, "el", "OK")
-    ok_locations, ok_status = fetch_public_ev_locations(
-        OK_LOCATIONS_API, normalize_ok_locations, "geo-emobility.okcloud.dk", prev.get("ev", []), errors,
-        payload_loader=load_ok_locations)
-    _report_progress(progress_callback, "el", "OIL")
-    oil_locations, oil_status = fetch_public_ev_locations(
-        OIL_STATIONS_PAGE, normalize_oil_charging, "oil-charging", prev.get("ev", []), errors,
-        payload_loader=load_oil_charging)
-    _report_progress(progress_callback, "el", "Shell Recharge")
-    shell_locations, shell_status = fetch_public_ev_locations(
-        SHELL_CHARGING_API, normalize_shell_charging, "shell-charging", prev.get("ev", []), errors,
-        payload_loader=load_shell_charging)
-    _report_progress(progress_callback, "el", "Circle K")
-    circlek_locations, circlek_status = fetch_public_ev_locations(
-        CK_CHARGING_API, normalize_circlek_charging, "circlek-charging", prev.get("ev", []), errors,
-        payload_loader=lambda: load_circlek_charging(progress_callback))
+    api = sys.modules.get(__name__) or SimpleNamespace(**globals())
+    fuel_data = fuel_providers.collect(api, errors, progress_callback)
+    electric_data = electric_providers.collect(
+        api, prev.get("ev", []), errors, progress_callback)
+    ok_ev = fuel_data["ok_tariffs"]
+    unox_chargers = fuel_data["unox_chargers"]
+    src_ok = fuel_data["source_ok"]
+    q8_ev = electric_data["q8_tariffs"]
+    circlek_ev = electric_data["circlek_tariffs"]
+    eon_tariffs = electric_data["eon_tariffs"]
+    ionity_tariffs = electric_data["ionity_tariffs"]
+    ev_locations = electric_data["locations"]
+    ev_statuses = electric_data["statuses"]
 
     # resilience: keep previous stations for sources that failed this run
     prev_by_src = {}
     for s in prev.get("stations", []):
         prev_by_src.setdefault(s.get("source"), []).append(s)
-    src_ok = {"api.circlek.com": ck_ok, "f24.dk": fq_ok,
-              "goon.nu": go_ok, "unoxmobility.dk": ux_ok,
-              "shellservice.dk": sh_ok,
-              "ok.dk": ok_list_ok, "oil-tankstationer.dk": oil_list_ok,
-              "mobility-prices.ok.dk": ok_ok, "oil-fuel-api": oil_ok}
-    fresh = ck_ingo + f24q8 + goon + unox + shell + ok_rows + oil_rows
+    fresh = fuel_data["stations"]
     have_src = {s.get("source") for s in fresh}
     for src, ok in src_ok.items():
         if not ok and src in prev_by_src:
@@ -1518,14 +1488,7 @@ def _collect(progress_callback=None):
                    "address": c["address"], "lat": c["lat"], "lon": c["lon"],
                    "kwh": None, "plugs": c.get("plugs"),
                    "app_only": True, "lu": None})
-    ev.extend(clever_ev)
-    ev.extend(eon_ev)
-    ev.extend(tesla_ev)
-    ev.extend(ionity_ev)
-    ev.extend(ok_locations)
-    ev.extend(oil_locations)
-    ev.extend(shell_locations)
-    ev.extend(circlek_locations)
+    ev.extend(ev_locations)
 
     def mean(vals):
         vals = [v for v in vals if v is not None]
@@ -1539,6 +1502,8 @@ def _collect(progress_callback=None):
         "kwh": mean([s.get("kwh") for s in pump]),
     }
 
+    provider_benefits, benefit_errors = fetch_benefits(prev.get("benefits", {}), progress_callback)
+
     save_json(OUT, {
         "project": "Tiny Refuel",
         "scraper_version": "v0.1",
@@ -1547,9 +1512,9 @@ def _collect(progress_callback=None):
         "snittet": snittet,
         "stations": stations,
         "ev": ev,
-        "ev_sources": {"clever": clever_status, "eon": eon_status,
-                       "tesla": tesla_status, "ionity": ionity_status, "ok": ok_status, "oil": oil_status,
-                       "shell": shell_status, "circle_k": circlek_status},
+        "benefits": provider_benefits,
+        "benefit_errors": benefit_errors,
+        "ev_sources": ev_statuses,
     })
     # Partial errors must not fail the sensor: data is still written and the
     # errors array inside priser-og-ladesteder.json shows what missed. Only fail on no data.
