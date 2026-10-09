@@ -43,10 +43,14 @@ vis_andet: true
 
 Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Scrape alle data** i kortet eller integrationens knap starter en fælles opdatering.
 
+Under hentning viser kortet den aktuelle udbyder og, når stationer eller adresser behandles enkeltvis, den aktuelle station/adresse. Status dækker benzin, diesel og el. Kortets layout tilpasser sig kortets bredde samt skærmens stående eller liggende format. I UI-editoren kan hele kortets YAML vises og kopieres.
+
+Scrape-knappen kan skjules under punktet **Scrape alle data** i UI-editoren. Bilvælgerens knapper er gjort mindre, så de bruger mindre plads.
+
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.3
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.4
 ```
 
 ## Eksempler fra v0.1
@@ -171,7 +175,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.1.3**. Kortets footer viser **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.1.4**. Kortets footer viser **Tiny Refuel v0.1**.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 

@@ -25,7 +25,14 @@ const Card = registry.get('tiny-refuel-card');
 assert.ok(Card);
 assert.ok(registry.get('tiny-refuel-card-editor'));
 assert.equal(window.customCards[0].type, 'tiny-refuel-card');
+const editor = new (registry.get('tiny-refuel-card-editor'))();
+editor.setConfig({ vis_scrape_knap: false });
+assert.ok(editor.innerHTML.includes('data-key="vis_scrape_knap"'));
+assert.ok(editor.innerHTML.includes('Vis knappen på kortet'));
 const card = new Card();
+assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');
+assert.equal(card._progressText({ phase: 'el', provider: 'Tesla', station: 'Supercharger Aarhus', current: 2, total: 7 }),
+  'Henter el fra Tesla · Supercharger Aarhus (2/7)…');
 card._config = { vis_benzin: false, vis_diesel: false, vis_el: true, vis_andet: true };
 card._render = () => {};
 card._data = { updated: '2026-01-01T00:00:00Z', ev: [

@@ -16,11 +16,15 @@ class RefuelManager:
         self.hass = hass
         self.data_dir = data_dir
         self.collector = collector or scraper.collect
+        # Injected collectors are commonly small test doubles with the historic
+        # one argument signature. The built-in scraper receives progress updates.
+        self._collector_supports_progress = collector is None
         self.data = {"project": "Tiny Refuel", "scraper_version": CARD_VERSION,
                      "stations": [], "ev": [], "errors": [], "ev_sources": {}}
         self.refreshing = False
         self.last_error = None
         self.last_attempt = None
+        self.progress = None
         self.task = None
         self.closed = False
         self.listeners: set[Callable] = set()
@@ -47,6 +51,7 @@ class RefuelManager:
         if self.closed or self.refreshing:
             return
         self.refreshing = True
+        self.progress = {"phase": "starting", "provider": "Tiny Refuel", "station": None}
         self.last_error = None
         self.last_attempt = datetime.now(timezone.utc).isoformat()
         self._notify()
@@ -54,7 +59,11 @@ class RefuelManager:
 
     async def _refresh(self):
         try:
-            data = await self.hass.async_add_executor_job(self.collector, self.data_dir)
+            if self._collector_supports_progress:
+                data = await self.hass.async_add_executor_job(
+                    self.collector, self.data_dir, self._update_progress)
+            else:
+                data = await self.hass.async_add_executor_job(self.collector, self.data_dir)
             if not isinstance(data, dict) or not data.get("updated") or not (data.get("stations") or data.get("ev")):
                 raise ValueError("Ingen brugbare priser eller ladesteder i hentningen")
             self.data = data
@@ -65,12 +74,19 @@ class RefuelManager:
             _LOGGER.exception("Tiny Refuel collection failed")
         finally:
             self.refreshing = False
+            self.progress = None
             if not self.closed:
                 self._notify()
 
     def snapshot(self):
         return {**self.data, "refreshing": self.refreshing,
-                "last_error": self.last_error, "last_attempt": self.last_attempt}
+                "last_error": self.last_error, "last_attempt": self.last_attempt,
+                "progress": self.progress}
+
+    def _update_progress(self, progress):
+        """Called from the executor thread; snapshots read this small immutable value."""
+        if isinstance(progress, dict):
+            self.progress = dict(progress)
 
     async def async_close(self):
         # Do not cancel an executor job and then start another writer during reload.

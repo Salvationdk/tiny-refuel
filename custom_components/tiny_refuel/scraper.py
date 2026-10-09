@@ -316,7 +316,7 @@ def normalize_tesla_detail(page, site_id):
     return result
 
 
-def enrich_tesla_prices(rows, status, previous, errors):
+def enrich_tesla_prices(rows, status, previous, errors, progress_callback=None):
     """Bounded public-page requests; keep locations if individual prices fail."""
     if status.get("status") != "ok" or not rows:
         return
@@ -341,6 +341,9 @@ def enrich_tesla_prices(rows, status, previous, errors):
     with ThreadPoolExecutor(max_workers=3) as executor:
         for i in range(0, len(rows), 3):
             batch = rows[i:i + 3]
+            for offset, row in enumerate(batch):
+                _report_progress(progress_callback, "el", "Tesla", row.get("name") or row.get("address"),
+                                 i + offset + 1, len(rows))
             results = ([(None, "price lookup paused", False)] * len(batch)
                        if stopped or time.monotonic() - started > 180 else list(executor.map(detail, batch)))
             for row, (result, error, blocked) in zip(batch, results):
@@ -550,7 +553,7 @@ def normalize_shell_charging(payload):
     return rows
 
 
-def load_circlek_charging():
+def load_circlek_charging(progress_callback=None):
     params = {"latitude": 56.26392, "longitude": 9.501785, "distance": 500000,
               "zoomLevel": 20, "cpoNames": "CIRCLEK"}
     data = json.loads(get_text(CK_CHARGING_API + "?" + urllib.parse.urlencode(params)))
@@ -574,7 +577,12 @@ def load_circlek_charging():
         for index in range(0, len(ids), 6):
             if time.monotonic() - started > 360:
                 raise ValueError("Circle K: detail download time limit reached")
-            records.extend(executor.map(detail, ids[index:index + 6]))
+            batch = ids[index:index + 6]
+            for offset, pool_id in enumerate(batch):
+                pool = pools[pool_id]
+                _report_progress(progress_callback, "el", "Circle K", pool.get("displayName") or pool_id,
+                                 index + offset + 1, len(ids))
+            records.extend(executor.map(detail, batch))
     return records
 
 
@@ -1296,7 +1304,7 @@ def fetch_oil(errors):
 
 # ---------- Nominatim geocoding (cached, bounded) ----------
 
-def geocode_new(addresses, errors, brands=None):
+def geocode_new(addresses, errors, brands=None, progress_callback=None):
     cache = load_json(ADDRESS_CACHE, {})
     now = int(time.time())
     fresh = dict(cache)
@@ -1321,7 +1329,9 @@ def geocode_new(addresses, errors, brands=None):
         if queue:
             active.append(queue)
     made = 0
-    for addr in pending:
+    brand_by_address = {norm_addr(addr): (brands[i] if brands is not None else "Station")
+                        for i, addr in enumerate(addresses)}
+    for index, addr in enumerate(pending, 1):
         if made >= NOM_MAX_NEW:
             break
         key = norm_addr(addr)
@@ -1329,6 +1339,8 @@ def geocode_new(addresses, errors, brands=None):
         if hit and (hit.get("lat") or now - hit.get("ts", 0) < 7 * 86400):
             continue
         q = re.sub(r"\s*danmark\s*$", "", addr.strip(), flags=re.I) + ", Danmark"
+        _report_progress(progress_callback, "geokodning", brand_by_address.get(key, "Station"),
+                         addr, index, len(pending))
         params = urllib.parse.urlencode(
             {"q": q, "format": "json", "limit": 1, "countrycodes": "dk"})
         try:
@@ -1355,7 +1367,14 @@ def geocode_new(addresses, errors, brands=None):
 
 # ---------- main ----------
 
-def _collect():
+def _report_progress(callback, phase, provider, station=None, current=None, total=None):
+    if callback is None:
+        return
+    callback({"phase": phase, "provider": provider, "station": station,
+              "current": current, "total": total})
+
+
+def _collect(progress_callback=None):
     errors = []
     prev = load_json(OUT, {})
     prev_prices = {}
@@ -1370,44 +1389,64 @@ def _collect():
             prev_hist[key + "|100"] = s["h100"][-30:]
     today = time.strftime("%Y-%m-%d", time.gmtime())
 
+    _report_progress(progress_callback, "benzin/diesel", "Circle K og Ingo")
     ck_ingo, ck_ok = fetch_ck_ingo(errors)
+    _report_progress(progress_callback, "benzin/diesel", "F24 og Q8")
     f24q8, fq_ok = fetch_f24q8(errors)
+    _report_progress(progress_callback, "benzin/diesel", "Go'on")
     goon, go_ok = fetch_goon(errors)
+    _report_progress(progress_callback, "benzin/diesel/el", "Uno-X")
     (unox, unox_chargers), ux_ok = fetch_unox(errors)
+    _report_progress(progress_callback, "benzin/diesel", "Shell")
     shell, sh_ok = fetch_shell(errors)
+    _report_progress(progress_callback, "benzin/diesel/el", "OK")
     ok_list, ok_ev, ok_list_ok = fetch_ok(errors)
+    _report_progress(progress_callback, "benzin/diesel", "OK")
     ok_rows, ok_ok = fetch_ok_fuel(errors)
     if not ok_rows:
         ok_rows = ok_list
+    _report_progress(progress_callback, "el", "Q8")
     q8_ev = fetch_q8_el(errors)
+    _report_progress(progress_callback, "el", "Circle K")
     circlek_ev = fetch_circlek_ev_prices(errors)
+    _report_progress(progress_callback, "el", "E.ON")
     eon_tariffs = fetch_eon_ev_tariffs(errors)
+    _report_progress(progress_callback, "el", "IONITY")
     ionity_tariffs = fetch_ionity_ev_tariffs(errors)
+    _report_progress(progress_callback, "benzin/diesel", "OIL")
     oil_rows, oil_ok = fetch_oil_fuel(errors)
     oil_list_ok = True
     if not oil_rows:
         oil_rows, oil_list_ok = fetch_oil(errors)
+    _report_progress(progress_callback, "el", "Clever")
     clever_ev, clever_status = fetch_public_ev_locations(
         CLEVER_LOCATIONS_URL, normalize_clever_locations, "clever.dk", prev.get("ev", []), errors)
+    _report_progress(progress_callback, "el", "E.ON")
     eon_ev, eon_status = fetch_public_ev_locations(
         EON_LOCATIONS_URL, normalize_eon_locations, "edri.com", prev.get("ev", []), errors)
+    _report_progress(progress_callback, "el", "Tesla")
     tesla_ev, tesla_status = fetch_public_ev_locations(
         TESLA_LOCATIONS_URL, normalize_tesla_locations, "tesla.com", prev.get("ev", []), errors, json_feed=False)
-    enrich_tesla_prices(tesla_ev, tesla_status, prev.get("ev", []), errors)
+    enrich_tesla_prices(tesla_ev, tesla_status, prev.get("ev", []), errors, progress_callback)
+    _report_progress(progress_callback, "el", "IONITY")
     ionity_ev, ionity_status = fetch_public_ev_locations(
         IONITY_LOCATIONS_URL, normalize_ionity_locations, "ionity.eu", prev.get("ev", []), errors)
+    _report_progress(progress_callback, "el", "OK")
     ok_locations, ok_status = fetch_public_ev_locations(
         OK_LOCATIONS_API, normalize_ok_locations, "geo-emobility.okcloud.dk", prev.get("ev", []), errors,
         payload_loader=load_ok_locations)
+    _report_progress(progress_callback, "el", "OIL")
     oil_locations, oil_status = fetch_public_ev_locations(
         OIL_STATIONS_PAGE, normalize_oil_charging, "oil-charging", prev.get("ev", []), errors,
         payload_loader=load_oil_charging)
+    _report_progress(progress_callback, "el", "Shell Recharge")
     shell_locations, shell_status = fetch_public_ev_locations(
         SHELL_CHARGING_API, normalize_shell_charging, "shell-charging", prev.get("ev", []), errors,
         payload_loader=load_shell_charging)
+    _report_progress(progress_callback, "el", "Circle K")
     circlek_locations, circlek_status = fetch_public_ev_locations(
         CK_CHARGING_API, normalize_circlek_charging, "circlek-charging", prev.get("ev", []), errors,
-        payload_loader=load_circlek_charging)
+        payload_loader=lambda: load_circlek_charging(progress_callback))
 
     # resilience: keep previous stations for sources that failed this run
     prev_by_src = {}
@@ -1429,8 +1468,10 @@ def _collect():
             errors.append({"stale_reused": src})
 
     missing_coords = [s for s in fresh if s.get("address") and s.get("lat") is None]
-    cache = geocode_new([s["address"] for s in missing_coords], errors,
-                        brands=[s["brand"] for s in missing_coords])
+    geocode_args = {"brands": [s["brand"] for s in missing_coords]}
+    if progress_callback is not None:
+        geocode_args["progress_callback"] = progress_callback
+    cache = geocode_new([s["address"] for s in missing_coords], errors, **geocode_args)
     stations = []
     for s in fresh:
         if s.get("lat") is None and s.get("address"):
@@ -1515,13 +1556,13 @@ def _collect():
     return 0 if stations or ev else 1
 
 
-def collect(data_dir):
+def collect(data_dir, progress_callback=None):
     """Called only in the integration's executor job, never on HA's event loop."""
     global WWW_DIR, OUT, ADDRESS_CACHE, STATION_CACHE
     WWW_DIR = str(data_dir)
     OUT = os.path.join(WWW_DIR, "priser-og-ladesteder.json")
     ADDRESS_CACHE = os.path.join(WWW_DIR, "adresse-cache.json")
     STATION_CACHE = os.path.join(WWW_DIR, "stations-cache.json")
-    if _collect() != 0:
+    if _collect(progress_callback) != 0:
         raise ValueError("Ingen brugbare priser eller ladesteder")
     return load_json(OUT, {})
