@@ -52,7 +52,7 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps o
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.4
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.5
 ```
 
 ## Eksempler fra v0.1
