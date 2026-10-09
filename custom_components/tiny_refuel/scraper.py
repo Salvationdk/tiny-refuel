@@ -256,9 +256,109 @@ def normalize_tesla_locations(page):
                      "lat": coords[0], "lon": coords[1], "kind": "DC", "kwh": None,
                      "app_only": True, "lu": None, "source": "tesla.com",
                      "location_id": str(location["uuid"]), "source_url": TESLA_LOCATIONS_URL,
+                     "tesla_site_slug": str(location.get("location_url_slug") or ""),
+                     "open_to_non_tesla": others,
                      "access_note": "Åben for andre elbiler; kontrollér stik og bil i Tesla-appen" if others is True
                      else "Kun Tesla" if others is False else "Adgang for andre bilmærker ikke oplyst"})
     return rows
+
+
+
+def normalize_tesla_detail(page, site_id):
+    """Read public Danish site pricebooks; never mix membership or minute fees."""
+    document = TeslaPageData()
+    document.feed(page)
+    props = json.loads("".join(document.parts)).get("props", {}).get("pageProps", {})
+    detail = (props.get("formattedData") or {}).get("chargerDetails") or {}
+    if (str(props.get("locationSlug")) != str(site_id)
+            or (detail.get("address") or {}).get("countryCode") != "DK"
+            or detail.get("openToPublic") is not True):
+        raise ValueError("Tesla: detail site/country/access mismatch")
+    prices = {"member": [], "non_member": []}
+    seen = set()
+    for book in detail.get("effectivePricebooks") or []:
+        if not isinstance(book, dict):
+            continue
+        value = to_float(book.get("rateBase"))
+        if (book.get("feeType") != "CHARGING" or book.get("currencyCode") != "DKK"
+                or str(book.get("uom", "")).lower() != "kwh" or value is None or value <= 0
+                or any(to_float(book.get(k)) not in (None, 0) for k in
+                       ("rateTier1", "rateTier2", "rateMinTier1", "rateMinTier2", "rateMinTier3", "rateMinTier4"))
+                or book.get("minSiteOccupancy") is not None or book.get("maxSiteOccupancy") is not None):
+            continue
+        if book.get("vehicleMakeType") == "TSLA" and book.get("isMemberPricebook") is True:
+            group = "member"
+        elif (book.get("vehicleMakeType") == "NTSLA" and book.get("isMemberPricebook") is False
+              and detail.get("openToNonTeslas") is True):
+            group = "non_member"
+        else:
+            continue
+        rate = {"price": value, "start": str(book.get("startTime") or ""),
+                "end": str(book.get("endTime") or ""), "days": str(book.get("days") or ""),
+                "time_of_use": book.get("isTou") is True}
+        key = (group, json.dumps(rate, sort_keys=True))
+        if key not in seen:
+            prices[group].append(rate)
+            seen.add(key)
+    # A generic single kWh value would misrepresent two tariffs or a time schedule.
+    result = {"tesla_prices": prices, "kwh": None,
+              "app_only": not any(prices.values()),
+              "open_to_non_tesla": detail.get("openToNonTeslas"),
+              "tesla_price_updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+              "tesla_price_stale": False}
+    for field, target in (("maxPowerKw", "power_kw"), ("publicStallCount", "plugs")):
+        value = to_float(detail.get(field))
+        if value is not None and value > 0:
+            result[target] = value
+    return result
+
+
+def enrich_tesla_prices(rows, status, previous, errors):
+    """Bounded public-page requests; keep locations if individual prices fail."""
+    if status.get("status") != "ok" or not rows:
+        return
+    old = {str(row.get("location_id")): row for row in previous
+           if isinstance(row, dict) and row.get("source") == "tesla.com"}
+    failures = []
+    started = time.monotonic()
+    stopped = False
+
+    def detail(row):
+        site_id = row.get("tesla_site_slug", "")
+        if not re.fullmatch(r"[A-Za-z0-9_-]+", site_id):
+            return None, "missing public site id", False
+        url = "https://www.tesla.com/da_DK/findus/location/supercharger/" + site_id
+        try:
+            result = normalize_tesla_detail(get_text(url, timeout=20), site_id)
+            result["source_url"] = url
+            return result, None, False
+        except Exception as exc:  # Preserve locations even when price pages fail.
+            return None, str(exc)[:160], getattr(exc, "code", None) in (403, 429)
+
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        for i in range(0, len(rows), 3):
+            batch = rows[i:i + 3]
+            results = ([(None, "price lookup paused", False)] * len(batch)
+                       if stopped or time.monotonic() - started > 180 else list(executor.map(detail, batch)))
+            for row, (result, error, blocked) in zip(batch, results):
+                if result is not None:
+                    row.update(result)
+                    row["access_note"] = ("Åben for andre elbiler; kontrollér stik og bil i Tesla-appen"
+                                          if row.get("open_to_non_tesla") is True else "Kun Tesla / adgang skal kontrolleres")
+                else:
+                    failures.append(error)
+                    cached = old.get(str(row.get("location_id")), {})
+                    if cached.get("tesla_prices"):
+                        for key in ("tesla_prices", "tesla_price_updated", "power_kw", "plugs"):
+                            if key in cached:
+                                row[key] = cached[key]
+                        row["tesla_price_stale"] = True
+                        row["app_only"] = not any(row["tesla_prices"].values())
+                stopped = stopped or blocked
+    status["prices_available"] = any(any(r.get("tesla_prices", {}).values()) for r in rows)
+    status["price_errors"] = len(failures)
+    if failures:
+        errors.append({"source": "tesla-prices", "error": "%d prisopslag mislykkedes: %s" % (len(failures), failures[0])})
 
 
 def normalize_ionity_locations(payload):
@@ -1214,6 +1314,7 @@ def _collect():
         EON_LOCATIONS_URL, normalize_eon_locations, "edri.com", prev.get("ev", []), errors)
     tesla_ev, tesla_status = fetch_public_ev_locations(
         TESLA_LOCATIONS_URL, normalize_tesla_locations, "tesla.com", prev.get("ev", []), errors, json_feed=False)
+    enrich_tesla_prices(tesla_ev, tesla_status, prev.get("ev", []), errors)
     ionity_ev, ionity_status = fetch_public_ev_locations(
         IONITY_LOCATIONS_URL, normalize_ionity_locations, "ionity.eu", prev.get("ev", []), errors)
     ok_locations, ok_status = fetch_public_ev_locations(

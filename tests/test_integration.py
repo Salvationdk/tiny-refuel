@@ -137,4 +137,15 @@ class SourceTests(unittest.TestCase):
             self.assertTrue((path/'priser-og-ladesteder.json').exists());self.assertEqual(data['scraper_version'],'v0.1');self.assertEqual(len(data['stations'][0]['h95']),1)
 
 
+class TeslaCountTests(unittest.TestCase):
+    def test_two_tesla_tariffs_count_as_one_priced_location(self):
+        row = {'brand': 'Tesla', 'location_id': 't1', 'kwh': None, 'app_only': False,
+               'tesla_prices': {'member': [{'price': 2.6}], 'non_member': [{'price': 3.6}]}}
+        manager = SimpleNamespace(data={'ev': [row, dict(row)]})
+        self.assertEqual(RefuelManager.counts(manager), (1, 1))
+        row['tesla_prices'] = {'member': [], 'non_member': []}
+        manager.data = {'ev': [row]}
+        self.assertEqual(RefuelManager.counts(manager), (1, 0))
+
+
 if __name__=='__main__':unittest.main()

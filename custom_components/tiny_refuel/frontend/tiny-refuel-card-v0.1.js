@@ -1010,6 +1010,29 @@
       return html;
     }
 
+    _teslaPricesHtml(ev) {
+      var self = this, prices = ev.tesla_prices || {};
+      var result = [['member', 'Tesla/medlemmer'], ['non_member', 'Andre biler uden medlemskab']].map(function (pair) {
+        var rates = Array.isArray(prices[pair[0]]) ? prices[pair[0]].filter(function (r) {
+          return r && typeof r.price === 'number' && isFinite(r.price) && r.price > 0;
+        }) : [];
+        var values = rates.map(function (r) { return r.price; });
+        var text = values.length ? self._fmt(Math.min.apply(null, values)) : 'Pris ikke oplyst';
+        if (values.length && Math.max.apply(null, values) !== Math.min.apply(null, values)) text += '–' + self._fmt(Math.max.apply(null, values));
+        if (values.length) text += ' kr/kWh';
+        if (pair[0] === 'non_member' && ev.open_to_non_tesla === false) text = 'Ikke åben for andre biler';
+        var schedules = rates.filter(function (r) { return r.time_of_use || r.start || r.end || r.days; }).map(function (r) {
+          return [r.days, r.start && r.end ? r.start + '–' + r.end : 'Tidsvilkår: se Tesla-appen', self._fmt(r.price) + ' kr/kWh'].filter(Boolean).join(' · ');
+        });
+        return '<div style="margin-bottom:6px;white-space:normal"><span style="display:block;font-size:11px;line-height:1.3">' + pair[1] +
+          '</span><b style="font-size:14px">' + esc(text) + '</b>' +
+          schedules.map(function (t) { return '<span style="display:block;font-size:11px;line-height:1.3">' + esc(t) + '</span>'; }).join('') + '</div>';
+      }).join('');
+      if (ev.stale || ev.tesla_price_stale) result += '<div style="font-size:11px;white-space:normal">Gemte priser · seneste hentning fejlede</div>';
+      if (ev.tesla_price_updated) result += '<div style="font-size:10px;white-space:normal">Priser hentet ' + esc(new Date(ev.tesla_price_updated).toLocaleString('da-DK')) + '</div>';
+      return result;
+    }
+
     _evRow(ev, loc, count, inPopup, tariffs, companyGroup) {
       var coords = this._evCoords(ev);
       var km = loc && coords ? this._haversineKm(loc.lat, loc.lon, coords.lat, coords.lon) : null;
@@ -1019,7 +1042,13 @@
       var logoContent = logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(ev.brand) + '">' : esc(ev.brand);
       var title = query + (km !== null ? ' · ' + this._fmtKm(km) + ' km' : '');
       var price = typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0 ? this._fmt(ev.kwh) : 'pris i app';
+      if (ev.brand === 'Tesla') price = this._teslaPricesHtml(ev);
       var info = [ev.name || ev.brand, ev.address];
+      if (ev.brand === 'Tesla') {
+        info.push('Medlemsabonnement og eventuelle trængsels-/parkeringsgebyrer er ikke medregnet');
+        if (ev.tesla_price_stale) info.push('Gemte priser: seneste prisopslag fejlede');
+        if (ev.tesla_price_updated) info.push('priser hentet ' + new Date(ev.tesla_price_updated).toLocaleString('da-DK'));
+      }
       if (!ev.address && coords) info.push('gadeadresse ikke oplyst; navigation til koordinater');
       if (ev.access_note) info.push(ev.access_note);
       if (ev.kind) info.push(ev.kind);
@@ -1032,7 +1061,7 @@
       var age = this._fmtAge(ev.lu);
       return '<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px" title="' + esc(title) + '">' +
         '<div class="trf-logo"><a class="trf-navlink" data-waze="' + esc(ev.brand) + '" href="' + esc(link) + '" title="' + esc(title) + '">' + logoContent + '</a></div>' +
-        '<div class="trf-pcol"><span class="trf-price"><b>' + price + '</b></span></div>' +
+        '<div class="trf-pcol">' + (ev.brand === 'Tesla' ? price : '<span class="trf-price"><b>' + price + '</b></span>') + '</div>' +
         '<span class="trf-km' + (km !== null && km > 15 ? ' trf-far' : '') + '">' + (km !== null ? this._fmtKm(km) + ' km' : '–') +
         (age ? '<span class="trf-age">' + esc(age) + '</span>' : '') + '</span>' +
         this._evTariffsHtml(tariffs) + '<div class="trf-station"><span class="trf-subtxt">' + info.filter(Boolean).map(esc).join(' · ') + '</span>' +
@@ -1115,8 +1144,11 @@
         var coords = self._evCoords(ev);
         var key = ev.location_id || (coords ? coords.lat + ',' + coords.lon : String(ev.address).toLowerCase().trim());
         p.sites.add(key);
-        if (typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0 && !ev.app_only) p.priced.add(key);
-        if (ev.stale) p.stale.add(key);
+        var teslaPriced = ev.brand === 'Tesla' && ['member', 'non_member'].some(function (g) {
+          return ev.tesla_prices && Array.isArray(ev.tesla_prices[g]) && ev.tesla_prices[g].some(function (r) { return r && typeof r.price === 'number' && isFinite(r.price) && r.price > 0; });
+        });
+        if (!ev.app_only && (teslaPriced || (typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0))) p.priced.add(key);
+        if (ev.stale || ev.tesla_price_stale) p.stale.add(key);
       });
       var sites = 0, priced = 0, count = 0;
       providers.forEach(function (p) { sites += p.sites.size; priced += p.priced.size; if (p.sites.size || p.tariffs) count++; });
@@ -1157,7 +1189,7 @@
       var groups = new Map();
       for (var i = 0; i < stations.length; i++) {
         var item = stations[i], ev = item.ev;
-        var companyGroup = self._evBrandKey(ev.brand) === 'q8';
+        var companyGroup = ['q8', 'tesla'].includes(self._evBrandKey(ev.brand));
         var key = companyGroup ? ev.brand : ev.brand + '|' + (ev.kind || '') + '|' + (ev.app_only ? 'app' : ev.kwh);
         if (!groups.has(key)) groups.set(key, { ev: ev, count: 0, companyGroup: companyGroup });
         groups.get(key).count++;

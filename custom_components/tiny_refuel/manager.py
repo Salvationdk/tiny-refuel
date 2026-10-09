@@ -95,6 +95,11 @@ class RefuelManager:
             key = (row["brand"], location)
             sites.add(key)
             value = row.get("kwh")
-            if isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0 and not row.get("app_only"):
+            tesla_rates = row.get("tesla_prices") or {}
+            has_tesla_price = any(isinstance(rate, dict) and isinstance(rate.get("price"), (int, float))
+                                  and not isinstance(rate["price"], bool) and rate["price"] > 0
+                                  for group in ("member", "non_member") for rate in tesla_rates.get(group, []))
+            if not row.get("app_only") and (has_tesla_price or
+                    (isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0)):
                 priced.add(key)
         return len(sites), len(priced)

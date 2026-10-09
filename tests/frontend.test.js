@@ -111,3 +111,28 @@ for (const nav of ['waze', 'google']) {
   fuel._data.stations = [];
   assert.equal(fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell').v95, null);
 }
+
+// Tesla always shows two explicitly labelled tariffs, irrespective of car.
+{
+  const tesla = new Card();
+  tesla._config = { vis_el: true };
+  const site = { brand: 'Tesla', name: 'Test', address: 'Testvej 1', location_id: 't1', lat: 55.6, lon: 12.1,
+    open_to_non_tesla: true, app_only: false, kwh: null,
+    tesla_prices: { member: [{ price: 2.6 }], non_member: [{ price: 3.6 }] } };
+  tesla._data = { ev: [site, { ...site, location_id: 't2', address: 'Testvej 2' }] };
+  let html = tesla._evHtml({ lat: 55.6, lon: 12.1 });
+  for (const text of ['Tesla/medlemmer', 'Andre biler uden medlemskab', '2,60', '3,60', '2 med lokal elpris']) assert.ok(html.includes(text), text);
+  assert.equal((html.match(/logo-tesla.svg/g) || []).length, 1);
+  tesla._openEvBrand = 'Tesla';
+  assert.equal((tesla._evPopupHtml(null).match(/Tesla\/medlemmer/g) || []).length, 2);
+  site.tesla_prices.member.push({ price: 4.6, start: '16:00', end: '20:00', time_of_use: true });
+  html = tesla._teslaPricesHtml(site);
+  assert.ok(html.includes('2,60–4,60'));
+  assert.ok(html.includes('16:00–20:00'));
+  delete site.tesla_prices.non_member;
+  assert.ok(tesla._teslaPricesHtml(site).includes('Pris ikke oplyst'));
+  site.open_to_non_tesla = false;
+  assert.ok(tesla._teslaPricesHtml(site).includes('Ikke åben for andre biler'));
+  site.tesla_price_stale = true;
+  assert.ok(tesla._evRow(site, null, 1, true).includes('Gemte priser'));
+}
