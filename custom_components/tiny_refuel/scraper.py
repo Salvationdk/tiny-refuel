@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 18334)
-Total output lines: 1609
-
 #!/usr/bin/env python3
 """Tiny Refuel v0.1 – self-scraped petrol, diesel and EV charging data.
 
@@ -706,7 +703,42 @@ def fetch_ck_ingo(errors):
                     if pr is not None:
                         alt[label] = pr
         else:
-            p95 = norm.get("benzin95",…334 tokens truncated…   raise ValueError("no coords parsed")
+            p95 = norm.get("benzin95", {})
+            diesel = norm.get("diesel", {})
+            if "upgrade95" in norm:
+                pr = to_float(norm["upgrade95"].get("price"))
+                if pr is not None:
+                    alt["UPGRADE 95"] = pr
+        lat, lon = coords.get(str(site.get("id")), (None, None))
+        stations.append({
+            "brand": brand,
+            "name": name, "address": address,
+            "lat": lat, "lon": lon,
+            "p95": to_float(p95.get("price")),
+            "p100": None,
+            "diesel": to_float(diesel.get("price")),
+            "kwh": None,
+            "alt": alt or None,
+            "lu": p95.get("lastUpdated"),
+            "source": "api.circlek.com",
+        })
+    return stations, True
+
+
+def load_station_cache(errors):
+    """id -> (lat, lon) from circlek.dk station-search, cached 7 days."""
+    cache = load_json(STATION_CACHE, None)
+    now = time.time()
+    if cache and now - cache.get("updated_epoch", 0) < 7 * 86400:
+        return {k: tuple(v) for k, v in cache["coords"].items()}
+    try:
+        page = get_text(CK_SEARCH)
+        pairs = re.findall(
+            r'"(1\d{4})":\{.*?/location":\{"lat":"([0-9.]+)","lng":"([0-9.]+)"', page)
+        coords = {sid: (round(float(la), 5), round(float(lo), 5))
+                  for sid, la, lo in pairs}
+        if not coords:
+            raise ValueError("no coords parsed")
         save_json(STATION_CACHE, {"updated_epoch": now, "coords": coords})
         return coords
     except Exception as exc:  # noqa: BLE001
