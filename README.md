@@ -120,11 +120,10 @@ Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges.
 
 | Selskab | Oplysninger fra anvendt kilde |
 |---|---|
-| Circle K / INGO | Offentlige brændstofpriser; Circle K også danske ladesteder, stiktyper og effekt |
+| Circle K / INGO | Offentlige brændstofpriser; Circle K også danske ladesteder, stiktyper, effekt og daglig listepris for lynladning |
 | Q8 / F24 | Stationspriser inklusive HPC, når oplyst; Q8's generelle ladetakster vises særskilt |
 | Go'on / Shell / Uno-X | Offentlige brændstofkilder; Shell og Uno-X også ladesteder |
 | OK / OIL | Lokale brændstofpriser og ladeadresser; generelle OK-ladetakster særskilt |
-| Circle K | Ladesteder og stik/effekt; offentlig daglig listepris for lynladning særskilt |
 | Clever | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst. Prisen varierer pr. sted og tidspunkt og skal ses i Clever-appen/kortet |
 | E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst; offentlige danske startpriser vises som generelle takster |
 | Tesla | Danske Superchargere med adgangsmarkering, adresser, koordinater, effekt og antal ladepunkter. Separate lokale priser for Tesla/medlemmer og andre biler uden medlemskab, når oplyst. Hentning kan blive afvist med HTTP 403 |
