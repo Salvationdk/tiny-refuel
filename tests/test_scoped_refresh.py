@@ -1,7 +1,13 @@
 """Focused tests for partial fuel refreshes."""
+import importlib.util
+from pathlib import Path
 import unittest
 
-from custom_components.tiny_refuel.scraper import _preserve_unselected_fuels
+spec = importlib.util.spec_from_file_location(
+    "tiny_refuel_scraper", Path(__file__).parents[1] / "custom_components/tiny_refuel/scraper.py")
+scraper = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(scraper)
+_preserve_unselected_fuels = scraper._preserve_unselected_fuels
 
 
 class ScopedRefreshTests(unittest.TestCase):
