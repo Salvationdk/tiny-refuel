@@ -30,5 +30,16 @@ class GeocodingTests(unittest.TestCase):
         self.assertEqual(fetch.call_count, 1)
         self.assertEqual(len(errors), 1)
 
+    def test_geocoding_reports_brand_and_current_address(self):
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = json.dumps([{'lat': '55.6', 'lon': '12.1'}]).encode()
+        progress = []
+        with patch.object(scraper, 'load_json', return_value={}), patch.object(scraper, 'save_json'), patch.object(scraper.time, 'sleep'), patch.object(scraper.urllib.request, 'urlopen', return_value=response):
+            scraper.geocode_new(['Testvej 1, 1000 København'], [], ['OK'], progress.append)
+        self.assertEqual(progress, [{
+            'phase': 'geokodning', 'provider': 'OK',
+            'station': 'Testvej 1, 1000 København', 'current': 1, 'total': 1,
+        }])
+
 if __name__ == '__main__':
     unittest.main()

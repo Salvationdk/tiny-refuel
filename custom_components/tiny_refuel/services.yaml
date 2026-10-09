@@ -1,3 +1,14 @@
 refresh:
-  name: Scrape alle data
-  description: Starter en fælles opdatering af benzin, diesel og EL i baggrunden. Gentagne kald deler den igangværende hentning.
+  name: Hent data
+  description: Starter en fælles opdatering. Kortets knap kan sende de drivmidler, der passer til den valgte bil. Gentagne kald deler den igangværende hentning.
+  fields:
+    fuel_types:
+      name: Drivmidler
+      description: Udelad feltet for at hente alle drivmidler.
+      selector:
+        select:
+          options:
+            - benzin
+            - diesel
+            - el
+          multiple: true

@@ -25,10 +25,20 @@ const Card = registry.get('tiny-refuel-card');
 assert.ok(Card);
 assert.ok(registry.get('tiny-refuel-card-editor'));
 assert.equal(window.customCards[0].type, 'tiny-refuel-card');
+const editor = new (registry.get('tiny-refuel-card-editor'))();
+editor.setConfig({ vis_scrape_knap: false });
+assert.ok(editor.innerHTML.includes('data-key="vis_scrape_knap"'));
+assert.ok(editor.innerHTML.includes('Vis knappen på kortet'));
+assert.ok(editor.innerHTML.includes('data-key="scrape_valgt_bil"'));
 const card = new Card();
+assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');
+assert.equal(card._progressText({ phase: 'el', provider: 'Tesla', station: 'Supercharger Aarhus', current: 2, total: 7 }),
+  'Henter el fra Tesla · Supercharger Aarhus (2/7)…');
 card._config = { vis_benzin: false, vis_diesel: false, vis_el: true, vis_andet: true };
 card._render = () => {};
-card._data = { updated: '2026-01-01T00:00:00Z', ev: [
+card._data = { updated: '2026-01-01T00:00:00Z', benefits: { circle_k: {
+  summary: 'Eksempel på scraped fordel', source_url: 'https://circlek.example/fordele',
+  fetched_at: '2026-10-09T10:00:00+00:00', status: 'ok' } }, ev: [
   { brand: 'Q8', name: 'A', address: 'A vej 1', lat: 55.64, lon: 12.08, app_only: true, kind: 'DC' },
   { brand: 'Q8', name: 'B', address: 'B vej 2', lat: 56, lon: 12, kwh: 3.89, kind: 'DC' },
   { brand: 'Q8', name: 'Q8 Lyn', kwh: 3.89 },
@@ -40,6 +50,11 @@ card._data = { updated: '2026-01-01T00:00:00Z', ev: [
     tariff_note: 'IONITY oplyser, at den faktiske stationspris kan være højere.' },
   { brand: 'Spirii', name: 'Excluded', kwh: 2 },
 ] };
+card._openFordel = 'circle_k';
+const scrapedBenefit = card._evBenefits({ brand: 'Circle K' }, 'box');
+assert.ok(scrapedBenefit.includes('Eksempel på scraped fordel'));
+assert.ok(scrapedBenefit.includes('https://circlek.example/fordele'));
+assert.ok(scrapedBenefit.includes('Hentet: 2026-10-09'));
 const html = card._evHtml({ lat: 55.63, lon: 12.08 });
 assert.equal((html.match(/logo-q8.svg/g) || []).length, 1);
 assert.ok(html.includes('3 ladesteder'));
@@ -79,6 +94,12 @@ for (const nav of ['waze', 'google']) {
   assert.equal(card._scraping, false);
   assert.ok(card._scrapeMessage.includes('1 fejl'));
   assert.ok(apiCalls.every(args => args[0] === 'GET' && args[1] === 'tiny_refuel/data'));
+  const scoped = new Card();
+  scoped._config = { biler: [{ navn: 'Min dieselbil', brændstof: 'diesel' }] };
+  scoped._hass = { callService: (...args) => { calls.push(args); return Promise.resolve(); } };
+  scoped._scrapeAll();
+  assert.equal(JSON.stringify(calls[calls.length - 1][2]), JSON.stringify({ fuel_types: ['diesel'] }));
+  scoped.disconnectedCallback();
   card._scrapeAll();
   response = { ...response, last_attempt: new Date().toISOString(), last_error: 'Failed source', refreshing: false };
   card._pollScrape(card._scrapeRun);

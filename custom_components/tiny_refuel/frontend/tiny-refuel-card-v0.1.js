@@ -3,13 +3,13 @@
   if (window.customElements.get("tiny-refuel-card")) return;
 
   var CSS = `
-  .trf { font-family: var(--paper-font-body1_-_font-family, inherit); padding: 14px 16px; color: var(--primary-text-color); }
+  .trf { container-type: inline-size; container-name: tiny-refuel; font-family: var(--paper-font-body1_-_font-family, inherit); padding: 14px 16px; color: var(--primary-text-color); }
   .trf-titlebar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
   .trf-title { font-weight: 600; font-size: 15px; text-transform: uppercase; letter-spacing: .6px; text-shadow: 0 0 12px rgba(0,229,255,.35); }
   .trf-rule { height: 2px; border-radius: 2px; margin: 6px 0 4px; background: linear-gradient(90deg, var(--primary-color, #00e5ff), var(--accent-color, #b967ff)); opacity: .55; box-shadow: 0 0 8px rgba(0,229,255,.35); }
   .trf-pos { font-size: 11px; color: var(--secondary-text-color); margin-bottom: 8px; opacity: .85; }
   .trf-cars { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-  .trf-car { border: 1px solid rgba(0,229,255,.45); background: linear-gradient(180deg, rgba(0,229,255,.08), rgba(185,103,255,.08)); color: var(--primary-text-color); border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,.25); }
+  .trf-car { border: 1px solid rgba(0,229,255,.45); background: linear-gradient(180deg, rgba(0,229,255,.08), rgba(185,103,255,.08)); color: var(--primary-text-color); border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,.25); }
   .trf-car:active { transform: scale(.95); }
   .trf-car.trf-on { background: linear-gradient(90deg, rgba(0,229,255,.28), rgba(185,103,255,.28)); border-color: var(--primary-color, #00e5ff); font-weight: 700; box-shadow: 0 0 14px rgba(0,229,255,.5); text-shadow: 0 0 8px rgba(0,229,255,.8); }
   .trf-refresh { border: 1px solid rgba(0,229,255,.4); background: rgba(0,229,255,.06); color: var(--primary-text-color); border-radius: 50%; width: 34px; height: 34px; font-size: 17px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,229,255,.25); }
@@ -90,6 +90,25 @@
     .trf-logo img { height: 22px; max-width: 80px; }
     .trf-price { font-size: 13px; }
     .trf-km { font-size: 11px; }
+  }
+  @container tiny-refuel (max-width: 390px) {
+    .trf { padding: 10px 8px; }
+    .trf-head[data-price-cols], .trf-row[data-price-cols] { grid-template-columns: minmax(52px,.9fr) repeat(var(--trf-price-cols), minmax(38px,1fr)) 34px !important; gap: 3px; padding: 3px 4px; }
+    .trf-logo img { max-width: 66px; }
+    .trf-price { font-size: 12px; }
+    .trf-km { font-size: 10px; }
+    .trf-data-tools { gap: 5px; }
+    .trf-evrow { grid-template-columns: minmax(52px,100px) minmax(40px,1fr) 34px !important; gap: 4px; padding: 3px 4px; }
+  }
+  @media (orientation: portrait) {
+    .trf { padding-top: 12px; padding-bottom: 12px; }
+  }
+  @media (orientation: landscape) and (max-height: 520px) {
+    .trf { padding-top: 8px; padding-bottom: 8px; }
+    .trf-titlebar { margin-bottom: 0; }
+    .trf-rule { margin: 3px 0; }
+    .trf-ev-dialog { max-height: 94vh; }
+    .trf-ev-list { max-height: 74vh; }
   }`;
 
   var ECSS = `
@@ -98,7 +117,8 @@
   .trfe h4:first-child { margin-top: 0; }
   .trfe label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
   .trfe input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--primary-color, #03a9f4); }
-  .trfe input[type=number], .trfe input[type=text], .trfe select { background: var(--mdc-text-field-fill-color, rgba(255,255,255,.06)); color: var(--primary-text-color); border: 1px solid var(--divider-color, rgba(255,255,255,.12)); border-radius: 4px; padding: 6px 8px; font-size: 13px; width: 100%; box-sizing: border-box; }
+  .trfe input[type=number], .trfe input[type=text], .trfe select, .trfe textarea { background: var(--mdc-text-field-fill-color, rgba(255,255,255,.06)); color: var(--primary-text-color); border: 1px solid var(--divider-color, rgba(255,255,255,.12)); border-radius: 4px; padding: 6px 8px; font-size: 13px; width: 100%; box-sizing: border-box; }
+  .trfe textarea { display: block; margin-top: 8px; min-height: 180px; font-family: monospace; font-size: 11px; white-space: pre; }
   .trfe .trfe-row { display: flex; gap: 8px; align-items: center; }
   .trfe .trfe-hint { font-size: 11px; color: var(--secondary-text-color); opacity: .8; margin-top: 2px; }
   .trfe details { margin-top: 10px; }
@@ -130,17 +150,7 @@
     { key: "ionity", brand: "Ionity", img: "logo-ionity.svg", has100: false, electricOnly: true },
   ];
 
-  var FORDELE = {
-    circle_k: "extra-app: op til 20 øre/L efter besøgstal",
-    ok: "OK-app + Coop-medlemskab: bonus pr. liter",
-    q8: "Q8 Smile-point kan veksles til brændstofrabat",
-    shell: "Shell App/Card: faste øre-rabatter pr. liter",
-    goon: "Go'on App + Klubkort støtter lokal forening",
-    uno_x: "Uno-X app + Forbrugsforeningskort: rabat i procent",
-    ingo: "Ingen bonusordning — altid lav pris",
-    f24: "Lavpriskæde uden bonusprogram",
-    oil: "OIL Kundekort til hurtig selvbetjening",
-  };
+  var FORDELE = {};
 
   function cfgGet(cfg, key, def) {
     if (cfg && cfg[key] !== undefined && cfg[key] !== null) return cfg[key];
@@ -435,6 +445,14 @@
       this._render();
     }
 
+    _progressText(progress) {
+      if (!progress) return "";
+      if (progress.phase === "starting") return "Starter hentning…";
+      var place = progress.station ? " · " + progress.station : "";
+      var count = progress.current && progress.total ? " (" + progress.current + "/" + progress.total + ")" : "";
+      return "Henter " + (progress.phase || "data") + " fra " + (progress.provider || "udbyder") + place + count + "…";
+    }
+
     _scrapeAll() {
       if (this._scraping) return;
       if (!this._hass || typeof this._hass.callService !== "function") {
@@ -443,14 +461,25 @@
         return;
       }
       this._scraping = true;
-      this._scrapeMessage = "Scraper alle data… Det kan tage flere minutter.";
+      var fuelTypes = null;
+      var selectedCar = this._car();
+      if (cfgGet(this._config, "scrape_valgt_bil", true) && selectedCar && selectedCar.brændstof) {
+        var fuelMap = {
+          benzin: ["benzin"], diesel: ["diesel"], el: ["el"],
+          hybrid: ["benzin"], plug_in_hybrid: ["benzin", "el"]
+        };
+        fuelTypes = fuelMap[selectedCar.brændstof] || null;
+      }
+      var scopeText = fuelTypes ? fuelTypes.join(" og ") : "benzin, diesel og el";
+      this._scrapeMessage = "Starter hentning af " + scopeText + "…";
       this._scrapeBaseline = this._data && this._data.updated;
       this._scrapeStarted = Date.now();
       this._scrapeRun = (this._scrapeRun || 0) + 1;
       var self = this, run = this._scrapeRun;
       this._render();
       try {
-        Promise.resolve(this._hass.callService("tiny_refuel", "refresh", {})).catch(function (err) {
+        var serviceData = fuelTypes ? { fuel_types: fuelTypes } : {};
+        Promise.resolve(this._hass.callService("tiny_refuel", "refresh", serviceData)).catch(function (err) {
           if (self._scraping && self._scrapeRun === run) self._finishScrape("Opdateringskaldet fejlede: " + String(err && err.message || err));
         });
         this._scrapeTimer = setTimeout(function () { self._pollScrape(run); }, 5000);
@@ -468,6 +497,10 @@
         if (data && !data.refreshing && data.last_error && isFinite(attempt) && attempt >= self._scrapeStarted - 1000) {
           self._finishScrape("Hentningen fejlede: " + data.last_error);
           return;
+        }
+        if (data && data.refreshing && data.progress) {
+          self._scrapeMessage = self._progressText(data.progress);
+          self._render();
         }
         var stamp = data && Date.parse(data.updated);
         if (data && data.updated !== self._scrapeBaseline && isFinite(stamp) && stamp >= self._scrapeStarted - 1000) {
@@ -659,6 +692,7 @@
       if (visDiesel) cols.push("minmax(60px,1fr)");
       cols.push("52px");
       var grid = cols.join(" ");
+      var priceColumnCount = (visBenzin ? 2 : 0) + (visDiesel ? 1 : 0);
 
       var body = "";
       var rows = this._buildRows(loc);
@@ -714,7 +748,7 @@
           }
         }
 
-        var head = '<div class="trf-head" style="grid-template-columns: ' + grid + '"><span></span>';
+        var head = '<div class="trf-head" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '"><span></span>';
         if (visBenzin) head += '<span class="trf-p">95</span><span class="trf-p">100</span>';
         if (visDiesel) head += '<span class="trf-p">Diesel</span>';
         head += '<span class="trf-km" title="Afstand fra telefonens placering til nærmeste station">km</span></div>';
@@ -763,7 +797,8 @@
             '" href="' + link + '" rel="noopener" title="' + esc(title) + '"><img src="/tiny_refuel/static/logos/' +
             row.b.img + '" alt="' + esc(row.b.brand) + '"></a></div>';
           var sub = "";
-          var fbtn = (visAndet && FORDELE[row.b.key])
+          var benefitEntry = this._benefitEntry(row.b.key);
+          var fbtn = (visAndet && benefitEntry)
             ? '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(row.b.key) + '" title="Se kundefordele">★ Fordele</a>'
             : "";
           if (row.liste) {
@@ -779,11 +814,8 @@
           if (row.locationNote) {
             sub += '<div class="trf-station"><span class="trf-subtxt">' + esc(row.locationNote) + '</span></div>';
           }
-          if (this._openFordel === row.b.key && FORDELE[row.b.key]) {
-            sub += '<div class="trf-fordel-box"><b>' + esc(row.b.brand) +
-              " kundefordele:</b><br>" + esc(FORDELE[row.b.key]) + "</div>";
-          }
-          body += '<div class="' + cls + '" style="grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
+          if (benefitEntry) sub += this._benefitBox(row.b.key, row.b.brand, benefitEntry);
+          body += '<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
             logo + cells + kmCell + sub + "</div>";
         }
       }
@@ -898,13 +930,15 @@
         (visEl && !visBenzin && !visDiesel ? 'Ladepriser' :
         (visEl ? 'Brændstof og ladepriser' : (visDiesel && !visBenzin ? 'Dieselpriser' : 'Benzinpriser'))));
 
+      var scrapeStatus = this._data && this._data.refreshing && this._data.progress
+        ? this._progressText(this._data.progress) : (this._scrapeMessage || "");
       this.innerHTML =
         "<style>" + CSS + "</style>" +
         '<div class="trf">' +
         '<div class="trf-titlebar"><div class="trf-title">' + cardTitle + '</div>' +
         '<button class="trf-refresh' + (this._locRefreshing ? " trf-spin" : "") + '" data-refresh title="Hent frisk GPS-position fra telefonen">⟳</button></div>' +
         '<div class="trf-rule"></div>' +
-        '<div class="trf-data-tools"><button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Scrape alle data</button><span role="status">' + esc(this._scrapeMessage || '') + '</span></div>' + this._dataErrorsHtml() +
+        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() +
         carHtml +
         (visAndet
           ? '<div class="trf-pos">Position: ' + (this._locRefreshing ? "opdaterer…" : esc(this._posAge() || "ukendt")) + "</div>"
@@ -973,6 +1007,23 @@
       return !!(ev.address || (ev.name && this._evCoords(ev)));
     }
 
+    _benefitEntry(key, fallbackText) {
+      var all = this._data && this._data.benefits;
+      var item = all && all[key];
+      if (item && (item.summary || item.source_url)) return item;
+      return fallbackText ? { summary: fallbackText, source_url: null, status: "source_only" } : null;
+    }
+
+    _benefitBox(key, brand, item) {
+      if (!item) return "";
+      var text = item.summary || "Se udbyderens officielle side for aktuelle fordele, app og abonnementsvilkår.";
+      var checked = item.fetched_at ? "<br><small>Hentet: " + esc(item.fetched_at.slice(0, 10)) +
+        (item.status === "stale" ? " · gemte oplysninger" : "") + "</small>" : "";
+      var source = item.source_url ? ' <a href="' + esc(item.source_url) + '" target="_blank" rel="noopener">Officiel kilde</a>' : "";
+      return this._openFordel === key ? '<div class="trf-fordel-box"><b>' + esc(brand) + " · fordele, app og abonnement:</b><br>" +
+        esc(text) + source + checked + "</div>" : "";
+    }
+
     _nearestEvHtml(loc) {
       if (!loc) return '<div class="trf-em">Nærmeste ladested: position mangler. Vælg en positions-enhed i kortets editor.</div>';
       var entries = this._evEntries(), nearest = null;
@@ -990,24 +1041,12 @@
 
     _evBenefits(ev, part) {
       if (!this._effVis().andet) return '';
-      var brand = this._evBrandKey(ev.brand), key = 'el_' + brand;
-      // Oplysninger kontrolleret 2026-10-08; aktuelle betingelser findes hos selskabet.
-      var benefits = {
-        circle_k: { text: 'Circle K extra giver medlemsfordele på opladning. Se den aktuelle medlemspris og betingelser hos Circle K.',
-          url: 'https://www.circlek.dk/opladning/opladningskort' },
-        ok: { text: '10 % rabat på offentlig opladning kræver OK Ladepakke med serviceaftale, OK Kort og betaling via OK-appen.',
-          url: 'https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat' },
-        uno_x: { text: 'Opladning uden abonnement. Uno-X Privatkort giver automatisk rabat på lynladning; se gældende vilkår hos Uno-X.',
-          url: 'https://www.unoxmobility.dk/privat/produkter/opladning/lad-uden-abonnement' }
-      };
-      var b = benefits[brand];
-      if (!b && typeof ev.benefits === 'string' && ev.benefits.trim()) b = { text: ev.benefits };
-      if (!b) return '';
-      var html = part === 'box' ? '' : '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(key) + '" title="Se ladefordele">★ Fordele</a>';
-      if (part === 'button') return html;
-      if (this._openFordel === key) html += '<div class="trf-fordel-box"><b>' + esc(ev.brand) + ' ladefordele:</b><br>' + esc(b.text) +
-        (b.url ? ' <a href="' + esc(b.url) + '" target="_blank" rel="noopener">Se vilkår</a>' : '') + '</div>';
-      return html;
+      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand, ev.benefits);
+      if (!item) return '';
+      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(brand) + '" title="Se ladefordele">★ Fordele</a>';
+      if (part === 'button') return button;
+      if (part === 'box') return this._benefitBox(brand, ev.brand, item);
+      return button + this._benefitBox(brand, ev.brand, item);
     }
 
     _teslaPricesHtml(ev) {
@@ -1263,12 +1302,51 @@
     return { benzin: true, diesel: false, el: false, andet: true };
   }
 
+  function yamlScalar(value) {
+    if (typeof value === "string") return JSON.stringify(value);
+    if (value === null) return "null";
+    return String(value);
+  }
+
+  function yamlLines(value, depth) {
+    var pad = new Array(depth + 1).join(" "), lines = [];
+    if (Array.isArray(value)) {
+      value.forEach(function (item) {
+        if (item && typeof item === "object") {
+          lines.push(pad + "-");
+          lines = lines.concat(yamlLines(item, depth + 2));
+        } else lines.push(pad + "- " + yamlScalar(item));
+      });
+    } else if (value && typeof value === "object") {
+      Object.keys(value).forEach(function (key) {
+        var item = value[key], name = JSON.stringify(key) + ":";
+        if (item && typeof item === "object") {
+          lines.push(pad + name);
+          lines = lines.concat(yamlLines(item, depth + 2));
+        } else lines.push(pad + name + " " + yamlScalar(item));
+      });
+    }
+    return lines;
+  }
+
   class TinyRefuelCardEditor extends HTMLElement {
     constructor() {
       super();
       this._config = {};
       var self = this;
       this.addEventListener("click", function (ev) {
+        var copy = ev.target && ev.target.closest ? ev.target.closest("[data-yaml-copy]") : null;
+        if (copy) {
+          ev.preventDefault();
+          var yaml = self.querySelector("[data-card-yaml]");
+          if (yaml && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(yaml.value).then(function () {
+              copy.textContent = "Kopieret";
+              setTimeout(function () { copy.textContent = "Kopiér YAML"; }, 1500);
+            }).catch(function () { yaml.focus(); yaml.select(); });
+          } else if (yaml) { yaml.focus(); yaml.select(); }
+          return;
+        }
         var t = ev.target && ev.target.closest ? ev.target.closest("[data-bil-add],[data-bil-del]") : null;
         if (!t) return;
         ev.preventDefault();
@@ -1286,6 +1364,7 @@
         else cfg.biler = biler;
         self._config = cfg;
         self._render();
+        self._updateYaml();
         self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
       });
       this.addEventListener("change", function (ev) {
@@ -1359,6 +1438,7 @@
           cfg.biler = biler;
           self._config = cfg;
           if (needRender) self._render();
+          self._updateYaml();
           self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
           return;
         } else if (key === "scrape_entity" || key === "location_entity" || key === "notify_service" || key === "katalog_url" || key === "navigation") {
@@ -1368,6 +1448,7 @@
           if (key === "katalog_url") {
             self._config = cfg;
             self._loadKatalog();
+            self._updateYaml();
             self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
             return;
           }
@@ -1379,6 +1460,7 @@
           cfg[key] = !!t.checked;
         }
         self._config = cfg;
+        self._updateYaml();
         self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
       });
     }
@@ -1456,6 +1538,13 @@
     _bool(key, def) {
       if (this._config && this._config[key] !== undefined) return !!this._config[key];
       return def;
+    }
+
+    _updateYaml() {
+      var textarea = this.querySelector && this.querySelector("[data-card-yaml]");
+      if (!textarea) return;
+      var config = Object.assign({}, this._config || {}, { type: "custom:tiny-refuel-card" });
+      textarea.value = yamlLines(config, 0).join("\n");
     }
 
     _render() {
@@ -1563,6 +1652,10 @@
         this._katalogBrands().length + ' mærker)</div><input type="text" data-key="katalog_url" value="' +
         esc(c.katalog_url || "") + '" placeholder="/tiny_refuel/static/bilkatalog.json">';
       html += '<div class="trfe-hint">Peg på en anden JSON i samme format {brands:[{mærke, modeller:[{model, brændstof, tank_l, batteri_kwh}]}]} for at udvide — fx din egen fil under www/. Indlæses hver gang editoren åbnes.</div>';
+      html += '<details class="trfe-yaml"><summary>Vis hele kortets YAML</summary>';
+      html += '<div class="trfe-hint">Kopiér hele konfigurationen til Udseende → Rediger i YAML.</div>';
+      html += '<button type="button" data-yaml-copy>Kopiér YAML</button>';
+      html += '<textarea data-card-yaml readonly spellcheck="false" rows="14" aria-label="Hele kortets YAML"></textarea></details>';
       html += "<h4>Fælles tankstørrelse (bruges hvis bilen ikke har egen)</h4>";
       var tl = (c.tank_liters !== undefined && c.tank_liters !== null) ? c.tank_liters : "";
       html += '<div class="trfe-row"><input type="number" data-key="tank_liters" min="5" max="200" step="1" value="' +
@@ -1577,7 +1670,10 @@
       html += '<label><input type="radio" name="trf-nav" data-key="navigation" value="google"' +
         (nv === "google" ? " checked" : "") + "><span>Google Maps</span></label>";
       html += '<div class="trfe-hint">Åbner navigation til den nærmeste station ved tryk på logo.</div>';
-      html += '<h4>Scrape alle data</h4><div class="trfe-hint">Tiny Refuel-integrationen opdaterer alle selskaber med én handling. Automatisk interval vælges, når integrationen tilføjes under Enheder og tjenester.</div>';
+      html += '<h4>Hent data</h4>';
+      html += cb("vis_scrape_knap", "Vis knappen på kortet", this._bool("vis_scrape_knap", true));
+      html += cb("scrape_valgt_bil", "Begræns hentning til den valgte bil", this._bool("scrape_valgt_bil", true));
+      html += '<div class="trfe-hint">Manuel hentning følger bilens drivmiddel: benzinbil henter benzin, dieselbil diesel, elbil el og plug-in-hybrid benzin samt el. Slå valget fra for at hente alle typer. Automatisk intervalhentning henter altid alle typer, så biler du tilføjer senere også får data.</div>';
       html += "<details><summary>Avanceret</summary>";
       html += '<div class="trfe-hint">Positions-enhed</div><input type="text" data-key="location_entity" value="' +
         esc(c.location_entity || "") + '" placeholder="device_tracker.din_telefon">';
@@ -1585,6 +1681,7 @@
         esc(c.notify_service || "") + '" placeholder="notify.mobile_app_din_telefon">';
       html += "</details></div>";
       this.innerHTML = html;
+      this._updateYaml();
     }
   }
 
