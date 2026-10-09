@@ -55,7 +55,7 @@
   .trf-evrow .trf-price { color: var(--primary-color, #00e5ff); text-shadow: 0 0 10px rgba(0,229,255,.75); }
   .trf-evrow .trf-meta { color: var(--secondary-text-color); font-size: 10px; }
   .trf-tariffs { grid-column: 1 / -1; min-width: 0; font-size: clamp(8px, 2.4vw, 10px); line-height: 1.5; }
-  .trf-tariff-line { display: block; white-space: nowrap; overflow-x: auto; font-weight: 600; }
+  .trf-tariff-line { display: block; white-space: normal; overflow-wrap: anywhere; font-weight: 600; }
   .trf-tariff-note { color: var(--secondary-text-color); font-size: 10px; }
   .trf-data-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; font-size: 11px; }
   .trf-data-tools button:disabled { cursor: wait; opacity: .65; }
@@ -1122,14 +1122,23 @@
     _evTariffsHtml(items) {
       if (!items || !items.length) return '';
       var self = this, seen = new Set();
-      var text = items.filter(function (ev) {
+      var lines = items.filter(function (ev) {
         var key = ev.name + '|' + ev.kwh;
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
-      }).map(function (ev) { return ev.name + ' ' + self._fmt(ev.kwh); }).join(' · ') + ' kr/kWh';
-      return '<div class="trf-tariffs"><span class="trf-tariff-line" title="' + esc(text) + '">' + esc(text) +
-        '</span><span class="trf-tariff-note">Generelle selskabstakster; ikke en bekræftet pris på det enkelte ladested.</span></div>';
+      }).map(function (ev) {
+        return '<span class="trf-tariff-line">' + esc(ev.name) + ' <b>' + esc(self._fmt(ev.kwh)) + '</b> kr/kWh</span>';
+      }).join('');
+      var detail = items.find(function (ev) { return ev.tariff_note; });
+      var dated = items.find(function (ev) { return ev.lu; });
+      var note = 'Generelle selskabstakster; ikke en bekræftet pris på det enkelte ladested.';
+      if (detail) note += ' ' + detail.tariff_note;
+      if (dated) {
+        var parsedDate = new Date(dated.lu);
+        note += ' Pris opdateret ' + (isNaN(parsedDate.getTime()) ? dated.lu : parsedDate.toLocaleDateString('da-DK')) + '.';
+      }
+      return '<div class="trf-tariffs">' + lines + '<span class="trf-tariff-note">' + esc(note) + '</span></div>';
     }
 
     _evDataSummary(entries) {

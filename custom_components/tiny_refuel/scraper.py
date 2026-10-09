@@ -63,6 +63,9 @@ OK_LOCATIONS_API = "https://geo-emobility.okcloud.dk/api/v2/locations/nearby"
 OIL_STATIONS_PAGE = "https://www.oil-tankstationer.dk/tankstationer-find-din-station/"
 CK_CHARGING_API = "https://map-prod-public.evmaps-prod.alpaque.net/api/v4/locations"
 SHELL_CHARGING_API = "https://shellretaillocator.geoapp.me/api/v2/locations/nearest_to"
+CK_EV_PRICES_URL = "https://www.circlek.dk/priser"
+EON_EV_TARIFFS_URL = "https://www.edri.com/da-dk/tariffs"
+IONITY_EV_TARIFFS_URL = "https://www.ionity.eu/dk/abonnementer"
 
 
 def get(url, headers=None, timeout=45):
@@ -793,6 +796,79 @@ def fetch_q8_el(errors):
         return []
 
 
+def fetch_circlek_ev_prices(errors):
+    """Circle K's published national fast-charging list price (updated daily)."""
+    try:
+        page = get_text(CK_EV_PRICES_URL)
+        text = html.unescape(re.sub(r"<[^>]+>", " ", page))
+        text = re.sub(r"\s+", " ", text)
+        match = re.search(
+            r"El-Lynlader.{0,300}?Pris inkl\. moms:\s*([\d,.]+).{0,200}?Dato:\s*(\d{4}-\d{2}-\d{2})",
+            text, re.I,
+        )
+        if not match:
+            raise ValueError("no El-Lynlader price and date parsed")
+        price, date = to_float(match.group(1)), match.group(2)
+        if price is None or price <= 0:
+            raise ValueError("invalid El-Lynlader price")
+        return [{"brand": "Circle K", "name": "Lynlader (listepris)",
+                 "kwh": price, "source": "circlek.dk", "lu": date,
+                 "tariff_note": "Eventuel Circle K EXTRA-rabat er ikke fratrukket."}]
+    except Exception as exc:  # noqa: BLE001
+        errors.append({"circlek_el": str(exc)[:120]})
+        return []
+
+
+def fetch_eon_ev_tariffs(errors):
+    """E.ON Drive's published Danish ad-hoc minimum prices by charging speed."""
+    try:
+        page = get_text(EON_EV_TARIFFS_URL)
+        # The official Danish page publishes one AC price and two DC cards.
+        # Parse every visible kWh price and preserve the current page date in
+        # the output timestamp; the page calls these prices "From".
+        values = [to_float(value.replace(",", ".")) for value in
+                  re.findall(r"([\d]+,[\d]{2})\s*kr\s*/\s*kWh", page)]
+        values = [value for value in values if value is not None and value > 0]
+        if len(values) < 2:
+            raise ValueError("no Danish ad-hoc tariffs parsed")
+        note = "Startpris; eventuelle blokeringsgebyrer er ikke medregnet."
+        return [{"brand": "E.ON", "name": "AC (fra)", "kwh": values[0],
+                 "source": "edri.com", "tariff_note": note},
+                {"brand": "E.ON", "name": "DC (fra)", "kwh": values[1],
+                 "source": "edri.com", "tariff_note": note}]
+    except Exception as exc:  # noqa: BLE001
+        errors.append({"eon_el": str(exc)[:120]})
+        return []
+
+
+def fetch_ionity_ev_tariffs(errors):
+    """IONITY's published Danish minimum prices, including subscription options."""
+    try:
+        page = get_text(IONITY_EV_TARIFFS_URL)
+        price_matches = list(re.finditer(r"([\d]+\.\d{2})\s*DKK/kWh", page))
+        country_start = page.rfind("Danmark", 0, price_matches[0].start()) if price_matches else -1
+        if country_start < 0 or price_matches[0].start() - country_start > 200:
+            raise ValueError("Danish price block not found")
+        values = [to_float(match.group(1)) for match in price_matches[:8]]
+        if len(values) < 8:
+            raise ValueError("incomplete Danish price block")
+        choices = [
+            ("Power måned (+ 90 kr/md., minimum)", 5),
+            ("Power år (+ 750 kr/år, minimum)", 4),
+            ("Motion måned (+ 45 kr/md., minimum)", 7),
+            ("Motion år (+ 375 kr/år, minimum)", 6),
+            ("IONITY Go (minimum)", 2),
+            ("Direkte betaling (minimum)", 3),
+        ]
+        return [{"brand": "IONITY", "name": label, "kwh": values[index],
+                 "source": "ionity.eu",
+                 "tariff_note": "IONITY oplyser, at den faktiske stationspris kan være højere."}
+                for label, index in choices]
+    except Exception as exc:  # noqa: BLE001
+        errors.append({"ionity_el": str(exc)[:120]})
+        return []
+
+
 def fetch_unox(errors):
     """Uno-X stations with live prices from their own price page (DK only)."""
     try:
@@ -1304,6 +1380,9 @@ def _collect():
     if not ok_rows:
         ok_rows = ok_list
     q8_ev = fetch_q8_el(errors)
+    circlek_ev = fetch_circlek_ev_prices(errors)
+    eon_tariffs = fetch_eon_ev_tariffs(errors)
+    ionity_tariffs = fetch_ionity_ev_tariffs(errors)
     oil_rows, oil_ok = fetch_oil_fuel(errors)
     oil_list_ok = True
     if not oil_rows:
@@ -1387,6 +1466,12 @@ def _collect():
         ev.append({"brand": "Q8", "name": "Q8 " + e["kind"],
                    "address": "", "lat": None, "lon": None,
                    "kwh": e["kwh"], "lu": None})
+    for e in circlek_ev + eon_tariffs + ionity_tariffs:
+        ev.append({"brand": e["brand"], "name": e["name"],
+                   "address": "", "lat": None, "lon": None,
+                   "kwh": e["kwh"], "source": e["source"],
+                   "tariff_note": e.get("tariff_note"),
+                   "lu": e.get("lu")})
     for c in unox_chargers:
         ev.append({"brand": c["brand"], "name": c["name"],
                    "address": c["address"], "lat": c["lat"], "lon": c["lon"],

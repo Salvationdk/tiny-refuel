@@ -34,12 +34,19 @@ card._data = { updated: '2026-01-01T00:00:00Z', ev: [
   { brand: 'Q8', name: 'Q8 Lyn', kwh: 3.89 },
   { brand: 'OK', name: 'C', location_id: 'ok1', address: 'C vej 3', lat: 55.65, lon: 12.08, kind: 'Normal', app_only: true },
   { brand: 'OK', name: 'C', location_id: 'ok1', address: 'C vej 3', lat: 55.65, lon: 12.08, kind: 'Lyn', app_only: true },
+  { brand: 'Circle K', name: 'Lynlader (listepris)', kwh: 3.99, lu: '2026-10-01' },
+  { brand: 'E.ON', name: 'AC (fra)', kwh: 3.25 },
+  { brand: 'IONITY', name: 'App/kontaktløs (minimum)', kwh: 3.86,
+    tariff_note: 'IONITY oplyser, at den faktiske stationspris kan være højere.' },
   { brand: 'Spirii', name: 'Excluded', kwh: 2 },
 ] };
 const html = card._evHtml({ lat: 55.63, lon: 12.08 });
 assert.equal((html.match(/logo-q8.svg/g) || []).length, 1);
 assert.ok(html.includes('3 ladesteder'));
 assert.ok(html.includes('1 med lokal elpris'));
+assert.ok(html.includes('3,99'));
+assert.ok(html.includes('Pris opdateret'));
+assert.ok(html.includes('den faktiske stationspris kan være højere'));
 assert.ok(!html.includes('Spirii'));
 assert.ok(!html.includes('Find OK-ladesteder'));
 card._openEvBrand = 'Q8';

@@ -46,7 +46,7 @@ Første scraping starter automatisk i baggrunden og kan tage flere minutter. **S
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.2
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.3
 ```
 
 ## Eksempler fra v0.1
@@ -124,9 +124,11 @@ Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges.
 | Q8 / F24 | Stationspriser inklusive HPC, når oplyst; Q8's generelle ladetakster vises særskilt |
 | Go'on / Shell / Uno-X | Offentlige brændstofkilder; Shell og Uno-X også ladesteder |
 | OK / OIL | Lokale brændstofpriser og ladeadresser; generelle OK-ladetakster særskilt |
-| Clever / E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst |
+| Circle K | Ladesteder og stik/effekt; offentlig daglig listepris for lynladning særskilt |
+| Clever | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst. Prisen varierer pr. sted og tidspunkt og skal ses i Clever-appen/kortet |
+| E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst; offentlige danske startpriser vises som generelle takster |
 | Tesla | Danske Superchargere med adgangsmarkering, adresser, koordinater, effekt og antal ladepunkter. Separate lokale priser for Tesla/medlemmer og andre biler uden medlemskab, når oplyst. Hentning kan blive afvist med HTTP 403 |
-| IONITY | Aktive danske steder, koordinater og effekt/antal, når oplyst; ingen gadeadresse i udtrækket |
+| IONITY | Aktive danske steder, koordinater og effekt/antal, når oplyst; ingen gadeadresse i udtrækket. Offentlige minimumspriser for app, direkte betaling og abonnement vises særskilt |
 
 Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevares eventuelle tidligere data fra denne installation, tydeligt markeret som gemte data.
 
@@ -170,7 +172,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.1.2**. Kortets footer viser **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.1.3**. Kortets footer viser **Tiny Refuel v0.1**.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 

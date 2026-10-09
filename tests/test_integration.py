@@ -125,6 +125,30 @@ class SourceTests(unittest.TestCase):
     def test_non_danish_shell_and_incomplete_circlek_are_rejected(self):
         with patch.object(scraper,'get_text',return_value=json.dumps({'evsePools':[],'clusters':[{}]})):
             with self.assertRaises(ValueError):scraper.load_circlek_charging()
+
+    def test_public_ev_tariff_feeds_are_parsed_as_general_prices(self):
+        circlek = '<div>El-Lynlader</div><div>Pris inkl. moms: 3,99</div><div>Dato: 2026-10-01</div>'
+        eon = '<span>3,25 kr / kWh</span><span>4,25 kr / kWh</span><span>4,25 kr / kWh</span>'
+        ionity = ('Danmark ' + ' '.join(f'{price} DKK/kWh' for price in
+                  ('2.29','2.86','3.67','3.86','2.29','2.20','2.86','2.75')) + ' Sverige')
+        with patch.object(scraper, 'get_text', side_effect=[circlek, eon, ionity]):
+            errors=[]
+            ck=scraper.fetch_circlek_ev_prices(errors)
+            eon_rows=scraper.fetch_eon_ev_tariffs(errors)
+            ionity_rows=scraper.fetch_ionity_ev_tariffs(errors)
+        self.assertEqual(ck[0]['kwh'],3.99);self.assertEqual(ck[0]['lu'],'2026-10-01')
+        self.assertEqual([row['kwh'] for row in eon_rows],[3.25,4.25])
+        self.assertEqual([row['kwh'] for row in ionity_rows],[2.2,2.29,2.75,2.86,3.67,3.86])
+        self.assertTrue(all(row['tariff_note'] for row in ionity_rows))
+        self.assertEqual(errors,[])
+
+    def test_public_ev_tariff_failures_are_reported_without_raising(self):
+        with patch.object(scraper, 'get_text', side_effect=OSError('offline')):
+            errors=[]
+            self.assertEqual(scraper.fetch_circlek_ev_prices(errors),[])
+            self.assertEqual(scraper.fetch_eon_ev_tariffs(errors),[])
+            self.assertEqual(scraper.fetch_ionity_ev_tariffs(errors),[])
+        self.assertEqual(len(errors),3)
         with patch.object(scraper,'get_text',return_value=json.dumps({'locations':[{'id':'x','country_code':'SE'}]})):
             with self.assertRaises(ValueError):scraper.load_shell_charging()
 
@@ -132,7 +156,7 @@ class SourceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'.storage/tiny_refuel'
             fuel={'brand':'OK','name':'Test','address':'A','lat':55,'lon':12,'p95':17,'source':'mobility-prices.ok.dk'}
-            with patch.multiple(scraper,fetch_ck_ingo=lambda e:([],True),fetch_f24q8=lambda e:([],True),fetch_goon=lambda e:([],True),fetch_shell=lambda e:([],True),fetch_oil=lambda e:([],True),fetch_oil_fuel=lambda e:([],True),fetch_unox=lambda e:(([],[]),True),fetch_ok=lambda e:([],[],True),fetch_q8_el=lambda e:[],geocode_new=lambda addresses, errors, brands=None:{},fetch_ok_fuel=lambda e:([fuel],True),fetch_public_ev_locations=lambda *a,**k:([],{'status':'error','records':0})):
+            with patch.multiple(scraper,fetch_ck_ingo=lambda e:([],True),fetch_f24q8=lambda e:([],True),fetch_goon=lambda e:([],True),fetch_shell=lambda e:([],True),fetch_oil=lambda e:([],True),fetch_oil_fuel=lambda e:([],True),fetch_unox=lambda e:(([],[]),True),fetch_ok=lambda e:([],[],True),fetch_q8_el=lambda e:[],fetch_circlek_ev_prices=lambda e:[],fetch_eon_ev_tariffs=lambda e:[],fetch_ionity_ev_tariffs=lambda e:[],geocode_new=lambda addresses, errors, brands=None:{},fetch_ok_fuel=lambda e:([fuel],True),fetch_public_ev_locations=lambda *a,**k:([],{'status':'error','records':0})):
                 data=scraper.collect(path)
             self.assertTrue((path/'priser-og-ladesteder.json').exists());self.assertEqual(data['scraper_version'],'v0.1');self.assertEqual(len(data['stations'][0]['h95']),1)
 
