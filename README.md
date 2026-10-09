@@ -1,4 +1,4 @@
-# Tiny Refuel v0.1
+# Tiny Refuel
 
 Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, bilkatalog og scraping i én HACS-integration.
 
