@@ -349,7 +349,12 @@ def enrich_tesla_prices(rows, status, previous, errors, progress_callback=None):
             result["source_url"] = url
             return result, None, False
         except Exception as exc:  # Preserve locations even when price pages fail.
-            return None, str(exc)[:160], getattr(exc, "code", None) in (403, 429)
+            code = getattr(exc, "code", None)
+            if code == 403:
+                return None, "HTTP 403 Forbidden: Tesla afviste prisopslaget", True
+            if code == 429:
+                return None, "HTTP 429: Tesla satte en grænse for prisopslag", True
+            return None, str(exc)[:160], code in (403, 429)
 
     with ThreadPoolExecutor(max_workers=3) as executor:
         for i in range(0, len(rows), 3):
@@ -1269,7 +1274,14 @@ def fetch_ok(errors, include_el=True):
             if m:
                 vals[prod] = to_float(m.group(1))
         if "Blyfri 95" not in vals:
-            raise ValueError("no listepriser parsed")
+            # OK now publishes this page as a change notice and can explicitly
+            # state that there are no current price changes. In that case the
+            # last published list price remains valid; _collect keeps its cache.
+            text = html.unescape(re.sub(r"<[^>]+>", " ", page))
+            text = re.sub(r"\s+", " ", text).strip()
+            if re.search(r"ingen aktuelle prisændringer", text, re.I):
+                return out, fetch_ok_el(errors) if include_el else [], True
+            raise ValueError("OK: no current list prices or unchanged-price notice found")
         dm = re.search(r"Fra (\w+ den \d+\. \w+ \d{4})", page)
         out.append({"brand": "OK", "name": "OK listepris",
                     "address": "", "lat": None, "lon": None,
@@ -1538,10 +1550,16 @@ def _collect(progress_callback=None, fuel_types=None):
     fresh = fuel_data["stations"]
     have_src = {s.get("source") for s in fresh}
     for src, ok in src_ok.items():
-        if not ok and src in prev_by_src:
+        # OK's change-notice page has no price block when prices are unchanged.
+        # Keep its last published list-price row while station prices continue
+        # to refresh independently through OK's public API.
+        has_ok_list = any(row.get("source") == "ok.dk" and row.get("liste") for row in fresh)
+        keep_unchanged_ok_list = src == "ok.dk" and ok and not has_ok_list
+        if (not ok or keep_unchanged_ok_list) and src in prev_by_src:
             for s in prev_by_src[src]:
                 s = dict(s)
-                s["stale"] = True
+                if not ok:
+                    s["stale"] = True
                 fresh.append(s)
             errors.append({"stale_reused": src})
 
