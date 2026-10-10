@@ -22,7 +22,8 @@
   .trf-b100 { color: var(--accent-color, #b967ff); text-shadow: 0 0 10px rgba(185,103,255,.7); }
   .trf-inline { height: 14px; vertical-align: middle; margin-left: 6px; border-radius: 3px; }
   .trf-head, .trf-row, .trf-evrow { display: grid; align-items: center; gap: 6px; padding: 4px 8px; }
-  .trf-fuel-list, .trf-ev-grid { display: contents; }
+  .trf-fuel-grid, .trf-fuel-col, .trf-ev-grid, .trf-ev-col { display: contents; }
+  .trf-fuel-head-duplicate { display: none; }
   .trf-head { font-size: 11px; letter-spacing: .8px; text-transform: uppercase; color: var(--secondary-text-color); opacity: .8; border-bottom: 1px solid rgba(255,255,255,.06); }
   .trf-head .trf-p { text-align: right; }
   .trf-head .trf-km { text-align: right; }
@@ -113,25 +114,11 @@
     .trf-ev-list { max-height: 74vh; }
   }
   @media (orientation: landscape) and (min-width: 700px) {
-    .trf-fuel-list, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; gap: 4px; }
-    .trf-fuel-list > .trf-head { display: none; }
-    .trf-fuel-list > .trf-row, .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; align-content: start;
-      gap: 4px; min-width: 0; margin: 3px 1px; padding: 6px !important;
-    }
-    .trf-fuel-list > .trf-row .trf-logo, .trf-ev-grid > .trf-evrow .trf-logo, .trf-ev-list > .trf-evrow .trf-logo { grid-column: 1 / -1; }
-    .trf-fuel-list > .trf-row .trf-logo img, .trf-ev-grid > .trf-evrow .trf-logo img, .trf-ev-list > .trf-evrow .trf-logo img { max-width: 100%; }
-    .trf-fuel-list > .trf-row .trf-pcol { text-align: left; min-width: 0; }
-    .trf-fuel-list > .trf-row .trf-pcol::before { content: attr(data-label); display: block; color: var(--secondary-text-color); font-size: 9px; font-weight: 500; text-align: left; }
-    .trf-fuel-list > .trf-row .trf-price { font-size: 12px; }
-    .trf-fuel-list > .trf-row .trf-km, .trf-ev-grid > .trf-evrow .trf-km, .trf-ev-list > .trf-evrow .trf-km { text-align: left; }
-    .trf-fuel-list > .trf-row .trf-station, .trf-fuel-list > .trf-row .trf-fordel-box,
-    .trf-ev-grid > .trf-evrow .trf-station, .trf-ev-grid > .trf-evrow .trf-fordel-box,
-    .trf-ev-grid > .trf-evrow .trf-tariffs, .trf-ev-list > .trf-evrow .trf-station,
-    .trf-ev-list > .trf-evrow .trf-fordel-box, .trf-ev-list > .trf-evrow .trf-tariffs { grid-column: 1 / -1; }
-    .trf-ev-grid > .trf-evrow .trf-pcol, .trf-ev-list > .trf-evrow .trf-pcol { min-width: 0; text-align: left; overflow-wrap: anywhere; }
-    .trf-ev-grid > .trf-evrow .trf-subtxt, .trf-ev-list > .trf-evrow .trf-subtxt,
-    .trf-fuel-list > .trf-row .trf-subtxt { -webkit-line-clamp: unset; display: block; overflow: visible; }
+    .trf-fuel-grid, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; }
+    .trf-fuel-col, .trf-ev-col { display: flex; flex-direction: column; min-width: 0; }
+    .trf-fuel-head-duplicate { display: grid; }
+    .trf-fuel-col > .trf-row, .trf-ev-col > .trf-evrow, .trf-ev-list .trf-ev-col > .trf-evrow { width: auto; min-width: 0; }
+    .trf-ev-list > .trf-em { grid-column: 1 / -1; }
     .trf-ev-dialog { width: min(1100px, calc(100vw - 32px)); max-height: 94vh; }
     .trf-ev-list { max-height: 74vh; }
   }`;
@@ -780,11 +767,12 @@
           }
         }
 
-        var head = '<div class="trf-head" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '"><span></span>';
+        var head = '<div class="trf-head trf-fuel-head" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '"><span></span>';
         if (visBenzin) head += '<span class="trf-p">95</span><span class="trf-p">100</span>';
         if (visDiesel) head += '<span class="trf-p">Diesel</span>';
         head += '<span class="trf-km" title="Afstand fra telefonens placering til nærmeste station">km</span></div>';
-        body += bestHtml + '<div class="trf-fuel-list">' + head;
+        body += bestHtml;
+        var fuelHtmlRows = [];
 
         for (var r = 0; r < rows.length; r++) {
           var row = rows[r];
@@ -848,10 +836,13 @@
             sub += '<div class="trf-station"><span class="trf-subtxt">' + esc(row.locationNote) + '</span></div>';
           }
           if (benefitEntry) sub += this._benefitBox(row.b.key, row.b.brand, benefitEntry);
-          body += '<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
-            logo + cells + kmCell + sub + "</div>";
+          fuelHtmlRows.push('<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
+            logo + cells + kmCell + sub + "</div>");
         }
-        body += '</div>';
+        var fuelSplit = Math.ceil(fuelHtmlRows.length / 2);
+        var duplicateHead = head.replace('class="trf-head trf-fuel-head"', 'class="trf-head trf-fuel-head trf-fuel-head-duplicate"');
+        body += '<div class="trf-fuel-grid"><div class="trf-fuel-col">' + head + fuelHtmlRows.slice(0, fuelSplit).join("") +
+          '</div><div class="trf-fuel-col">' + duplicateHead + fuelHtmlRows.slice(fuelSplit).join("") + '</div></div>';
       }
 
       if (hasData) {
@@ -1182,7 +1173,10 @@
       });
       html += '</div><div class="trf-ev-list">';
       if (rows.length) {
-        rows.slice(0, limit).forEach(function (row) { html += self._evRow(row.ev, loc, 1, true); });
+        var popupRows = rows.slice(0, limit).map(function (row) { return self._evRow(row.ev, loc, 1, true); });
+        var popupSplit = Math.ceil(popupRows.length / 2);
+        html += '<div class="trf-ev-col">' + popupRows.slice(0, popupSplit).join("") + '</div>' +
+          '<div class="trf-ev-col">' + popupRows.slice(popupSplit).join("") + '</div>';
       } else {
         html += '<div class="trf-em">Ingen konkrete ladesteder i udtrækket for dette selskab og filter.</div>';
       }
@@ -1338,20 +1332,22 @@
         }
       });
       var renderedBrands = new Set();
-      html += '<div class="trf-ev-grid">';
+      var evHtmlRows = [];
       groups.forEach(function (group) {
         var first = !renderedBrands.has(group.ev.brand);
         renderedBrands.add(group.ev.brand);
-        html += self._evRow(group.ev, loc, group.count, false, first ? tariffs.get(group.ev.brand) : null, group.companyGroup);
+        evHtmlRows.push(self._evRow(group.ev, loc, group.count, false, first ? tariffs.get(group.ev.brand) : null, group.companyGroup));
       });
       tariffs.forEach(function (items, brand) {
         if (renderedBrands.has(brand)) return;
         var logo = self._brandImg(brand);
-        html += '<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px"><div class="trf-logo">' + (logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(brand) + '">' : esc(brand)) + '</div>' +
+        evHtmlRows.push('<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px"><div class="trf-logo">' + (logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(brand) + '">' : esc(brand)) + '</div>' +
           '<div class="trf-pcol"><span class="trf-tariff-note">Generelle takster</span></div><span class="trf-km">–</span>' +
-          self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>';
+          self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>');
       });
-      html += '</div>';
+      var evSplit = Math.ceil(evHtmlRows.length / 2);
+      html += '<div class="trf-ev-grid"><div class="trf-ev-col">' + evHtmlRows.slice(0, evSplit).join("") +
+        '</div><div class="trf-ev-col">' + evHtmlRows.slice(evSplit).join("") + '</div></div>';
       html += self._evDataSummary(entries);
       if (!stations.length && !tariffs.size) html += '<div class="trf-em">Ingen ladesteder eller el-priser for de valgte selskaber.</div>';
       var absent = BRANDS.filter(function (b) {
