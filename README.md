@@ -1,4 +1,4 @@
-# Tiny Refuel
+# Tiny Refuel v0.2.0
 
 Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, bilkatalog og scraping i én HACS-integration.
 
@@ -43,7 +43,9 @@ vis_andet: true
 
 Første scraping starter automatisk i baggrunden og kan tage flere minutter. **Hent data** i kortet eller integrationens knap starter en fælles opdatering.
 
-Under hentning viser kortet den aktuelle udbyder og, når stationer eller adresser behandles enkeltvis, den aktuelle station/adresse. Status dækker benzin, diesel og el. Kortets layout tilpasser sig kortets bredde samt skærmens stående eller liggende format. I UI-editoren kan hele kortets YAML vises og kopieres.
+Under hentning viser kortet den aktuelle udbyder og, når stationer eller adresser behandles enkeltvis, den aktuelle station/adresse. Status dækker benzin, diesel og el. Datastatus viser hver brændstofkilde, antal stationer og priser, manglende koordinater, seneste kontrol og eventuelle fejl. Eloversigten viser tilsvarende kilde- og koordinatstatus. Gamle priser markeres som gemte, når seneste hentning fejler. Adresser uden koordinater tælles og behandles gradvist ved senere hentninger.
+
+I stående format bevares den eksisterende liste. I liggende format fordeles både benzin-/dieseludbydere og elstationer i fem kolonner, så ti elvalg vises som to rækker med fem. Farver, priser, adresser, afstande, kundefordele, filtre, navigation og knappen **Vis 10 mere** bevares. I UI-editoren kan hele kortets YAML vises og kopieres.
 
 Hent-knappen kan skjules under punktet **Hent data** i UI-editoren. Her kan du også begrænse en manuel hentning til den valgte bils drivmiddel. En benzinbil henter benzin, en dieselbil diesel, en elbil el og en plug-in-hybrid både benzin og el. Slås begrænsningen fra, hentes alle typer. Automatisk intervalhentning henter fortsat alle typer, så nye biler også får data. Data for fravalgte typer bevares mellem hentninger. Nogle brændstofkilder leverer benzin- og dieselpriser samlet, så de kan stadig blive hentet sammen.
 
@@ -52,12 +54,12 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps o
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.1.5
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.2.0
 ```
 
 ## Eksempler fra v0.1
 
-Billeder fra en faktisk Home Assistant-installation. Priser og datastatus er øjebliksbilleder fra 8. oktober 2026.
+Billederne viser den tidligere v0.1-visning fra en faktisk Home Assistant-installation. Vi opdaterer skærmbillederne, når v0.2.0 er installeret og afprøvet.
 
 ### Benzin
 
@@ -177,7 +179,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.1.5**. Kortets footer viser **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.2.0**. Kortets footer viser **Tiny Refuel v0.1**.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
