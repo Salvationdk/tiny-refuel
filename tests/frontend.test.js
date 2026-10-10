@@ -20,7 +20,8 @@ const context = { window, HTMLElement: Element, customElements: window.customEle
   setTimeout: fn => { timers.set(++timerId, fn); return timerId; },
   clearTimeout: id => timers.delete(id),
 };
-vm.runInNewContext(fs.readFileSync('custom_components/tiny_refuel/frontend/tiny-refuel-card-v0.1.js', 'utf8'), context);
+const frontendSource = fs.readFileSync('custom_components/tiny_refuel/frontend/tiny-refuel-card-v0.1.js', 'utf8');
+vm.runInNewContext(frontendSource, context);
 const Card = registry.get('tiny-refuel-card');
 assert.ok(Card);
 assert.ok(registry.get('tiny-refuel-card-editor'));
@@ -56,6 +57,7 @@ assert.ok(scrapedBenefit.includes('Eksempel på scraped fordel'));
 assert.ok(scrapedBenefit.includes('https://circlek.example/fordele'));
 assert.ok(scrapedBenefit.includes('Hentet: 2026-10-09'));
 const html = card._evHtml({ lat: 55.63, lon: 12.08 });
+assert.ok(html.includes('<div class="trf-ev-grid">'));
 assert.equal((html.match(/logo-q8.svg/g) || []).length, 1);
 assert.ok(html.includes('3 ladesteder'));
 assert.ok(html.includes('1 med lokal elpris'));
@@ -66,6 +68,7 @@ assert.ok(!html.includes('Spirii'));
 assert.ok(!html.includes('Find OK-ladesteder'));
 card._openEvBrand = 'Q8';
 const popup = card._evPopupHtml({ lat: 55.63, lon: 12.08 });
+assert.ok(popup.includes('class="trf-ev-list"'));
 assert.ok(popup.includes('Tryk på et logo for navigation'));
 assert.ok(!popup.includes('Navigér hertil'));
 for (const nav of ['waze', 'google']) {
@@ -131,6 +134,11 @@ for (const nav of ['waze', 'google']) {
       assert.equal(Boolean(row.locationNote), Boolean(loc));
     }
   }
+  fuel._data.stations[0].stale = true;
+  fuel._render();
+  assert.ok(fuel.innerHTML.includes('class="trf-fuel-list"'));
+  assert.ok(fuel.innerHTML.includes('data-label="95"'));
+  assert.ok(fuel.innerHTML.includes('trf-stale-tag">Gemt'));
   fuel._data.stations.push({ brand: 'Shell', name: 'Shell B', address: 'C vej 3', p95: 16, lat: 55.61, lon: 12.11 });
   const row = fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell');
   assert.equal(row.stAddr, 'C vej 3');
@@ -138,6 +146,26 @@ for (const nav of ['waze', 'google']) {
   assert.ok(row.locationNote.includes('kendte koordinater'));
   fuel._data.stations = [];
   assert.equal(fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell').v95, null);
+}
+
+// Landscape adds five columns to both fuel and EV station lists; the portrait base stays flow-based.
+assert.ok(frontendSource.includes('@media (orientation: landscape) and (min-width: 700px)'));
+assert.ok(frontendSource.includes('grid-template-columns: repeat(5, minmax(0, 1fr))'));
+assert.ok(frontendSource.includes('.trf-fuel-list, .trf-ev-grid { display: contents; }'));
+
+// Fuel source health and geocoding backlog remain visible from the data file.
+{
+  const status = new Card();
+  status._config = { vis_benzin: true, vis_diesel: true };
+  status._data = { geocode_pending: 2, fuel_sources: {
+    'api.circlek.com': { status: 'stale', records: 8, priced: 7, missing_coordinates: 2, last_attempt: '2026-10-10T10:00:00Z', error: 'Offline' },
+    'goon.nu': { status: 'ok', records: 4, priced: 4, missing_coordinates: 0, last_success: '2026-10-10T10:00:00Z' },
+  } };
+  const summary = status._fuelDataSummary();
+  assert.ok(summary.includes('Circle K og Ingo'));
+  assert.ok(summary.includes('Gemte data · nyt forsøg fejlede'));
+  assert.ok(summary.includes('2 adresser afventer koordinater'));
+  assert.ok(summary.includes('Offline'));
 }
 
 // Tesla always shows two explicitly labelled tariffs, irrespective of car.
