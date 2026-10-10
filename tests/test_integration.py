@@ -22,7 +22,8 @@ def payload():
             "stations": [], "ev": [{"brand": "Q8", "location_id": "a", "address": "A", "kind": "AC", "kwh": 3.89},
             {"brand": "Q8", "location_id": "a", "address": "A", "kind": "DC", "kwh": 3.89},
             {"brand": "OK", "location_id": "b", "address": "B", "kwh": None},
-            {"brand": "OK", "name": "Generel takst", "kwh": 3.49}], "errors": [], "ev_sources": {}}
+            {"brand": "OK", "name": "Generel takst", "kwh": 3.49}], "errors": [], "ev_sources": {},
+            "fuel_sources": {}, "geocode_pending": 0}
 
 
 class FakeHass:
@@ -101,6 +102,7 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
                 self.assertIn(('tiny_refuel','refresh'),self.hass.services_map)
                 entities=[];await sensor.async_setup_entry(self.hass,entry,entities.extend)
                 self.assertEqual([e.native_value for e in entities[:2]],[2,1]);self.assertIsNotNone(entities[2].native_value)
+                self.assertEqual(entities[2].extra_state_attributes['adresser_afventer_koordinater'],0)
                 buttons=[];await button.async_setup_entry(self.hass,entry,buttons.extend)
                 await buttons[0].async_press();await entry.runtime_data.task
                 await self.hass.services_map[('tiny_refuel','refresh')](SimpleNamespace(data={'fuel_types':['diesel']}));await entry.runtime_data.task
@@ -117,6 +119,16 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
 
 
 class SourceTests(unittest.TestCase):
+    def test_ok_no_current_price_changes_is_successful_without_new_list_price(self):
+        page = '<h1>Seneste prisændring</h1><p>Der er ingen aktuelle prisændringer på OK\'s benzinprodukter.</p>'
+        with patch.object(scraper, 'get_text', return_value=page):
+            errors = []
+            rows, ev_rows, ok = scraper.fetch_ok(errors, include_el=False)
+        self.assertEqual(rows, [])
+        self.assertEqual(ev_rows, [])
+        self.assertTrue(ok)
+        self.assertEqual(errors, [])
+
     def test_failed_source_preserves_only_its_own_previous_records(self):
         old=[{'brand':'Shell','source':'shell-charging','address':'A','source_updated':'2026-01-01T00:00:00Z'}, {'brand':'OK','source':'different','address':'B'}]
         def fail():raise ValueError('offline')

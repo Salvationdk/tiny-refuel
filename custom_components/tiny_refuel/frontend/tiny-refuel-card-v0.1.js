@@ -22,6 +22,8 @@
   .trf-b100 { color: var(--accent-color, #b967ff); text-shadow: 0 0 10px rgba(185,103,255,.7); }
   .trf-inline { height: 14px; vertical-align: middle; margin-left: 6px; border-radius: 3px; }
   .trf-head, .trf-row, .trf-evrow { display: grid; align-items: center; gap: 6px; padding: 4px 8px; }
+  .trf-fuel-grid, .trf-fuel-col, .trf-ev-grid, .trf-ev-col { display: contents; }
+  .trf-fuel-head-duplicate { display: none; }
   .trf-head { font-size: 11px; letter-spacing: .8px; text-transform: uppercase; color: var(--secondary-text-color); opacity: .8; border-bottom: 1px solid rgba(255,255,255,.06); }
   .trf-head .trf-p { text-align: right; }
   .trf-head .trf-km { text-align: right; }
@@ -51,6 +53,7 @@
   .trf-fordel-box { grid-column: 1 / -1; font-size: 11px; line-height: 1.5; margin-top: 4px; padding: 6px 10px; border-radius: 8px; border: 1px dashed rgba(0,229,255,.4); background: rgba(0,229,255,.05); color: var(--primary-text-color); }
   .trf-pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; border: 1px solid rgba(255,179,64,.5); color: #ffb340; border-radius: 20px; padding: 1px 8px; margin-top: 3px; }
   .trf-srctag { display: inline-block; font-size: 10px; opacity: .6; border: 1px solid rgba(255,255,255,.18); border-radius: 20px; padding: 1px 8px; margin-top: 3px; }
+  .trf-stale-tag { display: inline-block; margin-left: 4px; color: #ffb340; font-size: 9px; font-weight: 600; vertical-align: middle; }
   .trf-brand { font-weight: 700; font-size: 13px; margin: 12px 6px 4px; }
   .trf-evrow .trf-price { color: var(--primary-color, #00e5ff); text-shadow: 0 0 10px rgba(0,229,255,.75); }
   .trf-evrow .trf-meta { color: var(--secondary-text-color); font-size: 10px; }
@@ -108,6 +111,15 @@
     .trf-titlebar { margin-bottom: 0; }
     .trf-rule { margin: 3px 0; }
     .trf-ev-dialog { max-height: 94vh; }
+    .trf-ev-list { max-height: 74vh; }
+  }
+  @media (orientation: landscape) and (min-width: 700px) {
+    .trf-fuel-grid, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; }
+    .trf-fuel-col, .trf-ev-col { display: flex; flex-direction: column; min-width: 0; }
+    .trf-fuel-head-duplicate { display: grid; }
+    .trf-fuel-col > .trf-row, .trf-ev-col > .trf-evrow, .trf-ev-list .trf-ev-col > .trf-evrow { width: auto; min-width: 0; }
+    .trf-ev-list > .trf-em { grid-column: 1 / -1; }
+    .trf-ev-dialog { width: min(1100px, calc(100vw - 32px)); max-height: 94vh; }
     .trf-ev-list { max-height: 74vh; }
   }`;
 
@@ -354,6 +366,12 @@
       var h = Math.floor(mins / 60);
       if (h < 48) return pre + h + "t";
       return pre + Math.floor(h / 24) + "d";
+    }
+
+    _fmtStamp(value) {
+      if (!value) return "–";
+      var date = new Date(value);
+      return isNaN(date.getTime()) ? "–" : date.toLocaleString("da-DK", { dateStyle: "short", timeStyle: "short" });
     }
 
     _tankLiters() {
@@ -640,6 +658,7 @@
           row.ll = this._evCoords(pst) ? pst.lat + "," + pst.lon : null;
           row.stName = (pst.name || pst.brand) + (pst.stale ? ' · gemte data: seneste hentning fejlede' : '');
           row.stAddr = pst.address;
+          row.stale = !!pst.stale;
           row.stAge = this._fmtAge(pst.lu);
           row.stAgeRaw = pst.lu;
           row.alt = pst.alt || null;
@@ -748,30 +767,32 @@
           }
         }
 
-        var head = '<div class="trf-head" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '"><span></span>';
+        var head = '<div class="trf-head trf-fuel-head" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '"><span></span>';
         if (visBenzin) head += '<span class="trf-p">95</span><span class="trf-p">100</span>';
         if (visDiesel) head += '<span class="trf-p">Diesel</span>';
         head += '<span class="trf-km" title="Afstand fra telefonens placering til nærmeste station">km</span></div>';
-        body += bestHtml + head;
+        body += bestHtml;
+        var fuelHtmlRows = [];
 
         for (var r = 0; r < rows.length; r++) {
           var row = rows[r];
           var g95 = visBenzin && min95 !== null && row.v95 !== null && row.v95 === min95;
           var g100 = visBenzin && row.b.has100 && min100 !== null && row.v100 !== null && row.v100 === min100;
           var cls = "trf-row";
+          var staleTag = row.stale ? '<span class="trf-stale-tag">Gemt</span>' : '';
           var cells = "";
           if (visBenzin) {
             cells += row.v95 === null
-              ? '<div class="trf-pcol"><span class="trf-price trf-na">–</span></div>'
-              : '<div class="trf-pcol"><span class="trf-price' + (g95 ? " trf-g95" : "") + '">' + this._fmt(row.v95) + "</span>" + row.chg + "</div>";
+              ? '<div class="trf-pcol" data-label="95"><span class="trf-price trf-na">–</span></div>'
+              : '<div class="trf-pcol" data-label="95"><span class="trf-price' + (g95 ? " trf-g95" : "") + '">' + this._fmt(row.v95) + "</span>" + staleTag + row.chg + "</div>";
             cells += (!row.b.has100 || row.v100 === null)
-              ? '<div class="trf-pcol"><span class="trf-price trf-na">–</span></div>'
-              : '<div class="trf-pcol"><span class="trf-price' + (g100 ? " trf-g100" : "") + '">' + this._fmt(row.v100) + "</span></div>";
+              ? '<div class="trf-pcol" data-label="100"><span class="trf-price trf-na">–</span></div>'
+              : '<div class="trf-pcol" data-label="100"><span class="trf-price' + (g100 ? " trf-g100" : "") + '">' + this._fmt(row.v100) + "</span>" + staleTag + "</div>";
           }
           if (visDiesel) {
             cells += row.diesel === null
-              ? '<div class="trf-pcol"><span class="trf-price trf-na">–</span></div>'
-              : '<div class="trf-pcol"><span class="trf-price">' + this._fmt(row.diesel) + "</span></div>";
+              ? '<div class="trf-pcol" data-label="Diesel"><span class="trf-price trf-na">–</span></div>'
+              : '<div class="trf-pcol" data-label="Diesel"><span class="trf-price">' + this._fmt(row.diesel) + "</span>" + staleTag + "</div>";
           }
           var kmCell, link, title;
           if (row.liste) {
@@ -815,9 +836,13 @@
             sub += '<div class="trf-station"><span class="trf-subtxt">' + esc(row.locationNote) + '</span></div>';
           }
           if (benefitEntry) sub += this._benefitBox(row.b.key, row.b.brand, benefitEntry);
-          body += '<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
-            logo + cells + kmCell + sub + "</div>";
+          fuelHtmlRows.push('<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
+            logo + cells + kmCell + sub + "</div>");
         }
+        var fuelSplit = Math.ceil(fuelHtmlRows.length / 2);
+        var duplicateHead = head.replace('class="trf-head trf-fuel-head"', 'class="trf-head trf-fuel-head trf-fuel-head-duplicate"');
+        body += '<div class="trf-fuel-grid"><div class="trf-fuel-col">' + head + fuelHtmlRows.slice(0, fuelSplit).join("") +
+          '</div><div class="trf-fuel-col">' + duplicateHead + fuelHtmlRows.slice(fuelSplit).join("") + '</div></div>';
       }
 
       if (hasData) {
@@ -938,7 +963,7 @@
         '<div class="trf-titlebar"><div class="trf-title">' + cardTitle + '</div>' +
         '<button class="trf-refresh' + (this._locRefreshing ? " trf-spin" : "") + '" data-refresh title="Hent frisk GPS-position fra telefonen">⟳</button></div>' +
         '<div class="trf-rule"></div>' +
-        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() +
+        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() + this._fuelDataSummary() +
         carHtml +
         (visAndet
           ? '<div class="trf-pos">Position: ' + (this._locRefreshing ? "opdaterer…" : esc(this._posAge() || "ukendt")) + "</div>"
@@ -1148,7 +1173,10 @@
       });
       html += '</div><div class="trf-ev-list">';
       if (rows.length) {
-        rows.slice(0, limit).forEach(function (row) { html += self._evRow(row.ev, loc, 1, true); });
+        var popupRows = rows.slice(0, limit).map(function (row) { return self._evRow(row.ev, loc, 1, true); });
+        var popupSplit = Math.ceil(popupRows.length / 2);
+        html += '<div class="trf-ev-col">' + popupRows.slice(0, popupSplit).join("") + '</div>' +
+          '<div class="trf-ev-col">' + popupRows.slice(popupSplit).join("") + '</div>';
       } else {
         html += '<div class="trf-em">Ingen konkrete ladesteder i udtrækket for dette selskab og filter.</div>';
       }
@@ -1180,16 +1208,52 @@
       return '<div class="trf-tariffs">' + lines + '<span class="trf-tariff-note">' + esc(note) + '</span></div>';
     }
 
+    _fuelDataSummary() {
+      if (!this._effVis().benzin && !this._effVis().diesel) return '';
+      var data = this._data, sources = data && data.fuel_sources;
+      if (!sources || !Object.keys(sources).length) {
+        return data && Array.isArray(data.stations) && data.stations.length
+          ? '<div class="trf-em">Brændstofkildernes datastatus vises efter næste hentning.</div>' : '';
+      }
+      var names = {
+        "api.circlek.com": "Circle K og Ingo", "f24.dk": "F24 og Q8", "goon.nu": "Go’on",
+        "unoxmobility.dk": "Uno-X", "shellservice.dk": "Shell", "ok.dk": "OK",
+        "mobility-prices.ok.dk": "OK brændstofpriser", "oil-fuel-api": "OIL brændstofpriser",
+        "oil-tankstationer.dk": "OIL listepriser"
+      };
+      var keys = Object.keys(sources).sort(function (a, b) { return (names[a] || a).localeCompare(names[b] || b, "da"); });
+      var failures = keys.filter(function (key) { return sources[key] && sources[key].status !== "ok"; }).length;
+      var summary = failures ? failures + " brændstofkilder kræver opmærksomhed" : keys.length + " brændstofkilder · seneste status";
+      var html = '<details class="trf-data-counts"><summary>' + esc(summary) + '</summary>' +
+        '<table><thead><tr><th>Kilde</th><th>Stationer</th><th>Priser</th><th>Koordinater mangler</th><th>Status · tidspunkt</th></tr></thead><tbody>';
+      keys.forEach(function (key) {
+        var item = sources[key] || {}, state = item.status === "ok" ? "OK" :
+          (item.status === "stale" ? "Gemte data · nyt forsøg fejlede" : "Fejl");
+        var stamp = item.status === "ok" ? item.last_success : item.last_attempt;
+        var detail = item.error ? ' title="' + esc(item.error) + '"' : '';
+        html += '<tr><td>' + esc(names[key] || key) + '</td><td>' + (Number(item.records) || 0) +
+          '</td><td>' + (Number(item.priced) || 0) + '</td><td>' + (Number(item.missing_coordinates) || 0) +
+          '</td><td' + detail + '>' + esc(state + " · " + this._fmtStamp(stamp)) + '</td></tr>';
+      }, this);
+      html += '</tbody></table>';
+      var pending = Number(data.geocode_pending) || 0;
+      if (pending) html += '<div>' + pending + ' adresser afventer koordinater. De behandles gradvist ved senere hentninger.</div>';
+      else html += '<div>Koordinater er slået op for alle adresser med kendte adresser.</div>';
+      html += '</details>';
+      return html;
+    }
+
     _evDataSummary(entries) {
       var self = this, providers = new Map();
       entries.forEach(function (ev) {
         var p = providers.get(ev.brand);
-        if (!p) { p = { sites: new Set(), priced: new Set(), stale: new Set(), tariffs: false }; providers.set(ev.brand, p); }
+        if (!p) { p = { sites: new Set(), priced: new Set(), stale: new Set(), missingCoords: 0, tariffs: false }; providers.set(ev.brand, p); }
         if (!self._evHasLocation(ev)) {
           if (typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0) p.tariffs = true;
           return;
         }
         var coords = self._evCoords(ev);
+        if (!coords) p.missingCoords++;
         var key = ev.location_id || (coords ? coords.lat + ',' + coords.lon : String(ev.address).toLowerCase().trim());
         p.sites.add(key);
         var teslaPriced = ev.brand === 'Tesla' && ['member', 'non_member'].some(function (g) {
@@ -1201,12 +1265,30 @@
       var sites = 0, priced = 0, count = 0;
       providers.forEach(function (p) { sites += p.sites.size; priced += p.priced.size; if (p.sites.size || p.tariffs) count++; });
       var html = '<details class="trf-data-counts"><summary>Data fra ' + count + ' selskaber · ' + sites + ' ladesteder · ' + priced + ' med lokal elpris</summary>' +
-        '<table><thead><tr><th>Selskab</th><th>Steder</th><th>Med lokal pris</th><th>Datastatus</th></tr></thead><tbody>';
+        '<table><thead><tr><th>Selskab</th><th>Steder</th><th>Med lokal pris</th><th>Koordinater mangler</th><th>Datastatus · seneste kontrol</th></tr></thead><tbody>';
+      var sourceKeys = { "Clever": "clever", "E.ON": "eon", "Tesla": "tesla", "IONITY": "ionity", "OK": "ok", "OIL": "oil", "Shell": "shell", "Circle K": "circle_k" };
       providers.forEach(function (p, brand) {
         if (!p.sites.size && !p.tariffs) return;
-        var status = p.stale.size ? p.stale.size + ' steder med gemte data' : 'Indlæste data';
+        var source = self._data && self._data.ev_sources && self._data.ev_sources[sourceKeys[brand]];
+        var state = source && source.status;
+        var status = state === 'stale' ? 'Seneste forsøg fejlede · gemte data' :
+          (state === 'error' ? 'Seneste hentning fejlede' : (p.stale.size ? p.stale.size + ' steder med gemte data' : 'Indlæste data'));
         if (p.tariffs) status += ' · generelle takster';
-        html += '<tr><td>' + esc(brand) + '</td><td>' + p.sites.size + '</td><td>' + p.priced.size + '</td><td>' + esc(status) + '</td></tr>';
+        var stamp = source && (state === 'ok' ? source.last_success : source.last_attempt);
+        if (!source) status += ' · status afventer næste hentning';
+        html += '<tr><td>' + esc(brand) + '</td><td>' + p.sites.size + '</td><td>' + p.priced.size + '</td><td>' + p.missingCoords +
+          '</td><td title="' + esc(source && source.error || '') + '">' + esc(status + (stamp ? ' · ' + self._fmtStamp(stamp) : '')) + '</td></tr>';
+      });
+      Object.keys(sourceKeys).forEach(function (brand) {
+        var key = sourceKeys[brand], p = providers.get(brand);
+        if (!showBrand(self._config, key) || (p && (p.sites.size || p.tariffs))) return;
+        var source = self._data && self._data.ev_sources && self._data.ev_sources[key];
+        if (!source) return;
+        var state = source.status === 'ok' ? 'OK · ingen steder i udtrækket' :
+          (source.status === 'stale' ? 'Seneste forsøg fejlede · ingen gemte steder' : 'Seneste hentning fejlede');
+        var stamp = source.status === 'ok' ? source.last_success : source.last_attempt;
+        html += '<tr><td>' + esc(brand) + '</td><td>0</td><td>0</td><td>–</td><td title="' + esc(source.error || '') + '">' +
+          esc(state + (stamp ? ' · ' + self._fmtStamp(stamp) : '')) + '</td></tr>';
       });
       html += '</tbody></table><div>Kun valgte selskaber. AC/DC på samme sted tælles én gang pr. selskab. Generelle takster tælles ikke som lokale priser.</div></details>';
       return html;
@@ -1250,18 +1332,22 @@
         }
       });
       var renderedBrands = new Set();
+      var evHtmlRows = [];
       groups.forEach(function (group) {
         var first = !renderedBrands.has(group.ev.brand);
         renderedBrands.add(group.ev.brand);
-        html += self._evRow(group.ev, loc, group.count, false, first ? tariffs.get(group.ev.brand) : null, group.companyGroup);
+        evHtmlRows.push(self._evRow(group.ev, loc, group.count, false, first ? tariffs.get(group.ev.brand) : null, group.companyGroup));
       });
       tariffs.forEach(function (items, brand) {
         if (renderedBrands.has(brand)) return;
         var logo = self._brandImg(brand);
-        html += '<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px"><div class="trf-logo">' + (logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(brand) + '">' : esc(brand)) + '</div>' +
+        evHtmlRows.push('<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px"><div class="trf-logo">' + (logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(brand) + '">' : esc(brand)) + '</div>' +
           '<div class="trf-pcol"><span class="trf-tariff-note">Generelle takster</span></div><span class="trf-km">–</span>' +
-          self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>';
+          self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>');
       });
+      var evSplit = Math.ceil(evHtmlRows.length / 2);
+      html += '<div class="trf-ev-grid"><div class="trf-ev-col">' + evHtmlRows.slice(0, evSplit).join("") +
+        '</div><div class="trf-ev-col">' + evHtmlRows.slice(evSplit).join("") + '</div></div>';
       html += self._evDataSummary(entries);
       if (!stations.length && !tariffs.size) html += '<div class="trf-em">Ingen ladesteder eller el-priser for de valgte selskaber.</div>';
       var absent = BRANDS.filter(function (b) {
