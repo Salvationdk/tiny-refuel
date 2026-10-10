@@ -136,7 +136,8 @@ for (const nav of ['waze', 'google']) {
   }
   fuel._data.stations[0].stale = true;
   fuel._render();
-  assert.ok(fuel.innerHTML.includes('class="trf-fuel-list"'));
+  assert.ok(fuel.innerHTML.includes('class="trf-fuel-grid"'));
+  assert.equal((fuel.innerHTML.match(/class="trf-fuel-col"/g) || []).length, 2);
   assert.ok(fuel.innerHTML.includes('data-label="95"'));
   assert.ok(fuel.innerHTML.includes('trf-stale-tag">Gemt'));
   fuel._data.stations.push({ brand: 'Shell', name: 'Shell B', address: 'C vej 3', p95: 16, lat: 55.61, lon: 12.11 });
@@ -148,10 +149,13 @@ for (const nav of ['waze', 'google']) {
   assert.equal(fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell').v95, null);
 }
 
-// Landscape adds five columns to both fuel and EV station lists; the portrait base stays flow-based.
+// Landscape places the existing horizontal station rows in two columns; portrait stays flow-based.
 assert.ok(frontendSource.includes('@media (orientation: landscape) and (min-width: 700px)'));
-assert.ok(frontendSource.includes('grid-template-columns: repeat(5, minmax(0, 1fr))'));
-assert.ok(frontendSource.includes('.trf-fuel-list, .trf-ev-grid { display: contents; }'));
+assert.ok(frontendSource.includes('grid-template-columns: repeat(2, minmax(0, 1fr))'));
+assert.ok(frontendSource.includes('.trf-fuel-grid, .trf-fuel-col, .trf-ev-grid, .trf-ev-col { display: contents; }'));
+assert.ok(!frontendSource.includes('grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important'));
+assert.ok(frontendSource.includes('var fuelSplit = Math.ceil(fuelHtmlRows.length / 2)'));
+assert.ok(frontendSource.includes('var evSplit = Math.ceil(evHtmlRows.length / 2)'));
 
 // Fuel source health and geocoding backlog remain visible from the data file.
 {
