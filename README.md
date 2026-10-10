@@ -57,51 +57,9 @@ Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manu
 /tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.2.0
 ```
 
-## Eksempler fra v0.1
+## Skærmbilleder
 
-Billederne viser den tidligere v0.1-visning fra en faktisk Home Assistant-installation. Vi opdaterer skærmbillederne, når v0.2.0 er installeret og afprøvet.
-
-### Benzin
-
-Selskabslogoer, priser, adresser og bilvalg.
-
-![Benzinpriser](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/benzin-v0.1.png)
-
-### Hybrid uden stik
-
-Hybrid uden stik viser benzin. Plug-in-hybrid kan vise både benzin og opladning.
-
-![Hybrid med benzinpriser](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/hybrid-v0.1.png)
-
-### EL
-
-Ladepriser, generelle selskabstakster og knapper til ladesteder. Position er ikke valgt i dette eksempel.
-
-![Ladepriser og ladesteder](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/el-v0.1.png)
-
-### Datastatus
-
-Antal ladesteder, steder med lokal elpris og status for datakilder. Eksemplet viser en fejl hos Tesla.
-
-![Antal ladesteder og datastatus](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/el-datastatus-v0.1.png)
-
-### Visuel editor
-
-Vælg drivmidler, selskaber og biler med forhåndsvisning af kortet.
-
-![Kortets visuelle editor](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/editor-v0.1.png)
-
-### Navigation
-
-Vælg Waze eller Google Maps. Navigation åbnes ved tryk på selskabets logo.
-
-![Valg af Waze eller Google Maps](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/navigation-v0.1.png)
-
-### Bilkatalog
-
-Vælg bilmærke og model fra kataloget, eller indtast bilen manuelt.
-
-![Valg af bilmærke fra kataloget](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/main/docs/images/bilkatalog-v0.1.png)
+Skærmbillederne opdateres til v0.2.0, når kandidaten er installeret og afprøvet. De tidligere v0.1-billeder er midlertidigt taget ud, så README ikke viser dem som den aktuelle version.
 
 ## Funktioner
 
@@ -179,7 +137,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.0**. Kortets footer viser kortformatserien **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.2.0**. Kortets footer viser **Tiny Refuel v0.1**.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
