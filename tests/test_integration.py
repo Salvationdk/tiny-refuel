@@ -22,7 +22,8 @@ def payload():
             "stations": [], "ev": [{"brand": "Q8", "location_id": "a", "address": "A", "kind": "AC", "kwh": 3.89},
             {"brand": "Q8", "location_id": "a", "address": "A", "kind": "DC", "kwh": 3.89},
             {"brand": "OK", "location_id": "b", "address": "B", "kwh": None},
-            {"brand": "OK", "name": "Generel takst", "kwh": 3.49}], "errors": [], "ev_sources": {}}
+            {"brand": "OK", "name": "Generel takst", "kwh": 3.49}], "errors": [], "ev_sources": {},
+            "fuel_sources": {}, "geocode_pending": 0}
 
 
 class FakeHass:
@@ -101,6 +102,7 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
                 self.assertIn(('tiny_refuel','refresh'),self.hass.services_map)
                 entities=[];await sensor.async_setup_entry(self.hass,entry,entities.extend)
                 self.assertEqual([e.native_value for e in entities[:2]],[2,1]);self.assertIsNotNone(entities[2].native_value)
+                self.assertEqual(entities[2].extra_state_attributes['adresser_afventer_koordinater'],0)
                 buttons=[];await button.async_setup_entry(self.hass,entry,buttons.extend)
                 await buttons[0].async_press();await entry.runtime_data.task
                 await self.hass.services_map[('tiny_refuel','refresh')](SimpleNamespace(data={'fuel_types':['diesel']}));await entry.runtime_data.task
