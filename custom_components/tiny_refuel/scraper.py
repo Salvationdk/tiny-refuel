@@ -640,6 +640,7 @@ def normalize_circlek_charging(payload):
 
 
 def fetch_public_ev_locations(url, parser, source, previous, errors, json_feed=True, payload_loader=None):
+    attempted = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     try:
         if payload_loader:
             payload = payload_loader()
@@ -649,15 +650,19 @@ def fetch_public_ev_locations(url, parser, source, previous, errors, json_feed=T
         rows = parser(payload)
         if not rows:
             raise ValueError("no usable Danish charging locations")
-        fetched = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        fetched = attempted
         for row in rows:
             row["source_updated"] = fetched
-        return rows, {"status": "ok", "updated": fetched, "records": len(rows), "prices_available": False}
+        return rows, {"status": "ok", "updated": fetched, "last_attempt": attempted,
+                      "last_success": fetched, "records": len(rows), "prices_available": False}
     except Exception as exc:
         rows = [dict(row, stale=True) for row in previous
                 if isinstance(row, dict) and row.get("source") == source]
+        last_success = max((str(row.get("source_updated")) for row in rows if row.get("source_updated")), default=None)
         errors.append({"source": source, "error": str(exc), "stale_reused": len(rows)})
-        return rows, {"status": "stale" if rows else "error", "records": len(rows), "prices_available": False}
+        return rows, {"status": "stale" if rows else "error", "updated": last_success,
+                      "last_attempt": attempted, "last_success": last_success,
+                      "records": len(rows), "prices_available": False}
 
 
 # ---------- Circle K + Ingo official API ----------
@@ -1444,6 +1449,48 @@ def _preserve_unselected_fuels(fresh, previous, selected):
     return rows
 
 
+def _fuel_source_statuses(source_ok, stations, previous, errors, checked_at):
+    """Keep a compact health record for each fuel data source."""
+    previous = previous if isinstance(previous, dict) else {}
+    error_keys = {
+        "api.circlek.com": ("ck_api",),
+        "f24.dk": ("f24q8",),
+        "goon.nu": ("goon",),
+        "unoxmobility.dk": ("unox",),
+        "shellservice.dk": ("shell_pdf", "shell"),
+        "ok.dk": ("ok",),
+        "mobility-prices.ok.dk": ("ok_fuel_api",),
+        "oil-fuel-api": ("oil_fuel_api",),
+        "oil-tankstationer.dk": ("oil",),
+    }
+    result = dict(previous)
+    for source, ok in source_ok.items():
+        rows = [row for row in stations if isinstance(row, dict) and row.get("source") == source and not row.get("liste")]
+        old = previous.get(source) if isinstance(previous.get(source), dict) else {}
+        source_errors = []
+        for error in errors:
+            if not isinstance(error, dict):
+                continue
+            for key in error_keys.get(source, ()):
+                if error.get(key):
+                    source_errors.append(str(error[key]))
+        status = "ok" if ok else ("stale" if rows or old.get("last_success") else "error")
+        result[source] = {
+            "status": status,
+            "last_attempt": checked_at,
+            "last_success": checked_at if ok else old.get("last_success"),
+            "records": len(rows),
+            "priced": sum(1 for row in rows if any(
+                isinstance(row.get(field), (int, float)) and row.get(field) > 0
+                for field in ("p95", "p100", "diesel"))),
+            "missing_address": sum(1 for row in rows if not row.get("address")),
+            "missing_coordinates": sum(1 for row in rows if row.get("address") and
+                                        (row.get("lat") is None or row.get("lon") is None)),
+            "error": source_errors[0] if source_errors else None,
+        }
+    return result
+
+
 def _collect(progress_callback=None, fuel_types=None):
     errors = []
     prev = load_json(OUT, {})
@@ -1578,12 +1625,21 @@ def _collect(progress_callback=None, fuel_types=None):
         "kwh": mean([s.get("kwh") for s in pump]),
     }
 
+    updated = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    fuel_sources = dict(prev.get("fuel_sources", {})) if isinstance(prev.get("fuel_sources"), dict) else {}
+    if selected & {"benzin", "diesel"}:
+        fuel_sources = _fuel_source_statuses(
+            src_ok, stations, fuel_sources, errors, updated)
+    geocode_pending = sum(1 for station in stations
+                          if not station.get("liste") and station.get("address") and
+                          (station.get("lat") is None or station.get("lon") is None))
+
     provider_benefits, benefit_errors = fetch_benefits(prev.get("benefits", {}), progress_callback)
 
     save_json(OUT, {
         "project": "Tiny Refuel",
         "scraper_version": "v0.1",
-        "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "updated": updated,
         "errors": errors,
         "snittet": snittet,
         "stations": stations,
@@ -1591,6 +1647,8 @@ def _collect(progress_callback=None, fuel_types=None):
         "benefits": provider_benefits,
         "benefit_errors": benefit_errors,
         "ev_sources": ev_statuses,
+        "fuel_sources": fuel_sources,
+        "geocode_pending": geocode_pending,
     })
     # Partial errors must not fail the sensor: data is still written and the
     # errors array inside priser-og-ladesteder.json shows what missed. Only fail on no data.
