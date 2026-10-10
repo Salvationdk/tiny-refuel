@@ -71,6 +71,7 @@ class TeslaTests(unittest.TestCase):
         self.assertEqual(row['tesla_price_updated'], old['tesla_price_updated'])
         self.assertEqual(status['price_errors'], 1)
         self.assertEqual(errors[0]['source'], 'tesla-prices')
+        self.assertIn('HTTP 403 Forbidden', errors[0]['error'])
 
     def test_loader_uses_legacy_slug_instead_of_numeric_identifier(self):
         row = {'source': 'tesla.com', 'location_id': 'old', 'tesla_site_slug': 'hjorringsupercharger'}
