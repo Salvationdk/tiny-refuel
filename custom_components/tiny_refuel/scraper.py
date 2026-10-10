@@ -343,7 +343,9 @@ def enrich_tesla_prices(rows, status, previous, errors, progress_callback=None):
         site_id = row.get("tesla_site_slug", "")
         if not re.fullmatch(r"[A-Za-z0-9_-]+", site_id):
             return None, "missing public site id", False
-        url = "https://www.tesla.com/da_DK/findus/location/supercharger/" + site_id
+        # Use Tesla's public, locale-neutral location route. The localized
+        # route has returned HTTP 403 for some Home Assistant installations.
+        url = "https://www.tesla.com/findus/location/supercharger/" + site_id
         try:
             result = normalize_tesla_detail(get_text(url, timeout=20), site_id)
             result["source_url"] = url
