@@ -119,6 +119,16 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
 
 
 class SourceTests(unittest.TestCase):
+    def test_ok_no_current_price_changes_is_successful_without_new_list_price(self):
+        page = '<h1>Seneste prisændring</h1><p>Der er ingen aktuelle prisændringer på OK\'s benzinprodukter.</p>'
+        with patch.object(scraper, 'get_text', return_value=page):
+            errors = []
+            rows, ev_rows, ok = scraper.fetch_ok(errors, include_el=False)
+        self.assertEqual(rows, [])
+        self.assertEqual(ev_rows, [])
+        self.assertTrue(ok)
+        self.assertEqual(errors, [])
+
     def test_failed_source_preserves_only_its_own_previous_records(self):
         old=[{'brand':'Shell','source':'shell-charging','address':'A','source_updated':'2026-01-01T00:00:00Z'}, {'brand':'OK','source':'different','address':'B'}]
         def fail():raise ValueError('offline')
