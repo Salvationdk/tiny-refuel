@@ -56,6 +56,16 @@ class BenefitsTests(unittest.TestCase):
         self.assertEqual(benefits.extract_excerpt(page),
                          "Udbyderen giver 10 øre i rabat pr. kWh ved betaling med app.")
 
+    def test_ignores_unattributed_opinion_from_a_reviewer(self):
+        page = """
+        <main>
+        <p>Great app and discount, writes one user.</p>
+        <p>Get 20 øre off per kWh with the provider app.</p>
+        </main>
+        """
+        self.assertEqual(benefits.extract_excerpt(page),
+                         "Get 20 øre off per kWh with the provider app.")
+
     def test_uses_fresh_cache_without_requesting_page(self):
         now = 2_000_000_000
         cache = {key: {"provider": provider, "summary": "Cached benefit",
