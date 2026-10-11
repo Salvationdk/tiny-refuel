@@ -33,6 +33,12 @@ class RefuelManager:
         cached = await self.hass.async_add_executor_job(
             scraper.load_json, str(self.data_dir / "priser-og-ladesteder.json"), {})
         if isinstance(cached, dict) and cached.get("project") == "Tiny Refuel":
+            cached["ev"] = [row for row in cached.get("ev", [])
+                            if isinstance(row, dict) and row.get("brand") != "Tesla"]
+            if isinstance(cached.get("ev_sources"), dict):
+                cached["ev_sources"].pop("tesla", None)
+            if isinstance(cached.get("benefits"), dict):
+                cached["benefits"].pop("tesla", None)
             self.data = cached
 
     def subscribe(self, listener):
