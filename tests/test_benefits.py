@@ -21,11 +21,21 @@ class BenefitsTests(unittest.TestCase):
         excerpt = benefits.extract_excerpt(page)
         self.assertEqual(excerpt, "Members receive a discount of 20 øre per kWh when they pay using the provider app.")
 
+    def test_ignores_customer_comments_even_when_they_match_benefit_keywords(self):
+        page = """
+        <main><p>Get 15 øre discount per kWh with the provider's own charging app.</p>
+        <div class="reviews"><article><p>Customer says the app gives a great discount and cheap price.</p></article></div>
+        <section aria-label="Kundeanmeldelser"><p>Users receive a discount and free charging, says a customer.</p></section>
+        </main>
+        """
+        self.assertEqual(benefits.extract_excerpt(page),
+                         "Get 15 øre discount per kWh with the provider's own charging app.")
+
     def test_uses_fresh_cache_without_requesting_page(self):
         now = 2_000_000_000
         cache = {key: {"provider": provider, "summary": "Cached benefit",
                        "source_url": "https://example.test", "fetched_ts": now - 20,
-                       "fetched_at": "cached", "status": "ok"}
+                       "fetched_at": "cached", "extractor_version": benefits.EXTRACTOR_VERSION, "status": "ok"}
                  for key, (provider, _) in benefits.PROVIDER_PAGES.items()}
         saved = []
         result, failures = benefits.update(
@@ -40,7 +50,7 @@ class BenefitsTests(unittest.TestCase):
         now = 2_000_000_000
         old = {"circle_k": {"provider": "Circle K", "summary": "Last good benefit",
                             "source_url": "https://example.test", "fetched_ts": now - benefits.REFRESH_AFTER - 1,
-                            "fetched_at": "old", "status": "ok"}}
+                            "fetched_at": "old", "extractor_version": benefits.EXTRACTOR_VERSION, "status": "ok"}}
         result, failures = benefits.update(
             lambda *a, **k: (_ for _ in ()).throw(OSError("offline")),
             lambda path, default: old, lambda *a: None, "cache.json", now=now)
@@ -48,11 +58,22 @@ class BenefitsTests(unittest.TestCase):
         self.assertEqual(result["circle_k"]["status"], "stale")
         self.assertEqual(len(failures), len(benefits.PROVIDER_PAGES))
 
+    def test_legacy_extract_is_refreshed_and_not_shown_if_refresh_fails(self):
+        now = 2_000_000_000
+        old = {"circle_k": {"provider": "Circle K", "summary": "Customer review with a discount",
+                            "source_url": "https://example.test", "fetched_ts": now - 10,
+                            "fetched_at": "old", "status": "ok"}}
+        result, _ = benefits.update(
+            lambda *a, **k: (_ for _ in ()).throw(OSError("offline")),
+            lambda path, default: old, lambda *a: None, "cache.json", now=now)
+        self.assertIsNone(result["circle_k"]["summary"])
+        self.assertEqual(result["circle_k"]["status"], "unavailable")
+
     def test_empty_page_does_not_replace_last_good_excerpt(self):
         now = 2_000_000_000
         old = {key: {"provider": provider, "summary": "Last good benefit",
                      "source_url": url, "fetched_ts": now - benefits.REFRESH_AFTER - 1,
-                     "fetched_at": "old", "status": "ok"}
+                     "fetched_at": "old", "extractor_version": benefits.EXTRACTOR_VERSION, "status": "ok"}
                for key, (provider, url) in benefits.PROVIDER_PAGES.items()}
         result, _ = benefits.update(lambda *a, **k: "<html><body>No matching page text.</body></html>",
                                     lambda path, default: old, lambda *a: None,
