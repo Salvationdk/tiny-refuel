@@ -119,10 +119,10 @@ for (const nav of ['waze', 'google']) {
 // Keep fuel rows visible while coordinate lookup is incomplete.
 {
   const fuel = new Card();
-  fuel._config = { vis_benzin: true, vis_diesel: false, vis_el: false };
+  fuel._config = { vis_benzin: true, vis_diesel: true, vis_el: false };
   fuel._data = { stations: [
     { brand: "Go'on", name: 'Go on A', address: 'A vej 1', p95: 14.5, lat: null, lon: null },
-    { brand: 'Shell', name: 'Shell A', address: 'B vej 2', p95: 15, lat: null, lon: null },
+    { brand: 'Shell', name: 'Shell A', address: 'B vej 2', p95: 15, diesel: 13.9, lat: null, lon: null },
   ] };
   for (const loc of [null, { lat: 55.6, lon: 12.1 }]) {
     const rows = fuel._buildRows(loc).filter(r => ['goon', 'shell'].includes(r.b.key));
@@ -139,6 +139,8 @@ for (const nav of ['waze', 'google']) {
   assert.ok(fuel.innerHTML.includes('class="trf-fuel-grid"'));
   assert.equal((fuel.innerHTML.match(/class="trf-fuel-col"/g) || []).length, 0);
   assert.ok(fuel.innerHTML.includes('data-label="95"'));
+  assert.ok(fuel.innerHTML.includes('data-label="Diesel"'));
+  assert.ok(fuel.innerHTML.includes('13,90'));
   assert.ok(fuel.innerHTML.includes('trf-stale-tag">Gemt'));
   fuel._data.stations.push({ brand: 'Shell', name: 'Shell B', address: 'C vej 3', p95: 16, lat: 55.61, lon: 12.11 });
   const row = fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell');
