@@ -31,7 +31,7 @@ _INTERESTING = re.compile(
     r"rabat|øre|kr\s*/\s*kwh|kwh|abonnement|app|kort|bonus|loyal|fordel|gratis|pris|betaling|charge",
     re.I,
 )
-_SKIP_TAGS = {"script", "style", "nav", "header", "footer", "noscript", "svg", "iframe", "form"}
+_SKIP_TAGS = {"script", "style", "nav", "header", "footer", "noscript", "svg", "iframe", "form", "blockquote"}
 _BLOCK_TAGS = {"p", "li", "h2", "h3", "h4"}
 _REVIEW_MARKER = re.compile(
     r"review|rating|testimonial|feedback|comment|customer[-_ ]?(?:review|comment|story|voice|quote)|"
@@ -45,10 +45,13 @@ _CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside
 
 # Customer quotes can be embedded in ordinary page paragraphs without useful class names.
 _CUSTOMER_VOICE = re.compile(
-    r"\b(?:jeg|mig|min|mit|mine)\b.{0,70}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
-    r"elsker|anbefaler|er\s+tilfreds|er\s+utilfreds)\b|"
-    r"\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver)\b.{0,45}\b(?:kunde|bruger)\b|"
-    r"\b(?:kunde|bruger)\b.{0,45}\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|siger)\b|"
+    r"\b(?:jeg|mig|min|mit|mine|i|me|my)\b.{0,70}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
+    r"elsker|anbefaler|er\s+tilfreds|er\s+utilfreds|think|love|recommend|got|received|used|"
+    r"tried|found|have\s+used)\b|"
+    r"\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|says|writes|thinks|recommends|"
+    r"loves|claims|reports)\b.{0,45}\b(?:kunde|bruger|customer|user|reviewer|member)\b|"
+    r"\b(?:kunde|bruger|customer|user|reviewer|member)\b.{0,45}\b(?:synes|mener|oplevede|"
+    r"anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|loves|claims|reports)\b|"
     r"\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\b",
     re.I,
 )
@@ -66,7 +69,9 @@ class _BenefitText(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        marker_text = " ".join(str(value) for value in attrs.values())
+        marker_values = [attrs.get(key, "") for key in ("class", "id", "aria-label", "data-testid", "itemprop", "role")]
+        marker_values.extend(value for key, value in attrs.items() if key.startswith("data-"))
+        marker_text = " ".join(str(value) for value in marker_values)
         skip = tag in _SKIP_TAGS or bool(_REVIEW_MARKER.search(marker_text))
         self.stack.append((tag, skip))
         if skip:
