@@ -7,7 +7,7 @@ import time
 
 REFRESH_AFTER = 7 * 24 * 60 * 60
 MAX_EXCERPT_WORDS = 20
-EXTRACTOR_VERSION = 2
+EXTRACTOR_VERSION = 3
 
 # One canonical public page per provider. Records are keyed to the card's brand
 # keys so both the fuel and charging views can show the right source.
@@ -31,15 +31,27 @@ _INTERESTING = re.compile(
     r"rabat|øre|kr\s*/\s*kwh|kwh|abonnement|app|kort|bonus|loyal|fordel|gratis|pris|betaling|charge",
     re.I,
 )
-_SKIP_TAGS = {"script", "style", "nav", "header", "footer", "noscript", "svg"}
+_SKIP_TAGS = {"script", "style", "nav", "header", "footer", "noscript", "svg", "iframe", "form"}
 _BLOCK_TAGS = {"p", "li", "h2", "h3", "h4"}
 _REVIEW_MARKER = re.compile(
-    r"review|rating|testimonial|feedback|comment|customer[-_ ]?(?:review|comment|story|voice)|"
-    r"kunde[-_ ]?(?:anmeldelse|anmeldelser|kommentar|kommentarer|udtalelse|oplevelse|historie)|"
-    r"anmeldelse|anmeldelser|kommentar|kommentarer|udtalelse|udtalelser|bedømmelse|trustpilot|ugc|user[-_ ]?content",
+    r"review|rating|testimonial|feedback|comment|customer[-_ ]?(?:review|comment|story|voice|quote)|"
+    r"social[-_ ]?proof|quote[-_ ]?(?:card|block|slider)|review[-_ ]?(?:card|widget|slider|list)|"
+    r"kunde[-_ ]?(?:anmeldelse|anmeldelser|kommentar|kommentarer|udtalelse|oplevelse|historie|citat)|"
+    r"anmeldelse|anmeldelser|kommentar|kommentarer|kundeudtalelse|kundeoplevelse|udtalelse|udtalelser|"
+    r"bedømmelse|trustpilot|ugc|user[-_ ]?content",
     re.I,
 )
 _CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside"}
+
+# Customer quotes can be embedded in ordinary page paragraphs without useful class names.
+_CUSTOMER_VOICE = re.compile(
+    r"\b(?:jeg|mig|min|mit|mine)\b.{0,70}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
+    r"elsker|anbefaler|er\s+tilfreds|er\s+utilfreds)\b|"
+    r"\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver)\b.{0,45}\b(?:kunde|bruger)\b|"
+    r"\b(?:kunde|bruger)\b.{0,45}\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|siger)\b|"
+    r"\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\b",
+    re.I,
+)
 
 
 class _BenefitText(HTMLParser):
@@ -54,8 +66,7 @@ class _BenefitText(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        marker_text = " ".join(str(attrs.get(key, "")) for key in
-                                ("class", "id", "aria-label", "data-testid", "itemprop"))
+        marker_text = " ".join(str(value) for value in attrs.values())
         skip = tag in _SKIP_TAGS or bool(_REVIEW_MARKER.search(marker_text))
         self.stack.append((tag, skip))
         if skip:
@@ -91,10 +102,13 @@ def extract_excerpt(page):
     parser = _BenefitText()
     parser.feed(page)
     parser.close()
-    if not parser.blocks:
+    # Old cached extracts are invalidated when the filter changes. Also reject
+    # unlabelled testimonial copy that happens to mention an app or discount.
+    eligible = [text for text in parser.blocks if not _CUSTOMER_VOICE.search(text)]
+    if not eligible:
         return None
     # Prefer a concise block with concrete terms and avoid concatenating site text.
-    ranked = sorted(parser.blocks, key=lambda text: (
+    ranked = sorted(eligible, key=lambda text: (
         -len(re.findall(r"rabat|øre|abonnement|kwh|gratis|kort", text, re.I)), len(text)))
     words = ranked[0].split()
     if len(words) > MAX_EXCERPT_WORDS:
