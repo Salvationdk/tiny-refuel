@@ -1012,16 +1012,17 @@
       return !!(ev.address || (ev.name && this._evCoords(ev)));
     }
 
-    _benefitEntry(key, fallbackText) {
+    _benefitEntry(key) {
       var all = this._data && this._data.benefits;
       var item = all && all[key];
-      if (item && (item.summary || item.source_url)) return item;
-      return fallbackText ? { summary: fallbackText, source_url: null, status: "source_only" } : null;
+      if (item && typeof item.summary === "string" && item.summary.trim()) return item;
+      return null;
     }
 
     _benefitBox(key, brand, item) {
       if (!item) return "";
-      var text = item.summary || "Se udbyderens officielle side for aktuelle fordele, app og abonnementsvilkår.";
+      var text = typeof item.summary === "string" ? item.summary.trim() : "";
+      if (!text) return "";
       var checked = item.fetched_at ? "<br><small>Hentet: " + esc(item.fetched_at.slice(0, 10)) +
         (item.status === "stale" ? " · gemte oplysninger" : "") + "</small>" : "";
       var source = item.source_url ? ' <a href="' + esc(item.source_url) + '" target="_blank" rel="noopener">Officiel kilde</a>' : "";
@@ -1046,12 +1047,14 @@
 
     _evBenefits(ev, part) {
       if (!this._effVis().andet) return '';
-      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand, ev.benefits);
+      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand);
       if (!item) return '';
-      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(brand) + '" title="Se ladefordele">★ Fordele</a>';
+      var stationRef = ev.location_id || ev.id || ev.address || ev.name || "provider";
+      var benefitKey = "ev:" + brand + ":" + String(stationRef) + ":" + String(ev.kind || "");
+      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(benefitKey) + '" title="Se ladefordele">★ Fordele</a>';
       if (part === 'button') return button;
-      if (part === 'box') return this._benefitBox(brand, ev.brand, item);
-      return button + this._benefitBox(brand, ev.brand, item);
+      if (part === 'box') return this._benefitBox(benefitKey, ev.brand, item);
+      return button + this._benefitBox(benefitKey, ev.brand, item);
     }
 
     _teslaPricesHtml(ev) {
