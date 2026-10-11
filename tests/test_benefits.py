@@ -26,6 +26,8 @@ class BenefitsTests(unittest.TestCase):
         <main><p>Get 15 øre discount per kWh with the provider's own charging app.</p>
         <div class="reviews"><article><p>Customer says the app gives a great discount and cheap price.</p></article></div>
         <section aria-label="Kundeanmeldelser"><p>Users receive a discount and free charging, says a customer.</p></section>
+        <p class="customer-comment">I got a discount, says one reviewer of the app.</p>
+        <div data-testid="feedback-carousel"><p>We love the price and app benefits, writes a member.</p></div>
         </main>
         """
         self.assertEqual(benefits.extract_excerpt(page),
