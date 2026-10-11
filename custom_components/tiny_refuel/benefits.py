@@ -45,7 +45,6 @@ PROVIDER_PAGES = {
     "oil": ("OIL", ["https://www.oil-tankstationer.dk/betalingsformer/oil-loyalitetsaftale/"]),
     "clever": ("Clever", ["https://clever.dk/ladeloesninger/opladning-med-abonnement/"]),
     "eon": ("E.ON", ["https://www.eon.dk/privat/kundesupport/kontakt-opladning.html"]),
-    "tesla": ("Tesla", ["https://www.tesla.com/da_dk/support/charging/supercharging"]),
     "ionity": ("IONITY", ["https://www.ionity.eu/subscriptions"]),
 }
 
