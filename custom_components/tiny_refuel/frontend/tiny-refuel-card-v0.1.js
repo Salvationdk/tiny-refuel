@@ -22,7 +22,7 @@
   .trf-b100 { color: var(--accent-color, #b967ff); text-shadow: 0 0 10px rgba(185,103,255,.7); }
   .trf-inline { height: 14px; vertical-align: middle; margin-left: 6px; border-radius: 3px; }
   .trf-head, .trf-row, .trf-evrow { display: grid; align-items: center; gap: 6px; padding: 4px 8px; }
-  .trf-fuel-grid, .trf-fuel-col, .trf-ev-grid, .trf-ev-col { display: contents; }
+  .trf-fuel-grid, .trf-ev-grid { display: contents; }
   .trf-fuel-head-duplicate { display: none; }
   .trf-head { font-size: 11px; letter-spacing: .8px; text-transform: uppercase; color: var(--secondary-text-color); opacity: .8; border-bottom: 1px solid rgba(255,255,255,.06); }
   .trf-head .trf-p { text-align: right; }
@@ -114,10 +114,17 @@
     .trf-ev-list { max-height: 74vh; }
   }
   @media (orientation: landscape) and (min-width: 700px) {
-    .trf-fuel-grid, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; }
-    .trf-fuel-col, .trf-ev-col { display: flex; flex-direction: column; min-width: 0; }
-    .trf-fuel-head-duplicate { display: grid; }
-    .trf-fuel-col > .trf-row, .trf-ev-col > .trf-evrow, .trf-ev-list .trf-ev-col > .trf-evrow { width: auto; min-width: 0; }
+    .trf-fuel-grid, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; gap: 6px; }
+    .trf-fuel-grid > .trf-row, .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow { width: auto; min-width: 0; margin: 0; }
+    .trf-fuel-grid > .trf-row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; align-items: start; padding: 6px; }
+    .trf-fuel-grid > .trf-row > .trf-logo, .trf-fuel-grid > .trf-row > .trf-station, .trf-fuel-grid > .trf-row > .trf-km, .trf-fuel-grid > .trf-row > .trf-fordel-box { grid-column: 1 / -1; }
+    .trf-fuel-grid > .trf-row > .trf-pcol { text-align: left; min-width: 0; }
+    .trf-fuel-grid > .trf-row > .trf-pcol::before { content: attr(data-label); display: block; color: var(--secondary-text-color); font-size: 9px; font-weight: 500; }
+    .trf-fuel-grid > .trf-row > .trf-km { text-align: left; }
+    .trf-fuel-head { display: none; }
+    .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow { display: grid; grid-template-columns: minmax(0, 1fr) !important; align-items: start; gap: 4px; padding: 6px; }
+    .trf-ev-grid > .trf-evrow > .trf-logo, .trf-ev-list > .trf-evrow > .trf-logo { grid-column: 1 / -1; }
+    .trf-ev-grid > .trf-evrow > .trf-km, .trf-ev-list > .trf-evrow > .trf-km { text-align: left; }
     .trf-ev-list > .trf-em { grid-column: 1 / -1; }
     .trf-ev-dialog { width: min(1100px, calc(100vw - 32px)); max-height: 94vh; }
     .trf-ev-list { max-height: 74vh; }
@@ -820,7 +827,7 @@
           var sub = "";
           var benefitEntry = this._benefitEntry(row.b.key);
           var fbtn = (visAndet && benefitEntry)
-            ? '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(row.b.key) + '" title="Se kundefordele">★ Fordele</a>'
+            ? '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(row.b.key) + '" title="Se udbyderens fordele">★ Fordele</a>'
             : "";
           if (row.liste) {
             sub = '<div class="trf-station"><span class="trf-subtxt"><span class="trf-pill">Listepris</span>' +
@@ -839,10 +846,7 @@
           fuelHtmlRows.push('<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
             logo + cells + kmCell + sub + "</div>");
         }
-        var fuelSplit = Math.ceil(fuelHtmlRows.length / 2);
-        var duplicateHead = head.replace('class="trf-head trf-fuel-head"', 'class="trf-head trf-fuel-head trf-fuel-head-duplicate"');
-        body += '<div class="trf-fuel-grid"><div class="trf-fuel-col">' + head + fuelHtmlRows.slice(0, fuelSplit).join("") +
-          '</div><div class="trf-fuel-col">' + duplicateHead + fuelHtmlRows.slice(fuelSplit).join("") + '</div></div>';
+        body += head + '<div class="trf-fuel-grid">' + fuelHtmlRows.join("") + '</div>';
       }
 
       if (hasData) {
@@ -1174,9 +1178,7 @@
       html += '</div><div class="trf-ev-list">';
       if (rows.length) {
         var popupRows = rows.slice(0, limit).map(function (row) { return self._evRow(row.ev, loc, 1, true); });
-        var popupSplit = Math.ceil(popupRows.length / 2);
-        html += '<div class="trf-ev-col">' + popupRows.slice(0, popupSplit).join("") + '</div>' +
-          '<div class="trf-ev-col">' + popupRows.slice(popupSplit).join("") + '</div>';
+        html += popupRows.join("");
       } else {
         html += '<div class="trf-em">Ingen konkrete ladesteder i udtrækket for dette selskab og filter.</div>';
       }
@@ -1345,9 +1347,7 @@
           '<div class="trf-pcol"><span class="trf-tariff-note">Generelle takster</span></div><span class="trf-km">–</span>' +
           self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>');
       });
-      var evSplit = Math.ceil(evHtmlRows.length / 2);
-      html += '<div class="trf-ev-grid"><div class="trf-ev-col">' + evHtmlRows.slice(0, evSplit).join("") +
-        '</div><div class="trf-ev-col">' + evHtmlRows.slice(evSplit).join("") + '</div></div>';
+      html += '<div class="trf-ev-grid">' + evHtmlRows.join("") + '</div>';
       html += self._evDataSummary(entries);
       if (!stations.length && !tariffs.size) html += '<div class="trf-em">Ingen ladesteder eller el-priser for de valgte selskaber.</div>';
       var absent = BRANDS.filter(function (b) {
