@@ -343,13 +343,20 @@ def enrich_tesla_prices(rows, status, previous, errors, progress_callback=None):
         site_id = row.get("tesla_site_slug", "")
         if not re.fullmatch(r"[A-Za-z0-9_-]+", site_id):
             return None, "missing public site id", False
-        url = "https://www.tesla.com/da_DK/findus/location/supercharger/" + site_id
+        # Use Tesla's public, locale-neutral location route. The localized
+        # route has returned HTTP 403 for some Home Assistant installations.
+        url = "https://www.tesla.com/findus/location/supercharger/" + site_id
         try:
             result = normalize_tesla_detail(get_text(url, timeout=20), site_id)
             result["source_url"] = url
             return result, None, False
         except Exception as exc:  # Preserve locations even when price pages fail.
-            return None, str(exc)[:160], getattr(exc, "code", None) in (403, 429)
+            code = getattr(exc, "code", None)
+            if code == 403:
+                return None, "HTTP 403 Forbidden: Tesla afviste prisopslaget", True
+            if code == 429:
+                return None, "HTTP 429: Tesla satte en grænse for prisopslag", True
+            return None, str(exc)[:160], code in (403, 429)
 
     with ThreadPoolExecutor(max_workers=3) as executor:
         for i in range(0, len(rows), 3):
@@ -640,6 +647,7 @@ def normalize_circlek_charging(payload):
 
 
 def fetch_public_ev_locations(url, parser, source, previous, errors, json_feed=True, payload_loader=None):
+    attempted = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     try:
         if payload_loader:
             payload = payload_loader()
@@ -649,15 +657,19 @@ def fetch_public_ev_locations(url, parser, source, previous, errors, json_feed=T
         rows = parser(payload)
         if not rows:
             raise ValueError("no usable Danish charging locations")
-        fetched = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        fetched = attempted
         for row in rows:
             row["source_updated"] = fetched
-        return rows, {"status": "ok", "updated": fetched, "records": len(rows), "prices_available": False}
+        return rows, {"status": "ok", "updated": fetched, "last_attempt": attempted,
+                      "last_success": fetched, "records": len(rows), "prices_available": False}
     except Exception as exc:
         rows = [dict(row, stale=True) for row in previous
                 if isinstance(row, dict) and row.get("source") == source]
+        last_success = max((str(row.get("source_updated")) for row in rows if row.get("source_updated")), default=None)
         errors.append({"source": source, "error": str(exc), "stale_reused": len(rows)})
-        return rows, {"status": "stale" if rows else "error", "records": len(rows), "prices_available": False}
+        return rows, {"status": "stale" if rows else "error", "updated": last_success,
+                      "last_attempt": attempted, "last_success": last_success,
+                      "records": len(rows), "prices_available": False}
 
 
 # ---------- Circle K + Ingo official API ----------
@@ -1264,7 +1276,14 @@ def fetch_ok(errors, include_el=True):
             if m:
                 vals[prod] = to_float(m.group(1))
         if "Blyfri 95" not in vals:
-            raise ValueError("no listepriser parsed")
+            # OK now publishes this page as a change notice and can explicitly
+            # state that there are no current price changes. In that case the
+            # last published list price remains valid; _collect keeps its cache.
+            text = html.unescape(re.sub(r"<[^>]+>", " ", page))
+            text = re.sub(r"\s+", " ", text).strip()
+            if re.search(r"ingen aktuelle prisændringer", text, re.I):
+                return out, fetch_ok_el(errors) if include_el else [], True
+            raise ValueError("OK: no current list prices or unchanged-price notice found")
         dm = re.search(r"Fra (\w+ den \d+\. \w+ \d{4})", page)
         out.append({"brand": "OK", "name": "OK listepris",
                     "address": "", "lat": None, "lon": None,
@@ -1444,6 +1463,48 @@ def _preserve_unselected_fuels(fresh, previous, selected):
     return rows
 
 
+def _fuel_source_statuses(source_ok, stations, previous, errors, checked_at):
+    """Keep a compact health record for each fuel data source."""
+    previous = previous if isinstance(previous, dict) else {}
+    error_keys = {
+        "api.circlek.com": ("ck_api",),
+        "f24.dk": ("f24q8",),
+        "goon.nu": ("goon",),
+        "unoxmobility.dk": ("unox",),
+        "shellservice.dk": ("shell_pdf", "shell"),
+        "ok.dk": ("ok",),
+        "mobility-prices.ok.dk": ("ok_fuel_api",),
+        "oil-fuel-api": ("oil_fuel_api",),
+        "oil-tankstationer.dk": ("oil",),
+    }
+    result = dict(previous)
+    for source, ok in source_ok.items():
+        rows = [row for row in stations if isinstance(row, dict) and row.get("source") == source and not row.get("liste")]
+        old = previous.get(source) if isinstance(previous.get(source), dict) else {}
+        source_errors = []
+        for error in errors:
+            if not isinstance(error, dict):
+                continue
+            for key in error_keys.get(source, ()):
+                if error.get(key):
+                    source_errors.append(str(error[key]))
+        status = "ok" if ok else ("stale" if rows or old.get("last_success") else "error")
+        result[source] = {
+            "status": status,
+            "last_attempt": checked_at,
+            "last_success": checked_at if ok else old.get("last_success"),
+            "records": len(rows),
+            "priced": sum(1 for row in rows if any(
+                isinstance(row.get(field), (int, float)) and row.get(field) > 0
+                for field in ("p95", "p100", "diesel"))),
+            "missing_address": sum(1 for row in rows if not row.get("address")),
+            "missing_coordinates": sum(1 for row in rows if row.get("address") and
+                                        (row.get("lat") is None or row.get("lon") is None)),
+            "error": source_errors[0] if source_errors else None,
+        }
+    return result
+
+
 def _collect(progress_callback=None, fuel_types=None):
     errors = []
     prev = load_json(OUT, {})
@@ -1491,10 +1552,16 @@ def _collect(progress_callback=None, fuel_types=None):
     fresh = fuel_data["stations"]
     have_src = {s.get("source") for s in fresh}
     for src, ok in src_ok.items():
-        if not ok and src in prev_by_src:
+        # OK's change-notice page has no price block when prices are unchanged.
+        # Keep its last published list-price row while station prices continue
+        # to refresh independently through OK's public API.
+        has_ok_list = any(row.get("source") == "ok.dk" and row.get("liste") for row in fresh)
+        keep_unchanged_ok_list = src == "ok.dk" and ok and not has_ok_list
+        if (not ok or keep_unchanged_ok_list) and src in prev_by_src:
             for s in prev_by_src[src]:
                 s = dict(s)
-                s["stale"] = True
+                if not ok:
+                    s["stale"] = True
                 fresh.append(s)
             errors.append({"stale_reused": src})
 
@@ -1578,12 +1645,21 @@ def _collect(progress_callback=None, fuel_types=None):
         "kwh": mean([s.get("kwh") for s in pump]),
     }
 
+    updated = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    fuel_sources = dict(prev.get("fuel_sources", {})) if isinstance(prev.get("fuel_sources"), dict) else {}
+    if selected & {"benzin", "diesel"}:
+        fuel_sources = _fuel_source_statuses(
+            src_ok, stations, fuel_sources, errors, updated)
+    geocode_pending = sum(1 for station in stations
+                          if not station.get("liste") and station.get("address") and
+                          (station.get("lat") is None or station.get("lon") is None))
+
     provider_benefits, benefit_errors = fetch_benefits(prev.get("benefits", {}), progress_callback)
 
     save_json(OUT, {
         "project": "Tiny Refuel",
         "scraper_version": "v0.1",
-        "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "updated": updated,
         "errors": errors,
         "snittet": snittet,
         "stations": stations,
@@ -1591,6 +1667,8 @@ def _collect(progress_callback=None, fuel_types=None):
         "benefits": provider_benefits,
         "benefit_errors": benefit_errors,
         "ev_sources": ev_statuses,
+        "fuel_sources": fuel_sources,
+        "geocode_pending": geocode_pending,
     })
     # Partial errors must not fail the sensor: data is still written and the
     # errors array inside priser-og-ladesteder.json shows what missed. Only fail on no data.

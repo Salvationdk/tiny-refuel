@@ -71,13 +71,15 @@ class TeslaTests(unittest.TestCase):
         self.assertEqual(row['tesla_price_updated'], old['tesla_price_updated'])
         self.assertEqual(status['price_errors'], 1)
         self.assertEqual(errors[0]['source'], 'tesla-prices')
+        self.assertIn('HTTP 403 Forbidden', errors[0]['error'])
 
     def test_loader_uses_legacy_slug_instead_of_numeric_identifier(self):
         row = {'source': 'tesla.com', 'location_id': 'old', 'tesla_site_slug': 'hjorringsupercharger'}
         with patch.object(scraper, 'get_text', return_value=page([book(2.6)], site='hjorringsupercharger')) as get:
             errors = []
             scraper.enrich_tesla_prices([row], {'status': 'ok'}, [], errors)
-        self.assertTrue(get.call_args.args[0].endswith('/hjorringsupercharger'))
+        self.assertEqual(get.call_args.args[0],
+                         'https://www.tesla.com/findus/location/supercharger/hjorringsupercharger')
         self.assertEqual(errors, [])
         self.assertEqual(row['tesla_prices']['member'][0]['price'], 2.6)
 

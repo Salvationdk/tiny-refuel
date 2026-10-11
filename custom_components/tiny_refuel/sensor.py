@@ -35,5 +35,9 @@ class RefuelSensor(SensorEntity):
 
     @property
     def extra_state_attributes(self):
+        data = self.manager.data
         return {"opdaterer": self.manager.refreshing, "fejl": len(self.manager.data.get("errors", [])),
-                "seneste_fejl": self.manager.last_error, "version": VERSION}
+                "seneste_fejl": self.manager.last_error, "version": VERSION,
+                "brændstofkilder": data.get("fuel_sources", {}),
+                "ladekilder": data.get("ev_sources", {}),
+                "adresser_afventer_koordinater": data.get("geocode_pending", 0)}
