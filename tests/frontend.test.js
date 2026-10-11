@@ -78,7 +78,7 @@ assert.ok(card._evRow(card._data.ev[0], null, 1, true).includes('3,89*'));
 assert.ok(card._evRow(card._data.ev[6], null, 1, true).includes('3,49*'));
 assert.ok(card._evRow(card._data.ev[0], null, 1, true).includes('lokale pris kan afvige'));
 const noPublicPrice = card._evRow({ brand: 'Shell', name: 'Shell Recharge', address: 'Testvej 1', kind: 'DC' }, null, 1, true);
-assert.ok(noPublicPrice.includes('Se app'));
+assert.ok(noPublicPrice.includes('Se pris'));
 card._data.ev.push({ brand: 'Circle K', name: 'Lynlader (listepris)', kwh: 3.99 });
 assert.equal(card._evPublicTariff({ brand: 'Circle K', kind: 'DC', power_kw: 150 }).kwh, 3.99);
 assert.equal(card._evPublicTariff({ brand: 'Circle K', kind: 'DC', power_kw: 150 }).label, 'list');
