@@ -33,9 +33,11 @@ PROVIDER_PAGES = {
         "https://www.shell.dk/private-customers.html",
         "https://www.shell.dk/at-station/carwash.html",
     ]),
-    "uno_x": ("Uno-X", [\n        "https://landbrug.unox.dk/privat/produkter/kortlink",\n        "https://erhverv.unox.dk/privat",\n    ]),
+    "uno_x": ("Uno-X", [
+        "https://landbrug.unox.dk/privat/produkter/kortlink",
+        "https://erhverv.unox.dk/privat",
+    ]),
     "ok": ("OK", [
-        "https://www.ok.dk/privat/produkter/ok-kort",
         "https://www.ok.dk/privat/hjaelp/bilen/ok-kort/hvad-er-fordelene-ved-at-have-et-ok-kort",
         "https://www.ok.dk/privat/produkter/appen/vask",
         "https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat",
