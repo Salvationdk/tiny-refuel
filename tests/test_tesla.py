@@ -25,6 +25,22 @@ def page(books, country='DK', others=True, site='27396'):
 
 
 class TeslaTests(unittest.TestCase):
+    def test_location_list_uses_public_locale_neutral_route(self):
+        self.assertEqual(scraper.TESLA_LOCATIONS_URL,
+                         'https://www.tesla.com/findus/list/superchargers/Denmark')
+        location = {'uuid': 'location-1', 'location_url_slug': '412621', '_source': {
+            'supercharger_function': {'site_status': 'open', 'project_status': 'Open',
+                                      'access_type': 'Public', 'actual_latitude': 56.1,
+                                      'actual_longitude': 10.2, 'open_to_non_tesla': True},
+            'key_data': {'address': {'country': 'DK', 'formatted_address': ['30 Hasselager Centervej', 'Aarhus 8260']}},
+            'marketing': {'display_name': 'Viby'}}}
+        listing = '<script id="__NEXT_DATA__">' + json.dumps(
+            {'props': {'pageProps': {'data': [location]}}}) + '</script>'
+        rows = scraper.normalize_tesla_locations(listing)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['tesla_site_slug'], '412621')
+        self.assertEqual(rows[0]['address'], '30 Hasselager Centervej Aarhus 8260')
+
     def test_separate_prices_exclude_minute_fees_msp_and_other_currencies(self):
         fee = book(3); fee.update(feeType='CONGESTION', uom='min')
         msp = book(2.9, False); msp['vehicleMakeType'] = 'MSP'
