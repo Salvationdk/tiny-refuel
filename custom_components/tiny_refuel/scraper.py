@@ -67,7 +67,7 @@ OIL_URL = "https://www.oil-tankstationer.dk/priser-erhverv/gaeldende-priser/"
 SHELL_ERHVERV_URL = "https://shellservice.dk/erhverv/braendstofpriser"
 CLEVER_LOCATIONS_URL = "https://clever.dk/api/v2/chargers/locations"
 EON_LOCATIONS_URL = "https://www.edri.com/api/stations"
-TESLA_LOCATIONS_URL = "https://www.tesla.com/da_DK/findus/list/superchargers/Denmark"
+TESLA_LOCATIONS_URL = "https://www.tesla.com/findus/list/superchargers/Denmark"
 # Linked by IONITY's own network page (www.ionity.eu/network).
 IONITY_LOCATIONS_URL = "https://wf-assets.com/ionity/mapdata.json"
 OK_FUEL_API = "https://mobility-prices.ok.dk/api/v1/fuel-prices"
