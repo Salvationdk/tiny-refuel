@@ -77,7 +77,8 @@ _CUSTOMER_VOICE = re.compile(
     r"\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\b",
     re.I,
 )
-_QUOTED_TESTIMONIAL = re.compile(r"[“„«][^”»]{12,}[”»]|“|”|„|«|»")\n_QUESTION_BLOCK = re.compile(r"^\\s*(?:hvad|hvordan|hvorfor|hvornår|hvem|hvor|kan\\s+jeg|må\\s+jeg|skal\\s+jeg|how|what|why|when|where|can\\s+i|do\\s+i)\\b|[?？]", re.I);
+_QUOTED_TESTIMONIAL = re.compile(r"[“„«][^”»]{12,}[”»]|“|”|„|«|»")
+_QUESTION_BLOCK = re.compile(r"^\s*(?:hvad|hvordan|hvorfor|hvornår|hvem|hvor|kan\s+jeg|må\s+jeg|skal\s+jeg|how|what|why|when|where|can\s+i|do\s+i)\b|[?？]", re.I)
 
 
 class _BenefitText(HTMLParser):
