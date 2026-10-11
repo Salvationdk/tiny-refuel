@@ -33,6 +33,29 @@ class BenefitsTests(unittest.TestCase):
         self.assertEqual(benefits.extract_excerpt(page),
                          "Get 15 øre discount per kWh with the provider's own charging app.")
 
+    def test_ignores_unmarked_first_person_customer_comments(self):
+        page = """
+        <main>
+        <p>Jeg fik 15 øre i rabat med appen og synes prisen er fantastisk.</p>
+        <p>Super app og gode rabatter, skriver en kunde.</p>
+        <p>Med udbyderens app får medlemmer 15 øre i rabat pr. kWh.</p>
+        </main>
+        """
+        self.assertEqual(benefits.extract_excerpt(page),
+                         "Med udbyderens app får medlemmer 15 øre i rabat pr. kWh.")
+
+    def test_ignores_review_widgets_with_generic_data_attributes(self):
+        page = """
+        <main>
+        <p>Udbyderen giver 10 øre i rabat pr. kWh ved betaling med app.</p>
+        <div data-widget-type="customer-quote-slider">
+          <p>Appen er fantastisk, jeg fik en god rabat, skriver en kunde.</p>
+        </div>
+        </main>
+        """
+        self.assertEqual(benefits.extract_excerpt(page),
+                         "Udbyderen giver 10 øre i rabat pr. kWh ved betaling med app.")
+
     def test_uses_fresh_cache_without_requesting_page(self):
         now = 2_000_000_000
         cache = {key: {"provider": provider, "summary": "Cached benefit",
