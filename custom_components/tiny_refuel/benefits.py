@@ -7,18 +7,23 @@ import time
 
 REFRESH_AFTER = 7 * 24 * 60 * 60
 MAX_EXCERPT_WORDS = 20
-EXTRACTOR_VERSION = 4
+EXTRACTOR_VERSION = 5
 
 # One canonical public page per provider. Records are keyed to the card's brand
 # keys so both the fuel and charging views can show the right source.
 PROVIDER_PAGES = {
     "circle_k": ("Circle K", [
-        "https://www.circlek.dk/extra/faq",
         "https://www.circlek.dk/extra",
         "https://www.circlek.dk/ubegraensetbilvask",
     ]),
-    "ingo": ("Ingo", ["https://www.ingo.dk/app"]),
-    "f24": ("F24", ["https://www.f24.dk/"]),
+    "ingo": ("Ingo", [
+        "https://www.ingo.dk/ingokort/vores-kort/ingokort",
+        "https://www.ingo.dk/gratisliter",
+    ]),
+    "f24": ("F24", [
+        "https://www.q8.dk/kundeservice/bliv-q8-kunde/",
+        "https://www.q8.dk/bilvask",
+    ]),
     "q8": ("Q8", [
         "https://www.q8.dk/kundeservice/bliv-q8-kunde/",
         "https://www.q8.dk/bilvask",
@@ -28,7 +33,7 @@ PROVIDER_PAGES = {
         "https://www.shell.dk/private-customers.html",
         "https://www.shell.dk/at-station/carwash.html",
     ]),
-    "uno_x": ("Uno-X", ["https://www.unox.dk/el/"]),
+    "uno_x": ("Uno-X", [\n        "https://landbrug.unox.dk/privat/produkter/kortlink",\n        "https://erhverv.unox.dk/privat",\n    ]),
     "ok": ("OK", [
         "https://www.ok.dk/privat/produkter/ok-kort",
         "https://www.ok.dk/privat/hjaelp/bilen/ok-kort/hvad-er-fordelene-ved-at-have-et-ok-kort",
@@ -36,7 +41,7 @@ PROVIDER_PAGES = {
         "https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat",
     ]),
     "oil": ("OIL", ["https://www.oil-tankstationer.dk/betalingsformer/oil-loyalitetsaftale/"]),
-    "clever": ("Clever", ["https://clever.dk/ladeloesninger/clever-go/"]),
+    "clever": ("Clever", ["https://clever.dk/ladeloesninger/opladning-med-abonnement/"]),
     "eon": ("E.ON", ["https://www.eon.dk/privat/kundesupport/kontakt-opladning.html"]),
     "tesla": ("Tesla", ["https://www.tesla.com/da_dk/support/charging/supercharging"]),
     "ionity": ("IONITY", ["https://www.ionity.eu/subscriptions"]),
@@ -70,7 +75,7 @@ _CUSTOMER_VOICE = re.compile(
     r"\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\b",
     re.I,
 )
-_QUOTED_TESTIMONIAL = re.compile(r"[“„«][^”»]{12,}[”»]|“|”|„|«|»");
+_QUOTED_TESTIMONIAL = re.compile(r"[“„«][^”»]{12,}[”»]|“|”|„|«|»")\n_QUESTION_BLOCK = re.compile(r"^\\s*(?:hvad|hvordan|hvorfor|hvornår|hvem|hvor|kan\\s+jeg|må\\s+jeg|skal\\s+jeg|how|what|why|when|where|can\\s+i|do\\s+i)\\b|[?？]", re.I);
 
 
 class _BenefitText(HTMLParser):
@@ -125,7 +130,7 @@ def extract_excerpt(page):
     parser.close()
     # Old cached extracts are invalidated when the filter changes. Also reject
     # unlabelled testimonial copy that happens to mention an app or discount.
-    eligible = [text for text in parser.blocks if not _CUSTOMER_VOICE.search(text) and not _QUOTED_TESTIMONIAL.search(text)]
+    eligible = [text for text in parser.blocks if not _CUSTOMER_VOICE.search(text) and not _QUOTED_TESTIMONIAL.search(text) and not _QUESTION_BLOCK.search(text)]
     if not eligible:
         return None
     # Prefer a concise block with concrete terms and avoid concatenating site text.
