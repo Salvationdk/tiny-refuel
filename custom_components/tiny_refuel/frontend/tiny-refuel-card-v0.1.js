@@ -103,32 +103,7 @@
     .trf-data-tools { gap: 5px; }
     .trf-evrow { grid-template-columns: minmax(52px,100px) minmax(40px,1fr) 34px !important; gap: 4px; padding: 3px 4px; }
   }
-  @media (orientation: portrait) {
-    .trf { padding-top: 12px; padding-bottom: 12px; }
-  }
-  @media (orientation: landscape) and (max-height: 520px) {
-    .trf { padding-top: 8px; padding-bottom: 8px; }
-    .trf-titlebar { margin-bottom: 0; }
-    .trf-rule { margin: 3px 0; }
-    .trf-ev-dialog { max-height: 94vh; }
-    .trf-ev-list { max-height: 74vh; }
-  }
-  @media (orientation: landscape) and (min-width: 700px) {
-    .trf-fuel-grid, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; gap: 6px; }
-    .trf-fuel-grid > .trf-row, .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow { width: auto; min-width: 0; margin: 0; }
-    .trf-fuel-grid > .trf-row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; align-items: start; padding: 6px; }
-    .trf-fuel-grid > .trf-row > .trf-logo, .trf-fuel-grid > .trf-row > .trf-station, .trf-fuel-grid > .trf-row > .trf-km, .trf-fuel-grid > .trf-row > .trf-fordel-box { grid-column: 1 / -1; }
-    .trf-fuel-grid > .trf-row > .trf-pcol { text-align: left; min-width: 0; }
-    .trf-fuel-grid > .trf-row > .trf-pcol::before { content: attr(data-label); display: block; color: var(--secondary-text-color); font-size: 9px; font-weight: 500; }
-    .trf-fuel-grid > .trf-row > .trf-km { text-align: left; }
-    .trf-fuel-head { display: none; }
-    .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow { display: grid; grid-template-columns: minmax(0, 1fr) !important; align-items: start; gap: 4px; padding: 6px; }
-    .trf-ev-grid > .trf-evrow > .trf-logo, .trf-ev-list > .trf-evrow > .trf-logo { grid-column: 1 / -1; }
-    .trf-ev-grid > .trf-evrow > .trf-km, .trf-ev-list > .trf-evrow > .trf-km { text-align: left; }
-    .trf-ev-list > .trf-em { grid-column: 1 / -1; }
-    .trf-ev-dialog { width: min(1100px, calc(100vw - 32px)); max-height: 94vh; }
-    .trf-ev-list { max-height: 74vh; }
-  }`;
+  `;
 
   var ECSS = `
   .trfe { font-family: var(--paper-font-body1_-_font-family, inherit); padding: 8px 4px; color: var(--primary-text-color); font-size: 13px; }
