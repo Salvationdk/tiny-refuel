@@ -33,8 +33,8 @@ assert.ok(editor.innerHTML.includes('Vis knappen på kortet'));
 assert.ok(editor.innerHTML.includes('data-key="scrape_valgt_bil"'));
 const card = new Card();
 assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');
-assert.equal(card._progressText({ phase: 'el', provider: 'Tesla', station: 'Supercharger Aarhus', current: 2, total: 7 }),
-  'Henter el fra Tesla · Supercharger Aarhus (2/7)…');
+assert.equal(card._progressText({ phase: 'el', provider: 'Circle K', station: 'Hovedgaden', current: 2, total: 7 }),
+  'Henter el fra Circle K · Hovedgaden (2/7)…');
 card._config = { vis_benzin: false, vis_diesel: false, vis_el: true, vis_andet: true };
 card._render = () => {};
 card._data = { updated: '2026-01-01T00:00:00Z', benefits: {
@@ -105,7 +105,7 @@ for (const nav of ['waze', 'google']) {
   card._pollScrape(card._scrapeRun);
   await new Promise(setImmediate);
   assert.equal(card._scraping, true);
-  response = { ...response, updated: new Date().toISOString(), refreshing: false, errors: [{ error: 'Tesla HTTP 403' }] };
+  response = { ...response, updated: new Date().toISOString(), refreshing: false, errors: [{ error: 'Kilde HTTP 403' }] };
   card._pollScrape(card._scrapeRun);
   await new Promise(setImmediate);
   assert.equal(card._scraping, false);
