@@ -924,7 +924,7 @@
       var legends = [];
       if (visBenzin) legends.push('<b>95</b> = Blyfri 95 (E10) · <b>100</b> = 100-oktan · <b>Premium 95</b> = benzin med additiver · <b>92</b> = Blyfri 92');
       if (visDiesel) legends.push('<b>Diesel</b> = standard diesel · <b>Extra</b> = opgraderet diesel · <b>HVO100</b> = alternativt dieselbrændstof · <b>AdBlue</b> = væske til dieselbilens udstødningsrensning');
-      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>Se app</b> = ingen verificeret stationspris · <b>*</b> = offentlig selskabstakst, lokal pris kan afvige · <b>fra</b> = udbyderens startpris · <b>km</b> = afstand i luftlinje');
+      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>Se pris</b> = ingen verificeret stationspris; tjek udbyderens app eller kort · <b>*</b> = offentlig selskabstakst, lokal pris kan afvige · <b>fra</b> = udbyderens startpris · <b>km</b> = afstand i luftlinje');
       var legendHtml = legends.length ? '<div class="trf-legend"><b>Energityper:</b> ' + legends.join(' · ') + '</div>' : '';
       if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
       var selectedFuel = this._car() && this._car().brændstof;
@@ -1107,7 +1107,7 @@
       var publicTariff = localPrice ? null : this._evPublicTariff(ev);
       var price = localPrice ? this._fmt(ev.kwh) : (publicTariff
         ? (publicTariff.label === 'from' ? 'fra ' : '') + this._fmt(publicTariff.kwh) + (publicTariff.label === 'indicative' || publicTariff.label === 'list' ? '*' : '')
-        : 'Se app');
+        : 'Se pris');
       var info = [ev.name || ev.brand, ev.address];
       if (publicTariff) info.push(publicTariff.label === 'from'
         ? 'offentlig fra-pris; stationsprisen kan være højere'
