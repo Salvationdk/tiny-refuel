@@ -45,7 +45,7 @@ _CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside
 
 # Customer quotes can be embedded in ordinary page paragraphs without useful class names.
 _CUSTOMER_VOICE = re.compile(
-    r"\b(?:jeg|mig|min|mit|mine|(?-i:\\bI\\b)|me|my)\b.{0,70}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
+    r"\b(?:jeg|mig|min|mit|mine|(?-i:\bI\b)|me|my)\b.{0,70}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
     r"elsker|anbefaler|er\s+tilfreds|er\s+utilfreds|think|love|recommend|got|received|used|"
     r"tried|found|have\s+used)\b|"
     r"\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|says|writes|thinks|recommends|"
