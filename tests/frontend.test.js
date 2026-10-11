@@ -37,9 +37,13 @@ assert.equal(card._progressText({ phase: 'el', provider: 'Tesla', station: 'Supe
   'Henter el fra Tesla · Supercharger Aarhus (2/7)…');
 card._config = { vis_benzin: false, vis_diesel: false, vis_el: true, vis_andet: true };
 card._render = () => {};
-card._data = { updated: '2026-01-01T00:00:00Z', benefits: { circle_k: {
-  summary: 'Eksempel på scraped fordel', source_url: 'https://circlek.example/fordele',
-  fetched_at: '2026-10-09T10:00:00+00:00', status: 'ok' } }, ev: [
+card._data = { updated: '2026-01-01T00:00:00Z', benefits: {
+  circle_k: { summary: 'Eksempel på scraped fordel', source_url: 'https://circlek.example/fordele',
+    fetched_at: '2026-10-09T10:00:00+00:00', status: 'ok' },
+  q8: { summary: 'Q8 kort giver rabat på bilvask.', source_url: 'https://q8.example/kort',
+    fetched_at: '2026-10-09T10:00:00+00:00', status: 'ok' },
+  f24: { summary: null, source_url: 'https://f24.example/fordele', status: 'source_only' },
+}, ev: [
   { brand: 'Q8', name: 'A', address: 'A vej 1', lat: 55.64, lon: 12.08, app_only: true, kind: 'DC' },
   { brand: 'Q8', name: 'B', address: 'B vej 2', lat: 56, lon: 12, kwh: 3.89, kind: 'DC' },
   { brand: 'Q8', name: 'Q8 Lyn', kwh: 3.89 },
@@ -51,11 +55,21 @@ card._data = { updated: '2026-01-01T00:00:00Z', benefits: { circle_k: {
     tariff_note: 'IONITY oplyser, at den faktiske stationspris kan være højere.' },
   { brand: 'Spirii', name: 'Excluded', kwh: 2 },
 ] };
-card._openFordel = 'circle_k';
+card._openFordel = 'ev:circle_k:provider:';
 const scrapedBenefit = card._evBenefits({ brand: 'Circle K' }, 'box');
 assert.ok(scrapedBenefit.includes('Eksempel på scraped fordel'));
 assert.ok(scrapedBenefit.includes('https://circlek.example/fordele'));
 assert.ok(scrapedBenefit.includes('Hentet: 2026-10-09'));
+assert.equal(card._evBenefits({ brand: 'F24' }, 'button'), '');
+assert.equal(card._benefitBox('f24', 'F24', card._data.benefits.f24), '');
+const q8ButtonA = card._evBenefits({ brand: 'Q8', address: 'A vej 1', kind: 'DC' }, 'button');
+const q8ButtonB = card._evBenefits({ brand: 'Q8', address: 'B vej 2', kind: 'DC' }, 'button');
+const q8KeyA = q8ButtonA.match(/data-fordel="([^"]+)"/)[1];
+const q8KeyB = q8ButtonB.match(/data-fordel="([^"]+)"/)[1];
+assert.notEqual(q8KeyA, q8KeyB);
+card._openFordel = q8KeyA;
+assert.ok(card._evBenefits({ brand: 'Q8', address: 'A vej 1', kind: 'DC' }, 'box').includes('Q8 kort giver rabat'));
+assert.equal(card._evBenefits({ brand: 'Q8', address: 'B vej 2', kind: 'DC' }, 'box'), '');
 const html = card._evHtml({ lat: 55.63, lon: 12.08 });
 assert.ok(html.includes('<div class="trf-ev-grid">'));
 assert.equal((html.match(/logo-q8.svg/g) || []).length, 1);
