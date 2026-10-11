@@ -39,7 +39,7 @@ class BenefitsTests(unittest.TestCase):
 
     def test_ok_uses_official_card_wash_app_and_charging_pages(self):
         urls = benefits.PROVIDER_PAGES["ok"][1]
-        self.assertIn("https://www.ok.dk/privat/produkter/ok-kort", urls)
+        self.assertNotIn("https://www.ok.dk/privat/produkter/ok-kort", urls)
         self.assertIn("https://www.ok.dk/privat/produkter/appen/vask", urls)
         self.assertIn("https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat", urls)
 
@@ -87,6 +87,16 @@ class BenefitsTests(unittest.TestCase):
         """
         self.assertEqual(benefits.extract_excerpt(page),
                          "Get 20 øre off per kWh with the provider app.")
+
+    def test_ignores_standalone_customer_questions(self):
+        page = """
+        <main>
+        <p>Hvordan afmelder jeg mit abonnement? Jeg kan ikke finde det i appen.</p>
+        <p>Med OK Kort får du rabat på bilvask og betaling i app.</p>
+        </main>
+        """
+        self.assertEqual(benefits.extract_excerpt(page),
+                         "Med OK Kort får du rabat på bilvask og betaling i app.")
 
     def test_uses_fresh_cache_without_requesting_page(self):
         now = 2_000_000_000
