@@ -35,7 +35,7 @@ class BenefitsTests(unittest.TestCase):
         self.assertIsNotNone(excerpt)
         self.assertNotIn("For os", excerpt)
         self.assertNotIn("fantastisk", excerpt)
-        self.assertIn("OK Kort", excerpt)
+        self.assertIn("OK Fri Vask", excerpt)
 
     def test_ok_uses_official_card_wash_app_and_charging_pages(self):
         urls = benefits.PROVIDER_PAGES["ok"][1]
@@ -129,7 +129,7 @@ class BenefitsTests(unittest.TestCase):
     def test_empty_page_does_not_replace_last_good_excerpt(self):
         now = 2_000_000_000
         old = {key: {"provider": provider, "summary": "Last good benefit",
-                     "source_url": url, "fetched_ts": now - benefits.REFRESH_AFTER - 1,
+                     "source_url": _urls[0], "fetched_ts": now - benefits.REFRESH_AFTER - 1,
                      "fetched_at": "old", "extractor_version": benefits.EXTRACTOR_VERSION, "status": "ok"}
                for key, (provider, _urls) in benefits.PROVIDER_PAGES.items()}
         result, _ = benefits.update(lambda *a, **k: "<html><body>No matching page text.</body></html>",
