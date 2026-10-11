@@ -83,8 +83,16 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(manager.refreshing)
 
     async def test_cache_load_and_private_api(self):
-        self.path.mkdir(parents=True);scraper.save_json(str(self.path/'priser-og-ladesteder.json'),payload())
+        self.path.mkdir(parents=True)
+        cached = payload()
+        cached['ev'].append({'brand': 'Tesla', 'location_id': 'old-tesla', 'address': 'Testvej', 'kwh': 3.5})
+        cached['ev_sources']['tesla'] = {'status': 'stale'}
+        cached['benefits'] = {'tesla': {'summary': 'Old Tesla data'}}
+        scraper.save_json(str(self.path/'priser-og-ladesteder.json'),cached)
         manager=RefuelManager(self.hass,self.path);await manager.async_load();self.assertEqual(manager.counts(),(2,1))
+        self.assertFalse(any(row.get('brand') == 'Tesla' for row in manager.data['ev']))
+        self.assertNotIn('tesla',manager.data['ev_sources'])
+        self.assertNotIn('tesla',manager.data['benefits'])
         self.assertEqual(manager.snapshot()['version'], '0.2.1')
         self.hass.data['tiny_refuel']={'manager':manager}
         view=tiny_refuel.RefuelDataView(self.hass);self.assertTrue(view.requires_auth)
