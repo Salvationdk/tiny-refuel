@@ -90,7 +90,7 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
         view=tiny_refuel.RefuelDataView(self.hass);self.assertTrue(view.requires_auth)
         response=await view.get(None);self.assertEqual(response.status,200);self.assertEqual(response.headers['Cache-Control'],'no-store')
         self.assertEqual(json.loads(response.text)['project'],'Tiny Refuel')
-        self.assertEqual(json.loads(response.text)['version'],'0.2.0')
+        self.assertEqual(json.loads(response.text)['version'],'0.2.1')
         self.hass.data['tiny_refuel'].pop('manager');self.assertEqual((await view.get(None)).status,503)
 
     async def test_setup_service_entities_and_unload(self):
