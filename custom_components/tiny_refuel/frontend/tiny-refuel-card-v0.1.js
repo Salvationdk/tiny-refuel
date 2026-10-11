@@ -924,7 +924,7 @@
       var legends = [];
       if (visBenzin) legends.push('<b>95</b> = Blyfri 95 (E10) · <b>100</b> = 100-oktan · <b>Premium 95</b> = benzin med additiver · <b>92</b> = Blyfri 92');
       if (visDiesel) legends.push('<b>Diesel</b> = standard diesel · <b>Extra</b> = opgraderet diesel · <b>HVO100</b> = alternativt dieselbrændstof · <b>AdBlue</b> = væske til dieselbilens udstødningsrensning');
-      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>pris i app</b> = prisen findes ikke i udtrækket · <b>km</b> = afstand i luftlinje');
+      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>Se app</b> = ingen verificeret stationspris · <b>*</b> = offentlig selskabstakst, lokal pris kan afvige · <b>fra</b> = udbyderens startpris · <b>km</b> = afstand i luftlinje');
       var legendHtml = legends.length ? '<div class="trf-legend"><b>Energityper:</b> ' + legends.join(' · ') + '</div>' : '';
       if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
       var selectedFuel = this._car() && this._car().brændstof;
@@ -1000,6 +1000,45 @@
       }) : [];
     }
 
+    _evPublicTariff(ev) {
+      if (!ev || !this._data || !Array.isArray(this._data.ev)) return null;
+      var brand = String(ev.brand || '').toLowerCase();
+      var entries = this._data.ev.filter((row) => row && String(row.brand || '').toLowerCase() === brand &&
+        !this._evHasLocation(row) && typeof row.kwh === 'number' && isFinite(row.kwh) && row.kwh > 0);
+      if (!entries.length) return null;
+      var kind = String(ev.kind || '').toLowerCase();
+      var power = Number(ev.power_kw);
+      var category = kind;
+      if (brand === 'ok') {
+        if (kind === 'normal' || kind === 'hurtig' || kind === 'lyn') category = kind;
+        else if (kind === 'ac' || (isFinite(power) && power > 0 && power <= 22)) category = 'normal';
+        else if (isFinite(power) && power > 22 && power < 100) category = 'hurtig';
+        else if (kind === 'dc' || (isFinite(power) && power >= 100)) category = 'lyn';
+        var okItem = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) === 0);
+        return okItem ? { kwh: okItem.kwh, label: 'indicative' } : null;
+      }
+      if (brand === 'q8') {
+        category = kind === 'ac' || kind === 'normal' || (isFinite(power) && power > 0 && power <= 22)
+          ? 'normal' : 'lyn';
+        var q8Item = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) >= 0);
+        return q8Item ? { kwh: q8Item.kwh, label: 'indicative' } : null;
+      }
+      if (brand === 'e.on') {
+        category = kind === 'ac' || kind.indexOf('ac') >= 0 ? 'ac' : 'dc';
+        var eonItem = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) === 0);
+        return eonItem ? { kwh: eonItem.kwh, label: 'from' } : null;
+      }
+      if (brand === 'circle k' && kind === 'dc' && isFinite(power) && power >= 100) {
+        var ckItem = entries.find((row) => /lynlader/i.test(String(row.name || '')));
+        return ckItem ? { kwh: ckItem.kwh, label: 'list' } : null;
+      }
+      if (brand === 'ionity') {
+        var ionityItem = entries.find((row) => /direkte betaling/i.test(String(row.name || '')));
+        return ionityItem ? { kwh: ionityItem.kwh, label: 'from' } : null;
+      }
+      return null;
+    }
+
     _evCoords(ev) {
       if (ev.lat === null || ev.lat === undefined || ev.lat === '' || ev.lon === null || ev.lon === undefined || ev.lon === '') return null;
       var lat = Number(ev.lat), lon = Number(ev.lon);
@@ -1064,8 +1103,15 @@
       var logo = this._brandImg(ev.brand);
       var logoContent = logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(ev.brand) + '">' : esc(ev.brand);
       var title = query + (km !== null ? ' · ' + this._fmtKm(km) + ' km' : '');
-      var price = typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0 ? this._fmt(ev.kwh) : 'pris i app';
+      var localPrice = typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0;
+      var publicTariff = localPrice ? null : this._evPublicTariff(ev);
+      var price = localPrice ? this._fmt(ev.kwh) : (publicTariff
+        ? (publicTariff.label === 'from' ? 'fra ' : '') + this._fmt(publicTariff.kwh) + (publicTariff.label === 'indicative' || publicTariff.label === 'list' ? '*' : '')
+        : 'Se app');
       var info = [ev.name || ev.brand, ev.address];
+      if (publicTariff) info.push(publicTariff.label === 'from'
+        ? 'offentlig fra-pris; stationsprisen kan være højere'
+        : 'offentlig selskabstakst; den lokale pris kan afvige');
       if (!ev.address && coords) info.push('gadeadresse ikke oplyst; navigation til koordinater');
       if (ev.access_note) info.push(ev.access_note);
       if (ev.kind) info.push(ev.kind);
@@ -1074,7 +1120,7 @@
       if (ev.plugs) info.push(ev.plugs + ' ladepunkter');
       if (ev.stale) info.push('gemte data: seneste hentning fejlede');
       if (ev.source_updated) info.push('hentet ' + new Date(ev.source_updated).toLocaleString('da-DK'));
-      if (count > 1) info.push('+' + (count - 1) + (companyGroup ? ' andre ladevalg hos selskabet' : price === 'pris i app' ? ' andre ladesteder hos selskabet med pris i app' : ' ladesteder hos samme selskab til samme pris'));
+      if (count > 1) info.push('+' + (count - 1) + (companyGroup ? ' andre ladevalg hos selskabet' : (!localPrice && !publicTariff ? ' andre ladesteder hos selskabet uden stationspris i udtrækket' : ' ladesteder hos samme selskab')));
       var age = this._fmtAge(ev.lu);
       return '<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px" title="' + esc(title) + '">' +
         '<div class="trf-logo"><a class="trf-navlink" data-waze="' + esc(ev.brand) + '" href="' + esc(link) + '" title="' + esc(title) + '">' + logoContent + '</a></div>' +
