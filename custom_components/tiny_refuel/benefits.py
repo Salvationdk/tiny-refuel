@@ -60,14 +60,14 @@ _CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside
 
 # Customer quotes can be embedded in ordinary page paragraphs without useful class names.
 _CUSTOMER_VOICE = re.compile(
-    r"\\b(?:jeg|mig|min|mit|mine|vi|os|vores|(?-i:\\bI\\b)|me|my|we|us|our)\\b.{0,90}\\b(?:synes|mener|oplevede|fik|har\\s+brugt|"
-    r"elsker|anbefaler|er\\s+tilfreds|er\\s+utilfreds|think|love|recommend|got|received|used|"
-    r"tried|found|have\\s+used|enjoyed|feel)\\b|"
-    r"\\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|"
-    r"loves|claims|reports)\\b.{0,55}\\b(?:kunde|bruger|customer|user|reviewer|member|formand)\\b|"
-    r"\\b(?:kunde|bruger|customer|user|reviewer|member|formand)\\b.{0,55}\\b(?:synes|mener|oplevede|"
-    r"anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|loves|claims|reports)\\b|"
-    r"\\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\\b",
+    r"\b(?:jeg|mig|min|mit|mine|vi|os|vores|(?-i:\bI\b)|me|my|we|us|our)\b.{0,90}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
+    r"elsker|anbefaler|er\s+tilfreds|er\s+utilfreds|think|love|recommend|got|received|used|"
+    r"tried|found|have\s+used|enjoyed|feel)\b|"
+    r"\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|"
+    r"loves|claims|reports)\b.{0,55}\b(?:kunde|bruger|customer|user|reviewer|member|formand)\b|"
+    r"\b(?:kunde|bruger|customer|user|reviewer|member|formand)\b.{0,55}\b(?:synes|mener|oplevede|"
+    r"anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|loves|claims|reports)\b|"
+    r"\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\b",
     re.I,
 )
 _QUOTED_TESTIMONIAL = re.compile(r"[“„«][^”»]{12,}[”»]|“|”|„|«|»");
