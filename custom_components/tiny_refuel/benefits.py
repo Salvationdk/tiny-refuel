@@ -7,24 +7,39 @@ import time
 
 REFRESH_AFTER = 7 * 24 * 60 * 60
 MAX_EXCERPT_WORDS = 20
-EXTRACTOR_VERSION = 3
+EXTRACTOR_VERSION = 4
 
 # One canonical public page per provider. Records are keyed to the card's brand
 # keys so both the fuel and charging views can show the right source.
 PROVIDER_PAGES = {
-    "circle_k": ("Circle K", "https://www.circlek.dk/extra/faq"),
-    "ingo": ("Ingo", "https://www.ingo.dk/app"),
-    "f24": ("F24", "https://www.f24.dk/"),
-    "q8": ("Q8", "https://www.q8.dk/kundeservice/bliv-q8-kunde/"),
-    "goon": ("Go'on", "https://goon.nu/goon-kort/privat/loyalitet/"),
-    "shell": ("Shell", "https://www.shell.dk/private-customers.html"),
-    "uno_x": ("Uno-X", "https://www.unox.dk/el/"),
-    "ok": ("OK", "https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat"),
-    "oil": ("OIL", "https://www.oil-tankstationer.dk/betalingsformer/oil-loyalitetsaftale/"),
-    "clever": ("Clever", "https://clever.dk/ladeloesninger/clever-go/"),
-    "eon": ("E.ON", "https://www.eon.dk/privat/kundesupport/kontakt-opladning.html"),
-    "tesla": ("Tesla", "https://www.tesla.com/da_dk/support/charging/supercharging"),
-    "ionity": ("IONITY", "https://www.ionity.eu/subscriptions"),
+    "circle_k": ("Circle K", [
+        "https://www.circlek.dk/extra/faq",
+        "https://www.circlek.dk/extra",
+        "https://www.circlek.dk/ubegraensetbilvask",
+    ]),
+    "ingo": ("Ingo", ["https://www.ingo.dk/app"]),
+    "f24": ("F24", ["https://www.f24.dk/"]),
+    "q8": ("Q8", [
+        "https://www.q8.dk/kundeservice/bliv-q8-kunde/",
+        "https://www.q8.dk/bilvask",
+    ]),
+    "goon": ("Go'on", ["https://goon.nu/goon-kort/privat/loyalitet/"]),
+    "shell": ("Shell", [
+        "https://www.shell.dk/private-customers.html",
+        "https://www.shell.dk/at-station/carwash.html",
+    ]),
+    "uno_x": ("Uno-X", ["https://www.unox.dk/el/"]),
+    "ok": ("OK", [
+        "https://www.ok.dk/privat/produkter/ok-kort",
+        "https://www.ok.dk/privat/hjaelp/bilen/ok-kort/hvad-er-fordelene-ved-at-have-et-ok-kort",
+        "https://www.ok.dk/privat/produkter/appen/vask",
+        "https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat",
+    ]),
+    "oil": ("OIL", ["https://www.oil-tankstationer.dk/betalingsformer/oil-loyalitetsaftale/"]),
+    "clever": ("Clever", ["https://clever.dk/ladeloesninger/clever-go/"]),
+    "eon": ("E.ON", ["https://www.eon.dk/privat/kundesupport/kontakt-opladning.html"]),
+    "tesla": ("Tesla", ["https://www.tesla.com/da_dk/support/charging/supercharging"]),
+    "ionity": ("IONITY", ["https://www.ionity.eu/subscriptions"]),
 }
 
 _INTERESTING = re.compile(
@@ -45,16 +60,17 @@ _CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside
 
 # Customer quotes can be embedded in ordinary page paragraphs without useful class names.
 _CUSTOMER_VOICE = re.compile(
-    r"\b(?:jeg|mig|min|mit|mine|(?-i:\bI\b)|me|my)\b.{0,70}\b(?:synes|mener|oplevede|fik|har\s+brugt|"
-    r"elsker|anbefaler|er\s+tilfreds|er\s+utilfreds|think|love|recommend|got|received|used|"
-    r"tried|found|have\s+used)\b|"
-    r"\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|says|writes|thinks|recommends|"
-    r"loves|claims|reports)\b.{0,45}\b(?:kunde|bruger|customer|user|reviewer|member)\b|"
-    r"\b(?:kunde|bruger|customer|user|reviewer|member)\b.{0,45}\b(?:synes|mener|oplevede|"
-    r"anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|loves|claims|reports)\b|"
-    r"\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\b",
+    r"\\b(?:jeg|mig|min|mit|mine|vi|os|vores|(?-i:\\bI\\b)|me|my|we|us|our)\\b.{0,90}\\b(?:synes|mener|oplevede|fik|har\\s+brugt|"
+    r"elsker|anbefaler|er\\s+tilfreds|er\\s+utilfreds|think|love|recommend|got|received|used|"
+    r"tried|found|have\\s+used|enjoyed|feel)\\b|"
+    r"\\b(?:synes|mener|oplevede|anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|"
+    r"loves|claims|reports)\\b.{0,55}\\b(?:kunde|bruger|customer|user|reviewer|member|formand)\\b|"
+    r"\\b(?:kunde|bruger|customer|user|reviewer|member|formand)\\b.{0,55}\\b(?:synes|mener|oplevede|"
+    r"anbefaler|fortæller|skriver|siger|says|writes|thinks|recommends|loves|claims|reports)\\b|"
+    r"\\b(?:trustpilot|kundeanmeldelse|kundeudtalelse|testimonial|review|stjerner)\\b",
     re.I,
 )
+_QUOTED_TESTIMONIAL = re.compile(r"[“„«][^”»]{12,}[”»]|“|”|„|«|»");
 
 
 class _BenefitText(HTMLParser):
@@ -109,7 +125,7 @@ def extract_excerpt(page):
     parser.close()
     # Old cached extracts are invalidated when the filter changes. Also reject
     # unlabelled testimonial copy that happens to mention an app or discount.
-    eligible = [text for text in parser.blocks if not _CUSTOMER_VOICE.search(text)]
+    eligible = [text for text in parser.blocks if not _CUSTOMER_VOICE.search(text) and not _QUOTED_TESTIMONIAL.search(text)]
     if not eligible:
         return None
     # Prefer a concise block with concrete terms and avoid concatenating site text.
@@ -134,7 +150,7 @@ def update(fetch_text, load_json, save_json, cache_path, progress_callback=None,
     result, failures = {}, []
 
     def fetch_one(item):
-        key, (provider, url) = item
+        key, (provider, urls) = item
         cached = previous.get(key)
         if not isinstance(cached, dict) or cached.get("extractor_version") != EXTRACTOR_VERSION:
             # Old extracts were not checked for review widgets; never keep showing them.
@@ -145,27 +161,38 @@ def update(fetch_text, load_json, save_json, cache_path, progress_callback=None,
                     return key, dict(cached), None
             except (TypeError, ValueError):
                 pass
-        try:
-            page = fetch_text(url, timeout=12)
-            excerpt = extract_excerpt(page)
-            if excerpt:
-                return key, {"provider": provider, "summary": excerpt,
-                             "source_url": url, "fetched_at": fetched_at,
-                             "fetched_ts": now, "extractor_version": EXTRACTOR_VERSION, "status": "ok"}, None
-            if isinstance(cached, dict) and cached.get("summary"):
-                stale = dict(cached)
-                stale["status"] = "stale"
-                return key, stale, "no relevant benefit text found"
-            return key, {"provider": provider, "summary": None, "source_url": url,
+        excerpts, errors, empty_pages = [], [], 0
+        for url in urls:
+            try:
+                page = fetch_text(url, timeout=12)
+                excerpt = extract_excerpt(page)
+                if excerpt and excerpt not in excerpts:
+                    excerpts.append(excerpt)
+                elif not excerpt:
+                    empty_pages += 1
+            except Exception as exc:
+                errors.append(str(exc)[:100])
+        if excerpts:
+            summary = " · ".join(excerpts)
+            words = summary.split()
+            if len(words) > 48:
+                summary = " ".join(words[:48]).rstrip(".,;:") + "…"
+            return key, {"provider": provider, "summary": summary,
+                         "source_url": urls[0], "source_urls": urls,
                          "fetched_at": fetched_at, "fetched_ts": now,
-                         "extractor_version": EXTRACTOR_VERSION, "status": "source_only"}, None
-        except Exception as exc:  # Each provider is independent; keep the rest fresh.
-            if isinstance(cached, dict):
-                stale = dict(cached)
-                stale["status"] = "stale"
-                return key, stale, str(exc)[:140]
-            return key, {"provider": provider, "summary": None, "source_url": url,
-                         "fetched_at": None, "fetched_ts": 0, "extractor_version": EXTRACTOR_VERSION, "status": "unavailable"}, str(exc)[:140]
+                         "extractor_version": EXTRACTOR_VERSION, "status": "ok"}, (
+                             "; ".join(errors)[:140] if errors else None)
+        if isinstance(cached, dict) and cached.get("summary"):
+            stale = dict(cached)
+            stale["status"] = "stale"
+            error = "; ".join(errors)[:140] if errors else "no relevant provider benefit text found"
+            return key, stale, error
+        error = "; ".join(errors)[:140] if errors else None
+        status = "unavailable" if errors else "source_only"
+        return key, {"provider": provider, "summary": None, "source_url": urls[0],
+                     "source_urls": urls, "fetched_at": fetched_at if not errors else None,
+                     "fetched_ts": now if not errors else 0,
+                     "extractor_version": EXTRACTOR_VERSION, "status": status}, error
 
     if progress_callback:
         progress_callback({"phase": "fordele", "provider": "officielle udbydersider",
