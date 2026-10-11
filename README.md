@@ -92,7 +92,6 @@ Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges.
 | OK / OIL | Lokale brændstofpriser og ladeadresser; generelle OK-ladetakster særskilt |
 | Clever | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst. Prisen varierer pr. sted og tidspunkt og skal ses i Clever-appen/kortet |
 | E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst; offentlige danske startpriser vises som generelle takster |
-| Tesla | Danske Superchargere med adgangsmarkering, adresser, koordinater, effekt og antal ladepunkter. Separate lokale priser for Tesla/medlemmer og andre biler uden medlemskab, når oplyst. Hentning kan blive afvist med HTTP 403 |
 | IONITY | Aktive danske steder, koordinater og effekt/antal, når oplyst; ingen gadeadresse i udtrækket. Offentlige minimumspriser for app, direkte betaling og abonnement vises særskilt |
 
 Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevares eventuelle tidligere data fra denne installation, tydeligt markeret som gemte data.
@@ -154,12 +153,3 @@ Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigat
 Priser og adresser vises også uden koordinater. Kortet angiver, når nærmeste station ikke kan bestemmes eller kun er valgt blandt stationer med kendte koordinater. Op til 30 nye adresseopslag pr. kørsel fordeles på skift mellem selskaberne efter frasortering af cachede og gentagne adresser.
 
 
-## Tesla-priser i 0.1.2
-
-Tesla-rækken og listen over ladesteder viser **Tesla/medlemmer** og **Andre biler uden medlemskab** hver for sig. Begge vises uanset bilvalg; intet medlemskabsvalg eller login er nødvendigt. Den enkelte station er markeret med adgang for andre bilmærker.
-
-Priserne hentes fra Teslas offentlige stationssider. Flere takster vises som et interval med de oplyste tidsvilkår; laveste pris fremstilles ikke som prisen lige nu. Manglende priser vises som ikke oplyst. Medlemsabonnement samt eventuelle trængsels- og parkeringsgebyrer indgår ikke i kWh-prisen. Tesla indgår ikke i den generelle beregning af fuld opladning, da den beregning kræver én entydig kWh-pris.
-
-Ved et mislykket prisopslag beholdes stationen. Eventuelle tidligere priser markeres som gemte med deres oprindelige hentetid. Ved HTTP 403/429 stoppes yderligere prisopslag efter de allerede igangværende kald. Højst tre stationssider hentes samtidigt med en samlet startgrænse på tre minutter. Første hentning kan derfor tage længere tid.
-
-Denne ændring kan ikke garantere adgang fra alle installationer, hvis Tesla afviser hentningen.
