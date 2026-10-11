@@ -137,7 +137,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.0**. Kortets footer viser **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.2.0**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. JavaScript-filens `v0.1` i filnavnet er kortformatserien.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
