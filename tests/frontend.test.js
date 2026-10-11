@@ -46,7 +46,10 @@ card._data = { updated: '2026-01-01T00:00:00Z', benefits: {
 }, ev: [
   { brand: 'Q8', name: 'A', address: 'A vej 1', lat: 55.64, lon: 12.08, app_only: true, kind: 'DC' },
   { brand: 'Q8', name: 'B', address: 'B vej 2', lat: 56, lon: 12, kwh: 3.89, kind: 'DC' },
-  { brand: 'Q8', name: 'Q8 Lyn', kwh: 3.89 },
+  { brand: 'Q8', name: 'Q8 Lyn (150 kW)', kwh: 3.89 },
+  { brand: 'OK', name: 'Normallader', kwh: 3.49 },
+  { brand: 'OK', name: 'Hurtiglader', kwh: 3.69 },
+  { brand: 'OK', name: 'Lynlader', kwh: 3.89 },
   { brand: 'OK', name: 'C', location_id: 'ok1', address: 'C vej 3', lat: 55.65, lon: 12.08, kind: 'Normal', app_only: true },
   { brand: 'OK', name: 'C', location_id: 'ok1', address: 'C vej 3', lat: 55.65, lon: 12.08, kind: 'Lyn', app_only: true },
   { brand: 'Circle K', name: 'Lynlader (listepris)', kwh: 3.99, lu: '2026-10-01' },
@@ -67,6 +70,19 @@ const q8ButtonB = card._evBenefits({ brand: 'Q8', address: 'B vej 2', kind: 'DC'
 const q8KeyA = q8ButtonA.match(/data-fordel="([^"]+)"/)[1];
 const q8KeyB = q8ButtonB.match(/data-fordel="([^"]+)"/)[1];
 assert.notEqual(q8KeyA, q8KeyB);
+assert.equal(card._evPublicTariff(card._data.ev[0]).kwh, 3.89);
+assert.equal(card._evPublicTariff(card._data.ev[0]).label, 'indicative');
+assert.equal(card._evPublicTariff(card._data.ev[6]).kwh, 3.49);
+assert.equal(card._evPublicTariff(card._data.ev[6]).label, 'indicative');
+assert.ok(card._evRow(card._data.ev[0], null, 1, true).includes('3,89*'));
+assert.ok(card._evRow(card._data.ev[6], null, 1, true).includes('3,49*'));
+assert.ok(card._evRow(card._data.ev[0], null, 1, true).includes('lokale pris kan afvige'));
+const noPublicPrice = card._evRow({ brand: 'Shell', name: 'Shell Recharge', address: 'Testvej 1', kind: 'DC' }, null, 1, true);
+assert.ok(noPublicPrice.includes('Se app'));
+card._data.ev.push({ brand: 'Circle K', name: 'Lynlader (listepris)', kwh: 3.99 });
+assert.equal(card._evPublicTariff({ brand: 'Circle K', kind: 'DC', power_kw: 150 }).kwh, 3.99);
+assert.equal(card._evPublicTariff({ brand: 'Circle K', kind: 'DC', power_kw: 150 }).label, 'list');
+card._data.ev.pop();
 card._openFordel = q8KeyA;
 assert.ok(card._evBenefits({ brand: 'Q8', address: 'A vej 1', kind: 'DC' }, 'box').includes('Q8 kort giver rabat'));
 assert.equal(card._evBenefits({ brand: 'Q8', address: 'B vej 2', kind: 'DC' }, 'box'), '');
