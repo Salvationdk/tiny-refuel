@@ -1369,7 +1369,8 @@ def _collect(progress_callback=None, fuel_types=None):
         api, [row for row in prev.get("ev", []) if isinstance(row, dict) and row.get("brand") != "Tesla"], errors, progress_callback)
         if "el" in selected else
         {"tariffs": [], "q8_tariffs": [], "circlek_tariffs": [], "eon_tariffs": [],
-         "ionity_tariffs": [], "locations": [], "statuses": prev.get("ev_sources", {})})
+         "ionity_tariffs": [], "locations": [],
+         "statuses": {key: value for key, value in prev.get("ev_sources", {}).items() if key != "tesla"}})
     ok_ev = fuel_data["ok_tariffs"]
     if "el" in selected and not (selected & {"benzin", "diesel"}):
         ok_ev = api.fetch_ok_el(errors)
