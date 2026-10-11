@@ -135,12 +135,14 @@ for (const nav of ['waze', 'google']) {
     }
   }
   fuel._data.stations[0].stale = true;
+  fuel._data.version = '0.2.0';
   fuel._render();
   assert.ok(fuel.innerHTML.includes('class="trf-fuel-grid"'));
   assert.equal((fuel.innerHTML.match(/class="trf-fuel-col"/g) || []).length, 0);
   assert.ok(fuel.innerHTML.includes('data-label="95"'));
   assert.ok(fuel.innerHTML.includes('data-label="Diesel"'));
   assert.ok(fuel.innerHTML.includes('13,90'));
+  assert.ok(fuel.innerHTML.includes('Tiny Refuel v0.2.0'));
   assert.ok(fuel.innerHTML.includes('trf-stale-tag">Gemt'));
   fuel._data.stations.push({ brand: 'Shell', name: 'Shell B', address: 'C vej 3', p95: 16, lat: 55.61, lon: 12.11 });
   const row = fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell');
