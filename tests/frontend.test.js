@@ -153,9 +153,9 @@ for (const nav of ['waze', 'google']) {
   assert.equal(fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell').v95, null);
 }
 
-// Landscape uses five columns so ten entries form two rows; portrait keeps its existing flow layout.
-assert.ok(frontendSource.includes('@media (orientation: landscape) and (min-width: 700px)'));
-assert.ok(frontendSource.includes('grid-template-columns: repeat(5, minmax(0, 1fr))'));
+// Both screen orientations use the same list layout.
+assert.ok(!frontendSource.includes('@media (orientation:'));
+assert.ok(!frontendSource.includes('grid-template-columns: repeat(5, minmax(0, 1fr))'));
 assert.ok(frontendSource.includes('.trf-fuel-grid, .trf-ev-grid { display: contents; }'));
 assert.ok(frontendSource.includes('fuelHtmlRows.join'));
 assert.ok(frontendSource.includes('evHtmlRows.join'));
