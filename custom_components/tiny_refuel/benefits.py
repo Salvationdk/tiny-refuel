@@ -7,6 +7,7 @@ import time
 
 REFRESH_AFTER = 7 * 24 * 60 * 60
 MAX_EXCERPT_WORDS = 20
+EXTRACTOR_VERSION = 2
 
 # One canonical public page per provider. Records are keyed to the card's brand
 # keys so both the fuel and charging views can show the right source.
@@ -32,31 +33,54 @@ _INTERESTING = re.compile(
 )
 _SKIP_TAGS = {"script", "style", "nav", "header", "footer", "noscript", "svg"}
 _BLOCK_TAGS = {"p", "li", "h2", "h3", "h4"}
+_REVIEW_MARKER = re.compile(
+    r"review|rating|testimonial|customer[-_ ]?(?:review|comment|story|voice)|"
+    r"kunde[-_ ]?(?:anmeldelse|anmeldelser|kommentar|kommentarer|oplevelse|historie)|"
+    r"anmeldelse|anmeldelser|kommentar|kommentarer|bedømmelse|trustpilot|ugc|user[-_ ]?content",
+    re.I,
+)
+_CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside"}
 
 
 class _BenefitText(HTMLParser):
-    """Collect visible, meaningful text blocks and ignore page chrome."""
+    """Collect provider copy while excluding marked customer-review sections."""
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
+        self.stack = []
         self.skip_depth = 0
         self.block = None
         self.blocks = []
 
     def handle_starttag(self, tag, attrs):
-        if tag in _SKIP_TAGS:
+        attrs = dict(attrs)
+        marker_text = " ".join(str(attrs.get(key, "")) for key in
+                                ("class", "id", "aria-label", "data-testid", "itemprop"))
+        skip = tag in _SKIP_TAGS or (tag in _CONTAINER_TAGS and bool(_REVIEW_MARKER.search(marker_text)))
+        self.stack.append((tag, skip))
+        if skip:
             self.skip_depth += 1
         if self.skip_depth == 0 and tag in _BLOCK_TAGS and self.block is None:
             self.block = [tag, []]
 
+    def handle_startendtag(self, tag, attrs):
+        # Treat void/self-closing elements without leaving a stack entry behind.
+        if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
+            self.handle_starttag(tag, attrs)
+            self.handle_endtag(tag)
+
     def handle_endtag(self, tag):
-        if self.skip_depth and tag in _SKIP_TAGS:
-            self.skip_depth -= 1
         if self.block is not None and tag == self.block[0]:
             value = re.sub(r"\s+", " ", " ".join(self.block[1])).strip()
             if len(value) >= 35 and _INTERESTING.search(value):
                 self.blocks.append(value)
             self.block = None
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] == tag:
+                removed = self.stack[index:]
+                self.skip_depth -= sum(1 for _, skipped in removed if skipped)
+                del self.stack[index:]
+                break
 
     def handle_data(self, data):
         if self.skip_depth == 0 and self.block is not None:
@@ -93,6 +117,9 @@ def update(fetch_text, load_json, save_json, cache_path, progress_callback=None,
     def fetch_one(item):
         key, (provider, url) = item
         cached = previous.get(key)
+        if not isinstance(cached, dict) or cached.get("extractor_version") != EXTRACTOR_VERSION:
+            # Old extracts were not checked for review widgets; never keep showing them.
+            cached = None
         if isinstance(cached, dict):
             try:
                 if now - int(cached.get("fetched_ts", 0)) < REFRESH_AFTER:
@@ -105,21 +132,21 @@ def update(fetch_text, load_json, save_json, cache_path, progress_callback=None,
             if excerpt:
                 return key, {"provider": provider, "summary": excerpt,
                              "source_url": url, "fetched_at": fetched_at,
-                             "fetched_ts": now, "status": "ok"}, None
+                             "fetched_ts": now, "extractor_version": EXTRACTOR_VERSION, "status": "ok"}, None
             if isinstance(cached, dict) and cached.get("summary"):
                 stale = dict(cached)
                 stale["status"] = "stale"
                 return key, stale, "no relevant benefit text found"
             return key, {"provider": provider, "summary": None, "source_url": url,
                          "fetched_at": fetched_at, "fetched_ts": now,
-                         "status": "source_only"}, None
+                         "extractor_version": EXTRACTOR_VERSION, "status": "source_only"}, None
         except Exception as exc:  # Each provider is independent; keep the rest fresh.
             if isinstance(cached, dict):
                 stale = dict(cached)
                 stale["status"] = "stale"
                 return key, stale, str(exc)[:140]
             return key, {"provider": provider, "summary": None, "source_url": url,
-                         "fetched_at": None, "fetched_ts": 0, "status": "unavailable"}, str(exc)[:140]
+                         "fetched_at": None, "fetched_ts": 0, "extractor_version": EXTRACTOR_VERSION, "status": "unavailable"}, str(exc)[:140]
 
     if progress_callback:
         progress_callback({"phase": "fordele", "provider": "officielle udbydersider",
