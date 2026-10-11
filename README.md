@@ -45,11 +45,11 @@ Første scraping starter automatisk i baggrunden og kan tage flere minutter. **H
 
 Under hentning viser kortet den aktuelle udbyder og, når stationer eller adresser behandles enkeltvis, den aktuelle station/adresse. Status dækker benzin, diesel og el. Datastatus viser hver brændstofkilde, antal stationer og priser, manglende koordinater, seneste kontrol og eventuelle fejl. Eloversigten viser tilsvarende kilde- og koordinatstatus. Gamle priser markeres som gemte, når seneste hentning fejler. Adresser uden koordinater tælles og behandles gradvist ved senere hentninger.
 
-I stående format bevares den eksisterende liste. I liggende format fordeles både benzin-/dieseludbydere og elstationer i to kolonner med op til fem rækker under hinanden i hver. Hver station beholder sin vandrette række med logo, priser, adresse og afstand. Farver, kundefordele, filtre, navigation og knappen **Vis 10 mere** bevares. I UI-editoren kan hele kortets YAML vises og kopieres.
+Stående format bevarer den eksisterende liste. I liggende format vises benzin-/dieseludbydere og elstationer i fem kolonner, så ti kort står i to rækker med fem i hver. Hvert kort beholder logo, priser, adresse og afstand. Farver, kundefordele, filtre, navigation og knappen **Vis 10 mere** bevares. I UI-editoren kan hele kortets YAML vises og kopieres.
 
 Hent-knappen kan skjules under punktet **Hent data** i UI-editoren. Her kan du også begrænse en manuel hentning til den valgte bils drivmiddel. En benzinbil henter benzin, en dieselbil diesel, en elbil el og en plug-in-hybrid både benzin og el. Slås begrænsningen fra, hentes alle typer. Automatisk intervalhentning henter fortsat alle typer, så nye biler også får data. Data for fravalgte typer bevares mellem hentninger. Nogle brændstofkilder leverer benzin- og dieselpriser samlet, så de kan stadig blive hentet sammen.
 
-Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps og abonnementer hentes fra officielle udbydersider højst én gang om ugen og vises med kilde og hentetid. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
+Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps og abonnementer hentes fra officielle udbydersider højst én gang om ugen og vises med kilde og hentetid. Kun udbyderens egne beskrivelser bruges; kundeanmeldelser og kommentarer filtreres fra. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
@@ -137,7 +137,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.0**. Kortets footer viser **Tiny Refuel v0.1**.
+Teknisk integrationsversion: **0.2.0**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. JavaScript-filens `v0.1` i filnavnet er kortformatserien.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 

@@ -119,10 +119,10 @@ for (const nav of ['waze', 'google']) {
 // Keep fuel rows visible while coordinate lookup is incomplete.
 {
   const fuel = new Card();
-  fuel._config = { vis_benzin: true, vis_diesel: false, vis_el: false };
+  fuel._config = { vis_benzin: true, vis_diesel: true, vis_el: false };
   fuel._data = { stations: [
     { brand: "Go'on", name: 'Go on A', address: 'A vej 1', p95: 14.5, lat: null, lon: null },
-    { brand: 'Shell', name: 'Shell A', address: 'B vej 2', p95: 15, lat: null, lon: null },
+    { brand: 'Shell', name: 'Shell A', address: 'B vej 2', p95: 15, diesel: 13.9, lat: null, lon: null },
   ] };
   for (const loc of [null, { lat: 55.6, lon: 12.1 }]) {
     const rows = fuel._buildRows(loc).filter(r => ['goon', 'shell'].includes(r.b.key));
@@ -135,10 +135,14 @@ for (const nav of ['waze', 'google']) {
     }
   }
   fuel._data.stations[0].stale = true;
+  fuel._data.version = '0.2.0';
   fuel._render();
   assert.ok(fuel.innerHTML.includes('class="trf-fuel-grid"'));
-  assert.equal((fuel.innerHTML.match(/class="trf-fuel-col"/g) || []).length, 2);
+  assert.equal((fuel.innerHTML.match(/class="trf-fuel-col"/g) || []).length, 0);
   assert.ok(fuel.innerHTML.includes('data-label="95"'));
+  assert.ok(fuel.innerHTML.includes('data-label="Diesel"'));
+  assert.ok(fuel.innerHTML.includes('13,90'));
+  assert.ok(fuel.innerHTML.includes('Tiny Refuel v0.2.0'));
   assert.ok(fuel.innerHTML.includes('trf-stale-tag">Gemt'));
   fuel._data.stations.push({ brand: 'Shell', name: 'Shell B', address: 'C vej 3', p95: 16, lat: 55.61, lon: 12.11 });
   const row = fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell');
@@ -149,13 +153,13 @@ for (const nav of ['waze', 'google']) {
   assert.equal(fuel._buildRows({ lat: 55.6, lon: 12.1 }).find(r => r.b.key === 'shell').v95, null);
 }
 
-// Landscape places the existing horizontal station rows in two columns; portrait stays flow-based.
+// Landscape uses five columns so ten entries form two rows; portrait keeps its existing flow layout.
 assert.ok(frontendSource.includes('@media (orientation: landscape) and (min-width: 700px)'));
-assert.ok(frontendSource.includes('grid-template-columns: repeat(2, minmax(0, 1fr))'));
-assert.ok(frontendSource.includes('.trf-fuel-grid, .trf-fuel-col, .trf-ev-grid, .trf-ev-col { display: contents; }'));
+assert.ok(frontendSource.includes('grid-template-columns: repeat(5, minmax(0, 1fr))'));
+assert.ok(frontendSource.includes('.trf-fuel-grid, .trf-ev-grid { display: contents; }'));
+assert.ok(frontendSource.includes('fuelHtmlRows.join'));
+assert.ok(frontendSource.includes('evHtmlRows.join'));
 assert.ok(!frontendSource.includes('grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important'));
-assert.ok(frontendSource.includes('var fuelSplit = Math.ceil(fuelHtmlRows.length / 2)'));
-assert.ok(frontendSource.includes('var evSplit = Math.ceil(evHtmlRows.length / 2)'));
 
 // Fuel source health and geocoding backlog remain visible from the data file.
 {

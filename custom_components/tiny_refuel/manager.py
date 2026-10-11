@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Callable
 
 from . import scraper
-from .const import CARD_VERSION
+from .const import CARD_VERSION, VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ class RefuelManager:
                 self._notify()
 
     def snapshot(self):
-        return {**self.data, "refreshing": self.refreshing,
+        return {**self.data, "version": VERSION, "refreshing": self.refreshing,
                 "last_error": self.last_error, "last_attempt": self.last_attempt,
                 "progress": self.progress}
 
