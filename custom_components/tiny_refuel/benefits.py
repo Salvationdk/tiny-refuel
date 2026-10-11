@@ -34,9 +34,9 @@ _INTERESTING = re.compile(
 _SKIP_TAGS = {"script", "style", "nav", "header", "footer", "noscript", "svg"}
 _BLOCK_TAGS = {"p", "li", "h2", "h3", "h4"}
 _REVIEW_MARKER = re.compile(
-    r"review|rating|testimonial|customer[-_ ]?(?:review|comment|story|voice)|"
-    r"kunde[-_ ]?(?:anmeldelse|anmeldelser|kommentar|kommentarer|oplevelse|historie)|"
-    r"anmeldelse|anmeldelser|kommentar|kommentarer|bedømmelse|trustpilot|ugc|user[-_ ]?content",
+    r"review|rating|testimonial|feedback|comment|customer[-_ ]?(?:review|comment|story|voice)|"
+    r"kunde[-_ ]?(?:anmeldelse|anmeldelser|kommentar|kommentarer|udtalelse|oplevelse|historie)|"
+    r"anmeldelse|anmeldelser|kommentar|kommentarer|udtalelse|udtalelser|bedømmelse|trustpilot|ugc|user[-_ ]?content",
     re.I,
 )
 _CONTAINER_TAGS = {"div", "section", "article", "ul", "ol", "blockquote", "aside"}
@@ -56,7 +56,7 @@ class _BenefitText(HTMLParser):
         attrs = dict(attrs)
         marker_text = " ".join(str(attrs.get(key, "")) for key in
                                 ("class", "id", "aria-label", "data-testid", "itemprop"))
-        skip = tag in _SKIP_TAGS or (tag in _CONTAINER_TAGS and bool(_REVIEW_MARKER.search(marker_text)))
+        skip = tag in _SKIP_TAGS or bool(_REVIEW_MARKER.search(marker_text))
         self.stack.append((tag, skip))
         if skip:
             self.skip_depth += 1
