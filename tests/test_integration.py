@@ -85,7 +85,7 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
     async def test_cache_load_and_private_api(self):
         self.path.mkdir(parents=True);scraper.save_json(str(self.path/'priser-og-ladesteder.json'),payload())
         manager=RefuelManager(self.hass,self.path);await manager.async_load();self.assertEqual(manager.counts(),(2,1))
-        self.assertEqual(manager.snapshot()['version'], '0.2.0')
+        self.assertEqual(manager.snapshot()['version'], '0.2.1')
         self.hass.data['tiny_refuel']={'manager':manager}
         view=tiny_refuel.RefuelDataView(self.hass);self.assertTrue(view.requires_auth)
         response=await view.get(None);self.assertEqual(response.status,200);self.assertEqual(response.headers['Cache-Control'],'no-store')
