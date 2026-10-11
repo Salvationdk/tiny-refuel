@@ -961,6 +961,7 @@
 
       var scrapeStatus = this._data && this._data.refreshing && this._data.progress
         ? this._progressText(this._data.progress) : (this._scrapeMessage || "");
+      var integrationVersion = this._data && this._data.version;
       this.innerHTML =
         "<style>" + CSS + "</style>" +
         '<div class="trf">' +
@@ -974,7 +975,7 @@
           : "") +
         body +
         legendHtml +
-        '<div class="trf-foot"><span>Hentet fra selskabernes egne lister: ' + esc(upd) + '</span><span>Tiny Refuel v0.1</span></div>' +
+        '<div class="trf-foot"><span>Hentet fra selskabernes egne lister: ' + esc(upd) + '</span><span>Tiny Refuel v' + esc(integrationVersion || "ukendt") + '</span></div>' +
         "</div>" + this._evPopupHtml(loc);
       var popup = this.querySelector && this.querySelector(".trf-ev-dialog");
       if (popup) {
