@@ -36,6 +36,14 @@ assert.ok(editor.innerHTML.includes('class="trfe-brand-grid"'));
 assert.ok(editor.innerHTML.includes('src="/tiny_refuel/static/logos/logo-circle-k.svg"'));
 assert.ok(editor.innerHTML.includes('src="/tiny_refuel/static/logos/logo-ionity.svg"'));
 assert.ok(editor.innerHTML.includes('Stationer og udbydere'));
+assert.match(editor.innerHTML, /data-key="vis_benzin" checked>/);
+assert.match(editor.innerHTML, /data-key="vis_scrape_knap">/);
+assert.match(editor.innerHTML, /data-key="kæde:circle_k" checked><img/);
+for (const tag of editor.innerHTML.match(/<input\b[^>]*>/g) || []) {
+  assert.ok(!tag.includes('<img') && !tag.includes('<span'), 'input tags must close before logo and label elements');
+}
+editor.setConfig({ kaeder: { circle_k: false } });
+assert.match(editor.innerHTML, /data-key="kæde:circle_k"><img/);
 assert.ok(editor.innerHTML.includes('Ingen bil tilføjet endnu'));
 assert.ok(editor.innerHTML.includes('manuel hentning tager alle typer'));
 editor._katalog = { brands: [], logos: { Volkswagen: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>' }, logo_pngs: { Hongqi: 'iVBORw0KGgoAAA==' } };
@@ -156,6 +164,12 @@ logoPanel._render();
 assert.ok(!logoPanel.innerHTML.includes('class="trf-model-logo"'));
 assert.ok(logoPanel.innerHTML.includes('Min C3'), 'failed model images retain the usable vehicle label');
 assert.ok(logoPanel.innerHTML.includes('data-model-fallback title='), 'failed model images reveal a model-name fallback');
+const customCatalogPanel = new Card();
+customCatalogPanel._katalog = { brands: [{ mærke: 'Eget mærke', modeller: [{ model: 'Egen model' }] }] };
+customCatalogPanel.setConfig({ biler: [{ mærke: 'Eget mærke', model: 'Egen model', navn: 'Min bil' }] });
+assert.ok(customCatalogPanel.innerHTML.includes('data-make-fallback>Eget mærke</span>'));
+assert.ok(customCatalogPanel.innerHTML.includes('>Egen model</span>'));
+assert.ok(customCatalogPanel.innerHTML.includes('>Min bil</span>'));
 const unsourcedPanel = new Card();
 unsourcedPanel._katalog = packagedCatalog;
 unsourcedPanel.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'up!' }] });

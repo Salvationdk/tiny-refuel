@@ -12,6 +12,7 @@
   .trf-car { border: 1px solid rgba(0,229,255,.45); background: linear-gradient(180deg, rgba(0,229,255,.08), rgba(185,103,255,.08)); color: var(--primary-text-color); border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,.25); }
   .trf-car:active { transform: scale(.95); }
   .trf-car { display: inline-flex; align-items: center; gap: 6px; }
+  .trf-make-mark { display: inline-flex; align-items: center; min-height: 22px; }
   .trf-car-logo { width: 22px; height: 22px; object-fit: contain; }
   .trf-model-logo { width: 38px; height: 18px; object-fit: contain; }
   .trf-model-mark { display: inline-flex; align-items: center; }
@@ -148,6 +149,7 @@
   .trfe .trfe-section > summary:focus-visible, .trfe .trfe-car > summary:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: -2px; }
   .trfe .trfe-section-body { padding: 0 12px 12px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
   .trfe .trfe-summary-meta { color: var(--secondary-text-color); font-size: 11px; font-weight: 400; margin-left: auto; }
+  .trfe .trf-make-mark { display: inline-flex; align-items: center; min-height: 28px; }
   .trfe .trfe-car-logo { width: 28px; height: 28px; flex: 0 0 28px; object-fit: contain; background: transparent; filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); }
   .trfe .trfe-model-logo { width: 46px; height: 24px; object-fit: contain; background: transparent; filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); }
   .trfe .trf-logo-color { filter: none; mix-blend-mode: normal; }
@@ -225,7 +227,7 @@
       FAILED_VEHICLE_LOGOS[image.getAttribute("src")] = true;
       image.hidden = true;
       var fallback = image.nextElementSibling;
-      if (fallback && fallback.hasAttribute("data-model-fallback")) fallback.hidden = false;
+      if (fallback && (fallback.hasAttribute("data-model-fallback") || fallback.hasAttribute("data-make-fallback"))) fallback.hidden = false;
     }, true);
   }
 
@@ -252,6 +254,13 @@
     if (!src && typeof url === "string" && (/^https:\/\//.test(url) || /^\/(?!\/)/.test(url))) src = url;
     if (!src || FAILED_VEHICLE_LOGOS[src]) return "";
     return '<img class="' + className + (color ? " trf-logo-color" : "") + (white ? " trf-logo-white" : "") + '" src="' + esc(src) + '" data-vehicle-logo="true" alt="' + esc(label) + '" title="' + esc(label) + '" referrerpolicy="no-referrer">';
+  }
+
+  function vehicleMakeHtml(catalog, car, className) {
+    if (!car || !car.mærke) return "";
+    var image = vehicleLogoHtml(catalog, car, className, false);
+    return '<span class="trf-make-mark">' + image + '<span class="' + className + '-text" data-make-fallback' +
+      (image ? " hidden" : "") + '>' + esc(car.mærke) + '</span></span>';
   }
 
   function vehicleModelHtml(catalog, car) {
@@ -1058,7 +1067,7 @@
           var modelAsset = this._katalog && this._katalog.model_logos && this._katalog.model_logos[cars[ci].mærke] && this._katalog.model_logos[cars[ci].mærke][cars[ci].model];
           var customCarName = !cars[ci].model || (modelAsset && modelAsset.family) || String(cars[ci].navn).toLowerCase() !== plainCarName.toLowerCase();
           carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '" aria-label="' + esc(cars[ci].navn) + '">' +
-            vehicleLogoHtml(this._katalog, cars[ci], "trf-car-logo", false) +
+            vehicleMakeHtml(this._katalog, cars[ci], "trf-car-logo") +
             vehicleModelHtml(this._katalog, cars[ci]) +
             (customCarName ? '<span>' + esc(cars[ci].navn) + "</span>" : "") + "</button>";
         }
@@ -1814,7 +1823,7 @@
         var tip = tooltip ? ' title="' + esc(tooltip) + '" aria-label="' + esc(label + ". " + tooltip) + '"' : "";
         var logo = icon ? '<img class="trfe-brand-logo" src="/tiny_refuel/static/logos/' + esc(icon) + '" alt="" loading="lazy">' : "";
         return '<label' + tip + '><input type="checkbox" data-key="' + key + '"' +
-          (checked ? " checked" : "") + logo + "<span>" + esc(label) + "</span></label>";
+          (checked ? " checked" : "") + ">" + logo + "<span>" + esc(label) + "</span></label>";
       }
       var html = '<div class="trfe"><style>' + ECSS + "</style>";
       html += '<h4>Visning <span class="trfe-tip" tabindex="0" title="Vælg hvilke energityper og oplysninger kortet skal vise." aria-label="Hjælp: Vælg hvilke energityper og oplysninger kortet skal vise.">i</span></h4>';
@@ -1861,7 +1870,7 @@
         var bb = biler[bi2] || {};
         var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Bil " + (bi2 + 1)));
         var carHint = bb.brændstof ? ({ benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[bb.brændstof] || bb.brændstof) : "Vælg drivmiddel";
-        var carLogoHtml = vehicleLogoHtml(this._katalog, bb, "trfe-car-logo", false) +
+        var carLogoHtml = vehicleMakeHtml(this._katalog, bb, "trfe-car-logo") +
           '<span data-model-logo="' + bi2 + '">' + vehicleLogoHtml(this._katalog, bb, "trfe-model-logo", true) + '</span>';
         html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
           esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
