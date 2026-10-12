@@ -1,1 +1,2423 @@
-{"note":"Kurateret dansk bilkatalog (vejledende tankstørrelser - kontroller mod instruktionsbogen). brændstof: benzin|diesel|el|hybrid. tank_l: liter (null for el).","brands":[{"mærke":"Audi","modeller":[{"model":"A1","brændstof":"benzin","tank_l":40},{"model":"A3","brændstof":"benzin","tank_l":50},{"model":"A4","brændstof":"diesel","tank_l":54},{"model":"Q3","brændstof":"benzin","tank_l":58},{"model":"A6","brændstof":"diesel","tank_l":63},{"model":"Q2","brændstof":"benzin","tank_l":50},{"model":"Q5","brændstof":"diesel","tank_l":65},{"model":"Q4 e-tron","brændstof":"el","tank_l":null,"batteri_kwh":77}]},{"mærke":"BMW","modeller":[{"model":"1-serie","brændstof":"benzin","tank_l":42},{"model":"3-serie","brændstof":"diesel","tank_l":59},{"model":"X1","brændstof":"benzin","tank_l":51},{"model":"2-serie Gran Coupé","brændstof":"benzin","tank_l":42},{"model":"5-serie","brændstof":"diesel","tank_l":68},{"model":"X3","brændstof":"diesel","tank_l":60},{"model":"i4","brændstof":"el","tank_l":null,"batteri_kwh":80},{"model":"iX1","brændstof":"el","tank_l":null,"batteri_kwh":65},{"model":"iX3","brændstof":"el","tank_l":null,"batteri_kwh":74}]},{"mærke":"BYD","modeller":[{"model":"Atto 3","brændstof":"el","tank_l":null,"batteri_kwh":60},{"model":"Dolphin","brændstof":"el","tank_l":null,"batteri_kwh":45},{"model":"Seal","brændstof":"el","tank_l":null,"batteri_kwh":82}]},{"mærke":"Citroën","modeller":[{"model":"C1","brændstof":"benzin","tank_l":35},{"model":"C3","brændstof":"benzin","tank_l":44},{"model":"C4","brændstof":"benzin","tank_l":50},{"model":"C5 Aircross","brændstof":"diesel","tank_l":53},{"model":"Berlingo","brændstof":"diesel","tank_l":50},{"model":"C3 Aircross","brændstof":"benzin","tank_l":45},{"model":"C4 X","brændstof":"benzin","tank_l":50},{"model":"ë-C4","brændstof":"el","tank_l":null,"batteri_kwh":50},{"model":"e-C3","brændstof":"el","tank_l":null,"batteri_kwh":44}]},{"mærke":"Cupra","modeller":[{"model":"Born","brændstof":"el","tank_l":null,"batteri_kwh":58},{"model":"Formentor","brændstof":"benzin","tank_l":50},{"model":"Tavascan","brændstof":"el","tank_l":null,"batteri_kwh":77}]},{"mærke":"Dacia","modeller":[{"model":"Sandero","brændstof":"benzin","tank_l":50},{"model":"Duster","brændstof":"benzin","tank_l":50},{"model":"Jogger","brændstof":"hybrid","tank_l":50},{"model":"Spring","brændstof":"el","tank_l":null,"batteri_kwh":27}]},{"mærke":"Fiat","modeller":[{"model":"500","brændstof":"benzin","tank_l":35},{"model":"500e","brændstof":"el","tank_l":null,"batteri_kwh":37},{"model":"Panda","brændstof":"benzin","tank_l":37},{"model":"Tipo","brændstof":"benzin","tank_l":50}]},{"mærke":"Ford","modeller":[{"model":"Fiesta","brændstof":"benzin","tank_l":42},{"model":"Focus","brændstof":"benzin","tank_l":55},{"model":"Kuga","brændstof":"diesel","tank_l":60},{"model":"Puma","brændstof":"benzin","tank_l":42},{"model":"Explorer","brændstof":"el","tank_l":null,"batteri_kwh":77}]},{"mærke":"Honda","modeller":[{"model":"Jazz","brændstof":"hybrid","tank_l":40},{"model":"Civic","brændstof":"benzin","tank_l":46},{"model":"CR-V","brændstof":"hybrid","tank_l":57},{"model":"HR-V","brændstof":"hybrid","tank_l":40},{"model":"e:Ny1","brændstof":"el","tank_l":null,"batteri_kwh":61}]},{"mærke":"Hyundai","modeller":[{"model":"i10","brændstof":"benzin","tank_l":36},{"model":"i20","brændstof":"benzin","tank_l":37},{"model":"Kona","brændstof":"benzin","tank_l":38},{"model":"Tucson","brændstof":"diesel","tank_l":54},{"model":"Ioniq 5","brændstof":"el","tank_l":null,"batteri_kwh":77},{"model":"i30","brændstof":"benzin","tank_l":50},{"model":"Kona Electric","brændstof":"el","tank_l":null,"batteri_kwh":48},{"model":"Inster","brændstof":"el","tank_l":null,"batteri_kwh":42},{"model":"Santa Fe","brændstof":"diesel","tank_l":67}]},{"mærke":"Kia","modeller":[{"model":"Picanto","brændstof":"benzin","tank_l":35},{"model":"Ceed","brændstof":"benzin","tank_l":50},{"model":"Niro","brændstof":"hybrid","tank_l":45},{"model":"Sportage","brændstof":"diesel","tank_l":54},{"model":"EV3","brændstof":"el","tank_l":null,"batteri_kwh":58},{"model":"EV6","brændstof":"el","tank_l":null,"batteri_kwh":77},{"model":"Stonic","brændstof":"benzin","tank_l":45},{"model":"EV9","brændstof":"el","tank_l":null,"batteri_kwh":100},{"model":"Niro EV","brændstof":"el","tank_l":null,"batteri_kwh":64},{"model":"Sorento","brændstof":"diesel","tank_l":67}]},{"mærke":"MG","modeller":[{"model":"MG3","brændstof":"benzin","tank_l":36},{"model":"MG4","brændstof":"el","tank_l":null,"batteri_kwh":51},{"model":"ZS","brændstof":"benzin","tank_l":41},{"model":"Marvel R","brændstof":"el","tank_l":null,"batteri_kwh":70}]},{"mærke":"Mazda","modeller":[{"model":"Mazda2","brændstof":"benzin","tank_l":35},{"model":"Mazda3","brændstof":"benzin","tank_l":51},{"model":"CX-30","brændstof":"benzin","tank_l":51},{"model":"CX-5","brændstof":"diesel","tank_l":56},{"model":"MX-30","brændstof":"el","tank_l":null,"batteri_kwh":35},{"model":"CX-60","brændstof":"diesel","tank_l":58},{"model":"CX-80","brændstof":"diesel","tank_l":58}]},{"mærke":"Mercedes","modeller":[{"model":"A-klasse","brændstof":"benzin","tank_l":43},{"model":"C-klasse","brændstof":"diesel","tank_l":66},{"model":"GLA","brændstof":"benzin","tank_l":43},{"model":"E-klasse","brændstof":"diesel","tank_l":66},{"model":"GLC","brændstof":"diesel","tank_l":62},{"model":"EQA","brændstof":"el","tank_l":null,"batteri_kwh":66}]},{"mærke":"Mini","modeller":[{"model":"Cooper","brændstof":"benzin","tank_l":40},{"model":"Cooper SE","brændstof":"el","tank_l":null,"batteri_kwh":49},{"model":"Countryman","brændstof":"benzin","tank_l":45}]},{"mærke":"Mitsubishi","modeller":[{"model":"Colt","brændstof":"benzin","tank_l":39},{"model":"ASX","brændstof":"benzin","tank_l":45},{"model":"Eclipse Cross","brændstof":"benzin","tank_l":60},{"model":"Outlander","brændstof":"benzin","tank_l":45}]},{"mærke":"Nissan","modeller":[{"model":"Micra","brændstof":"benzin","tank_l":41},{"model":"Juke","brændstof":"benzin","tank_l":46},{"model":"Qashqai","brændstof":"benzin","tank_l":55},{"model":"Leaf","brændstof":"el","tank_l":null,"batteri_kwh":40},{"model":"Ariya","brændstof":"el","tank_l":null,"batteri_kwh":63},{"model":"X-Trail","brændstof":"benzin","tank_l":55}]},{"mærke":"Opel","modeller":[{"model":"Corsa","brændstof":"benzin","tank_l":40},{"model":"Astra","brændstof":"benzin","tank_l":52},{"model":"Mokka","brændstof":"benzin","tank_l":41},{"model":"Grandland","brændstof":"diesel","tank_l":53},{"model":"Corsa-e","brændstof":"el","tank_l":null,"batteri_kwh":50},{"model":"Frontera","brændstof":"benzin","tank_l":44}]},{"mærke":"Peugeot","modeller":[{"model":"108","brændstof":"benzin","tank_l":35},{"model":"208","brændstof":"benzin","tank_l":44},{"model":"2008","brændstof":"benzin","tank_l":44},{"model":"3008","brændstof":"diesel","tank_l":53},{"model":"5008","brændstof":"diesel","tank_l":56},{"model":"e-208","brændstof":"el","tank_l":null,"batteri_kwh":50},{"model":"e-2008","brændstof":"el","tank_l":null,"batteri_kwh":50},{"model":"Rifter","brændstof":"diesel","tank_l":50},{"model":"408","brændstof":"benzin","tank_l":52}]},{"mærke":"Polestar","modeller":[{"model":"Polestar 2","brændstof":"el","tank_l":null,"batteri_kwh":78}]},{"mærke":"Renault","modeller":[{"model":"Clio","brændstof":"benzin","tank_l":39},{"model":"Captur","brændstof":"benzin","tank_l":39},{"model":"Kadjar","brændstof":"diesel","tank_l":55},{"model":"Mégane","brændstof":"benzin","tank_l":50},{"model":"Austral","brændstof":"benzin","tank_l":55},{"model":"Scenic E-Tech","brændstof":"el","tank_l":null,"batteri_kwh":60},{"model":"R5 E-Tech","brændstof":"el","tank_l":null,"batteri_kwh":40},{"model":"Arkana","brændstof":"benzin","tank_l":50}]},{"mærke":"Seat","modeller":[{"model":"Ibiza","brændstof":"benzin","tank_l":40},{"model":"Arona","brændstof":"benzin","tank_l":40},{"model":"Leon","brændstof":"benzin","tank_l":50},{"model":"Ateca","brændstof":"benzin","tank_l":50},{"model":"Tarraco","brændstof":"diesel","tank_l":58}]},{"mærke":"Skoda","modeller":[{"model":"Fabia","brændstof":"benzin","tank_l":40},{"model":"Kamiq","brændstof":"benzin","tank_l":40},{"model":"Octavia","brændstof":"diesel","tank_l":50},{"model":"Karoq","brændstof":"benzin","tank_l":50},{"model":"Superb","brændstof":"diesel","tank_l":66},{"model":"Enyaq","brændstof":"el","tank_l":null,"batteri_kwh":77},{"model":"Elroq","brændstof":"el","tank_l":null,"batteri_kwh":55},{"model":"Scala","brændstof":"benzin","tank_l":46},{"model":"Kodiaq","brændstof":"diesel","tank_l":58}]},{"mærke":"Smart","modeller":[{"model":"#1","brændstof":"el","tank_l":null,"batteri_kwh":66}]},{"mærke":"Suzuki","modeller":[{"model":"Ignis","brændstof":"benzin","tank_l":32},{"model":"Swift","brændstof":"benzin","tank_l":37},{"model":"Vitara","brændstof":"benzin","tank_l":47},{"model":"S-Cross","brændstof":"benzin","tank_l":47},{"model":"Jimny","brændstof":"benzin","tank_l":40},{"model":"Across","brændstof":"benzin","tank_l":55}]},{"mærke":"Tesla","modeller":[{"model":"Model 3","brændstof":"el","tank_l":null,"batteri_kwh":60},{"model":"Model Y","brændstof":"el","tank_l":null,"batteri_kwh":75}]},{"mærke":"Toyota","modeller":[{"model":"Aygo X","brændstof":"benzin","tank_l":35},{"model":"Yaris","brændstof":"hybrid","tank_l":36},{"model":"Yaris Cross","brændstof":"hybrid","tank_l":36},{"model":"Corolla","brændstof":"hybrid","tank_l":43},{"model":"C-HR","brændstof":"hybrid","tank_l":43},{"model":"RAV4","brændstof":"hybrid","tank_l":55},{"model":"bZ4X","brændstof":"el","tank_l":null,"batteri_kwh":71},{"model":"Corolla Cross","brændstof":"hybrid","tank_l":36}]},{"mærke":"Volkswagen","modeller":[{"model":"up!","brændstof":"benzin","tank_l":35},{"model":"Polo","brændstof":"benzin","tank_l":40},{"model":"Golf","brændstof":"benzin","tank_l":50},{"model":"T-Roc","brændstof":"benzin","tank_l":50},{"model":"Taigo","brændstof":"benzin","tank_l":40},{"model":"Tiguan","brændstof":"diesel","tank_l":58},{"model":"Passat","brændstof":"diesel","tank_l":66},{"model":"ID.3","brændstof":"el","tank_l":null,"batteri_kwh":58},{"model":"ID.4","brændstof":"el","tank_l":null,"batteri_kwh":77},{"model":"T-Cross","brændstof":"benzin","tank_l":40},{"model":"Touran","brændstof":"diesel","tank_l":58},{"model":"ID.7","brændstof":"el","tank_l":null,"batteri_kwh":77},{"model":"ID. Buzz","brændstof":"el","tank_l":null,"batteri_kwh":77},{"model":"e-up!","brændstof":"el","tank_l":null,"batteri_kwh":32},{"model":"Tayron","brændstof":"diesel","tank_l":58}]},{"mærke":"Volvo","modeller":[{"model":"XC40","brændstof":"benzin","tank_l":54},{"model":"EX30","brændstof":"el","tank_l":null,"batteri_kwh":51},{"model":"XC60","brændstof":"diesel","tank_l":70},{"model":"EX90","brændstof":"el","tank_l":null,"batteri_kwh":107}]},{"mærke":"XPeng","modeller":[{"model":"G6","brændstof":"el","tank_l":null,"batteri_kwh":66}]}]}
+{
+  "note": "Kurateret dansk bilkatalog med populære nye og brugte personbiler. Tank- og batteristørrelser er vejledende modelværdier; kontroller altid mod bilens instruktionsbog. brændstof: benzin|diesel|el|hybrid|plug_in_hybrid. tank_l: liter (null for el). batteri_kwh: vejledende batteristørrelse.",
+  "brands": [
+    {
+      "mærke": "Alfa Romeo",
+      "modeller": [
+        {
+          "model": "Giulia",
+          "brændstof": "benzin",
+          "tank_l": 58
+        },
+        {
+          "model": "Stelvio",
+          "brændstof": "diesel",
+          "tank_l": 64
+        },
+        {
+          "model": "Tonale Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 43,
+          "batteri_kwh": 15
+        }
+      ]
+    },
+    {
+      "mærke": "Audi",
+      "modeller": [
+        {
+          "model": "A1",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "A3",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "A4",
+          "brændstof": "diesel",
+          "tank_l": 54
+        },
+        {
+          "model": "A5",
+          "brændstof": "benzin",
+          "tank_l": 54
+        },
+        {
+          "model": "A5 Avant",
+          "brændstof": "diesel",
+          "tank_l": 60
+        },
+        {
+          "model": "A6",
+          "brændstof": "diesel",
+          "tank_l": 63
+        },
+        {
+          "model": "A7",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 55,
+          "batteri_kwh": 17
+        },
+        {
+          "model": "e-tron",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 95
+        },
+        {
+          "model": "e-tron GT",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 93
+        },
+        {
+          "model": "Q2",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Q3",
+          "brændstof": "benzin",
+          "tank_l": 58
+        },
+        {
+          "model": "Q4 e-tron",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Q5",
+          "brændstof": "diesel",
+          "tank_l": 65
+        },
+        {
+          "model": "Q6 e-tron",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 94
+        },
+        {
+          "model": "Q7 e-hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 75,
+          "batteri_kwh": 25
+        },
+        {
+          "model": "Q8 e-tron",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 95
+        }
+      ]
+    },
+    {
+      "mærke": "BMW",
+      "modeller": [
+        {
+          "model": "1-serie",
+          "brændstof": "benzin",
+          "tank_l": 42
+        },
+        {
+          "model": "2-serie Gran Coupé",
+          "brændstof": "benzin",
+          "tank_l": 42
+        },
+        {
+          "model": "3-serie",
+          "brændstof": "diesel",
+          "tank_l": 59
+        },
+        {
+          "model": "4-serie",
+          "brændstof": "benzin",
+          "tank_l": 59
+        },
+        {
+          "model": "5-serie",
+          "brændstof": "diesel",
+          "tank_l": 68
+        },
+        {
+          "model": "7-serie",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 65,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "i3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 42
+        },
+        {
+          "model": "i4",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 80
+        },
+        {
+          "model": "i5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 81
+        },
+        {
+          "model": "i7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 101
+        },
+        {
+          "model": "iX",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 105
+        },
+        {
+          "model": "iX1",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 65
+        },
+        {
+          "model": "iX2",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 65
+        },
+        {
+          "model": "iX3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 74
+        },
+        {
+          "model": "X1",
+          "brændstof": "benzin",
+          "tank_l": 51
+        },
+        {
+          "model": "X1 plug-in hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 47,
+          "batteri_kwh": 16
+        },
+        {
+          "model": "X3",
+          "brændstof": "diesel",
+          "tank_l": 60
+        },
+        {
+          "model": "X5 plug-in hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 69,
+          "batteri_kwh": 25
+        }
+      ]
+    },
+    {
+      "mærke": "BYD",
+      "modeller": [
+        {
+          "model": "Atto 3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 60
+        },
+        {
+          "model": "Dolphin",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 45
+        },
+        {
+          "model": "Dolphin Surf",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 43
+        },
+        {
+          "model": "Seal",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 82
+        },
+        {
+          "model": "Seal U",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "Seal U DM-i",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "Sealion 7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 82
+        },
+        {
+          "model": "Tang",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 109
+        }
+      ]
+    },
+    {
+      "mærke": "Chrysler",
+      "modeller": [
+        {
+          "model": "300C",
+          "brændstof": "benzin",
+          "tank_l": 72
+        },
+        {
+          "model": "PT Cruiser",
+          "brændstof": "benzin",
+          "tank_l": 57
+        },
+        {
+          "model": "Voyager",
+          "brændstof": "benzin",
+          "tank_l": 76
+        }
+      ]
+    },
+    {
+      "mærke": "Citroën",
+      "modeller": [
+        {
+          "model": "Berlingo",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "C1",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "C3",
+          "brændstof": "benzin",
+          "tank_l": 44
+        },
+        {
+          "model": "C3 Aircross",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "C4",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "C4 X",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "C5 Aircross",
+          "brændstof": "diesel",
+          "tank_l": 53
+        },
+        {
+          "model": "C5 X",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 40,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "e-C3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 44
+        },
+        {
+          "model": "ë-C3 Aircross",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 54
+        },
+        {
+          "model": "ë-C4",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        }
+      ]
+    },
+    {
+      "mærke": "Cupra",
+      "modeller": [
+        {
+          "model": "Ateca",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Born",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 58
+        },
+        {
+          "model": "Formentor",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Leon",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 40,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "Tavascan",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Terramar",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 45,
+          "batteri_kwh": 20
+        }
+      ]
+    },
+    {
+      "mærke": "Dacia",
+      "modeller": [
+        {
+          "model": "Duster",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Jogger",
+          "brændstof": "hybrid",
+          "tank_l": 50
+        },
+        {
+          "model": "Lodgy",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Logan",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Sandero",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Spring",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 27
+        }
+      ]
+    },
+    {
+      "mærke": "Dodge",
+      "modeller": [
+        {
+          "model": "Caliber",
+          "brændstof": "benzin",
+          "tank_l": 51
+        },
+        {
+          "model": "Journey",
+          "brændstof": "benzin",
+          "tank_l": 77
+        }
+      ]
+    },
+    {
+      "mærke": "DS Automobiles",
+      "modeller": [
+        {
+          "model": "DS 3",
+          "brændstof": "benzin",
+          "tank_l": 44
+        },
+        {
+          "model": "DS 3 E-Tense",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 54
+        },
+        {
+          "model": "DS 4",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 52,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "DS 7",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 43,
+          "batteri_kwh": 14
+        }
+      ]
+    },
+    {
+      "mærke": "Fiat",
+      "modeller": [
+        {
+          "model": "500",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "500 Hybrid",
+          "brændstof": "hybrid",
+          "tank_l": 35
+        },
+        {
+          "model": "500e",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 37
+        },
+        {
+          "model": "600 Hybrid",
+          "brændstof": "hybrid",
+          "tank_l": 44
+        },
+        {
+          "model": "600e",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 54
+        },
+        {
+          "model": "Grande Panda",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 44
+        },
+        {
+          "model": "Panda",
+          "brændstof": "benzin",
+          "tank_l": 37
+        },
+        {
+          "model": "Punto",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "Tipo",
+          "brændstof": "benzin",
+          "tank_l": 50
+        }
+      ]
+    },
+    {
+      "mærke": "Ford",
+      "modeller": [
+        {
+          "model": "C-Max",
+          "brændstof": "benzin",
+          "tank_l": 53
+        },
+        {
+          "model": "Capri",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Explorer",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Fiesta",
+          "brændstof": "benzin",
+          "tank_l": 42
+        },
+        {
+          "model": "Focus",
+          "brændstof": "benzin",
+          "tank_l": 55
+        },
+        {
+          "model": "Galaxy",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "Kuga",
+          "brændstof": "diesel",
+          "tank_l": 60
+        },
+        {
+          "model": "Kuga plug-in hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 45,
+          "batteri_kwh": 14
+        },
+        {
+          "model": "Mondeo",
+          "brændstof": "diesel",
+          "tank_l": 60
+        },
+        {
+          "model": "Mustang",
+          "brændstof": "benzin",
+          "tank_l": 61
+        },
+        {
+          "model": "Mustang Mach-E",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 72
+        },
+        {
+          "model": "Puma",
+          "brændstof": "benzin",
+          "tank_l": 42
+        },
+        {
+          "model": "S-Max",
+          "brændstof": "diesel",
+          "tank_l": 70
+        }
+      ]
+    },
+    {
+      "mærke": "Honda",
+      "modeller": [
+        {
+          "model": "Accord",
+          "brændstof": "benzin",
+          "tank_l": 65
+        },
+        {
+          "model": "Civic",
+          "brændstof": "benzin",
+          "tank_l": 46
+        },
+        {
+          "model": "CR-V",
+          "brændstof": "hybrid",
+          "tank_l": 57
+        },
+        {
+          "model": "e:Ny1",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 61
+        },
+        {
+          "model": "HR-V",
+          "brændstof": "hybrid",
+          "tank_l": 40
+        },
+        {
+          "model": "Insight",
+          "brændstof": "hybrid",
+          "tank_l": 40
+        },
+        {
+          "model": "Jazz",
+          "brændstof": "hybrid",
+          "tank_l": 40
+        },
+        {
+          "model": "Prelude",
+          "brændstof": "hybrid",
+          "tank_l": 40
+        },
+        {
+          "model": "ZR-V",
+          "brændstof": "hybrid",
+          "tank_l": 57
+        }
+      ]
+    },
+    {
+      "mærke": "Hongqi",
+      "modeller": [
+        {
+          "model": "E-HS9",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 99
+        },
+        {
+          "model": "EH7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 85
+        },
+        {
+          "model": "EHS7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 85
+        }
+      ]
+    },
+    {
+      "mærke": "Hyundai",
+      "modeller": [
+        {
+          "model": "Bayon",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "i10",
+          "brændstof": "benzin",
+          "tank_l": 36
+        },
+        {
+          "model": "i20",
+          "brændstof": "benzin",
+          "tank_l": 37
+        },
+        {
+          "model": "i30",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Inster",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 42
+        },
+        {
+          "model": "Ioniq",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 28
+        },
+        {
+          "model": "Ioniq 5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Ioniq 6",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Ioniq 9",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 110
+        },
+        {
+          "model": "Kona",
+          "brændstof": "benzin",
+          "tank_l": 38
+        },
+        {
+          "model": "Kona Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 48
+        },
+        {
+          "model": "Kona Hybrid",
+          "brændstof": "hybrid",
+          "tank_l": 38
+        },
+        {
+          "model": "Santa Fe",
+          "brændstof": "diesel",
+          "tank_l": 67
+        },
+        {
+          "model": "Tucson",
+          "brændstof": "diesel",
+          "tank_l": 54
+        },
+        {
+          "model": "Tucson Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 42,
+          "batteri_kwh": 14
+        }
+      ]
+    },
+    {
+      "mærke": "Jaecoo",
+      "modeller": [
+        {
+          "model": "7",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "7 benzin",
+          "brændstof": "benzin",
+          "tank_l": 51
+        }
+      ]
+    },
+    {
+      "mærke": "Jaguar",
+      "modeller": [
+        {
+          "model": "E-Pace",
+          "brændstof": "benzin",
+          "tank_l": 56
+        },
+        {
+          "model": "F-Pace",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 69,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "I-Pace",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 90
+        }
+      ]
+    },
+    {
+      "mærke": "Jeep",
+      "modeller": [
+        {
+          "model": "Avenger",
+          "brændstof": "benzin",
+          "tank_l": 44
+        },
+        {
+          "model": "Avenger e-Hybrid",
+          "brændstof": "hybrid",
+          "tank_l": 44
+        },
+        {
+          "model": "Avenger Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 54
+        },
+        {
+          "model": "Compass",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 55,
+          "batteri_kwh": 12
+        },
+        {
+          "model": "Renegade",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 48,
+          "batteri_kwh": 11
+        },
+        {
+          "model": "Wrangler 4xe",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 65,
+          "batteri_kwh": 17
+        }
+      ]
+    },
+    {
+      "mærke": "KGM",
+      "modeller": [
+        {
+          "model": "Korando",
+          "brændstof": "benzin",
+          "tank_l": 47
+        },
+        {
+          "model": "Rexton",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "Tivoli",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Torres",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Torres EVX",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 73
+        }
+      ]
+    },
+    {
+      "mærke": "Kia",
+      "modeller": [
+        {
+          "model": "Carens",
+          "brændstof": "benzin",
+          "tank_l": 58
+        },
+        {
+          "model": "Ceed",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "EV3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 58
+        },
+        {
+          "model": "EV4",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 81
+        },
+        {
+          "model": "EV5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 81
+        },
+        {
+          "model": "EV6",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "EV6 GT",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "EV9",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "Niro",
+          "brændstof": "hybrid",
+          "tank_l": 45
+        },
+        {
+          "model": "Niro EV",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 64
+        },
+        {
+          "model": "Niro Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 37,
+          "batteri_kwh": 11
+        },
+        {
+          "model": "Optima",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 55,
+          "batteri_kwh": 10
+        },
+        {
+          "model": "Picanto",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "Rio",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "Sorento",
+          "brændstof": "diesel",
+          "tank_l": 67
+        },
+        {
+          "model": "Sportage",
+          "brændstof": "diesel",
+          "tank_l": 54
+        },
+        {
+          "model": "Stonic",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "XCeed",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 37,
+          "batteri_kwh": 9
+        }
+      ]
+    },
+    {
+      "mærke": "Land Rover",
+      "modeller": [
+        {
+          "model": "Defender",
+          "brændstof": "diesel",
+          "tank_l": 90
+        },
+        {
+          "model": "Discovery Sport",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 57,
+          "batteri_kwh": 15
+        },
+        {
+          "model": "Range Rover Evoque",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 57,
+          "batteri_kwh": 15
+        },
+        {
+          "model": "Range Rover Sport PHEV",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 71,
+          "batteri_kwh": 32
+        }
+      ]
+    },
+    {
+      "mærke": "Leapmotor",
+      "modeller": [
+        {
+          "model": "C10",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 70
+        },
+        {
+          "model": "T03",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 37
+        }
+      ]
+    },
+    {
+      "mærke": "Lexus",
+      "modeller": [
+        {
+          "model": "LBX",
+          "brændstof": "hybrid",
+          "tank_l": 36
+        },
+        {
+          "model": "NX Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 55,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "RX Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 55,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "RZ",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 71
+        },
+        {
+          "model": "UX",
+          "brændstof": "hybrid",
+          "tank_l": 43
+        },
+        {
+          "model": "UX 300e",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 72
+        }
+      ]
+    },
+    {
+      "mærke": "Lotus",
+      "modeller": [
+        {
+          "model": "Eletre",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 112
+        },
+        {
+          "model": "Emeya",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 102
+        }
+      ]
+    },
+    {
+      "mærke": "Lynk & Co",
+      "modeller": [
+        {
+          "model": "01",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 42,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "02",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 66
+        }
+      ]
+    },
+    {
+      "mærke": "Maserati",
+      "modeller": [
+        {
+          "model": "Grecale",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 64,
+          "batteri_kwh": 17
+        },
+        {
+          "model": "Levante",
+          "brændstof": "benzin",
+          "tank_l": 80
+        }
+      ]
+    },
+    {
+      "mærke": "Maxus",
+      "modeller": [
+        {
+          "model": "Euniq 5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 53
+        }
+      ]
+    },
+    {
+      "mærke": "Mazda",
+      "modeller": [
+        {
+          "model": "CX-3",
+          "brændstof": "benzin",
+          "tank_l": 48
+        },
+        {
+          "model": "CX-30",
+          "brændstof": "benzin",
+          "tank_l": 51
+        },
+        {
+          "model": "CX-5",
+          "brændstof": "diesel",
+          "tank_l": 56
+        },
+        {
+          "model": "CX-60",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "CX-60 Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 50,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "CX-80",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "Mazda2",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "Mazda3",
+          "brændstof": "benzin",
+          "tank_l": 51
+        },
+        {
+          "model": "Mazda6",
+          "brændstof": "benzin",
+          "tank_l": 62
+        },
+        {
+          "model": "MX-30",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 35
+        },
+        {
+          "model": "MX-5",
+          "brændstof": "benzin",
+          "tank_l": 45
+        }
+      ]
+    },
+    {
+      "mærke": "Mercedes",
+      "modeller": [
+        {
+          "model": "A-klasse",
+          "brændstof": "benzin",
+          "tank_l": 43
+        },
+        {
+          "model": "B-klasse",
+          "brændstof": "benzin",
+          "tank_l": 54
+        },
+        {
+          "model": "C-klasse",
+          "brændstof": "diesel",
+          "tank_l": 66
+        },
+        {
+          "model": "CLA",
+          "brændstof": "benzin",
+          "tank_l": 51
+        },
+        {
+          "model": "E-klasse",
+          "brændstof": "diesel",
+          "tank_l": 66
+        },
+        {
+          "model": "EQA",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 66
+        },
+        {
+          "model": "EQB",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 70
+        },
+        {
+          "model": "EQC",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 80
+        },
+        {
+          "model": "EQE",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 90
+        },
+        {
+          "model": "EQS",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 108
+        },
+        {
+          "model": "EQV",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 90
+        },
+        {
+          "model": "GLA",
+          "brændstof": "benzin",
+          "tank_l": 43
+        },
+        {
+          "model": "GLB",
+          "brændstof": "benzin",
+          "tank_l": 52
+        },
+        {
+          "model": "GLC",
+          "brændstof": "diesel",
+          "tank_l": 62
+        },
+        {
+          "model": "GLC plug-in hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 49,
+          "batteri_kwh": 25
+        },
+        {
+          "model": "GLE plug-in hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 65,
+          "batteri_kwh": 25
+        }
+      ]
+    },
+    {
+      "mærke": "MG",
+      "modeller": [
+        {
+          "model": "Cyberster",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "HS",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 37,
+          "batteri_kwh": 16
+        },
+        {
+          "model": "Marvel R",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 70
+        },
+        {
+          "model": "MG3",
+          "brændstof": "benzin",
+          "tank_l": 36
+        },
+        {
+          "model": "MG4",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 51
+        },
+        {
+          "model": "ZS",
+          "brændstof": "benzin",
+          "tank_l": 41
+        },
+        {
+          "model": "ZS EV",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 51
+        }
+      ]
+    },
+    {
+      "mærke": "Mini",
+      "modeller": [
+        {
+          "model": "Aceman",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 49
+        },
+        {
+          "model": "Clubman",
+          "brændstof": "benzin",
+          "tank_l": 48
+        },
+        {
+          "model": "Cooper",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Cooper SE",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 49
+        },
+        {
+          "model": "Countryman",
+          "brændstof": "benzin",
+          "tank_l": 45
+        }
+      ]
+    },
+    {
+      "mærke": "Mitsubishi",
+      "modeller": [
+        {
+          "model": "ASX",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "Colt",
+          "brændstof": "benzin",
+          "tank_l": 39
+        },
+        {
+          "model": "Eclipse Cross",
+          "brændstof": "benzin",
+          "tank_l": 60
+        },
+        {
+          "model": "Lancer",
+          "brændstof": "benzin",
+          "tank_l": 59
+        },
+        {
+          "model": "Outlander",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "Outlander PHEV",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 56,
+          "batteri_kwh": 20
+        }
+      ]
+    },
+    {
+      "mærke": "Navor",
+      "modeller": [
+        {
+          "model": "E5",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        }
+      ]
+    },
+    {
+      "mærke": "NIO",
+      "modeller": [
+        {
+          "model": "EL6",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "EL7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "ET5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        }
+      ]
+    },
+    {
+      "mærke": "Nissan",
+      "modeller": [
+        {
+          "model": "Ariya",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 63
+        },
+        {
+          "model": "Juke",
+          "brændstof": "benzin",
+          "tank_l": 46
+        },
+        {
+          "model": "Leaf",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 40
+        },
+        {
+          "model": "Micra",
+          "brændstof": "benzin",
+          "tank_l": 41
+        },
+        {
+          "model": "Note",
+          "brændstof": "benzin",
+          "tank_l": 41
+        },
+        {
+          "model": "Pulsar",
+          "brændstof": "benzin",
+          "tank_l": 46
+        },
+        {
+          "model": "Qashqai",
+          "brændstof": "benzin",
+          "tank_l": 55
+        },
+        {
+          "model": "Townstar EV",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 45
+        },
+        {
+          "model": "X-Trail",
+          "brændstof": "benzin",
+          "tank_l": 55
+        }
+      ]
+    },
+    {
+      "mærke": "Omoda",
+      "modeller": [
+        {
+          "model": "5",
+          "brændstof": "benzin",
+          "tank_l": 51
+        },
+        {
+          "model": "5 EV",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 61
+        },
+        {
+          "model": "9",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 70,
+          "batteri_kwh": 35
+        }
+      ]
+    },
+    {
+      "mærke": "Opel",
+      "modeller": [
+        {
+          "model": "Ampera",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 35,
+          "batteri_kwh": 16
+        },
+        {
+          "model": "Astra",
+          "brændstof": "benzin",
+          "tank_l": 52
+        },
+        {
+          "model": "Corsa",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Corsa-e",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
+          "model": "Crossland",
+          "brændstof": "benzin",
+          "tank_l": 45
+        },
+        {
+          "model": "Frontera",
+          "brændstof": "benzin",
+          "tank_l": 44
+        },
+        {
+          "model": "Frontera Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 54
+        },
+        {
+          "model": "Grandland",
+          "brændstof": "diesel",
+          "tank_l": 53
+        },
+        {
+          "model": "Grandland Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 73
+        },
+        {
+          "model": "Insignia",
+          "brændstof": "diesel",
+          "tank_l": 62
+        },
+        {
+          "model": "Mokka",
+          "brændstof": "benzin",
+          "tank_l": 41
+        }
+      ]
+    },
+    {
+      "mærke": "Peugeot",
+      "modeller": [
+        {
+          "model": "108",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "2008",
+          "brændstof": "benzin",
+          "tank_l": 44
+        },
+        {
+          "model": "208",
+          "brændstof": "benzin",
+          "tank_l": 44
+        },
+        {
+          "model": "3008",
+          "brændstof": "diesel",
+          "tank_l": 53
+        },
+        {
+          "model": "308",
+          "brændstof": "benzin",
+          "tank_l": 52
+        },
+        {
+          "model": "308 Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 40,
+          "batteri_kwh": 12
+        },
+        {
+          "model": "408",
+          "brændstof": "benzin",
+          "tank_l": 52
+        },
+        {
+          "model": "5008",
+          "brændstof": "diesel",
+          "tank_l": 56
+        },
+        {
+          "model": "508",
+          "brændstof": "diesel",
+          "tank_l": 55
+        },
+        {
+          "model": "508 Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 43,
+          "batteri_kwh": 12
+        },
+        {
+          "model": "e-2008",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
+          "model": "e-208",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
+          "model": "e-3008",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 73
+        },
+        {
+          "model": "e-308",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 54
+        },
+        {
+          "model": "e-5008",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 73
+        },
+        {
+          "model": "Partner",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Rifter",
+          "brændstof": "diesel",
+          "tank_l": 50
+        }
+      ]
+    },
+    {
+      "mærke": "Polestar",
+      "modeller": [
+        {
+          "model": "Polestar 2",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 78
+        },
+        {
+          "model": "Polestar 3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 111
+        },
+        {
+          "model": "Polestar 4",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        }
+      ]
+    },
+    {
+      "mærke": "Porsche",
+      "modeller": [
+        {
+          "model": "911",
+          "brændstof": "benzin",
+          "tank_l": 64
+        },
+        {
+          "model": "Cayenne E-Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 75,
+          "batteri_kwh": 25
+        },
+        {
+          "model": "Macan",
+          "brændstof": "benzin",
+          "tank_l": 65
+        },
+        {
+          "model": "Macan Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "Taycan",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 89
+        }
+      ]
+    },
+    {
+      "mærke": "Renault",
+      "modeller": [
+        {
+          "model": "4 E-Tech",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 52
+        },
+        {
+          "model": "Arkana",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Austral",
+          "brændstof": "benzin",
+          "tank_l": 55
+        },
+        {
+          "model": "Captur",
+          "brændstof": "benzin",
+          "tank_l": 39
+        },
+        {
+          "model": "Clio",
+          "brændstof": "benzin",
+          "tank_l": 39
+        },
+        {
+          "model": "Espace",
+          "brændstof": "hybrid",
+          "tank_l": 55
+        },
+        {
+          "model": "Kadjar",
+          "brændstof": "diesel",
+          "tank_l": 55
+        },
+        {
+          "model": "Mégane",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Mégane E-Tech",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 60
+        },
+        {
+          "model": "R5 E-Tech",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 40
+        },
+        {
+          "model": "Rafale E-Tech",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 55,
+          "batteri_kwh": 22
+        },
+        {
+          "model": "Scenic E-Tech",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 60
+        },
+        {
+          "model": "Twingo",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "Zoe",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 52
+        }
+      ]
+    },
+    {
+      "mærke": "Seat",
+      "modeller": [
+        {
+          "model": "Alhambra",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "Arona",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Ateca",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Ibiza",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Leon",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Mii",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "Tarraco",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "Toledo",
+          "brændstof": "benzin",
+          "tank_l": 55
+        }
+      ]
+    },
+    {
+      "mærke": "Skoda",
+      "modeller": [
+        {
+          "model": "Citigo",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "Elroq",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 55
+        },
+        {
+          "model": "Enyaq",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Enyaq Coupé",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Fabia",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Kamiq",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Karoq",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Kodiaq",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "Octavia",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Octavia iV",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 45,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "Rapid",
+          "brændstof": "benzin",
+          "tank_l": 55
+        },
+        {
+          "model": "Roomster",
+          "brændstof": "benzin",
+          "tank_l": 55
+        },
+        {
+          "model": "Scala",
+          "brændstof": "benzin",
+          "tank_l": 46
+        },
+        {
+          "model": "Superb",
+          "brændstof": "diesel",
+          "tank_l": 66
+        },
+        {
+          "model": "Yeti",
+          "brændstof": "diesel",
+          "tank_l": 55
+        }
+      ]
+    },
+    {
+      "mærke": "Smart",
+      "modeller": [
+        {
+          "model": "#1",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 66
+        },
+        {
+          "model": "#3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 66
+        },
+        {
+          "model": "#5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        }
+      ]
+    },
+    {
+      "mærke": "Subaru",
+      "modeller": [
+        {
+          "model": "Crosstrek",
+          "brændstof": "hybrid",
+          "tank_l": 48
+        },
+        {
+          "model": "Forester",
+          "brændstof": "hybrid",
+          "tank_l": 48
+        },
+        {
+          "model": "Outback",
+          "brændstof": "benzin",
+          "tank_l": 70
+        },
+        {
+          "model": "Solterra",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 71
+        }
+      ]
+    },
+    {
+      "mærke": "Suzuki",
+      "modeller": [
+        {
+          "model": "Across",
+          "brændstof": "benzin",
+          "tank_l": 55
+        },
+        {
+          "model": "Baleno",
+          "brændstof": "benzin",
+          "tank_l": 37
+        },
+        {
+          "model": "e Vitara",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 61
+        },
+        {
+          "model": "Ignis",
+          "brændstof": "benzin",
+          "tank_l": 32
+        },
+        {
+          "model": "Jimny",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "S-Cross",
+          "brændstof": "benzin",
+          "tank_l": 47
+        },
+        {
+          "model": "Swace",
+          "brændstof": "hybrid",
+          "tank_l": 43
+        },
+        {
+          "model": "Swift",
+          "brændstof": "benzin",
+          "tank_l": 37
+        },
+        {
+          "model": "SX4",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Vitara",
+          "brændstof": "benzin",
+          "tank_l": 47
+        }
+      ]
+    },
+    {
+      "mærke": "Saab",
+      "modeller": [
+        {
+          "model": "9-3",
+          "brændstof": "benzin",
+          "tank_l": 62
+        },
+        {
+          "model": "9-5",
+          "brændstof": "benzin",
+          "tank_l": 68
+        },
+        {
+          "model": "900",
+          "brændstof": "benzin",
+          "tank_l": 68
+        }
+      ]
+    },
+    {
+      "mærke": "Tesla",
+      "modeller": [
+        {
+          "model": "Model 3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 60
+        },
+        {
+          "model": "Model S",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "Model X",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "Model Y",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "Model Y 7-sæder",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        }
+      ]
+    },
+    {
+      "mærke": "Toyota",
+      "modeller": [
+        {
+          "model": "Auris",
+          "brændstof": "hybrid",
+          "tank_l": 45
+        },
+        {
+          "model": "Avensis",
+          "brændstof": "benzin",
+          "tank_l": 60
+        },
+        {
+          "model": "Aygo X",
+          "brændstof": "benzin",
+          "tank_l": 35
+        },
+        {
+          "model": "bZ4X",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 71
+        },
+        {
+          "model": "C-HR",
+          "brændstof": "hybrid",
+          "tank_l": 43
+        },
+        {
+          "model": "Camry",
+          "brændstof": "hybrid",
+          "tank_l": 50
+        },
+        {
+          "model": "Corolla",
+          "brændstof": "hybrid",
+          "tank_l": 43
+        },
+        {
+          "model": "Corolla Cross",
+          "brændstof": "hybrid",
+          "tank_l": 36
+        },
+        {
+          "model": "Prius",
+          "brændstof": "hybrid",
+          "tank_l": 43
+        },
+        {
+          "model": "Prius Plug-in Hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 40,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "Proace City Verso",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "RAV4",
+          "brændstof": "hybrid",
+          "tank_l": 55
+        },
+        {
+          "model": "Yaris",
+          "brændstof": "hybrid",
+          "tank_l": 36
+        },
+        {
+          "model": "Yaris Cross",
+          "brændstof": "hybrid",
+          "tank_l": 36
+        }
+      ]
+    },
+    {
+      "mærke": "Volkswagen",
+      "modeller": [
+        {
+          "model": "Arteon",
+          "brændstof": "diesel",
+          "tank_l": 66
+        },
+        {
+          "model": "e-Golf",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 35
+        },
+        {
+          "model": "e-up!",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 32
+        },
+        {
+          "model": "Golf",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Golf GTE",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 50,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "ID. Buzz",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "ID.3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 58
+        },
+        {
+          "model": "ID.4",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "ID.5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "ID.6",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "ID.7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "Passat",
+          "brændstof": "diesel",
+          "tank_l": 66
+        },
+        {
+          "model": "Passat GTE",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 50,
+          "batteri_kwh": 13
+        },
+        {
+          "model": "Polo",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Sharan",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "T-Cross",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "T-Roc",
+          "brændstof": "benzin",
+          "tank_l": 50
+        },
+        {
+          "model": "Taigo",
+          "brændstof": "benzin",
+          "tank_l": 40
+        },
+        {
+          "model": "Tayron",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "Tiguan",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "Tiguan eHybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 45,
+          "batteri_kwh": 20
+        },
+        {
+          "model": "Touran",
+          "brændstof": "diesel",
+          "tank_l": 58
+        },
+        {
+          "model": "up!",
+          "brændstof": "benzin",
+          "tank_l": 35
+        }
+      ]
+    },
+    {
+      "mærke": "Volvo",
+      "modeller": [
+        {
+          "model": "C40 Recharge",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 78
+        },
+        {
+          "model": "EC40",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 79
+        },
+        {
+          "model": "EX30",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 51
+        },
+        {
+          "model": "EX40",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 79
+        },
+        {
+          "model": "EX90",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 107
+        },
+        {
+          "model": "S60",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "S90",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "V40",
+          "brændstof": "diesel",
+          "tank_l": 62
+        },
+        {
+          "model": "V60",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "V90",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 60,
+          "batteri_kwh": 18
+        },
+        {
+          "model": "XC40",
+          "brændstof": "benzin",
+          "tank_l": 54
+        },
+        {
+          "model": "XC60",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "XC90 plug-in hybrid",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 71,
+          "batteri_kwh": 19
+        }
+      ]
+    },
+    {
+      "mærke": "XPeng",
+      "modeller": [
+        {
+          "model": "G6",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 66
+        },
+        {
+          "model": "G9",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 93
+        },
+        {
+          "model": "P7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 82
+        }
+      ]
+    },
+    {
+      "mærke": "Zeekr",
+      "modeller": [
+        {
+          "model": "001",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "7X",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 100
+        },
+        {
+          "model": "X",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 66
+        }
+      ]
+    }
+  ]
+}
