@@ -1,4 +1,4 @@
-# Tiny Refuel v0.2.0
+# Tiny Refuel v0.2.1
 
 Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, bilkatalog og scraping i én HACS-integration.
 
@@ -45,21 +45,59 @@ Første scraping starter automatisk i baggrunden og kan tage flere minutter. **H
 
 Under hentning viser kortet den aktuelle udbyder og, når stationer eller adresser behandles enkeltvis, den aktuelle station/adresse. Status dækker benzin, diesel og el. Datastatus viser hver brændstofkilde, antal stationer og priser, manglende koordinater, seneste kontrol og eventuelle fejl. Eloversigten viser tilsvarende kilde- og koordinatstatus. Gamle priser markeres som gemte, når seneste hentning fejler. Adresser uden koordinater tælles og behandles gradvist ved senere hentninger.
 
-Stående format bevarer den eksisterende liste. I liggende format vises benzin-/dieseludbydere og elstationer i fem kolonner, så ti kort står i to rækker med fem i hver. Hvert kort beholder logo, priser, adresse og afstand. Farver, kundefordele, filtre, navigation og knappen **Vis 10 mere** bevares. I UI-editoren kan hele kortets YAML vises og kopieres.
+Kortet bruger samme listevisning, uanset om skærmen står eller ligger. Hvert kort beholder logo, priser, adresse og afstand. Farver, kundefordele, filtre, navigation og knappen **Vis 10 mere** bevares. I UI-editoren kan hele kortets YAML vises og kopieres.
 
 Hent-knappen kan skjules under punktet **Hent data** i UI-editoren. Her kan du også begrænse en manuel hentning til den valgte bils drivmiddel. En benzinbil henter benzin, en dieselbil diesel, en elbil el og en plug-in-hybrid både benzin og el. Slås begrænsningen fra, hentes alle typer. Automatisk intervalhentning henter fortsat alle typer, så nye biler også får data. Data for fravalgte typer bevares mellem hentninger. Nogle brændstofkilder leverer benzin- og dieselpriser samlet, så de kan stadig blive hentet sammen.
 
-Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps og abonnementer hentes fra officielle udbydersider højst én gang om ugen og vises med kilde og hentetid. Kun udbyderens egne beskrivelser bruges; kundeanmeldelser og kommentarer filtreres fra. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
+Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, medlemsordninger, rabatter og bilvask hentes fra relevante officielle sider hos hver udbyder, højst én gang om ugen. Kortet samler korte beskrivelser fra flere sider, når det er relevant, og viser den officielle kilde og hentetid. Kundeanmeldelser, citater og kommentarer sorteres fra, og cachede tekster genhentes, når filtreringen ændres. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.2.0
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.2.1
 ```
 
 ## Skærmbilleder
 
-Skærmbillederne opdateres til v0.2.0, når kandidaten er installeret og afprøvet. De tidligere v0.1-billeder er midlertidigt taget ud, så README ikke viser dem som den aktuelle version.
+Skærmbilleder fra v0.2.1. Priser og datastatus er eksempler fra testtidspunktet. Position er ikke valgt i disse eksempler; afstande kræver en positionsenhed.
+
+### Benzin, diesel og plug-in-hybrid
+
+Den valgte bil bestemmer de viste energityper. En plug-in-hybrid viser både benzin og opladning. Bilknapperne viser mærkelogo og model, når et logo findes, med tekst som fallback.
+
+| Diesel og officielle kundefordele | Plug-in-hybrid: benzinoversigt |
+|---|---|
+| ![Dieselpriser og Circle K's officielle oplysninger om rabat og bilvask](docs/screenshots/diesel-benefits.png) | ![Plug-in-hybrid med benzinpriser og bilknapper](docs/screenshots/plugin-hybrid.png) |
+
+### Opladning og ladesteder
+
+Lokale priser, generelle selskabstakster og startpriser markeres forskelligt. **Se pris** betyder, at en verificeret stationspris ikke er tilgængelig i udtrækket. Dialogen **Ladesteder** viser selskabets ladevalg og giver mulighed for at vise flere.
+
+| Ladeoversigt | Ladesteder pr. selskab |
+|---|---|
+| ![Opladning med priser, selskabstakster og Se pris](docs/screenshots/charging.png) | ![Q8's ladesteder med mulighed for at vise flere](docs/screenshots/charging-locations.png) |
+
+### Information og datagrundlag
+
+Den sammenklappelige informationsbjælke samler kildeoversigt, manglende koordinater, beregninger og forklaring af priser og energityper. Footer viser integrationens version.
+
+| Benzin og beregninger | Brændstof og opladning samlet |
+|---|---|
+| ![Udvidet Information og datagrundlag med footer v0.2.1](docs/screenshots/information.png) | ![Samlet datastatus for brændstof og opladning samt hybridberegning](docs/screenshots/information-all-fuels.png) |
+
+### Visuel editor
+
+Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af visningen uden en oprettet bil.
+
+![Visuel editor med tooltip og kortets forhåndsvisning](docs/screenshots/editor-overview.png)
+
+| Udbydere med logoer | Sammenklappelige biler |
+|---|---|
+| ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Bilsektion med fire sammenklappede biler og mærkelogoer](docs/screenshots/editor-vehicles.png) |
+
+En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 54 mærker og 470 modeller, inklusive benzin, diesel, el, hybrider og varevogne. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst.
+
+![Udvidet bilopsætning for en dieselbil](docs/screenshots/editor-vehicle-details.png)
 
 ## Funktioner
 
@@ -92,7 +130,6 @@ Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges.
 | OK / OIL | Lokale brændstofpriser og ladeadresser; generelle OK-ladetakster særskilt |
 | Clever | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst. Prisen varierer pr. sted og tidspunkt og skal ses i Clever-appen/kortet |
 | E.ON | Ladesteder, adresser, koordinater og AC/DC/effekt, når oplyst; offentlige danske startpriser vises som generelle takster |
-| Tesla | Danske Superchargere med adgangsmarkering, adresser, koordinater, effekt og antal ladepunkter. Separate lokale priser for Tesla/medlemmer og andre biler uden medlemskab, når oplyst. Hentning kan blive afvist med HTTP 403 |
 | IONITY | Aktive danske steder, koordinater og effekt/antal, når oplyst; ingen gadeadresse i udtrækket. Offentlige minimumspriser for app, direkte betaling og abonnement vises særskilt |
 
 Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevares eventuelle tidligere data fra denne installation, tydeligt markeret som gemte data.
@@ -137,7 +174,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.0**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. JavaScript-filens `v0.1` i filnavnet er kortformatserien.
+Teknisk integrationsversion: **0.2.1**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. JavaScript-filens `v0.1` i filnavnet er kortformatserien.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
@@ -147,19 +184,3 @@ node tests/frontend.test.js
 ```
 
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
-
-
-## Rettelser i 0.1.1
-
-Priser og adresser vises også uden koordinater. Kortet angiver, når nærmeste station ikke kan bestemmes eller kun er valgt blandt stationer med kendte koordinater. Op til 30 nye adresseopslag pr. kørsel fordeles på skift mellem selskaberne efter frasortering af cachede og gentagne adresser.
-
-
-## Tesla-priser i 0.1.2
-
-Tesla-rækken og listen over ladesteder viser **Tesla/medlemmer** og **Andre biler uden medlemskab** hver for sig. Begge vises uanset bilvalg; intet medlemskabsvalg eller login er nødvendigt. Den enkelte station er markeret med adgang for andre bilmærker.
-
-Priserne hentes fra Teslas offentlige stationssider. Flere takster vises som et interval med de oplyste tidsvilkår; laveste pris fremstilles ikke som prisen lige nu. Manglende priser vises som ikke oplyst. Medlemsabonnement samt eventuelle trængsels- og parkeringsgebyrer indgår ikke i kWh-prisen. Tesla indgår ikke i den generelle beregning af fuld opladning, da den beregning kræver én entydig kWh-pris.
-
-Ved et mislykket prisopslag beholdes stationen. Eventuelle tidligere priser markeres som gemte med deres oprindelige hentetid. Ved HTTP 403/429 stoppes yderligere prisopslag efter de allerede igangværende kald. Højst tre stationssider hentes samtidigt med en samlet startgrænse på tre minutter. Første hentning kan derfor tage længere tid.
-
-Denne ændring kan ikke garantere adgang fra alle installationer, hvis Tesla afviser hentningen.

@@ -11,6 +11,15 @@
   .trf-cars { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
   .trf-car { border: 1px solid rgba(0,229,255,.45); background: linear-gradient(180deg, rgba(0,229,255,.08), rgba(185,103,255,.08)); color: var(--primary-text-color); border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,.25); }
   .trf-car:active { transform: scale(.95); }
+  .trf-car { display: inline-flex; align-items: center; gap: 6px; }
+  .trf-make-mark { display: inline-flex; align-items: center; min-height: 22px; }
+  .trf-car-logo { width: 22px; height: 22px; object-fit: contain; }
+  .trf-model-logo { width: 38px; height: 18px; object-fit: contain; }
+  .trf-model-mark { display: inline-flex; align-items: center; }
+  .trf-model-logo-text { font-size: 11px; font-weight: 700; color: var(--primary-text-color); }
+  .trf-car-logo, .trf-model-logo { filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); background: transparent; }
+  .trf-logo-color { filter: none; mix-blend-mode: normal; }
+  .trf-logo-white { filter: var(--trf-white-logo-filter, invert(1)); }
   .trf-car.trf-on { background: linear-gradient(90deg, rgba(0,229,255,.28), rgba(185,103,255,.28)); border-color: var(--primary-color, #00e5ff); font-weight: 700; box-shadow: 0 0 14px rgba(0,229,255,.5); text-shadow: 0 0 8px rgba(0,229,255,.8); }
   .trf-refresh { border: 1px solid rgba(0,229,255,.4); background: rgba(0,229,255,.06); color: var(--primary-text-color); border-radius: 50%; width: 34px; height: 34px; font-size: 17px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,229,255,.25); }
   .trf-refresh:active { transform: scale(.93); }
@@ -67,6 +76,21 @@
   .trf-data-counts table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 10px; }
   .trf-data-counts th, .trf-data-counts td { padding: 3px 5px; text-align: left; }
   .trf-data-counts th { font-weight: 600; }
+  .trf-info-panel { margin: 10px 0 2px; border: 1px solid rgba(255,193,7,.42); border-radius: 14px; background: rgba(255,193,7,.07); color: var(--primary-text-color); overflow: hidden; }
+  .trf-info-panel > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; padding: 10px 12px; font-size: 12px; font-weight: 700; }
+  .trf-info-panel > summary::-webkit-details-marker { display: none; }
+  .trf-info-panel > summary::before { content: "i"; display: inline-grid; place-items: center; width: 19px; height: 19px; border: 1px solid rgba(255,193,7,.75); border-radius: 50%; color: var(--primary-text-color); font: 700 12px/1 sans-serif; }
+  .trf-info-panel > summary::after { content: "⌄"; margin-left: auto; font-size: 16px; transition: transform .15s ease; }
+  .trf-info-panel[open] > summary::after { transform: rotate(180deg); }
+  .trf-info-panel > summary:focus-visible { outline: 2px solid rgba(255,193,7,.8); outline-offset: -2px; }
+  .trf-info-content { padding: 0 12px 10px; border-top: 1px solid rgba(255,193,7,.25); }
+  .trf-info-section { margin-top: 8px; font-size: 10px; line-height: 1.5; }
+  .trf-info-count { margin-bottom: 4px; font-weight: 700; font-size: 11px; color: var(--primary-text-color); }
+  .trf-info-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .trf-info-panel .trf-data-counts { margin: 6px 0; }
+  .trf-info-panel .trf-legend { padding: 4px 0; }
+  .trf-info-panel .trf-tank { padding: 5px 0 0; }
+  .trf-info-panel .trf-foot { padding: 7px 0 0; }
   .trf-tank { font-size: 11px; color: var(--secondary-text-color); padding: 6px 12px 0; opacity: .9; }
   .trf-tank b { color: var(--primary-text-color); }
   .trf-legend { font-size: 10px; color: var(--secondary-text-color); opacity: .75; padding: 6px 12px 2px; line-height: 1.5; }
@@ -103,32 +127,7 @@
     .trf-data-tools { gap: 5px; }
     .trf-evrow { grid-template-columns: minmax(52px,100px) minmax(40px,1fr) 34px !important; gap: 4px; padding: 3px 4px; }
   }
-  @media (orientation: portrait) {
-    .trf { padding-top: 12px; padding-bottom: 12px; }
-  }
-  @media (orientation: landscape) and (max-height: 520px) {
-    .trf { padding-top: 8px; padding-bottom: 8px; }
-    .trf-titlebar { margin-bottom: 0; }
-    .trf-rule { margin: 3px 0; }
-    .trf-ev-dialog { max-height: 94vh; }
-    .trf-ev-list { max-height: 74vh; }
-  }
-  @media (orientation: landscape) and (min-width: 700px) {
-    .trf-fuel-grid, .trf-ev-grid, .trf-ev-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; gap: 6px; }
-    .trf-fuel-grid > .trf-row, .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow { width: auto; min-width: 0; margin: 0; }
-    .trf-fuel-grid > .trf-row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; align-items: start; padding: 6px; }
-    .trf-fuel-grid > .trf-row > .trf-logo, .trf-fuel-grid > .trf-row > .trf-station, .trf-fuel-grid > .trf-row > .trf-km, .trf-fuel-grid > .trf-row > .trf-fordel-box { grid-column: 1 / -1; }
-    .trf-fuel-grid > .trf-row > .trf-pcol { text-align: left; min-width: 0; }
-    .trf-fuel-grid > .trf-row > .trf-pcol::before { content: attr(data-label); display: block; color: var(--secondary-text-color); font-size: 9px; font-weight: 500; }
-    .trf-fuel-grid > .trf-row > .trf-km { text-align: left; }
-    .trf-fuel-head { display: none; }
-    .trf-ev-grid > .trf-evrow, .trf-ev-list > .trf-evrow { display: grid; grid-template-columns: minmax(0, 1fr) !important; align-items: start; gap: 4px; padding: 6px; }
-    .trf-ev-grid > .trf-evrow > .trf-logo, .trf-ev-list > .trf-evrow > .trf-logo { grid-column: 1 / -1; }
-    .trf-ev-grid > .trf-evrow > .trf-km, .trf-ev-list > .trf-evrow > .trf-km { text-align: left; }
-    .trf-ev-list > .trf-em { grid-column: 1 / -1; }
-    .trf-ev-dialog { width: min(1100px, calc(100vw - 32px)); max-height: 94vh; }
-    .trf-ev-list { max-height: 74vh; }
-  }`;
+  `;
 
   var ECSS = `
   .trfe { font-family: var(--paper-font-body1_-_font-family, inherit); padding: 8px 4px; color: var(--primary-text-color); font-size: 13px; }
@@ -142,14 +141,134 @@
   .trfe .trfe-hint { font-size: 11px; color: var(--secondary-text-color); opacity: .8; margin-top: 2px; }
   .trfe details { margin-top: 10px; }
   .trfe summary { cursor: pointer; color: var(--secondary-text-color); font-size: 12px; }
-  .trfe .trfe-car { border: 1px solid var(--divider-color, rgba(255,255,255,.12)); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
-  .trfe .trfe-car b { font-size: 13px; }
+  .trfe .trfe-section { margin: 12px 0; border: 1px solid var(--divider-color, rgba(255,255,255,.14)); border-radius: 12px; background: var(--card-background-color, rgba(127,127,127,.035)); overflow: hidden; }
+  .trfe .trfe-section > summary { display: flex; align-items: center; gap: 8px; padding: 11px 12px; color: var(--primary-text-color); font-weight: 600; font-size: 13px; list-style: none; }
+  .trfe .trfe-section > summary::-webkit-details-marker, .trfe .trfe-car > summary::-webkit-details-marker { display: none; }
+  .trfe .trfe-section > summary::after, .trfe .trfe-car > summary::after { content: "⌄"; margin-left: auto; color: var(--secondary-text-color); transition: transform .15s ease; }
+  .trfe .trfe-section[open] > summary::after, .trfe .trfe-car[open] > summary::after { transform: rotate(180deg); }
+  .trfe .trfe-section > summary:focus-visible, .trfe .trfe-car > summary:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: -2px; }
+  .trfe .trfe-section-body { padding: 0 12px 12px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
+  .trfe .trfe-summary-meta { color: var(--secondary-text-color); font-size: 11px; font-weight: 400; margin-left: auto; }
+  .trfe .trf-make-mark { display: inline-flex; align-items: center; min-height: 28px; }
+  .trfe .trfe-car-logo { width: 28px; height: 28px; flex: 0 0 28px; object-fit: contain; background: transparent; filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); }
+  .trfe .trfe-model-logo { width: 46px; height: 24px; object-fit: contain; background: transparent; filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); }
+  .trfe .trf-logo-color { filter: none; mix-blend-mode: normal; }
+  .trfe .trf-logo-white { filter: var(--trf-white-logo-filter, invert(1)); }
+  .trfe .trfe-car-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+  .trfe .trfe-brand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 6px; margin-top: 8px; }
+  .trfe .trfe-brand-grid label { display: grid; grid-template-columns: 16px 42px minmax(0,1fr); box-sizing: border-box; min-width: 0; margin: 0; padding: 7px 9px; border: 1px solid var(--divider-color, rgba(127,127,127,.14)); border-radius: 9px; background: rgba(127,127,127,.035); font-size: 12px; }
+  .trfe .trfe-brand-grid label:hover { background: rgba(127,127,127,.09); }
+  .trfe .trfe-brand-logo { display: block; width: 42px; height: 24px; object-fit: contain; }
+  .trfe .trfe-car { border: 1px solid var(--divider-color, rgba(127,127,127,.18)); border-radius: 10px; margin: 8px 0; overflow: hidden; }
+  .trfe .trfe-car > summary { display: flex; align-items: center; gap: 8px; padding: 10px 11px; cursor: pointer; list-style: none; }
+  .trfe .trfe-car > summary span:first-child { font-weight: 600; font-size: 13px; }
+  .trfe .trfe-car-fields { padding: 0 11px 11px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
+  .trfe .trfe-row { flex-wrap: wrap; }
+  .trfe .trfe-row label { width: auto; margin-right: 7px; font-size: 12px; }
+  .trfe .trfe-empty-car { padding: 10px 11px; margin: 8px 0; border-radius: 10px; background: rgba(127,127,127,.06); font-size: 12px; line-height: 1.5; }
+  .trfe .trfe-empty-car strong { display: block; margin-bottom: 3px; }
+  .trfe .trfe-tip { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 4px; border: 1px solid var(--secondary-text-color); border-radius: 50%; color: var(--secondary-text-color); font-size: 10px; cursor: help; vertical-align: middle; }
+  .trfe .trfe-tip:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
   .trfe a { color: var(--primary-color, #03a9f4); }`;
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m];
     });
+  }
+
+  var VEHICLE_CATALOG_REQUESTS = {};
+  var FAILED_VEHICLE_LOGOS = {};
+
+  function vehicleCatalogUrl(config) {
+    var url = config && config.katalog_url && String(config.katalog_url).trim();
+    return url && ["/local/fuelprices/bilkatalog.json", "/local/tiny-gas/data/bilkatalog.json", "/local/tiny-refuel/data/bilkatalog.json"].indexOf(url) === -1 ? url : "/tiny_refuel/static/bilkatalog.json";
+  }
+
+  function loadVehicleCatalog(owner) {
+    if (typeof fetch !== "function") return;
+    var url = vehicleCatalogUrl(owner._config);
+    if (owner._katalogUrlUsed === url && (owner._katalog || owner._katalogLoading || owner._katalogFailed)) return;
+    owner._katalogUrlUsed = url;
+    owner._katalog = null;
+    owner._katalogLoading = true;
+    owner._katalogFailed = false;
+    if (!VEHICLE_CATALOG_REQUESTS[url]) {
+      VEHICLE_CATALOG_REQUESTS[url] = fetch(url, { cache: "no-store" }).then(function (response) {
+        if (!response.ok) throw new Error("http " + response.status);
+        return response.json();
+      });
+    }
+    VEHICLE_CATALOG_REQUESTS[url].then(function (catalog) {
+      if (owner._katalogUrlUsed !== url) return;
+      owner._katalog = catalog;
+      owner._katalogLoading = false;
+      owner._render();
+    }).catch(function () {
+      if (owner._katalogUrlUsed !== url) return;
+      owner._katalogLoading = false;
+      owner._katalogFailed = true;
+    });
+  }
+
+  function vehicleLogoTheme(owner, hass) {
+    if (!owner.style || !owner.style.setProperty) return;
+    var dark = hass && hass.themes && hass.themes.darkMode;
+    if (dark === undefined) dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    owner.style.setProperty("--trf-vehicle-logo-filter", dark ? "invert(1)" : "none");
+    owner.style.setProperty("--trf-vehicle-logo-blend", dark ? "screen" : "multiply");
+    owner.style.setProperty("--trf-white-logo-filter", dark ? "none" : "invert(1)");
+  }
+
+  function vehicleLogoFailure(owner) {
+    owner.addEventListener("error", function (ev) {
+      var image = ev.target;
+      if (!image || !image.dataset || !image.dataset.vehicleLogo) return;
+      FAILED_VEHICLE_LOGOS[image.getAttribute("src")] = true;
+      image.hidden = true;
+      var fallback = image.nextElementSibling;
+      if (fallback && (fallback.hasAttribute("data-model-fallback") || fallback.hasAttribute("data-make-fallback"))) fallback.hidden = false;
+    }, true);
+  }
+
+  function vehicleLogoHtml(catalog, car, className, model) {
+    if (!catalog || !car || !car.mærke) return "";
+    var svg, png, url, label, color = false, white = false;
+    if (model) {
+      var entry = catalog.model_logos && catalog.model_logos[car.mærke] && catalog.model_logos[car.mærke][car.model];
+      if (!entry) return "";
+      svg = entry.svg; png = entry.png; url = entry.url;
+      label = car.model + " logo" + (entry.generation ? " (" + entry.generation + ")" : "");
+      color = entry.monochrome === false;
+    } else {
+      svg = catalog.logos && catalog.logos[car.mærke];
+      png = catalog.logo_pngs && catalog.logo_pngs[car.mærke];
+      label = car.mærke + " logo";
+      color = catalog.logo_colors && catalog.logo_colors[car.mærke] === true;
+      var source = catalog.logo_urls && catalog.logo_urls[car.mærke];
+      if (source) { url = source.url; white = source.white === true; color = source.monochrome === false; }
+    }
+    var data = typeof png === "string" ? png.replace(/\s+/g, "") : "";
+    var src = /^iVBORw0KGgo[A-Za-z0-9+/]*={0,2}$/.test(data) ? "data:image/png;base64," + data :
+      (typeof svg === "string" && /<svg(?:\s|>)/.test(svg) ? "data:image/svg+xml," + encodeURIComponent(svg) : "");
+    if (!src && typeof url === "string" && (/^https:\/\//.test(url) || /^\/(?!\/)/.test(url))) src = url;
+    if (!src || FAILED_VEHICLE_LOGOS[src]) return "";
+    return '<img class="' + className + (color ? " trf-logo-color" : "") + (white ? " trf-logo-white" : "") + '" src="' + esc(src) + '" data-vehicle-logo="true" alt="' + esc(label) + '" title="' + esc(label) + '" referrerpolicy="no-referrer">';
+  }
+
+  function vehicleMakeHtml(catalog, car, className) {
+    if (!car || !car.mærke) return "";
+    var image = vehicleLogoHtml(catalog, car, className, false);
+    return '<span class="trf-make-mark">' + image + '<span class="' + className + '-text" data-make-fallback' +
+      (image ? " hidden" : "") + '>' + esc(car.mærke) + '</span></span>';
+  }
+
+  function vehicleModelHtml(catalog, car) {
+    if (!car || !car.model) return "";
+    var image = vehicleLogoHtml(catalog, car, "trf-model-logo", true);
+    return '<span class="trf-model-mark">' + image + '<span class="trf-model-logo-text" data-model-fallback' +
+      (image ? " hidden" : "") + ' title="Modelnavn som tekst; officielt navnelogo vises, når en passende fil er tilføjet">' +
+      esc(car.model) + '</span></span>';
   }
 
   var LOGO_SIZE = 22;
@@ -165,7 +284,6 @@
     { key: "oil", brand: "OIL", img: "logo-oil.svg", has100: false },
     { key: "clever", brand: "Clever", img: "logo-clever.svg", has100: false, electricOnly: true },
     { key: "eon", brand: "E.ON", img: "logo-eon.svg", has100: false, electricOnly: true },
-    { key: "tesla", brand: "Tesla", img: "logo-tesla.svg", has100: false, electricOnly: true },
     { key: "ionity", brand: "Ionity", img: "logo-ionity.svg", has100: false, electricOnly: true },
   ];
 
@@ -184,6 +302,7 @@
   class TinyRefuelCard extends HTMLElement {
     constructor() {
       super();
+      vehicleLogoFailure(this);
       this._hass = null;
       this._data = null;
       this._dataFetchedAt = 0;
@@ -298,6 +417,7 @@
     set hass(hass) {
       var prev = this._hass && this._trackerState();
       this._hass = hass;
+      vehicleLogoTheme(this, hass);
       var cur = this._trackerState();
       if (this._locRefreshing && prev && cur && cur.last_updated !== prev.last_updated) {
         this._locRefreshing = false;
@@ -404,7 +524,7 @@
       if (Array.isArray(cfg.biler) && cfg.biler.length) {
         return cfg.biler.map(function (b, i) {
           return {
-            navn: (b && b.navn) || ("Bil " + (i + 1)),
+            navn: (b && b.navn) || (b && [b.mærke, b.model].filter(Boolean).join(" ")) || ("Bil " + (i + 1)),
             mærke: b ? b.mærke : null,
             model: b ? b.model : null,
             brændstof: b ? b.brændstof : null,
@@ -703,6 +823,7 @@
 
     _render() {
       if (!this._config) return;
+      if (Array.isArray(this._config.biler) && this._config.biler.length) loadVehicleCatalog(this);
       var previousList = this.querySelector && this.querySelector(".trf-ev-list");
       var popupScroll = previousList ? previousList.scrollTop : 0;
       var cfg = this._config;
@@ -720,6 +841,7 @@
       var grid = cols.join(" ");
       var priceColumnCount = (visBenzin ? 2 : 0) + (visDiesel ? 1 : 0);
 
+      var infoMetrics = "";
       var body = "";
       var rows = this._buildRows(loc);
       var hasData = !!this._data;
@@ -877,7 +999,7 @@
               if (priced[n2].v < cheap.v) cheap = priced[n2];
               if (priced[n2].v > dear.v) dear = priced[n2];
             }
-            body += '<div class="trf-tank">Fuld tank (' + String(tankL).replace(".", ",") + ' L' +
+            infoMetrics += '<div class="trf-tank">Fuld tank (' + String(tankL).replace(".", ",") + ' L' +
               (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + ') 95: <b>' +
               esc(cheap.brand) + " " + Math.round(cheap.v * tankL) + " kr</b> → " + esc(dear.brand) + " " +
               Math.round(dear.v * tankL) + " kr · spar <b>" + Math.round((dear.v - cheap.v) * tankL) + " kr</b></div>";
@@ -891,7 +1013,7 @@
             if (kwhs.length >= 2) {
               var kmin = Math.min.apply(null, kwhs), kmax = Math.max.apply(null, kwhs);
               var bkwh = Math.min(200, Math.max(10, _carBatt));
-              body += '<div class="trf-tank">Fuld opladning (' + String(bkwh).replace(".", ",") + ' kWh' +
+              infoMetrics += '<div class="trf-tank">Fuld opladning (' + String(bkwh).replace(".", ",") + ' kWh' +
                 (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + '): <b>' +
                 Math.round(kmin * bkwh) + " kr</b> → " + Math.round(kmax * bkwh) +
                 " kr · spar <b>" + Math.round((kmax - kmin) * bkwh) + " kr</b></div>";
@@ -921,7 +1043,7 @@
                   ? " · billigst nær dig " + sdiff.toFixed(2).replace(".", ",") + " over"
                   : " · billigst nær dig = snit");
             }
-            body += '<div class="trf-tank">' + snitTxt + "</div>";
+            infoMetrics += '<div class="trf-tank">' + snitTxt + "</div>";
           }
         }
 
@@ -937,12 +1059,17 @@
       }
       var cars = this._cars();
       var carHtml = "";
-      if (cars.length > 1) {
+      if (Array.isArray(cfg.biler) && cfg.biler.length) {
         var sel = this._carIdx();
         carHtml = '<div class="trf-cars">';
         for (var ci = 0; ci < cars.length; ci++) {
-          carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '">' +
-            esc(cars[ci].navn) + "</button>";
+          var plainCarName = [cars[ci].mærke, cars[ci].model].filter(Boolean).join(" ");
+          var modelAsset = this._katalog && this._katalog.model_logos && this._katalog.model_logos[cars[ci].mærke] && this._katalog.model_logos[cars[ci].mærke][cars[ci].model];
+          var customCarName = !cars[ci].model || (modelAsset && modelAsset.family) || String(cars[ci].navn).toLowerCase() !== plainCarName.toLowerCase();
+          carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '" aria-label="' + esc(cars[ci].navn) + '">' +
+            vehicleMakeHtml(this._katalog, cars[ci], "trf-car-logo") +
+            vehicleModelHtml(this._katalog, cars[ci]) +
+            (customCarName ? '<span>' + esc(cars[ci].navn) + "</span>" : "") + "</button>";
         }
         carHtml += "</div>";
       }
@@ -950,9 +1077,12 @@
       var legends = [];
       if (visBenzin) legends.push('<b>95</b> = Blyfri 95 (E10) · <b>100</b> = 100-oktan · <b>Premium 95</b> = benzin med additiver · <b>92</b> = Blyfri 92');
       if (visDiesel) legends.push('<b>Diesel</b> = standard diesel · <b>Extra</b> = opgraderet diesel · <b>HVO100</b> = alternativt dieselbrændstof · <b>AdBlue</b> = væske til dieselbilens udstødningsrensning');
-      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>pris i app</b> = prisen findes ikke i udtrækket · <b>km</b> = afstand i luftlinje');
+      if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>Se pris</b> = ingen verificeret stationspris; tjek udbyderens app eller kort · <b>*</b> = offentlig selskabstakst, lokal pris kan afvige · <b>fra</b> = udbyderens startpris · <b>km</b> = afstand i luftlinje');
       var legendHtml = legends.length ? '<div class="trf-legend"><b>Energityper:</b> ' + legends.join(' · ') + '</div>' : '';
       if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
+      var infoSections = (visBenzin || visDiesel ? this._fuelDataSummary() : '') +
+        (visEl ? this._evDataSummary(this._evEntries()) : '') + infoMetrics + legendHtml;
+      var infoPanelHtml = infoSections ? '<details class=\"trf-info-panel\"><summary>Information og datagrundlag</summary><div class=\"trf-info-content\">' + infoSections + '</div></details>' : '';
       var selectedFuel = this._car() && this._car().brændstof;
       var cardTitle = selectedFuel === 'plug_in_hybrid' && visBenzin && visEl ? 'Hybrid – benzin og opladning' :
         (selectedFuel === 'hybrid' && visBenzin && !visEl ? 'Hybrid – benzin' :
@@ -968,13 +1098,13 @@
         '<div class="trf-titlebar"><div class="trf-title">' + cardTitle + '</div>' +
         '<button class="trf-refresh' + (this._locRefreshing ? " trf-spin" : "") + '" data-refresh title="Hent frisk GPS-position fra telefonen">⟳</button></div>' +
         '<div class="trf-rule"></div>' +
-        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() + this._fuelDataSummary() +
+        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() +
         carHtml +
         (visAndet
           ? '<div class="trf-pos">Position: ' + (this._locRefreshing ? "opdaterer…" : esc(this._posAge() || "ukendt")) + "</div>"
           : "") +
         body +
-        legendHtml +
+        infoPanelHtml +
         '<div class="trf-foot"><span>Hentet fra selskabernes egne lister: ' + esc(upd) + '</span><span>Tiny Refuel v' + esc(integrationVersion || "ukendt") + '</span></div>' +
         "</div>" + this._evPopupHtml(loc);
       var popup = this.querySelector && this.querySelector(".trf-ev-dialog");
@@ -1026,6 +1156,45 @@
       }) : [];
     }
 
+    _evPublicTariff(ev) {
+      if (!ev || !this._data || !Array.isArray(this._data.ev)) return null;
+      var brand = String(ev.brand || '').toLowerCase();
+      var entries = this._data.ev.filter((row) => row && String(row.brand || '').toLowerCase() === brand &&
+        !this._evHasLocation(row) && typeof row.kwh === 'number' && isFinite(row.kwh) && row.kwh > 0);
+      if (!entries.length) return null;
+      var kind = String(ev.kind || '').toLowerCase();
+      var power = Number(ev.power_kw);
+      var category = kind;
+      if (brand === 'ok') {
+        if (kind === 'normal' || kind === 'hurtig' || kind === 'lyn') category = kind;
+        else if (kind === 'ac' || (isFinite(power) && power > 0 && power <= 22)) category = 'normal';
+        else if (isFinite(power) && power > 22 && power < 100) category = 'hurtig';
+        else if (kind === 'dc' || (isFinite(power) && power >= 100)) category = 'lyn';
+        var okItem = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) === 0);
+        return okItem ? { kwh: okItem.kwh, label: 'indicative' } : null;
+      }
+      if (brand === 'q8') {
+        category = kind === 'ac' || kind === 'normal' || (isFinite(power) && power > 0 && power <= 22)
+          ? 'normal' : 'lyn';
+        var q8Item = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) >= 0);
+        return q8Item ? { kwh: q8Item.kwh, label: 'indicative' } : null;
+      }
+      if (brand === 'e.on') {
+        category = kind === 'ac' || kind.indexOf('ac') >= 0 ? 'ac' : 'dc';
+        var eonItem = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) === 0);
+        return eonItem ? { kwh: eonItem.kwh, label: 'from' } : null;
+      }
+      if (brand === 'circle k' && kind === 'dc' && isFinite(power) && power >= 100) {
+        var ckItem = entries.find((row) => /lynlader/i.test(String(row.name || '')));
+        return ckItem ? { kwh: ckItem.kwh, label: 'list' } : null;
+      }
+      if (brand === 'ionity') {
+        var ionityItem = entries.find((row) => /direkte betaling/i.test(String(row.name || '')));
+        return ionityItem ? { kwh: ionityItem.kwh, label: 'from' } : null;
+      }
+      return null;
+    }
+
     _evCoords(ev) {
       if (ev.lat === null || ev.lat === undefined || ev.lat === '' || ev.lon === null || ev.lon === undefined || ev.lon === '') return null;
       var lat = Number(ev.lat), lon = Number(ev.lon);
@@ -1037,16 +1206,17 @@
       return !!(ev.address || (ev.name && this._evCoords(ev)));
     }
 
-    _benefitEntry(key, fallbackText) {
+    _benefitEntry(key) {
       var all = this._data && this._data.benefits;
       var item = all && all[key];
-      if (item && (item.summary || item.source_url)) return item;
-      return fallbackText ? { summary: fallbackText, source_url: null, status: "source_only" } : null;
+      if (item && typeof item.summary === "string" && item.summary.trim()) return item;
+      return null;
     }
 
     _benefitBox(key, brand, item) {
       if (!item) return "";
-      var text = item.summary || "Se udbyderens officielle side for aktuelle fordele, app og abonnementsvilkår.";
+      var text = typeof item.summary === "string" ? item.summary.trim() : "";
+      if (!text) return "";
       var checked = item.fetched_at ? "<br><small>Hentet: " + esc(item.fetched_at.slice(0, 10)) +
         (item.status === "stale" ? " · gemte oplysninger" : "") + "</small>" : "";
       var source = item.source_url ? ' <a href="' + esc(item.source_url) + '" target="_blank" rel="noopener">Officiel kilde</a>' : "";
@@ -1071,35 +1241,14 @@
 
     _evBenefits(ev, part) {
       if (!this._effVis().andet) return '';
-      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand, ev.benefits);
+      var brand = this._evBrandKey(ev.brand), item = this._benefitEntry(brand);
       if (!item) return '';
-      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(brand) + '" title="Se ladefordele">★ Fordele</a>';
+      var stationRef = ev.location_id || ev.id || ev.address || ev.name || "provider";
+      var benefitKey = "ev:" + brand + ":" + String(stationRef) + ":" + String(ev.kind || "");
+      var button = '<a href="#" class="trf-fordel-btn" data-fordel="' + esc(benefitKey) + '" title="Se ladefordele">★ Fordele</a>';
       if (part === 'button') return button;
-      if (part === 'box') return this._benefitBox(brand, ev.brand, item);
-      return button + this._benefitBox(brand, ev.brand, item);
-    }
-
-    _teslaPricesHtml(ev) {
-      var self = this, prices = ev.tesla_prices || {};
-      var result = [['member', 'Tesla/medlemmer'], ['non_member', 'Andre biler uden medlemskab']].map(function (pair) {
-        var rates = Array.isArray(prices[pair[0]]) ? prices[pair[0]].filter(function (r) {
-          return r && typeof r.price === 'number' && isFinite(r.price) && r.price > 0;
-        }) : [];
-        var values = rates.map(function (r) { return r.price; });
-        var text = values.length ? self._fmt(Math.min.apply(null, values)) : 'Pris ikke oplyst';
-        if (values.length && Math.max.apply(null, values) !== Math.min.apply(null, values)) text += '–' + self._fmt(Math.max.apply(null, values));
-        if (values.length) text += ' kr/kWh';
-        if (pair[0] === 'non_member' && ev.open_to_non_tesla === false) text = 'Ikke åben for andre biler';
-        var schedules = rates.filter(function (r) { return r.time_of_use || r.start || r.end || r.days; }).map(function (r) {
-          return [r.days, r.start && r.end ? r.start + '–' + r.end : 'Tidsvilkår: se Tesla-appen', self._fmt(r.price) + ' kr/kWh'].filter(Boolean).join(' · ');
-        });
-        return '<div style="margin-bottom:6px;white-space:normal"><span style="display:block;font-size:11px;line-height:1.3">' + pair[1] +
-          '</span><b style="font-size:14px">' + esc(text) + '</b>' +
-          schedules.map(function (t) { return '<span style="display:block;font-size:11px;line-height:1.3">' + esc(t) + '</span>'; }).join('') + '</div>';
-      }).join('');
-      if (ev.stale || ev.tesla_price_stale) result += '<div style="font-size:11px;white-space:normal">Gemte priser · seneste hentning fejlede</div>';
-      if (ev.tesla_price_updated) result += '<div style="font-size:10px;white-space:normal">Priser hentet ' + esc(new Date(ev.tesla_price_updated).toLocaleString('da-DK')) + '</div>';
-      return result;
+      if (part === 'box') return this._benefitBox(benefitKey, ev.brand, item);
+      return button + this._benefitBox(benefitKey, ev.brand, item);
     }
 
     _evRow(ev, loc, count, inPopup, tariffs, companyGroup) {
@@ -1110,14 +1259,15 @@
       var logo = this._brandImg(ev.brand);
       var logoContent = logo ? '<img src="/tiny_refuel/static/logos/' + esc(logo) + '" alt="' + esc(ev.brand) + '">' : esc(ev.brand);
       var title = query + (km !== null ? ' · ' + this._fmtKm(km) + ' km' : '');
-      var price = typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0 ? this._fmt(ev.kwh) : 'pris i app';
-      if (ev.brand === 'Tesla') price = this._teslaPricesHtml(ev);
+      var localPrice = typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0;
+      var publicTariff = localPrice ? null : this._evPublicTariff(ev);
+      var price = localPrice ? this._fmt(ev.kwh) : (publicTariff
+        ? (publicTariff.label === 'from' ? 'fra ' : '') + this._fmt(publicTariff.kwh) + (publicTariff.label === 'indicative' || publicTariff.label === 'list' ? '*' : '')
+        : 'Se pris');
       var info = [ev.name || ev.brand, ev.address];
-      if (ev.brand === 'Tesla') {
-        info.push('Medlemsabonnement og eventuelle trængsels-/parkeringsgebyrer er ikke medregnet');
-        if (ev.tesla_price_stale) info.push('Gemte priser: seneste prisopslag fejlede');
-        if (ev.tesla_price_updated) info.push('priser hentet ' + new Date(ev.tesla_price_updated).toLocaleString('da-DK'));
-      }
+      if (publicTariff) info.push(publicTariff.label === 'from'
+        ? 'offentlig fra-pris; stationsprisen kan være højere'
+        : 'offentlig selskabstakst; den lokale pris kan afvige');
       if (!ev.address && coords) info.push('gadeadresse ikke oplyst; navigation til koordinater');
       if (ev.access_note) info.push(ev.access_note);
       if (ev.kind) info.push(ev.kind);
@@ -1126,11 +1276,11 @@
       if (ev.plugs) info.push(ev.plugs + ' ladepunkter');
       if (ev.stale) info.push('gemte data: seneste hentning fejlede');
       if (ev.source_updated) info.push('hentet ' + new Date(ev.source_updated).toLocaleString('da-DK'));
-      if (count > 1) info.push('+' + (count - 1) + (companyGroup ? ' andre ladevalg hos selskabet' : price === 'pris i app' ? ' andre ladesteder hos selskabet med pris i app' : ' ladesteder hos samme selskab til samme pris'));
+      if (count > 1) info.push('+' + (count - 1) + (companyGroup ? ' andre ladevalg hos selskabet' : (!localPrice && !publicTariff ? ' andre ladesteder hos selskabet uden stationspris i udtrækket' : ' ladesteder hos samme selskab')));
       var age = this._fmtAge(ev.lu);
       return '<div class="trf-evrow" style="grid-template-columns: minmax(70px,130px) minmax(60px,1fr) 52px" title="' + esc(title) + '">' +
         '<div class="trf-logo"><a class="trf-navlink" data-waze="' + esc(ev.brand) + '" href="' + esc(link) + '" title="' + esc(title) + '">' + logoContent + '</a></div>' +
-        '<div class="trf-pcol">' + (ev.brand === 'Tesla' ? price : '<span class="trf-price"><b>' + price + '</b></span>') + '</div>' +
+        '<div class="trf-pcol">' + '<span class="trf-price"><b>' + price + '</b></span>' + '</div>' +
         '<span class="trf-km' + (km !== null && km > 15 ? ' trf-far' : '') + '">' + (km !== null ? this._fmtKm(km) + ' km' : '–') +
         (age ? '<span class="trf-age">' + esc(age) + '</span>' : '') + '</span>' +
         this._evTariffsHtml(tariffs) + '<div class="trf-station"><span class="trf-subtxt">' + info.filter(Boolean).map(esc).join(' · ') + '</span>' +
@@ -1227,8 +1377,7 @@
       var keys = Object.keys(sources).sort(function (a, b) { return (names[a] || a).localeCompare(names[b] || b, "da"); });
       var failures = keys.filter(function (key) { return sources[key] && sources[key].status !== "ok"; }).length;
       var summary = failures ? failures + " brændstofkilder kræver opmærksomhed" : keys.length + " brændstofkilder · seneste status";
-      var html = '<details class="trf-data-counts"><summary>' + esc(summary) + '</summary>' +
-        '<table><thead><tr><th>Kilde</th><th>Stationer</th><th>Priser</th><th>Koordinater mangler</th><th>Status · tidspunkt</th></tr></thead><tbody>';
+      var html = '<section class="trf-info-section"><div class="trf-info-count">' + esc(summary) + '</div><div class="trf-info-table-wrap"><table><thead><tr><th>Kilde</th><th>Stationer</th><th>Priser</th><th>Koordinater mangler</th><th>Status · tidspunkt</th></tr></thead><tbody>';
       keys.forEach(function (key) {
         var item = sources[key] || {}, state = item.status === "ok" ? "OK" :
           (item.status === "stale" ? "Gemte data · nyt forsøg fejlede" : "Fejl");
@@ -1238,11 +1387,11 @@
           '</td><td>' + (Number(item.priced) || 0) + '</td><td>' + (Number(item.missing_coordinates) || 0) +
           '</td><td' + detail + '>' + esc(state + " · " + this._fmtStamp(stamp)) + '</td></tr>';
       }, this);
-      html += '</tbody></table>';
+      html += '</tbody></table></div>';
       var pending = Number(data.geocode_pending) || 0;
       if (pending) html += '<div>' + pending + ' adresser afventer koordinater. De behandles gradvist ved senere hentninger.</div>';
       else html += '<div>Koordinater er slået op for alle adresser med kendte adresser.</div>';
-      html += '</details>';
+      html += '</section>';
       return html;
     }
 
@@ -1259,17 +1408,13 @@
         if (!coords) p.missingCoords++;
         var key = ev.location_id || (coords ? coords.lat + ',' + coords.lon : String(ev.address).toLowerCase().trim());
         p.sites.add(key);
-        var teslaPriced = ev.brand === 'Tesla' && ['member', 'non_member'].some(function (g) {
-          return ev.tesla_prices && Array.isArray(ev.tesla_prices[g]) && ev.tesla_prices[g].some(function (r) { return r && typeof r.price === 'number' && isFinite(r.price) && r.price > 0; });
-        });
-        if (!ev.app_only && (teslaPriced || (typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0))) p.priced.add(key);
-        if (ev.stale || ev.tesla_price_stale) p.stale.add(key);
+        if (!ev.app_only && typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0) p.priced.add(key);
+        if (ev.stale) p.stale.add(key);
       });
       var sites = 0, priced = 0, count = 0;
       providers.forEach(function (p) { sites += p.sites.size; priced += p.priced.size; if (p.sites.size || p.tariffs) count++; });
-      var html = '<details class="trf-data-counts"><summary>Data fra ' + count + ' selskaber · ' + sites + ' ladesteder · ' + priced + ' med lokal elpris</summary>' +
-        '<table><thead><tr><th>Selskab</th><th>Steder</th><th>Med lokal pris</th><th>Koordinater mangler</th><th>Datastatus · seneste kontrol</th></tr></thead><tbody>';
-      var sourceKeys = { "Clever": "clever", "E.ON": "eon", "Tesla": "tesla", "IONITY": "ionity", "OK": "ok", "OIL": "oil", "Shell": "shell", "Circle K": "circle_k" };
+      var html = '<section class="trf-info-section"><div class="trf-info-count">Data fra ' + count + ' selskaber · ' + sites + ' ladesteder · ' + priced + ' med lokal elpris</div><div class="trf-info-table-wrap"><table><thead><tr><th>Selskab</th><th>Steder</th><th>Med lokal pris</th><th>Koordinater mangler</th><th>Datastatus · seneste kontrol</th></tr></thead><tbody>';
+      var sourceKeys = { "Clever": "clever", "E.ON": "eon", "IONITY": "ionity", "OK": "ok", "OIL": "oil", "Shell": "shell", "Circle K": "circle_k" };
       providers.forEach(function (p, brand) {
         if (!p.sites.size && !p.tariffs) return;
         var source = self._data && self._data.ev_sources && self._data.ev_sources[sourceKeys[brand]];
@@ -1293,7 +1438,7 @@
         html += '<tr><td>' + esc(brand) + '</td><td>0</td><td>0</td><td>–</td><td title="' + esc(source.error || '') + '">' +
           esc(state + (stamp ? ' · ' + self._fmtStamp(stamp) : '')) + '</td></tr>';
       });
-      html += '</tbody></table><div>Kun valgte selskaber. AC/DC på samme sted tælles én gang pr. selskab. Generelle takster tælles ikke som lokale priser.</div></details>';
+      html += '</tbody></table></div><div>Kun valgte selskaber. AC/DC på samme sted tælles én gang pr. selskab. Generelle takster tælles ikke som lokale priser.</div></section>';
       return html;
     }
 
@@ -1322,7 +1467,7 @@
       var groups = new Map();
       for (var i = 0; i < stations.length; i++) {
         var item = stations[i], ev = item.ev;
-        var companyGroup = ['q8', 'tesla'].includes(self._evBrandKey(ev.brand));
+        var companyGroup = self._evBrandKey(ev.brand) === 'q8';
         var key = companyGroup ? ev.brand : ev.brand + '|' + (ev.kind || '') + '|' + (ev.app_only ? 'app' : ev.kwh);
         if (!groups.has(key)) groups.set(key, { ev: ev, count: 0, companyGroup: companyGroup });
         groups.get(key).count++;
@@ -1349,14 +1494,13 @@
           self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>');
       });
       html += '<div class="trf-ev-grid">' + evHtmlRows.join("") + '</div>';
-      html += self._evDataSummary(entries);
       if (!stations.length && !tariffs.size) html += '<div class="trf-em">Ingen ladesteder eller el-priser for de valgte selskaber.</div>';
       var absent = BRANDS.filter(function (b) {
         return b.electricOnly && showBrand(self._config, b.key) && !entries.some(function (ev) { return self._evBrandKey(ev.brand) === b.key; });
       }).map(function (b) { return b.brand; });
       if (absent.length) html += '<div class="trf-em">Ingen ladedata i udtrækket: ' + absent.map(esc).join(', ') + '.</div>';
       var sources = this._data && this._data.ev_sources;
-      var expected = { clever: 'Clever', eon: 'E.ON', tesla: 'Tesla', ionity: 'Ionity', ok: 'OK', oil: 'OIL', shell: 'Shell', circle_k: 'Circle K' };
+      var expected = { clever: 'Clever', eon: 'E.ON', ionity: 'Ionity', ok: 'OK', oil: 'OIL', shell: 'Shell', circle_k: 'Circle K' };
       var missingSetup = [], failed = [];
       Object.keys(expected).forEach(function (key) {
         if (!showBrand(self._config, key)) return;
@@ -1419,6 +1563,7 @@
   class TinyRefuelCardEditor extends HTMLElement {
     constructor() {
       super();
+      vehicleLogoFailure(this);
       this._config = {};
       var self = this;
       this.addEventListener("click", function (ev) {
@@ -1434,25 +1579,33 @@
           } else if (yaml) { yaml.focus(); yaml.select(); }
           return;
         }
+        var carSummary = ev.target && ev.target.closest ? ev.target.closest("[data-car-toggle]") : null;
+        if (carSummary) {
+          var carCard = carSummary.parentElement;
+          self._openCar = carCard && carCard.open ? null : parseInt(carSummary.getAttribute("data-car-toggle"), 10);
+          return;
+        }
         var t = ev.target && ev.target.closest ? ev.target.closest("[data-bil-add],[data-bil-del]") : null;
         if (!t) return;
         ev.preventDefault();
         var cfg = Object.assign({}, self._config);
         var biler = Array.isArray(cfg.biler) && cfg.biler.length
           ? cfg.biler.map(function (b) { return Object.assign({}, b); })
-          : [{ navn: "Bil 1" }];
+          : [];
         if (t.hasAttribute && t.hasAttribute("data-bil-add")) {
+          self._openCar = biler.length;
           biler.push({ navn: "Bil " + (biler.length + 1) });
         } else {
           var idx = parseInt(t.getAttribute("data-bil-del"), 10);
           if (isFinite(idx)) biler.splice(idx, 1);
+          self._openCar = null;
         }
         if (!biler.length) delete cfg.biler;
         else cfg.biler = biler;
         self._config = cfg;
-        self._render();
+        self._render({ resetCars: true });
         self._updateYaml();
-        self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
+        self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg }, bubbles: true, composed: true }));
       });
       this.addEventListener("change", function (ev) {
         var t = ev.target;
@@ -1503,7 +1656,6 @@
             } else {
               delete biler[bi].model;
             }
-            needRender = true;
           } else if (field === "brændstof") {
             var fb = String(t.value || "");
             if (fb) {
@@ -1512,7 +1664,6 @@
             } else {
               delete biler[bi].brændstof;
             }
-            needRender = true;
           } else if (field.indexOf("vis_") === 0) {
             var vk = field.slice(4);
             biler[bi].vis = Object.assign({}, biler[bi].vis);
@@ -1525,8 +1676,9 @@
           cfg.biler = biler;
           self._config = cfg;
           if (needRender) self._render();
+          else self._updateCarFields(bi);
           self._updateYaml();
-          self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
+          self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg }, bubbles: true, composed: true }));
           return;
         } else if (key === "scrape_entity" || key === "location_entity" || key === "notify_service" || key === "katalog_url" || key === "navigation") {
           var s = String(t.value || "").trim();
@@ -1536,29 +1688,45 @@
             self._config = cfg;
             self._loadKatalog();
             self._updateYaml();
-            self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
+            self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg }, bubbles: true, composed: true }));
             return;
           }
         } else if (key.indexOf("kæde:") === 0) {
           var bk = key.slice(5);
           cfg.kaeder = Object.assign({}, cfg.kaeder);
           cfg.kaeder[bk] = !!t.checked;
+          var count = BRANDS.filter(function (brand) { return !(cfg.kaeder && cfg.kaeder[brand.key] === false); }).length;
+          var countNode = self.querySelector("[data-provider-count]");
+          if (countNode) countNode.textContent = count + " af " + BRANDS.length + " valgt";
         } else {
           cfg[key] = !!t.checked;
         }
         self._config = cfg;
         self._updateYaml();
-        self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg } }));
+        self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg }, bubbles: true, composed: true }));
       });
     }
 
     setConfig(config) {
-      this._config = config || {};
+      var next = config || {};
+      function signature(value) {
+        return JSON.stringify(value, function (key, item) {
+          if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+          var sorted = {};
+          Object.keys(item).sort().forEach(function (k) { sorted[k] = item[k]; });
+          return sorted;
+        });
+      }
+      // Home Assistant echoes config-changed back to setConfig. Keep the live
+      // form intact so a blur/change event cannot move the Save button.
+      if (this._editorRendered && signature(next) === signature(this._config)) return;
+      this._config = next;
       this._render();
     }
 
     set hass(hass) {
       this._hass = hass;
+      vehicleLogoTheme(this, hass);
       if (!this._config) return;
       var keys = [];
       for (var ek in hass.states) {
@@ -1573,32 +1741,11 @@
     }
 
     _katalogUrl() {
-      var u = this._config && this._config.katalog_url;
-      if (u && String(u).trim() && ["/local/fuelprices/bilkatalog.json", "/local/tiny-gas/data/bilkatalog.json", "/local/tiny-refuel/data/bilkatalog.json"].indexOf(String(u).trim()) === -1) return String(u).trim();
-      return "/tiny_refuel/static/bilkatalog.json";
+      return vehicleCatalogUrl(this._config);
     }
 
     _loadKatalog() {
-      if (typeof fetch !== "function") return;
-      var url = this._katalogUrl();
-      if (this._katalog && this._katalogUrlUsed === url) return;
-      if (this._katalogLoading && this._katalogUrlUsed === url) return;
-      this._katalog = null;
-      this._katalogUrlUsed = url;
-      this._katalogLoading = true;
-      var self = this;
-      fetch(url, { cache: "no-store" }).then(function (r) {
-        if (!r.ok) throw new Error("http " + r.status);
-        return r.json();
-      }).then(function (data) {
-        if (self._katalogUrlUsed !== url) return;
-        self._katalog = data;
-        self._katalogLoading = false;
-        self._render();
-      }).catch(function () {
-        if (self._katalogUrlUsed !== url) return;
-        self._katalogLoading = false;
-      });
+      loadVehicleCatalog(this);
     }
 
     _katalogBrands() {
@@ -1627,6 +1774,29 @@
       return def;
     }
 
+    _updateCarFields(index) {
+      var car = this._config.biler && this._config.biler[index];
+      if (!car) return;
+      var self = this;
+      ["model", "navn", "tank_liters", "batteri_kwh"].forEach(function (field) {
+        var node = self.querySelector('[data-key="bil:' + index + ':' + field + '"]');
+        if (node) node.value = car[field] == null ? "" : String(car[field]);
+      });
+      this.querySelectorAll('[data-key="bil:' + index + ':brændstof"]').forEach(function (node) {
+        node.checked = node.value === car.brændstof;
+      });
+      ["benzin", "diesel", "el", "andet"].forEach(function (fuel) {
+        var node = self.querySelector('[data-key="bil:' + index + ':vis_' + fuel + '"]');
+        if (node) node.checked = car.vis && car.vis[fuel] !== undefined ? !!car.vis[fuel] : self._bool("vis_" + fuel, fuel !== "diesel");
+      });
+      var title = this.querySelector('[data-car-card="' + index + '"] .trfe-car-title');
+      if (title) title.textContent = car.navn || [car.mærke, car.model].filter(Boolean).join(" ") || "Bil " + (index + 1);
+      var hint = this.querySelector('[data-car-card="' + index + '"] .trfe-summary-meta');
+      if (hint) hint.textContent = { benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[car.brændstof] || car.brændstof || "Vælg drivmiddel";
+      var logo = this.querySelector('[data-model-logo="' + index + '"]');
+      if (logo) logo.innerHTML = vehicleLogoHtml(this._katalog, car, "trfe-model-logo", true);
+    }
+
     _updateYaml() {
       var textarea = this.querySelector && this.querySelector("[data-card-yaml]");
       if (!textarea) return;
@@ -1634,28 +1804,47 @@
       textarea.value = yamlLines(config, 0).join("\n");
     }
 
-    _render() {
+    _render(options) {
+      options = options || {};
+      var detailsState = {};
+      this.querySelectorAll("details[data-editor-section], details[data-car-card]").forEach(function (node) {
+        var section = node.getAttribute("data-editor-section");
+        if (section) detailsState["section:" + section] = node.open;
+        else if (!options.resetCars) detailsState["car:" + node.getAttribute("data-car-card")] = node.open;
+      });
+      var root = this.getRootNode ? this.getRootNode() : this.ownerDocument;
+      var active = root && root.activeElement;
+      var focus = active && this.contains && this.contains(active) && active.dataset && active.dataset.key ? {
+        key: active.dataset.key, value: active.value,
+        start: active.selectionStart, end: active.selectionEnd
+      } : null;
       var c = this._config || {};
-      function cb(key, label, checked) {
-        return '<label><input type="checkbox" data-key="' + key + '"' +
-          (checked ? " checked" : "") + "><span>" + esc(label) + "</span></label>";
+      function cb(key, label, checked, tooltip, icon) {
+        var tip = tooltip ? ' title="' + esc(tooltip) + '" aria-label="' + esc(label + ". " + tooltip) + '"' : "";
+        var logo = icon ? '<img class="trfe-brand-logo" src="/tiny_refuel/static/logos/' + esc(icon) + '" alt="" loading="lazy">' : "";
+        return '<label' + tip + '><input type="checkbox" data-key="' + key + '"' +
+          (checked ? " checked" : "") + ">" + logo + "<span>" + esc(label) + "</span></label>";
       }
       var html = '<div class="trfe"><style>' + ECSS + "</style>";
-      html += "<h4>Informationer</h4>";
-      html += cb("vis_benzin", "Benzin (95/100-oktan)", this._bool("vis_benzin", true));
-      html += cb("vis_diesel", "Diesel", this._bool("vis_diesel", false));
-      html += cb("vis_el", "El (kr/kWh)", this._bool("vis_el", true));
-      html += cb("vis_ladeoversigt", "Ladesteder (popup pr. selskab)", this._bool("vis_ladeoversigt", true));
-      html += cb("vis_andet", "Andet (billigst, fuld tank, position)", this._bool("vis_andet", true));
-      html += "<h4>Tank- og ladeselskaber (alle forvalgt)</h4>";
+      html += '<h4>Visning <span class="trfe-tip" tabindex="0" title="Vælg hvilke energityper og oplysninger kortet skal vise." aria-label="Hjælp: Vælg hvilke energityper og oplysninger kortet skal vise.">i</span></h4>';
+      html += cb("vis_benzin", "Benzin (95/100-oktan)", this._bool("vis_benzin", true), "Vis benzinpriser fra de valgte selskaber.");
+      html += cb("vis_diesel", "Diesel", this._bool("vis_diesel", false), "Vis dieselpriser fra de valgte selskaber.");
+      html += cb("vis_el", "El (kr/kWh)", this._bool("vis_el", true), "Vis ladepriser og ladesteder.");
+      html += cb("vis_ladeoversigt", "Ladesteder pr. selskab", this._bool("vis_ladeoversigt", true), "Vis en liste over ladesteder for hvert valgt ladeselskab.");
+      html += cb("vis_andet", "Prisoversigt og beregninger", this._bool("vis_andet", true), "Vis blandt andet billigste pris og beregning af fuld tank eller opladning.");
+      var activeBrands = BRANDS.filter(function (brand) { return !(c.kaeder && c.kaeder[brand.key] === false); }).length;
+      html += '<details class="trfe-section" data-editor-section="providers"><summary><span>Stationer og udbydere</span><span class="trfe-summary-meta" data-provider-count>' +
+        activeBrands + " af " + BRANDS.length + ' valgt</span></summary><div class="trfe-section-body">' +
+        '<div class="trfe-hint">Vælg de selskaber, der skal vises på kortet. Som standard er alle valgt.</div><div class="trfe-brand-grid">';
       for (var i = 0; i < BRANDS.length; i++) {
         var b = BRANDS[i];
         var on = !(c.kaeder && c.kaeder[b.key] === false);
-        html += cb("kæde:" + b.key, b.brand, on);
+        html += cb("kæde:" + b.key, b.brand, on, "Vis eller skjul " + b.brand + " på dette kort.", b.img);
       }
-      html += "<h4>Biler (katalog, tank, telefon)</h4>";
+      html += "</div></div></details>";
+      html += "<h4>Biler <span class=\"trfe-tip\" tabindex=\"0\" title=\"Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
       this._loadKatalog();
-      var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [{ navn: "Bil 1" }];
+      var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [];
       var trackers = [];
       if (this._hass && this._hass.states) {
         for (var ek in this._hass.states) {
@@ -1672,10 +1861,20 @@
       var gB = this._bool("vis_benzin", true), gD = this._bool("vis_diesel", false),
           gE = this._bool("vis_el", true), gA = this._bool("vis_andet", true);
       var fuels = [["benzin", "Benzin"], ["diesel", "Diesel"], ["el", "El"], ["hybrid", "Hybrid (uden stik)"], ["plug_in_hybrid", "Plug-in-hybrid"]];
+      if (!biler.length) {
+        html += '<div class="trfe-empty-car"><strong>Ingen bil tilføjet endnu</strong>' +
+          'Kortet viser de energityper, du har slået til ovenfor. Uden en bil filtreres priserne ikke efter drivmiddel, og manuel hentning tager alle typer. ' +
+          'Fuld tank bruger tankstørrelses-helperen, som som standard er 50 L.</div>';
+      }
       for (var bi2 = 0; bi2 < biler.length; bi2++) {
         var bb = biler[bi2] || {};
-        html += '<div class="trfe-car"><b>' + esc(bb.navn || ("Bil " + (bi2 + 1))) + "</b>";
-        html += '<div class="trfe-hint">Mærke (fra katalog)</div><select data-key="bil:' + bi2 + ':mærke">';
+        var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Bil " + (bi2 + 1)));
+        var carHint = bb.brændstof ? ({ benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[bb.brændstof] || bb.brændstof) : "Vælg drivmiddel";
+        var carLogoHtml = vehicleMakeHtml(this._katalog, bb, "trfe-car-logo") +
+          '<span data-model-logo="' + bi2 + '">' + vehicleLogoHtml(this._katalog, bb, "trfe-model-logo", true) + '</span>';
+        html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
+          esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
+        html += '<div class="trfe-hint">Mærke <span class="trfe-tip" tabindex="0" title="Vælg et mærke fra bilkataloget, eller brug manuel indtastning." aria-label="Hjælp: Vælg et mærke fra bilkataloget, eller brug manuel indtastning.">i</span></div><select data-key="bil:' + bi2 + ':mærke">';
         html += '<option value="">Manuel indtastning…</option>';
         for (var mi = 0; mi < katBrands.length; mi++) {
           html += '<option value="' + esc(katBrands[mi].mærke) + '"' +
@@ -1728,18 +1927,16 @@
         html += '<div class="trfe-hint">Vis for denne bil</div>';
         html += cbv("benzin", "Benzin", gB) + cbv("diesel", "Diesel", gD) +
           cbv("el", "El", gE) + cbv("andet", "Andet", gA);
-        if (biler.length > 1 || (c.biler && c.biler.length)) {
-          html += '<div class="trfe-hint"><a href="#" data-bil-del="' + bi2 + '">Fjern bilen</a></div>';
-        }
-        html += "</div>";
+        html += '<div class="trfe-hint"><a href="#" data-bil-del="' + bi2 + '">Fjern bilen</a></div>';
+        html += "</div></details>";
       }
-      html += '<div class="trfe-hint"><a href="#" data-bil-add>Tilføj bil</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
+      html += '<div class="trfe-hint"><a href="#" data-bil-add>' + (biler.length ? "Tilføj endnu en bil" : "＋ Tilføj bil") + '</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
       html += "<h4>Bilkatalog (mærker/modeller)</h4>";
       html += '<div class="trfe-hint">Katalogkilde (tom = indbygget: ' +
         this._katalogBrands().length + ' mærker)</div><input type="text" data-key="katalog_url" value="' +
         esc(c.katalog_url || "") + '" placeholder="/tiny_refuel/static/bilkatalog.json">';
       html += '<div class="trfe-hint">Peg på en anden JSON i samme format {brands:[{mærke, modeller:[{model, brændstof, tank_l, batteri_kwh}]}]} for at udvide — fx din egen fil under www/. Indlæses hver gang editoren åbnes.</div>';
-      html += '<details class="trfe-yaml"><summary>Vis hele kortets YAML</summary>';
+      html += '<details class="trfe-yaml" data-editor-section="yaml"><summary>Vis hele kortets YAML</summary>';
       html += '<div class="trfe-hint">Kopiér hele konfigurationen til Udseende → Rediger i YAML.</div>';
       html += '<button type="button" data-yaml-copy>Kopiér YAML</button>';
       html += '<textarea data-card-yaml readonly spellcheck="false" rows="14" aria-label="Hele kortets YAML"></textarea></details>';
@@ -1761,13 +1958,27 @@
       html += cb("vis_scrape_knap", "Vis knappen på kortet", this._bool("vis_scrape_knap", true));
       html += cb("scrape_valgt_bil", "Begræns hentning til den valgte bil", this._bool("scrape_valgt_bil", true));
       html += '<div class="trfe-hint">Manuel hentning følger bilens drivmiddel: benzinbil henter benzin, dieselbil diesel, elbil el og plug-in-hybrid benzin samt el. Slå valget fra for at hente alle typer. Automatisk intervalhentning henter altid alle typer, så biler du tilføjer senere også får data.</div>';
-      html += "<details><summary>Avanceret</summary>";
+      html += '<details data-editor-section="advanced"><summary>Avanceret</summary>';
       html += '<div class="trfe-hint">Positions-enhed</div><input type="text" data-key="location_entity" value="' +
         esc(c.location_entity || "") + '" placeholder="device_tracker.din_telefon">';
       html += '<div class="trfe-hint">Notifikations-service til ⟳-knap</div><input type="text" data-key="notify_service" value="' +
         esc(c.notify_service || "") + '" placeholder="notify.mobile_app_din_telefon">';
       html += "</details></div>";
       this.innerHTML = html;
+      this._editorRendered = true;
+      this.querySelectorAll("details[data-editor-section], details[data-car-card]").forEach(function (node) {
+        var section = node.getAttribute("data-editor-section");
+        var key = section ? "section:" + section : "car:" + node.getAttribute("data-car-card");
+        if (Object.prototype.hasOwnProperty.call(detailsState, key)) node.open = detailsState[key];
+      });
+      if (focus) {
+        var focused = this.querySelector('[data-key="' + focus.key + '"]');
+        if (focused) {
+          focused.value = focus.value;
+          focused.focus({ preventScroll: true });
+          if (focus.start !== null && typeof focused.setSelectionRange === "function") focused.setSelectionRange(focus.start, focus.end);
+        }
+      }
       this._updateYaml();
     }
   }

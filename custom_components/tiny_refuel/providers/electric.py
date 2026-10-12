@@ -15,15 +15,11 @@ def collect(api, previous_ev, errors, progress_callback=None):
 
     report(progress_callback, "el", "Clever")
     clever, clever_status = api.fetch_public_ev_locations(
-        api.CLEVER_LOCATIONS_URL, api.normalize_clever_locations, "clever.dk", previous_ev, errors)
+        api.CLEVER_LOCATIONS_URL, api.normalize_clever_locations, "clever.dk", previous_ev, errors,
+        payload_loader=api.load_clever_locations)
     report(progress_callback, "el", "E.ON")
     eon, eon_status = api.fetch_public_ev_locations(
         api.EON_LOCATIONS_URL, api.normalize_eon_locations, "edri.com", previous_ev, errors)
-    report(progress_callback, "el", "Tesla")
-    tesla, tesla_status = api.fetch_public_ev_locations(
-        api.TESLA_LOCATIONS_URL, api.normalize_tesla_locations, "tesla.com", previous_ev, errors,
-        json_feed=False)
-    api.enrich_tesla_prices(tesla, tesla_status, previous_ev, errors, progress_callback)
     report(progress_callback, "el", "IONITY")
     ionity, ionity_status = api.fetch_public_ev_locations(
         api.IONITY_LOCATIONS_URL, api.normalize_ionity_locations, "ionity.eu", previous_ev, errors)
@@ -50,9 +46,8 @@ def collect(api, previous_ev, errors, progress_callback=None):
         "circlek_tariffs": circlek_tariffs,
         "eon_tariffs": eon_tariffs,
         "ionity_tariffs": ionity_tariffs,
-        "locations": clever + eon + tesla + ionity + ok + oil + shell + circlek,
-        "tesla": tesla,
-        "statuses": {"clever": clever_status, "eon": eon_status, "tesla": tesla_status,
+        "locations": clever + eon + ionity + ok + oil + shell + circlek,
+        "statuses": {"clever": clever_status, "eon": eon_status,
                      "ionity": ionity_status, "ok": ok_status, "oil": oil_status,
                      "shell": shell_status, "circle_k": circlek_status},
     }

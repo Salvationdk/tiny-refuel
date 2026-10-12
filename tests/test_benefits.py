@@ -21,6 +21,42 @@ class BenefitsTests(unittest.TestCase):
         excerpt = benefits.extract_excerpt(page)
         self.assertEqual(excerpt, "Members receive a discount of 20 øre per kWh when they pay using the provider app.")
 
+    def test_reads_official_ok_card_benefits_and_ignores_customer_quotes(self):
+        page = """
+        <main>
+          <h2>Dine fordele med OK Kort</h2>
+          <p>Med et OK Kort kan du betale brændstof, bilvask, parkering og opladning via appen.</p>
+          <p>Du kan få abonnement på OK Fri Vask og op til 45 dages rentefri kredit.</p>
+          <p>“For os er det et stort fokusområde, at klubben kan rumme unge,” siger formanden.</p>
+          <p>Jeg synes appen er fantastisk og fik en stor rabat, skriver en kunde.</p>
+        </main>
+        """
+        excerpt = benefits.extract_excerpt(page)
+        self.assertIsNotNone(excerpt)
+        self.assertNotIn("For os", excerpt)
+        self.assertNotIn("fantastisk", excerpt)
+        self.assertIn("OK Fri Vask", excerpt)
+
+    def test_ok_uses_official_card_wash_app_and_charging_pages(self):
+        urls = benefits.PROVIDER_PAGES["ok"][1]
+        self.assertNotIn("https://www.ok.dk/privat/produkter/ok-kort", urls)
+        self.assertIn("https://www.ok.dk/privat/produkter/appen/vask", urls)
+        self.assertIn("https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat", urls)
+
+    def test_ionity_uses_danish_official_page_and_keeps_full_summary(self):
+        self.assertEqual(
+            benefits.PROVIDER_PAGES["ionity"][1],
+            ["https://www.ionity.eu/dk/abonnementer"],
+        )
+        page = """
+        <main><p>IONITY Power månedligt abonnement betaler sig efter to opladninger om måneden
+        og giver en af de laveste priser pr. kWh via IONITY-appen.</p></main>
+        """
+        self.assertEqual(
+            benefits.extract_excerpt(page),
+            "IONITY Power månedligt abonnement betaler sig efter to opladninger om måneden og giver en af de laveste priser pr. kWh via IONITY-appen.",
+        )
+
     def test_ignores_customer_comments_even_when_they_match_benefit_keywords(self):
         page = """
         <main><p>Get 15 øre discount per kWh with the provider's own charging app.</p>
@@ -66,12 +102,22 @@ class BenefitsTests(unittest.TestCase):
         self.assertEqual(benefits.extract_excerpt(page),
                          "Get 20 øre off per kWh with the provider app.")
 
+    def test_ignores_standalone_customer_questions(self):
+        page = """
+        <main>
+        <p>Hvordan afmelder jeg mit abonnement? Jeg kan ikke finde det i appen.</p>
+        <p>Med OK Kort får du rabat på bilvask og betaling i app.</p>
+        </main>
+        """
+        self.assertEqual(benefits.extract_excerpt(page),
+                         "Med OK Kort får du rabat på bilvask og betaling i app.")
+
     def test_uses_fresh_cache_without_requesting_page(self):
         now = 2_000_000_000
         cache = {key: {"provider": provider, "summary": "Cached benefit",
                        "source_url": "https://example.test", "fetched_ts": now - 20,
                        "fetched_at": "cached", "extractor_version": benefits.EXTRACTOR_VERSION, "status": "ok"}
-                 for key, (provider, _) in benefits.PROVIDER_PAGES.items()}
+                 for key, (provider, _urls) in benefits.PROVIDER_PAGES.items()}
         saved = []
         result, failures = benefits.update(
             lambda *a, **k: self.fail("fresh cache should avoid network"),
@@ -107,9 +153,9 @@ class BenefitsTests(unittest.TestCase):
     def test_empty_page_does_not_replace_last_good_excerpt(self):
         now = 2_000_000_000
         old = {key: {"provider": provider, "summary": "Last good benefit",
-                     "source_url": url, "fetched_ts": now - benefits.REFRESH_AFTER - 1,
+                     "source_url": _urls[0], "fetched_ts": now - benefits.REFRESH_AFTER - 1,
                      "fetched_at": "old", "extractor_version": benefits.EXTRACTOR_VERSION, "status": "ok"}
-               for key, (provider, url) in benefits.PROVIDER_PAGES.items()}
+               for key, (provider, _urls) in benefits.PROVIDER_PAGES.items()}
         result, _ = benefits.update(lambda *a, **k: "<html><body>No matching page text.</body></html>",
                                     lambda path, default: old, lambda *a: None,
                                     "cache.json", now=now)

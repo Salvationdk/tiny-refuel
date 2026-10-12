@@ -83,14 +83,22 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(manager.refreshing)
 
     async def test_cache_load_and_private_api(self):
-        self.path.mkdir(parents=True);scraper.save_json(str(self.path/'priser-og-ladesteder.json'),payload())
+        self.path.mkdir(parents=True)
+        cached = payload()
+        cached['ev'].append({'brand': 'Tesla', 'location_id': 'old-tesla', 'address': 'Testvej', 'kwh': 3.5})
+        cached['ev_sources']['tesla'] = {'status': 'stale'}
+        cached['benefits'] = {'tesla': {'summary': 'Old Tesla data'}}
+        scraper.save_json(str(self.path/'priser-og-ladesteder.json'),cached)
         manager=RefuelManager(self.hass,self.path);await manager.async_load();self.assertEqual(manager.counts(),(2,1))
-        self.assertEqual(manager.snapshot()['version'], '0.2.0')
+        self.assertFalse(any(row.get('brand') == 'Tesla' for row in manager.data['ev']))
+        self.assertNotIn('tesla',manager.data['ev_sources'])
+        self.assertNotIn('tesla',manager.data['benefits'])
+        self.assertEqual(manager.snapshot()['version'], '0.2.1')
         self.hass.data['tiny_refuel']={'manager':manager}
         view=tiny_refuel.RefuelDataView(self.hass);self.assertTrue(view.requires_auth)
         response=await view.get(None);self.assertEqual(response.status,200);self.assertEqual(response.headers['Cache-Control'],'no-store')
         self.assertEqual(json.loads(response.text)['project'],'Tiny Refuel')
-        self.assertEqual(json.loads(response.text)['version'],'0.2.0')
+        self.assertEqual(json.loads(response.text)['version'],'0.2.1')
         self.hass.data['tiny_refuel'].pop('manager');self.assertEqual((await view.get(None)).status,503)
 
     async def test_setup_service_entities_and_unload(self):
@@ -121,6 +129,28 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
 
 
 class SourceTests(unittest.TestCase):
+    def test_clever_bad_json_retries_then_keeps_cached_locations_if_both_attempts_fail(self):
+        good = json.dumps({"locations": [{"locationId": "new"}]})
+        with patch.object(scraper, "get_text", side_effect=['{"broken":,}', good]) as request:
+            self.assertEqual(scraper.load_clever_locations(), {"locations": [{"locationId": "new"}]})
+        self.assertEqual(request.call_count, 2)
+        self.assertEqual(request.call_args_list[1].kwargs["headers"]["Cache-Control"], "no-cache")
+
+        old = [{"brand": "Clever", "source": "clever.dk", "location_id": "old",
+                "source_updated": "2026-10-11T10:00:00Z"}]
+        malformed = '{"broken":,}'
+        errors = []
+        with patch.object(scraper, "get_text", side_effect=[malformed, malformed]):
+            rows, status = scraper.fetch_public_ev_locations(
+                scraper.CLEVER_LOCATIONS_URL,
+                lambda payload: payload["locations"],
+                "clever.dk", old, errors, payload_loader=scraper.load_clever_locations,
+            )
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]["stale"])
+        self.assertEqual(status["status"], "stale")
+        self.assertIn("cache-free retry", errors[0]["error"])
+
     def test_ok_no_current_price_changes_is_successful_without_new_list_price(self):
         page = '<h1>Seneste prisændring</h1><p>Der er ingen aktuelle prisændringer på OK\'s benzinprodukter.</p>'
         with patch.object(scraper, 'get_text', return_value=page):
@@ -174,17 +204,6 @@ class SourceTests(unittest.TestCase):
             with patch.multiple(scraper,fetch_ck_ingo=lambda e:([],True),fetch_f24q8=lambda e:([],True),fetch_goon=lambda e:([],True),fetch_shell=lambda e:([],True),fetch_oil=lambda e:([],True),fetch_oil_fuel=lambda e:([],True),fetch_unox=lambda e:(([],[]),True),fetch_ok=lambda e:([],[],True),fetch_q8_el=lambda e:[],fetch_circlek_ev_prices=lambda e:[],fetch_eon_ev_tariffs=lambda e:[],fetch_ionity_ev_tariffs=lambda e:[],geocode_new=lambda addresses, errors, brands=None:{},fetch_ok_fuel=lambda e:([fuel],True),fetch_public_ev_locations=lambda *a,**k:([],{'status':'error','records':0}),fetch_benefits=lambda *a,**k:({},[])):
                 data=scraper.collect(path)
             self.assertTrue((path/'priser-og-ladesteder.json').exists());self.assertEqual(data['scraper_version'],'v0.1');self.assertEqual(len(data['stations'][0]['h95']),1)
-
-
-class TeslaCountTests(unittest.TestCase):
-    def test_two_tesla_tariffs_count_as_one_priced_location(self):
-        row = {'brand': 'Tesla', 'location_id': 't1', 'kwh': None, 'app_only': False,
-               'tesla_prices': {'member': [{'price': 2.6}], 'non_member': [{'price': 3.6}]}}
-        manager = SimpleNamespace(data={'ev': [row, dict(row)]})
-        self.assertEqual(RefuelManager.counts(manager), (1, 1))
-        row['tesla_prices'] = {'member': [], 'non_member': []}
-        manager.data = {'ev': [row]}
-        self.assertEqual(RefuelManager.counts(manager), (1, 0))
 
 
 if __name__=='__main__':unittest.main()

@@ -33,6 +33,12 @@ class RefuelManager:
         cached = await self.hass.async_add_executor_job(
             scraper.load_json, str(self.data_dir / "priser-og-ladesteder.json"), {})
         if isinstance(cached, dict) and cached.get("project") == "Tiny Refuel":
+            cached["ev"] = [row for row in cached.get("ev", [])
+                            if isinstance(row, dict) and row.get("brand") != "Tesla"]
+            if isinstance(cached.get("ev_sources"), dict):
+                cached["ev_sources"].pop("tesla", None)
+            if isinstance(cached.get("benefits"), dict):
+                cached["benefits"].pop("tesla", None)
             self.data = cached
 
     def subscribe(self, listener):
@@ -121,11 +127,7 @@ class RefuelManager:
             key = (row["brand"], location)
             sites.add(key)
             value = row.get("kwh")
-            tesla_rates = row.get("tesla_prices") or {}
-            has_tesla_price = any(isinstance(rate, dict) and isinstance(rate.get("price"), (int, float))
-                                  and not isinstance(rate["price"], bool) and rate["price"] > 0
-                                  for group in ("member", "non_member") for rate in tesla_rates.get(group, []))
-            if not row.get("app_only") and (has_tesla_price or
-                    (isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0)):
+            if (not row.get("app_only") and isinstance(value, (int, float))
+                    and not isinstance(value, bool) and value > 0):
                 priced.add(key)
         return len(sites), len(priced)

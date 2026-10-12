@@ -67,7 +67,6 @@ OIL_URL = "https://www.oil-tankstationer.dk/priser-erhverv/gaeldende-priser/"
 SHELL_ERHVERV_URL = "https://shellservice.dk/erhverv/braendstofpriser"
 CLEVER_LOCATIONS_URL = "https://clever.dk/api/v2/chargers/locations"
 EON_LOCATIONS_URL = "https://www.edri.com/api/stations"
-TESLA_LOCATIONS_URL = "https://www.tesla.com/findus/list/superchargers/Denmark"
 # Linked by IONITY's own network page (www.ionity.eu/network).
 IONITY_LOCATIONS_URL = "https://wf-assets.com/ionity/mapdata.json"
 OK_FUEL_API = "https://mobility-prices.ok.dk/api/v1/fuel-prices"
@@ -89,6 +88,26 @@ def get(url, headers=None, timeout=45):
 
 def get_text(url, headers=None, timeout=45):
     return get(url, headers, timeout).decode("utf-8", errors="replace")
+
+
+def load_clever_locations():
+    """Fetch Clever's large public location feed, retrying malformed JSON without cache."""
+    headers = {"User-Agent": UA, "Accept": "application/json"}
+    raw = get_text(CLEVER_LOCATIONS_URL, headers=headers, timeout=45)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # Clever's nationwide feed can be several megabytes. A truncated or
+        # stale edge response should not make the source fail without one retry.
+        retry_headers = {**headers, "Cache-Control": "no-cache", "Pragma": "no-cache"}
+        retry_raw = get_text(CLEVER_LOCATIONS_URL, headers=retry_headers, timeout=45)
+        try:
+            return json.loads(retry_raw)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"Clever returned invalid JSON on cache-free retry at character "
+                f"{exc.pos} of {len(retry_raw)}: {exc.msg}"
+            ) from exc
 
 
 def to_float(value):
@@ -223,168 +242,6 @@ def normalize_eon_locations(payload):
                          "lu": None, "source": "edri.com", "location_id": str(location["locationId"]),
                          "source_url": EON_LOCATIONS_URL})
     return rows
-
-
-class TeslaPageData(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.inside = False
-        self.parts = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag == "script" and dict(attrs).get("id") == "__NEXT_DATA__":
-            self.inside = True
-
-    def handle_endtag(self, tag):
-        if tag == "script":
-            self.inside = False
-
-    def handle_data(self, data):
-        if self.inside:
-            self.parts.append(data)
-
-
-def normalize_tesla_locations(page):
-    document = TeslaPageData()
-    document.feed(page)
-    payload = json.loads("".join(document.parts))
-    locations = payload.get("props", {}).get("pageProps", {}).get("data")
-    if not isinstance(locations, list):
-        raise ValueError("Tesla: unexpected location format")
-    rows = []
-    for location in locations:
-        if not isinstance(location, dict):
-            continue
-        data = location.get("_source") or {}
-        charger = data.get("supercharger_function") or {}
-        address = (data.get("key_data") or {}).get("address") or {}
-        # Include only confirmed public, open Superchargers, never planned sites.
-        if (address.get("country") != "DK" or charger.get("site_status") != "open"
-                or charger.get("project_status") != "Open" or charger.get("access_type") != "Public"):
-            continue
-        coords = dk_coordinates(charger.get("actual_latitude"), charger.get("actual_longitude"))
-        formatted = address.get("formatted_address")
-        if not coords or not isinstance(formatted, list) or not formatted or not location.get("uuid"):
-            continue
-        name = (data.get("marketing") or {}).get("display_name") or "Tesla Supercharger"
-        others = charger.get("open_to_non_tesla")
-        rows.append({"brand": "Tesla", "name": name, "address": " ".join(str(v) for v in formatted if v),
-                     "lat": coords[0], "lon": coords[1], "kind": "DC", "kwh": None,
-                     "app_only": True, "lu": None, "source": "tesla.com",
-                     "location_id": str(location["uuid"]), "source_url": TESLA_LOCATIONS_URL,
-                     "tesla_site_slug": str(location.get("location_url_slug") or ""),
-                     "open_to_non_tesla": others,
-                     "access_note": "Åben for andre elbiler; kontrollér stik og bil i Tesla-appen" if others is True
-                     else "Kun Tesla" if others is False else "Adgang for andre bilmærker ikke oplyst"})
-    return rows
-
-
-
-def normalize_tesla_detail(page, site_id):
-    """Read public Danish site pricebooks; never mix membership or minute fees."""
-    document = TeslaPageData()
-    document.feed(page)
-    props = json.loads("".join(document.parts)).get("props", {}).get("pageProps", {})
-    detail = (props.get("formattedData") or {}).get("chargerDetails") or {}
-    if (str(props.get("locationSlug")) != str(site_id)
-            or (detail.get("address") or {}).get("countryCode") != "DK"
-            or detail.get("openToPublic") is not True):
-        raise ValueError("Tesla: detail site/country/access mismatch")
-    prices = {"member": [], "non_member": []}
-    seen = set()
-    for book in detail.get("effectivePricebooks") or []:
-        if not isinstance(book, dict):
-            continue
-        value = to_float(book.get("rateBase"))
-        if (book.get("feeType") != "CHARGING" or book.get("currencyCode") != "DKK"
-                or str(book.get("uom", "")).lower() != "kwh" or value is None or value <= 0
-                or any(to_float(book.get(k)) not in (None, 0) for k in
-                       ("rateTier1", "rateTier2", "rateMinTier1", "rateMinTier2", "rateMinTier3", "rateMinTier4"))
-                or book.get("minSiteOccupancy") is not None or book.get("maxSiteOccupancy") is not None):
-            continue
-        if book.get("vehicleMakeType") == "TSLA" and book.get("isMemberPricebook") is True:
-            group = "member"
-        elif (book.get("vehicleMakeType") == "NTSLA" and book.get("isMemberPricebook") is False
-              and detail.get("openToNonTeslas") is True):
-            group = "non_member"
-        else:
-            continue
-        rate = {"price": value, "start": str(book.get("startTime") or ""),
-                "end": str(book.get("endTime") or ""), "days": str(book.get("days") or ""),
-                "time_of_use": book.get("isTou") is True}
-        key = (group, json.dumps(rate, sort_keys=True))
-        if key not in seen:
-            prices[group].append(rate)
-            seen.add(key)
-    # A generic single kWh value would misrepresent two tariffs or a time schedule.
-    result = {"tesla_prices": prices, "kwh": None,
-              "app_only": not any(prices.values()),
-              "open_to_non_tesla": detail.get("openToNonTeslas"),
-              "tesla_price_updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-              "tesla_price_stale": False}
-    for field, target in (("maxPowerKw", "power_kw"), ("publicStallCount", "plugs")):
-        value = to_float(detail.get(field))
-        if value is not None and value > 0:
-            result[target] = value
-    return result
-
-
-def enrich_tesla_prices(rows, status, previous, errors, progress_callback=None):
-    """Bounded public-page requests; keep locations if individual prices fail."""
-    if status.get("status") != "ok" or not rows:
-        return
-    old = {str(row.get("location_id")): row for row in previous
-           if isinstance(row, dict) and row.get("source") == "tesla.com"}
-    failures = []
-    started = time.monotonic()
-    stopped = False
-
-    def detail(row):
-        site_id = row.get("tesla_site_slug", "")
-        if not re.fullmatch(r"[A-Za-z0-9_-]+", site_id):
-            return None, "missing public site id", False
-        # Use Tesla's public, locale-neutral location route. The localized
-        # route has returned HTTP 403 for some Home Assistant installations.
-        url = "https://www.tesla.com/findus/location/supercharger/" + site_id
-        try:
-            result = normalize_tesla_detail(get_text(url, timeout=20), site_id)
-            result["source_url"] = url
-            return result, None, False
-        except Exception as exc:  # Preserve locations even when price pages fail.
-            code = getattr(exc, "code", None)
-            if code == 403:
-                return None, "HTTP 403 Forbidden: Tesla afviste prisopslaget", True
-            if code == 429:
-                return None, "HTTP 429: Tesla satte en grænse for prisopslag", True
-            return None, str(exc)[:160], code in (403, 429)
-
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        for i in range(0, len(rows), 3):
-            batch = rows[i:i + 3]
-            for offset, row in enumerate(batch):
-                _report_progress(progress_callback, "el", "Tesla", row.get("name") or row.get("address"),
-                                 i + offset + 1, len(rows))
-            results = ([(None, "price lookup paused", False)] * len(batch)
-                       if stopped or time.monotonic() - started > 180 else list(executor.map(detail, batch)))
-            for row, (result, error, blocked) in zip(batch, results):
-                if result is not None:
-                    row.update(result)
-                    row["access_note"] = ("Åben for andre elbiler; kontrollér stik og bil i Tesla-appen"
-                                          if row.get("open_to_non_tesla") is True else "Kun Tesla / adgang skal kontrolleres")
-                else:
-                    failures.append(error)
-                    cached = old.get(str(row.get("location_id")), {})
-                    if cached.get("tesla_prices"):
-                        for key in ("tesla_prices", "tesla_price_updated", "power_kw", "plugs"):
-                            if key in cached:
-                                row[key] = cached[key]
-                        row["tesla_price_stale"] = True
-                        row["app_only"] = not any(row["tesla_prices"].values())
-                stopped = stopped or blocked
-    status["prices_available"] = any(any(r.get("tesla_prices", {}).values()) for r in rows)
-    status["price_errors"] = len(failures)
-    if failures:
-        errors.append({"source": "tesla-prices", "error": "%d prisopslag mislykkedes: %s" % (len(failures), failures[0])})
 
 
 def normalize_ionity_locations(payload):
@@ -1529,10 +1386,11 @@ def _collect(progress_callback=None, fuel_types=None):
                  if selected & {"benzin", "diesel"} else
                  {"stations": [], "source_ok": {}, "unox_chargers": [], "ok_tariffs": []})
     electric_data = (electric_providers.collect(
-        api, prev.get("ev", []), errors, progress_callback)
+        api, [row for row in prev.get("ev", []) if isinstance(row, dict) and row.get("brand") != "Tesla"], errors, progress_callback)
         if "el" in selected else
         {"tariffs": [], "q8_tariffs": [], "circlek_tariffs": [], "eon_tariffs": [],
-         "ionity_tariffs": [], "locations": [], "tesla": [], "statuses": prev.get("ev_sources", {})})
+         "ionity_tariffs": [], "locations": [],
+         "statuses": {key: value for key, value in prev.get("ev_sources", {}).items() if key != "tesla"}})
     ok_ev = fuel_data["ok_tariffs"]
     if "el" in selected and not (selected & {"benzin", "diesel"}):
         ok_ev = api.fetch_ok_el(errors)
@@ -1571,7 +1429,7 @@ def _collect(progress_callback=None, fuel_types=None):
         fresh = [dict(row) for row in prev.get("stations", [])]
 
     if "el" not in selected:
-        ev_locations = list(prev.get("ev", []))
+        ev_locations = [row for row in prev.get("ev", []) if isinstance(row, dict) and row.get("brand") != "Tesla"]
         ev = []
         ok_ev = q8_ev = circlek_ev = eon_tariffs = ionity_tariffs = []
         unox_chargers = []
