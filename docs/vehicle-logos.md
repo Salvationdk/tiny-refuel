@@ -32,6 +32,8 @@ and is not repeatedly loaded on every Home Assistant state update.
   `white` to identify an asset whose original mark is white.
 - `model_logos[make][model]`: `svg`, `png`, or `url`, with `source_url`, optional
   `generation`, and `monochrome`.
+  Set `family: true` when a shared family emblem needs the full variant name
+  alongside it, such as Macan Electric and Cayenne E-Hybrid.
 
 Monochrome marks change between dark and light themes without adding a logo
 background. Colored marks keep their colors. The catalog is fetched once per

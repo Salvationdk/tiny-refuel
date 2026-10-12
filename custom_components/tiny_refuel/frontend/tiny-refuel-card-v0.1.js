@@ -1055,7 +1055,8 @@
         carHtml = '<div class="trf-cars">';
         for (var ci = 0; ci < cars.length; ci++) {
           var plainCarName = [cars[ci].mærke, cars[ci].model].filter(Boolean).join(" ");
-          var customCarName = !cars[ci].model || String(cars[ci].navn).toLowerCase() !== plainCarName.toLowerCase();
+          var modelAsset = this._katalog && this._katalog.model_logos && this._katalog.model_logos[cars[ci].mærke] && this._katalog.model_logos[cars[ci].mærke][cars[ci].model];
+          var customCarName = !cars[ci].model || (modelAsset && modelAsset.family) || String(cars[ci].navn).toLowerCase() !== plainCarName.toLowerCase();
           carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '" aria-label="' + esc(cars[ci].navn) + '">' +
             vehicleLogoHtml(this._katalog, cars[ci], "trf-car-logo", false) +
             vehicleModelHtml(this._katalog, cars[ci]) +

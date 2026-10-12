@@ -162,6 +162,12 @@ unsourcedPanel.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'up!' }] });
 assert.ok(unsourcedPanel.innerHTML.includes('data-model-fallback title='));
 assert.ok(unsourcedPanel.innerHTML.includes('>up!</span>'));
 assert.ok(unsourcedPanel.innerHTML.includes('aria-label="Volkswagen up!"'));
+for (const model of ['Macan Electric', 'Cayenne E-Hybrid']) {
+  const variantPanel = new Card();
+  variantPanel._katalog = packagedCatalog;
+  variantPanel.setConfig({ biler: [{ mærke: 'Porsche', model }] });
+  assert.ok(variantPanel.innerHTML.includes('<span>Porsche ' + model + '</span>'), 'family emblems must preserve the visible variant name');
+}
 
 const card = new Card();
 assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');
