@@ -129,6 +129,28 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
 
 
 class SourceTests(unittest.TestCase):
+    def test_clever_bad_json_retries_then_keeps_cached_locations_if_both_attempts_fail(self):
+        good = json.dumps({"locations": [{"locationId": "new"}]})
+        with patch.object(scraper, "get_text", side_effect=['{"broken":,}', good]) as request:
+            self.assertEqual(scraper.load_clever_locations(), {"locations": [{"locationId": "new"}]})
+        self.assertEqual(request.call_count, 2)
+        self.assertEqual(request.call_args_list[1].kwargs["headers"]["Cache-Control"], "no-cache")
+
+        old = [{"brand": "Clever", "source": "clever.dk", "location_id": "old",
+                "source_updated": "2026-10-11T10:00:00Z"}]
+        malformed = '{"broken":,}'
+        errors = []
+        with patch.object(scraper, "get_text", side_effect=[malformed, malformed]):
+            rows, status = scraper.fetch_public_ev_locations(
+                scraper.CLEVER_LOCATIONS_URL,
+                lambda payload: payload["locations"],
+                "clever.dk", old, errors, payload_loader=scraper.load_clever_locations,
+            )
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]["stale"])
+        self.assertEqual(status["status"], "stale")
+        self.assertIn("cache-free retry", errors[0]["error"])
+
     def test_ok_no_current_price_changes_is_successful_without_new_list_price(self):
         page = '<h1>Seneste prisændring</h1><p>Der er ingen aktuelle prisændringer på OK\'s benzinprodukter.</p>'
         with patch.object(scraper, 'get_text', return_value=page):
