@@ -1,5 +1,5 @@
 {
-  "note": "Kurateret dansk bilkatalog med populære nye og brugte personbiler. Tank- og batteristørrelser er vejledende modelværdier; kontroller altid mod bilens instruktionsbog. brændstof: benzin|diesel|el|hybrid|plug_in_hybrid. tank_l: liter (null for el). batteri_kwh: vejledende batteristørrelse.",
+  "note": "Kurateret dansk katalog med populære nye og brugte personbiler, større familiebiler, varevogne og minibusser. Tank- og batteristørrelser er vejledende modelværdier; kontroller altid mod bilens instruktionsbog. brændstof: benzin|diesel|el|hybrid|plug_in_hybrid. tank_l: liter (null for el). batteri_kwh: vejledende batteristørrelse.",
   "brands": [
     {
       "mærke": "Alfa Romeo",
@@ -302,6 +302,11 @@
           "tank_l": 50
         },
         {
+          "model": "Berlingo Van",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
           "model": "C1",
           "brændstof": "benzin",
           "tank_l": 35
@@ -338,6 +343,12 @@
           "batteri_kwh": 13
         },
         {
+          "model": "ë-Berlingo Van",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
           "model": "e-C3",
           "brændstof": "el",
           "tank_l": null,
@@ -354,6 +365,33 @@
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 50
+        },
+        {
+          "model": "ë-Jumpy",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "ë-SpaceTourer",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "Jumper",
+          "brændstof": "diesel",
+          "tank_l": 90
+        },
+        {
+          "model": "Jumpy",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
+          "model": "SpaceTourer",
+          "brændstof": "diesel",
+          "tank_l": 69
         }
       ]
     },
@@ -506,6 +544,28 @@
           "batteri_kwh": 54
         },
         {
+          "model": "Doblò",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Ducato",
+          "brændstof": "diesel",
+          "tank_l": 90
+        },
+        {
+          "model": "E-Doblò",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
+          "model": "E-Scudo",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
           "model": "Grande Panda",
           "brændstof": "el",
           "tank_l": null,
@@ -522,9 +582,19 @@
           "tank_l": 45
         },
         {
+          "model": "Scudo",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
           "model": "Tipo",
           "brændstof": "benzin",
           "tank_l": 50
+        },
+        {
+          "model": "Ulysse",
+          "brændstof": "diesel",
+          "tank_l": 69
         }
       ]
     },
@@ -541,6 +611,24 @@
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 77
+        },
+        {
+          "model": "E-Tourneo Custom",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 64
+        },
+        {
+          "model": "E-Transit",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 89
+        },
+        {
+          "model": "E-Transit Custom",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 64
         },
         {
           "model": "Explorer",
@@ -596,9 +684,44 @@
           "tank_l": 42
         },
         {
+          "model": "Ranger",
+          "brændstof": "diesel",
+          "tank_l": 80
+        },
+        {
           "model": "S-Max",
           "brændstof": "diesel",
           "tank_l": 70
+        },
+        {
+          "model": "Tourneo Connect",
+          "brændstof": "diesel",
+          "tank_l": 60
+        },
+        {
+          "model": "Tourneo Custom",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "Transit",
+          "brændstof": "diesel",
+          "tank_l": 80
+        },
+        {
+          "model": "Transit Connect",
+          "brændstof": "diesel",
+          "tank_l": 60
+        },
+        {
+          "model": "Transit Courier",
+          "brændstof": "diesel",
+          "tank_l": 44
+        },
+        {
+          "model": "Transit Custom",
+          "brændstof": "diesel",
+          "tank_l": 55
         }
       ]
     },
@@ -764,6 +887,16 @@
       ]
     },
     {
+      "mærke": "Isuzu",
+      "modeller": [
+        {
+          "model": "D-Max",
+          "brændstof": "diesel",
+          "tank_l": 76
+        }
+      ]
+    },
+    {
       "mærke": "Jaecoo",
       "modeller": [
         {
@@ -847,6 +980,11 @@
           "model": "Korando",
           "brændstof": "benzin",
           "tank_l": 47
+        },
+        {
+          "model": "Musso",
+          "brændstof": "diesel",
+          "tank_l": 75
         },
         {
           "model": "Rexton",
@@ -1114,10 +1252,40 @@
       "mærke": "Maxus",
       "modeller": [
         {
+          "model": "eDeliver 3",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 52
+        },
+        {
+          "model": "eDeliver 5",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 64
+        },
+        {
+          "model": "eDeliver 7",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "eDeliver 9",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 89
+        },
+        {
           "model": "Euniq 5",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 53
+        },
+        {
+          "model": "T90 EV",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 89
         }
       ]
     },
@@ -1202,6 +1370,11 @@
           "tank_l": 66
         },
         {
+          "model": "Citan",
+          "brændstof": "diesel",
+          "tank_l": 54
+        },
+        {
           "model": "CLA",
           "brændstof": "benzin",
           "tank_l": 51
@@ -1210,6 +1383,12 @@
           "model": "E-klasse",
           "brændstof": "diesel",
           "tank_l": 66
+        },
+        {
+          "model": "eCitan",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 45
         },
         {
           "model": "EQA",
@@ -1248,6 +1427,18 @@
           "batteri_kwh": 90
         },
         {
+          "model": "eSprinter",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 81
+        },
+        {
+          "model": "eVito",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 60
+        },
+        {
           "model": "GLA",
           "brændstof": "benzin",
           "tank_l": 43
@@ -1273,6 +1464,26 @@
           "brændstof": "plug_in_hybrid",
           "tank_l": 65,
           "batteri_kwh": 25
+        },
+        {
+          "model": "Sprinter",
+          "brændstof": "diesel",
+          "tank_l": 71
+        },
+        {
+          "model": "V-Klasse",
+          "brændstof": "diesel",
+          "tank_l": 57
+        },
+        {
+          "model": "Vito",
+          "brændstof": "diesel",
+          "tank_l": 70
+        },
+        {
+          "model": "X-Klasse",
+          "brændstof": "diesel",
+          "tank_l": 80
         }
       ]
     },
@@ -1372,6 +1583,11 @@
           "tank_l": 60
         },
         {
+          "model": "L200",
+          "brændstof": "diesel",
+          "tank_l": 75
+        },
+        {
           "model": "Lancer",
           "brændstof": "benzin",
           "tank_l": 59
@@ -1433,6 +1649,17 @@
           "batteri_kwh": 63
         },
         {
+          "model": "e-NV200",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 40
+        },
+        {
+          "model": "Interstar",
+          "brændstof": "diesel",
+          "tank_l": 80
+        },
+        {
           "model": "Juke",
           "brændstof": "benzin",
           "tank_l": 46
@@ -1454,6 +1681,11 @@
           "tank_l": 41
         },
         {
+          "model": "Primastar",
+          "brændstof": "diesel",
+          "tank_l": 80
+        },
+        {
           "model": "Pulsar",
           "brændstof": "benzin",
           "tank_l": 46
@@ -1462,6 +1694,11 @@
           "model": "Qashqai",
           "brændstof": "benzin",
           "tank_l": 55
+        },
+        {
+          "model": "Townstar",
+          "brændstof": "diesel",
+          "tank_l": 54
         },
         {
           "model": "Townstar EV",
@@ -1513,6 +1750,17 @@
           "tank_l": 52
         },
         {
+          "model": "Combo Cargo",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Combo Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
           "model": "Corsa",
           "brændstof": "benzin",
           "tank_l": 40
@@ -1559,6 +1807,27 @@
           "model": "Mokka",
           "brændstof": "benzin",
           "tank_l": 41
+        },
+        {
+          "model": "Movano",
+          "brændstof": "diesel",
+          "tank_l": 90
+        },
+        {
+          "model": "Vivaro",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
+          "model": "Vivaro Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "Zafira Life",
+          "brændstof": "diesel",
+          "tank_l": 69
         }
       ]
     },
@@ -1618,6 +1887,11 @@
           "batteri_kwh": 12
         },
         {
+          "model": "Boxer",
+          "brændstof": "diesel",
+          "tank_l": 90
+        },
+        {
           "model": "e-2008",
           "brændstof": "el",
           "tank_l": null,
@@ -1648,7 +1922,35 @@
           "batteri_kwh": 73
         },
         {
+          "model": "e-Expert",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "e-Partner",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
+          "model": "e-Traveller",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "Expert",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
           "model": "Partner",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Partner Van",
           "brændstof": "diesel",
           "tank_l": 50
         },
@@ -1656,6 +1958,11 @@
           "model": "Rifter",
           "brændstof": "diesel",
           "tank_l": 50
+        },
+        {
+          "model": "Traveller",
+          "brændstof": "diesel",
+          "tank_l": 69
         }
       ]
     },
@@ -1750,9 +2057,30 @@
           "tank_l": 55
         },
         {
+          "model": "Express",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
           "model": "Kadjar",
           "brændstof": "diesel",
           "tank_l": 55
+        },
+        {
+          "model": "Kangoo",
+          "brændstof": "diesel",
+          "tank_l": 54
+        },
+        {
+          "model": "Kangoo E-Tech",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 45
+        },
+        {
+          "model": "Master",
+          "brændstof": "diesel",
+          "tank_l": 80
         },
         {
           "model": "Mégane",
@@ -1782,6 +2110,11 @@
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 60
+        },
+        {
+          "model": "Trafic",
+          "brændstof": "diesel",
+          "tank_l": 80
         },
         {
           "model": "Twingo",
@@ -2130,6 +2463,11 @@
           "tank_l": 36
         },
         {
+          "model": "Hilux",
+          "brændstof": "diesel",
+          "tank_l": 80
+        },
+        {
           "model": "Prius",
           "brændstof": "hybrid",
           "tank_l": 43
@@ -2141,9 +2479,42 @@
           "batteri_kwh": 13
         },
         {
+          "model": "Proace",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
+          "model": "Proace City",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Proace City Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
+        },
+        {
           "model": "Proace City Verso",
           "brændstof": "diesel",
           "tank_l": 50
+        },
+        {
+          "model": "Proace Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
+        },
+        {
+          "model": "Proace Verso",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
+          "model": "Proace Verso Electric",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 75
         },
         {
           "model": "RAV4",
@@ -2166,15 +2537,41 @@
       "mærke": "Volkswagen",
       "modeller": [
         {
+          "model": "Amarok",
+          "brændstof": "diesel",
+          "tank_l": 80
+        },
+        {
           "model": "Arteon",
           "brændstof": "diesel",
           "tank_l": 66
+        },
+        {
+          "model": "Caddy",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Caddy Cargo",
+          "brændstof": "diesel",
+          "tank_l": 50
+        },
+        {
+          "model": "Crafter",
+          "brændstof": "diesel",
+          "tank_l": 75
         },
         {
           "model": "e-Golf",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 35
+        },
+        {
+          "model": "e-Transporter",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 64
         },
         {
           "model": "e-up!",
@@ -2195,6 +2592,12 @@
         },
         {
           "model": "ID. Buzz",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 77
+        },
+        {
+          "model": "ID. Buzz Cargo",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 77
@@ -2228,6 +2631,12 @@
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 77
+        },
+        {
+          "model": "Multivan",
+          "brændstof": "plug_in_hybrid",
+          "tank_l": 45,
+          "batteri_kwh": 19
         },
         {
           "model": "Passat",
@@ -2285,6 +2694,11 @@
           "model": "Touran",
           "brændstof": "diesel",
           "tank_l": 58
+        },
+        {
+          "model": "Transporter",
+          "brændstof": "diesel",
+          "tank_l": 70
         },
         {
           "model": "up!",
