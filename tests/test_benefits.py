@@ -43,6 +43,20 @@ class BenefitsTests(unittest.TestCase):
         self.assertIn("https://www.ok.dk/privat/produkter/appen/vask", urls)
         self.assertIn("https://www.ok.dk/privat/produkter/opladning/kampagner/laderabat", urls)
 
+    def test_ionity_uses_danish_official_page_and_keeps_full_summary(self):
+        self.assertEqual(
+            benefits.PROVIDER_PAGES["ionity"][1],
+            ["https://www.ionity.eu/dk/abonnementer"],
+        )
+        page = """
+        <main><p>IONITY Power månedligt abonnement betaler sig efter to opladninger om måneden
+        og giver en af de laveste priser pr. kWh via IONITY-appen.</p></main>
+        """
+        self.assertEqual(
+            benefits.extract_excerpt(page),
+            "IONITY Power månedligt abonnement betaler sig efter to opladninger om måneden og giver en af de laveste priser pr. kWh via IONITY-appen.",
+        )
+
     def test_ignores_customer_comments_even_when_they_match_benefit_keywords(self):
         page = """
         <main><p>Get 15 øre discount per kWh with the provider's own charging app.</p>
