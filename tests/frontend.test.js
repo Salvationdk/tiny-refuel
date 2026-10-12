@@ -15,6 +15,7 @@ const window = {
   navigator: { userAgent: 'Desktop' }, location: { href: '' },
 };
 const context = { window, HTMLElement: Element, customElements: window.customElements,
+  CustomEvent: class { constructor(type, options) { this.type = type; Object.assign(this, options); } },
   document: { createElement: name => new (registry.get(name) || Element)() },
   console, URLSearchParams, Date, Map, Set, Promise,
   setTimeout: fn => { timers.set(++timerId, fn); return timerId; },
@@ -48,6 +49,103 @@ assert.ok(editor.innerHTML.includes('data:image/png;base64,iVBORw0KGgoAAA=='));
 editor.setConfig({ biler: [{ navn: 'Anden bil', mærke: 'Mitsubishi' }] });
 assert.ok(!editor.innerHTML.includes('alt="Mitsubishi logo"'), 'brands without a packaged logo keep the text label');
 assert.ok(editor.innerHTML.includes('title="Vis benzinpriser fra de valgte selskaber."'));
+// Exercise every packaged logo through the editor, including real PNG files.
+const packagedCatalog = JSON.parse(fs.readFileSync('custom_components/tiny_refuel/frontend/bilkatalog.json', 'utf8'));
+editor._katalog = packagedCatalog;
+for (const brand of packagedCatalog.brands) {
+  editor.setConfig({ biler: [{ mærke: brand.mærke }] });
+  const png = packagedCatalog.logo_pngs[brand.mærke];
+  const svg = packagedCatalog.logos[brand.mærke];
+  const source = packagedCatalog.logo_urls && packagedCatalog.logo_urls[brand.mærke];
+  if (png) {
+    assert.equal(Buffer.from(png, 'base64').subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+    assert.ok(editor.innerHTML.includes('data:image/png;base64,' + png));
+    assert.ok(!/\s/.test(png), 'packaged PNG data must contain no whitespace');
+  } else if (svg) {
+    assert.ok(editor.innerHTML.includes('data:image/svg+xml,' + encodeURIComponent(svg)));
+  } else if (source) {
+    assert.ok(editor.innerHTML.includes('src="' + source.url + '"'));
+  } else {
+    assert.ok(!editor.innerHTML.includes('class="trfe-car-logo"'));
+  }
+}
+// A custom catalog must not be able to inject attributes through PNG data.
+editor._katalog = { brands: [], logo_pngs: { Test: 'iVBORw0KGgo" onerror="injected' } };
+editor.setConfig({ biler: [{ mærke: 'Test' }] });
+assert.ok(!editor.innerHTML.includes('onerror='));
+assert.ok(!editor.innerHTML.includes('class="trfe-car-logo"'));
+
+// Committing a text field while clicking Save must not rebuild the editor,
+// including when HA echoes the config with a different object-key order.
+const StableEditor = registry.get('tiny-refuel-card-editor');
+const stable = new StableEditor();
+stable._katalog = packagedCatalog;
+stable.setConfig({ type: 'custom:tiny-refuel-card', biler: [{ mærke: 'Volkswagen', navn: 'Bil 1' }] });
+const stableRender = stable._render.bind(stable);
+let editorRenders = 0;
+stable._render = (...args) => { editorRenders++; stableRender(...args); };
+stable.dispatchEvent = event => {
+  assert.equal(event.type, 'config-changed');
+  assert.equal(event.bubbles, true);
+  assert.equal(event.composed, true);
+  const echoed = JSON.parse(JSON.stringify(event.detail.config));
+  stable.setConfig(Object.fromEntries(Object.entries(echoed).reverse()));
+};
+const change = (key, value) => stable.events.change({ target: { dataset: { key }, value } });
+change('bil:0:navn', 'Min bil');
+change('bil:0:model', 'up!');
+change('bil:0:location_entity', 'device_tracker.telefon');
+change('bil:0:tank_liters', '36');
+assert.equal(editorRenders, 0, 'blur and config echoes must preserve the live form');
+assert.equal(stable._config.biler[0].navn, 'Min bil');
+assert.equal(stable._config.biler[0].model, 'up!');
+assert.equal(stable._config.biler[0].brændstof, 'benzin');
+assert.equal(stable._config.biler[0].tank_liters, 36);
+assert.equal(stable._config.biler[0].location_entity, 'device_tracker.telefon');
+stable.style = { values: {}, setProperty(key, value) { this.values[key] = value; } };
+stable.hass = { states: { 'device_tracker.telefon': {} }, themes: { darkMode: false } };
+const trackerRenderCount = editorRenders;
+stable.hass = { states: { 'device_tracker.telefon': { state: 'away' } }, themes: { darkMode: true } };
+assert.equal(editorRenders, trackerRenderCount, 'GPS and theme updates must not rebuild editor fields');
+assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'invert(1)');
+assert.equal(stable.style.values['--trf-vehicle-logo-blend'], 'screen');
+assert.equal(stable.style.values['--trf-white-logo-filter'], 'none');
+stable.hass = { states: { 'device_tracker.telefon': {} }, themes: { darkMode: false } };
+assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'none');
+
+// A late catalog render preserves open sections and an uncommitted text draft.
+const focusedEditor = new StableEditor();
+focusedEditor.setConfig({ biler: [{ navn: 'Bil 1' }] });
+const oldFocus = { dataset: { key: 'bil:0:navn' }, value: 'I gang med navn', selectionStart: 5, selectionEnd: 8 };
+const newFocus = { value: '', focus(options) { this.focusOptions = options; }, setSelectionRange(start, end) { this.selection = [start, end]; } };
+const section = open => ({ open, getAttribute(name) { return name === 'data-editor-section' ? 'providers' : null; } });
+const oldSection = section(true), newSection = section(false);
+let replaced = false;
+Object.defineProperty(focusedEditor, 'innerHTML', { configurable: true, set() { replaced = true; } });
+focusedEditor.getRootNode = () => ({ activeElement: oldFocus });
+focusedEditor.contains = node => node === oldFocus;
+focusedEditor.querySelectorAll = () => [replaced ? newSection : oldSection];
+focusedEditor.querySelector = selector => selector === '[data-key="bil:0:navn"]' ? newFocus : null;
+focusedEditor._render();
+assert.equal(newSection.open, true);
+assert.equal(newFocus.value, oldFocus.value);
+assert.deepEqual(newFocus.selection, [5, 8]);
+assert.equal(newFocus.focusOptions.preventScroll, true);
+
+const logoPanel = new Card();
+logoPanel._katalog = packagedCatalog;
+logoPanel.setConfig({ biler: [{ mærke: 'Citroën', model: 'C3', navn: 'Min C3', brændstof: 'benzin' }] });
+assert.ok(logoPanel.innerHTML.includes('class="trf-car-logo"'));
+assert.ok(logoPanel.innerHTML.includes('class="trf-model-logo"'));
+assert.ok(logoPanel.innerHTML.includes('Min C3'));
+const modelUrl = packagedCatalog.model_logos['Citroën'].C3.url;
+const failedImage = { dataset: { vehicleLogo: 'true' }, getAttribute: () => modelUrl };
+logoPanel.events.error({ target: failedImage });
+assert.equal(failedImage.hidden, true);
+logoPanel._render();
+assert.ok(!logoPanel.innerHTML.includes('class="trf-model-logo"'));
+assert.ok(logoPanel.innerHTML.includes('Min C3'), 'failed model images retain the usable vehicle label');
+
 const card = new Card();
 assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');
 assert.equal(card._progressText({ phase: 'el', provider: 'Circle K', station: 'Hovedgaden', current: 2, total: 7 }),
@@ -229,3 +327,42 @@ assert.ok(!frontendSource.includes('grid-template-columns: minmax(0, 1fr) minmax
 }
 
 assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card UI');
+
+// The preview card and editor share one catalog fetch. A response for an old
+// custom catalog must not replace the newly selected catalog.
+(async () => {
+  const localRegistry = new Map();
+  const localWindow = { ...window, customElements: {
+    define: (name, type) => localRegistry.set(name, type), get: name => localRegistry.get(name),
+  } };
+  const pending = {};
+  const requests = [];
+  const localContext = { ...context, window: localWindow, customElements: localWindow.customElements,
+    fetch: url => {
+      requests.push(url);
+      if (url === '/tiny_refuel/static/bilkatalog.json') return Promise.resolve({ ok: true, json: () => Promise.resolve(packagedCatalog) });
+      return new Promise(resolve => { pending[url] = resolve; });
+    },
+  };
+  vm.runInNewContext(frontendSource, localContext);
+  const Preview = localRegistry.get('tiny-refuel-card');
+  const Editor = localRegistry.get('tiny-refuel-card-editor');
+  const first = new Preview(), second = new Preview(), form = new Editor();
+  first.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'up!' }] });
+  second.setConfig({ biler: [{ mærke: 'Citroën', model: 'C3' }] });
+  form.setConfig({ biler: [] });
+  await new Promise(setImmediate);
+  assert.equal(requests.length, 1);
+  assert.equal(first._katalog, packagedCatalog);
+  assert.equal(second._katalog, packagedCatalog);
+  assert.equal(form._katalog, packagedCatalog);
+  form.setConfig({ katalog_url: '/local/old.json' });
+  form.setConfig({ katalog_url: '/local/new.json' });
+  const newer = { brands: [{ mærke: 'Nyt mærke', modeller: [] }] };
+  pending['/local/new.json']({ ok: true, json: () => Promise.resolve(newer) });
+  await new Promise(setImmediate);
+  pending['/local/old.json']({ ok: true, json: () => Promise.resolve({ brands: [] }) });
+  await new Promise(setImmediate);
+  assert.equal(form._katalog, newer);
+  console.log('PASS: stable editor, shared vehicle catalogs, logo fallbacks and theme switching');
+})().catch(error => { console.error(error); process.exitCode = 1; });
