@@ -1729,7 +1729,9 @@
         var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Bil " + (bi2 + 1)));
         var carHint = bb.brændstof ? ({ benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[bb.brændstof] || bb.brændstof) : "Vælg drivmiddel";
         var carLogo = bb.mærke && this._katalog && this._katalog.logos && this._katalog.logos[bb.mærke];
-        var carLogoHtml = carLogo ? '<img class="trfe-car-logo" src="data:image/svg+xml,' + encodeURIComponent(carLogo) + '" alt="' + esc(bb.mærke + " logo") + '">' : "";
+        var carLogoPng = bb.mærke && this._katalog && this._katalog.logo_pngs && this._katalog.logo_pngs[bb.mærke];
+        var carLogoSrc = carLogoPng ? "data:image/png;base64," + carLogoPng : (carLogo ? "data:image/svg+xml," + encodeURIComponent(carLogo) : "");
+        var carLogoHtml = carLogoSrc ? '<img class="trfe-car-logo" src="' + carLogoSrc + '" alt="' + esc(bb.mærke + " logo") + '">' : "";
         html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
           esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
         html += '<div class="trfe-hint">Mærke <span class="trfe-tip" tabindex="0" title="Vælg et mærke fra bilkataloget, eller brug manuel indtastning." aria-label="Hjælp: Vælg et mærke fra bilkataloget, eller brug manuel indtastning.">i</span></div><select data-key="bil:' + bi2 + ':mærke">';
