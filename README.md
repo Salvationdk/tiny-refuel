@@ -59,7 +59,43 @@ Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manu
 
 ## Skærmbilleder
 
-Skærmbillederne opdateres til v0.2.1, når kandidaten er installeret og afprøvet. De tidligere v0.1-billeder er midlertidigt taget ud, så README ikke viser dem som den aktuelle version.
+Skærmbilleder fra v0.2.1. Priser og datastatus er eksempler fra testtidspunktet. Position er ikke valgt i disse eksempler; afstande kræver en positionsenhed.
+
+### Benzin, diesel og plug-in-hybrid
+
+Den valgte bil bestemmer de viste energityper. En plug-in-hybrid viser både benzin og opladning. Bilknapperne viser mærkelogo og model, når et logo findes, med tekst som fallback.
+
+| Diesel og officielle kundefordele | Plug-in-hybrid: benzinoversigt |
+|---|---|
+| ![Dieselpriser og Circle K's officielle oplysninger om rabat og bilvask](docs/screenshots/diesel-benefits.png) | ![Plug-in-hybrid med benzinpriser og bilknapper](docs/screenshots/plugin-hybrid.png) |
+
+### Opladning og ladesteder
+
+Lokale priser, generelle selskabstakster og startpriser markeres forskelligt. **Se pris** betyder, at en verificeret stationspris ikke er tilgængelig i udtrækket. Dialogen **Ladesteder** viser selskabets ladevalg og giver mulighed for at vise flere.
+
+| Ladeoversigt | Ladesteder pr. selskab |
+|---|---|
+| ![Opladning med priser, selskabstakster og Se pris](docs/screenshots/charging.png) | ![Q8's ladesteder med mulighed for at vise flere](docs/screenshots/charging-locations.png) |
+
+### Information og datagrundlag
+
+Den sammenklappelige informationsbjælke samler kildeoversigt, manglende koordinater, beregninger og forklaring af priser og energityper. Footer viser integrationens version.
+
+![Udvidet Information og datagrundlag med footer v0.2.1](docs/screenshots/information.png)
+
+### Visuel editor
+
+Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af visningen uden en oprettet bil.
+
+![Visuel editor med tooltip og kortets forhåndsvisning](docs/screenshots/editor-overview.png)
+
+| Udbydere med logoer | Sammenklappelige biler |
+|---|---|
+| ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Bilsektion med fire sammenklappede biler og mærkelogoer](docs/screenshots/editor-vehicles.png) |
+
+En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 54 mærker og 470 modeller, inklusive benzin, diesel, el, hybrider og varevogne. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst.
+
+![Udvidet bilopsætning for en dieselbil](docs/screenshots/editor-vehicle-details.png)
 
 ## Funktioner
 
