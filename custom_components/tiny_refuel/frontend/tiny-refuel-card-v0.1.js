@@ -141,8 +141,9 @@
   .trfe .trfe-section-body { padding: 0 12px 12px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
   .trfe .trfe-summary-meta { color: var(--secondary-text-color); font-size: 11px; font-weight: 400; margin-left: auto; }
   .trfe .trfe-brand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 6px; margin-top: 8px; }
-  .trfe .trfe-brand-grid label { box-sizing: border-box; min-width: 0; margin: 0; padding: 7px 9px; border: 1px solid var(--divider-color, rgba(127,127,127,.14)); border-radius: 9px; background: rgba(127,127,127,.035); font-size: 12px; }
+  .trfe .trfe-brand-grid label { display: grid; grid-template-columns: 16px 42px minmax(0,1fr); box-sizing: border-box; min-width: 0; margin: 0; padding: 7px 9px; border: 1px solid var(--divider-color, rgba(127,127,127,.14)); border-radius: 9px; background: rgba(127,127,127,.035); font-size: 12px; }
   .trfe .trfe-brand-grid label:hover { background: rgba(127,127,127,.09); }
+  .trfe .trfe-brand-logo { display: block; width: 42px; height: 24px; object-fit: contain; }
   .trfe .trfe-car { border: 1px solid var(--divider-color, rgba(127,127,127,.18)); border-radius: 10px; margin: 8px 0; overflow: hidden; }
   .trfe .trfe-car > summary { display: flex; align-items: center; gap: 8px; padding: 10px 11px; cursor: pointer; list-style: none; }
   .trfe .trfe-car > summary span:first-child { font-weight: 600; font-size: 13px; }
@@ -1674,10 +1675,11 @@
 
     _render() {
       var c = this._config || {};
-      function cb(key, label, checked, tooltip) {
+      function cb(key, label, checked, tooltip, icon) {
         var tip = tooltip ? ' title="' + esc(tooltip) + '" aria-label="' + esc(label + ". " + tooltip) + '"' : "";
+        var logo = icon ? '<img class="trfe-brand-logo" src="/tiny_refuel/static/logos/' + esc(icon) + '" alt="" loading="lazy">' : "";
         return '<label' + tip + '><input type="checkbox" data-key="' + key + '"' +
-          (checked ? " checked" : "") + "><span>" + esc(label) + "</span></label>";
+          (checked ? " checked" : "") + logo + "<span>" + esc(label) + "</span></label>";
       }
       var html = '<div class="trfe"><style>' + ECSS + "</style>";
       html += '<h4>Visning <span class="trfe-tip" tabindex="0" title="Vælg hvilke energityper og oplysninger kortet skal vise." aria-label="Hjælp: Vælg hvilke energityper og oplysninger kortet skal vise.">i</span></h4>';
@@ -1693,7 +1695,7 @@
       for (var i = 0; i < BRANDS.length; i++) {
         var b = BRANDS[i];
         var on = !(c.kaeder && c.kaeder[b.key] === false);
-        html += cb("kæde:" + b.key, b.brand, on, "Vis eller skjul " + b.brand + " på dette kort.");
+        html += cb("kæde:" + b.key, b.brand, on, "Vis eller skjul " + b.brand + " på dette kort.", b.img);
       }
       html += "</div></div></details>";
       html += "<h4>Biler <span class=\"trfe-tip\" tabindex=\"0\" title=\"Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
