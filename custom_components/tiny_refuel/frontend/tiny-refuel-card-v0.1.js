@@ -140,6 +140,8 @@
   .trfe .trfe-section > summary:focus-visible, .trfe .trfe-car > summary:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: -2px; }
   .trfe .trfe-section-body { padding: 0 12px 12px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
   .trfe .trfe-summary-meta { color: var(--secondary-text-color); font-size: 11px; font-weight: 400; margin-left: auto; }
+  .trfe .trfe-car-logo { width: 28px; height: 28px; flex: 0 0 28px; padding: 3px; box-sizing: border-box; object-fit: contain; border-radius: 7px; background: var(--primary-background-color, #fff); }
+  .trfe .trfe-car-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .trfe .trfe-brand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 6px; margin-top: 8px; }
   .trfe .trfe-brand-grid label { display: grid; grid-template-columns: 16px 42px minmax(0,1fr); box-sizing: border-box; min-width: 0; margin: 0; padding: 7px 9px; border: 1px solid var(--divider-color, rgba(127,127,127,.14)); border-radius: 9px; background: rgba(127,127,127,.035); font-size: 12px; }
   .trfe .trfe-brand-grid label:hover { background: rgba(127,127,127,.09); }
@@ -1726,7 +1728,9 @@
         var bb = biler[bi2] || {};
         var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Bil " + (bi2 + 1)));
         var carHint = bb.brændstof ? ({ benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[bb.brændstof] || bb.brændstof) : "Vælg drivmiddel";
-        html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '"><span>' +
+        var carLogo = bb.mærke && this._katalog && this._katalog.logos && this._katalog.logos[bb.mærke];
+        var carLogoHtml = carLogo ? '<img class="trfe-car-logo" src="data:image/svg+xml,' + encodeURIComponent(carLogo) + '" alt="' + esc(bb.mærke + " logo") + '">' : "";
+        html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
           esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
         html += '<div class="trfe-hint">Mærke <span class="trfe-tip" tabindex="0" title="Vælg et mærke fra bilkataloget, eller brug manuel indtastning." aria-label="Hjælp: Vælg et mærke fra bilkataloget, eller brug manuel indtastning.">i</span></div><select data-key="bil:' + bi2 + ':mærke">';
         html += '<option value="">Manuel indtastning…</option>';
