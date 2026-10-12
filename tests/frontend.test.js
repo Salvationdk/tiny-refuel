@@ -155,6 +155,13 @@ assert.equal(failedImage.hidden, true);
 logoPanel._render();
 assert.ok(!logoPanel.innerHTML.includes('class="trf-model-logo"'));
 assert.ok(logoPanel.innerHTML.includes('Min C3'), 'failed model images retain the usable vehicle label');
+assert.ok(logoPanel.innerHTML.includes('data-model-fallback title='), 'failed model images reveal a model-name fallback');
+const unsourcedPanel = new Card();
+unsourcedPanel._katalog = packagedCatalog;
+unsourcedPanel.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'up!' }] });
+assert.ok(unsourcedPanel.innerHTML.includes('data-model-fallback title='));
+assert.ok(unsourcedPanel.innerHTML.includes('>up!</span>'));
+assert.ok(unsourcedPanel.innerHTML.includes('aria-label="Volkswagen up!"'));
 
 const card = new Card();
 assert.equal(card._progressText({ phase: 'benzin/diesel', provider: 'Shell' }), 'Henter benzin/diesel fra Shell…');

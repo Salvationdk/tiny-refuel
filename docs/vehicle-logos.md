@@ -13,7 +13,9 @@ The vehicle name stays visible if a logo is missing or an image fails to load.
 
 Model wordmark collection is **not complete**. The C3 wordmark identifies the
 third generation (2016), and the C5 Aircross wordmark identifies the first
-generation. Other models retain their text names. Do not describe this as
+generation. Other models use a text model-name mark on the vehicle button;
+custom vehicle names stay visible and the full name stays accessible. A failed
+model image reveals the text mark immediately. Do not describe this as
 complete coverage of official model emblems or every model generation.
 
 Bundled make-logo sources and trademark attribution are recorded in the

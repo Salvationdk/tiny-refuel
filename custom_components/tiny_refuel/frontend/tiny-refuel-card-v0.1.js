@@ -14,6 +14,8 @@
   .trf-car { display: inline-flex; align-items: center; gap: 6px; }
   .trf-car-logo { width: 22px; height: 22px; object-fit: contain; }
   .trf-model-logo { width: 38px; height: 18px; object-fit: contain; }
+  .trf-model-mark { display: inline-flex; align-items: center; }
+  .trf-model-logo-text { font-size: 11px; font-weight: 700; color: var(--primary-text-color); }
   .trf-car-logo, .trf-model-logo { filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); background: transparent; }
   .trf-logo-color { filter: none; mix-blend-mode: normal; }
   .trf-logo-white { filter: var(--trf-white-logo-filter, invert(1)); }
@@ -222,6 +224,8 @@
       if (!image || !image.dataset || !image.dataset.vehicleLogo) return;
       FAILED_VEHICLE_LOGOS[image.getAttribute("src")] = true;
       image.hidden = true;
+      var fallback = image.nextElementSibling;
+      if (fallback && fallback.hasAttribute("data-model-fallback")) fallback.hidden = false;
     }, true);
   }
 
@@ -248,6 +252,14 @@
     if (!src && typeof url === "string" && (/^https:\/\//.test(url) || /^\/(?!\/)/.test(url))) src = url;
     if (!src || FAILED_VEHICLE_LOGOS[src]) return "";
     return '<img class="' + className + (color ? " trf-logo-color" : "") + (white ? " trf-logo-white" : "") + '" src="' + esc(src) + '" data-vehicle-logo="true" alt="' + esc(label) + '" title="' + esc(label) + '" referrerpolicy="no-referrer">';
+  }
+
+  function vehicleModelHtml(catalog, car) {
+    if (!car || !car.model) return "";
+    var image = vehicleLogoHtml(catalog, car, "trf-model-logo", true);
+    return '<span class="trf-model-mark">' + image + '<span class="trf-model-logo-text" data-model-fallback' +
+      (image ? " hidden" : "") + ' title="Modelnavn som tekst; officielt navnelogo vises, når en passende fil er tilføjet">' +
+      esc(car.model) + '</span></span>';
   }
 
   var LOGO_SIZE = 22;
@@ -1042,10 +1054,12 @@
         var sel = this._carIdx();
         carHtml = '<div class="trf-cars">';
         for (var ci = 0; ci < cars.length; ci++) {
-          carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '">' +
+          var plainCarName = [cars[ci].mærke, cars[ci].model].filter(Boolean).join(" ");
+          var customCarName = !cars[ci].model || String(cars[ci].navn).toLowerCase() !== plainCarName.toLowerCase();
+          carHtml += '<button class="trf-car' + (ci === sel ? " trf-on" : "") + '" data-car="' + ci + '" aria-label="' + esc(cars[ci].navn) + '">' +
             vehicleLogoHtml(this._katalog, cars[ci], "trf-car-logo", false) +
-            vehicleLogoHtml(this._katalog, cars[ci], "trf-model-logo", true) +
-            '<span>' + esc(cars[ci].navn) + "</span></button>";
+            vehicleModelHtml(this._katalog, cars[ci]) +
+            (customCarName ? '<span>' + esc(cars[ci].navn) + "</span>" : "") + "</button>";
         }
         carHtml += "</div>";
       }
