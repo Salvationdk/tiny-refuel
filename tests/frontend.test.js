@@ -138,6 +138,16 @@ logoPanel.setConfig({ biler: [{ mærke: 'Citroën', model: 'C3', navn: 'Min C3',
 assert.ok(logoPanel.innerHTML.includes('class="trf-car-logo"'));
 assert.ok(logoPanel.innerHTML.includes('class="trf-model-logo"'));
 assert.ok(logoPanel.innerHTML.includes('Min C3'));
+for (const [make, models] of Object.entries(packagedCatalog.model_logos)) {
+  for (const [model, entry] of Object.entries(models)) {
+    const panel = new Card();
+    panel._katalog = packagedCatalog;
+    panel.setConfig({ biler: [{ mærke: make, model }] });
+    const src = entry.svg ? 'data:image/svg+xml,' + encodeURIComponent(entry.svg) : entry.url;
+    assert.ok(panel.innerHTML.includes('src="' + src + '"'), 'model logo must appear in controls: ' + make + ' ' + model);
+    assert.ok(entry.source_url, 'every model logo must record its source');
+  }
+}
 const modelUrl = packagedCatalog.model_logos['Citroën'].C3.url;
 const failedImage = { dataset: { vehicleLogo: 'true' }, getAttribute: () => modelUrl };
 logoPanel.events.error({ target: failedImage });

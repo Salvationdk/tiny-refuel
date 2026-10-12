@@ -9,7 +9,7 @@ The vehicle name stays visible if a logo is missing or an image fails to load.
 | Asset | Coverage | Delivery |
 | --- | --- | --- |
 | Make logos | 54 of 54 catalog makes | 53 bundled; NAVOR loads from its official website |
-| Model wordmarks | 2 of 470 catalog models | Citroën C3 and C5 Aircross load from the documented source URLs |
+| Model wordmarks | 7 of 470 catalog models | 5 Porsche model entries use bundled official SVG signatures; Citroën C3 and C5 Aircross load from the documented source URLs |
 
 Model wordmark collection is **not complete**. The C3 wordmark identifies the
 third generation (2016), and the C5 Aircross wordmark identifies the first
