@@ -37,11 +37,14 @@ assert.ok(editor.innerHTML.includes('src="/tiny_refuel/static/logos/logo-ionity.
 assert.ok(editor.innerHTML.includes('Stationer og udbydere'));
 assert.ok(editor.innerHTML.includes('Ingen bil tilføjet endnu'));
 assert.ok(editor.innerHTML.includes('manuel hentning tager alle typer'));
-editor._katalog = { brands: [], logos: { Volkswagen: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>' } };
+editor._katalog = { brands: [], logos: { Volkswagen: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>' }, logo_pngs: { Hongqi: 'iVBORw0KGgoAAA==' } };
 editor.setConfig({ biler: [{ navn: 'Testbil', mærke: 'Volkswagen', model: 'up!' }] });
 assert.ok(editor.innerHTML.includes('data-car-toggle="0"'));
 assert.ok(editor.innerHTML.includes('alt="Volkswagen logo"'));
 assert.ok(editor.innerHTML.includes('data:image/svg+xml,%3Csvg'));
+editor.setConfig({ biler: [{ navn: 'Hongqi-bil', mærke: 'Hongqi' }] });
+assert.ok(editor.innerHTML.includes('alt="Hongqi logo"'));
+assert.ok(editor.innerHTML.includes('data:image/png;base64,iVBORw0KGgoAAA=='));
 editor.setConfig({ biler: [{ navn: 'Anden bil', mærke: 'Mitsubishi' }] });
 assert.ok(!editor.innerHTML.includes('alt="Mitsubishi logo"'), 'brands without a packaged logo keep the text label');
 assert.ok(editor.innerHTML.includes('title="Vis benzinpriser fra de valgte selskaber."'));
