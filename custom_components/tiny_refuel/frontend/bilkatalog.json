@@ -249,9 +249,9 @@
         },
         {
           "model": "Seal U",
-          "brændstof": "plug_in_hybrid",
-          "tank_l": 60,
-          "batteri_kwh": 18
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 71
         },
         {
           "model": "Seal U DM-i",
