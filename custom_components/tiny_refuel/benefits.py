@@ -6,8 +6,8 @@ import re
 import time
 
 REFRESH_AFTER = 7 * 24 * 60 * 60
-MAX_EXCERPT_WORDS = 20
-EXTRACTOR_VERSION = 5
+MAX_EXCERPT_WORDS = 36
+EXTRACTOR_VERSION = 6
 
 # One canonical public page per provider. Records are keyed to the card's brand
 # keys so both the fuel and charging views can show the right source.
@@ -45,7 +45,7 @@ PROVIDER_PAGES = {
     "oil": ("OIL", ["https://www.oil-tankstationer.dk/betalingsformer/oil-loyalitetsaftale/"]),
     "clever": ("Clever", ["https://clever.dk/ladeloesninger/opladning-med-abonnement/"]),
     "eon": ("E.ON", ["https://www.eon.dk/privat/kundesupport/kontakt-opladning.html"]),
-    "ionity": ("IONITY", ["https://www.ionity.eu/subscriptions"]),
+    "ionity": ("IONITY", ["https://www.ionity.eu/dk/abonnementer"]),
 }
 
 _INTERESTING = re.compile(
