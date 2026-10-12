@@ -32,6 +32,8 @@ assert.ok(editor.innerHTML.includes('data-key="vis_scrape_knap"'));
 assert.ok(editor.innerHTML.includes('Vis knappen på kortet'));
 assert.ok(editor.innerHTML.includes('data-key="scrape_valgt_bil"'));
 assert.ok(editor.innerHTML.includes('class="trfe-brand-grid"'));
+assert.ok(editor.innerHTML.includes('src="/tiny_refuel/static/logos/logo-circle-k.svg"'));
+assert.ok(editor.innerHTML.includes('src="/tiny_refuel/static/logos/logo-ionity.svg"'));
 assert.ok(editor.innerHTML.includes('Stationer og udbydere'));
 assert.ok(editor.innerHTML.includes('data-car-toggle='));
 assert.ok(editor.innerHTML.includes('Ingen bil tilføjet endnu'));
