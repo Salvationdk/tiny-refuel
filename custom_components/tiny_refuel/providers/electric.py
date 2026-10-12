@@ -15,7 +15,8 @@ def collect(api, previous_ev, errors, progress_callback=None):
 
     report(progress_callback, "el", "Clever")
     clever, clever_status = api.fetch_public_ev_locations(
-        api.CLEVER_LOCATIONS_URL, api.normalize_clever_locations, "clever.dk", previous_ev, errors)
+        api.CLEVER_LOCATIONS_URL, api.normalize_clever_locations, "clever.dk", previous_ev, errors,
+        payload_loader=api.load_clever_locations)
     report(progress_callback, "el", "E.ON")
     eon, eon_status = api.fetch_public_ev_locations(
         api.EON_LOCATIONS_URL, api.normalize_eon_locations, "edri.com", previous_ev, errors)
