@@ -1462,7 +1462,8 @@
         }
         var carSummary = ev.target && ev.target.closest ? ev.target.closest("[data-car-toggle]") : null;
         if (carSummary) {
-          self._openCar = parseInt(carSummary.getAttribute("data-car-toggle"), 10);
+          var carCard = carSummary.parentElement;
+          self._openCar = carCard && carCard.open ? null : parseInt(carSummary.getAttribute("data-car-toggle"), 10);
           return;
         }
         var t = ev.target && ev.target.closest ? ev.target.closest("[data-bil-add],[data-bil-del]") : null;
@@ -1554,6 +1555,7 @@
             var bs = String(t.value || "").trim();
             if (bs) biler[bi][field] = bs;
             else delete biler[bi][field];
+            if (field === "navn") needRender = true;
           }
           cfg.biler = biler;
           self._config = cfg;
@@ -1576,6 +1578,9 @@
           var bk = key.slice(5);
           cfg.kaeder = Object.assign({}, cfg.kaeder);
           cfg.kaeder[bk] = !!t.checked;
+          var count = BRANDS.filter(function (brand) { return !(cfg.kaeder && cfg.kaeder[brand.key] === false); }).length;
+          var countNode = self.querySelector("[data-provider-count]");
+          if (countNode) countNode.textContent = count + " af " + BRANDS.length + " valgt";
         } else {
           cfg[key] = !!t.checked;
         }
@@ -1682,7 +1687,7 @@
       html += cb("vis_ladeoversigt", "Ladesteder pr. selskab", this._bool("vis_ladeoversigt", true), "Vis en liste over ladesteder for hvert valgt ladeselskab.");
       html += cb("vis_andet", "Prisoversigt og beregninger", this._bool("vis_andet", true), "Vis blandt andet billigste pris og beregning af fuld tank eller opladning.");
       var activeBrands = BRANDS.filter(function (brand) { return !(c.kaeder && c.kaeder[brand.key] === false); }).length;
-      html += '<details class="trfe-section"><summary><span>Stationer og udbydere</span><span class="trfe-summary-meta">' +
+      html += '<details class="trfe-section"><summary><span>Stationer og udbydere</span><span class="trfe-summary-meta" data-provider-count>' +
         activeBrands + " af " + BRANDS.length + ' valgt</span></summary><div class="trfe-section-body">' +
         '<div class="trfe-hint">Vælg de selskaber, der skal vises på kortet. Som standard er alle valgt.</div><div class="trfe-brand-grid">';
       for (var i = 0; i < BRANDS.length; i++) {
