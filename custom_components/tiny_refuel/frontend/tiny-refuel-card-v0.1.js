@@ -132,8 +132,27 @@
   .trfe .trfe-hint { font-size: 11px; color: var(--secondary-text-color); opacity: .8; margin-top: 2px; }
   .trfe details { margin-top: 10px; }
   .trfe summary { cursor: pointer; color: var(--secondary-text-color); font-size: 12px; }
-  .trfe .trfe-car { border: 1px solid var(--divider-color, rgba(255,255,255,.12)); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
-  .trfe .trfe-car b { font-size: 13px; }
+  .trfe .trfe-section { margin: 12px 0; border: 1px solid var(--divider-color, rgba(255,255,255,.14)); border-radius: 12px; background: var(--card-background-color, rgba(127,127,127,.035)); overflow: hidden; }
+  .trfe .trfe-section > summary { display: flex; align-items: center; gap: 8px; padding: 11px 12px; color: var(--primary-text-color); font-weight: 600; font-size: 13px; list-style: none; }
+  .trfe .trfe-section > summary::-webkit-details-marker, .trfe .trfe-car > summary::-webkit-details-marker { display: none; }
+  .trfe .trfe-section > summary::after, .trfe .trfe-car > summary::after { content: "⌄"; margin-left: auto; color: var(--secondary-text-color); transition: transform .15s ease; }
+  .trfe .trfe-section[open] > summary::after, .trfe .trfe-car[open] > summary::after { transform: rotate(180deg); }
+  .trfe .trfe-section > summary:focus-visible, .trfe .trfe-car > summary:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: -2px; }
+  .trfe .trfe-section-body { padding: 0 12px 12px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
+  .trfe .trfe-summary-meta { color: var(--secondary-text-color); font-size: 11px; font-weight: 400; margin-left: auto; }
+  .trfe .trfe-brand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 6px; margin-top: 8px; }
+  .trfe .trfe-brand-grid label { box-sizing: border-box; min-width: 0; margin: 0; padding: 7px 9px; border: 1px solid var(--divider-color, rgba(127,127,127,.14)); border-radius: 9px; background: rgba(127,127,127,.035); font-size: 12px; }
+  .trfe .trfe-brand-grid label:hover { background: rgba(127,127,127,.09); }
+  .trfe .trfe-car { border: 1px solid var(--divider-color, rgba(127,127,127,.18)); border-radius: 10px; margin: 8px 0; overflow: hidden; }
+  .trfe .trfe-car > summary { display: flex; align-items: center; gap: 8px; padding: 10px 11px; cursor: pointer; list-style: none; }
+  .trfe .trfe-car > summary span:first-child { font-weight: 600; font-size: 13px; }
+  .trfe .trfe-car-fields { padding: 0 11px 11px; border-top: 1px solid var(--divider-color, rgba(127,127,127,.14)); }
+  .trfe .trfe-row { flex-wrap: wrap; }
+  .trfe .trfe-row label { width: auto; margin-right: 7px; font-size: 12px; }
+  .trfe .trfe-empty-car { padding: 10px 11px; margin: 8px 0; border-radius: 10px; background: rgba(127,127,127,.06); font-size: 12px; line-height: 1.5; }
+  .trfe .trfe-empty-car strong { display: block; margin-bottom: 3px; }
+  .trfe .trfe-tip { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 4px; border: 1px solid var(--secondary-text-color); border-radius: 50%; color: var(--secondary-text-color); font-size: 10px; cursor: help; vertical-align: middle; }
+  .trfe .trfe-tip:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
   .trfe a { color: var(--primary-color, #03a9f4); }`;
 
   function esc(s) {
@@ -1441,18 +1460,25 @@
           } else if (yaml) { yaml.focus(); yaml.select(); }
           return;
         }
+        var carSummary = ev.target && ev.target.closest ? ev.target.closest("[data-car-toggle]") : null;
+        if (carSummary) {
+          self._openCar = parseInt(carSummary.getAttribute("data-car-toggle"), 10);
+          return;
+        }
         var t = ev.target && ev.target.closest ? ev.target.closest("[data-bil-add],[data-bil-del]") : null;
         if (!t) return;
         ev.preventDefault();
         var cfg = Object.assign({}, self._config);
         var biler = Array.isArray(cfg.biler) && cfg.biler.length
           ? cfg.biler.map(function (b) { return Object.assign({}, b); })
-          : [{ navn: "Bil 1" }];
+          : [];
         if (t.hasAttribute && t.hasAttribute("data-bil-add")) {
+          self._openCar = biler.length;
           biler.push({ navn: "Bil " + (biler.length + 1) });
         } else {
           var idx = parseInt(t.getAttribute("data-bil-del"), 10);
           if (isFinite(idx)) biler.splice(idx, 1);
+          self._openCar = null;
         }
         if (!biler.length) delete cfg.biler;
         else cfg.biler = biler;
@@ -1643,26 +1669,31 @@
 
     _render() {
       var c = this._config || {};
-      function cb(key, label, checked) {
-        return '<label><input type="checkbox" data-key="' + key + '"' +
+      function cb(key, label, checked, tooltip) {
+        var tip = tooltip ? ' title="' + esc(tooltip) + '" aria-label="' + esc(label + ". " + tooltip) + '"' : "";
+        return '<label' + tip + '><input type="checkbox" data-key="' + key + '"' +
           (checked ? " checked" : "") + "><span>" + esc(label) + "</span></label>";
       }
       var html = '<div class="trfe"><style>' + ECSS + "</style>";
-      html += "<h4>Informationer</h4>";
-      html += cb("vis_benzin", "Benzin (95/100-oktan)", this._bool("vis_benzin", true));
-      html += cb("vis_diesel", "Diesel", this._bool("vis_diesel", false));
-      html += cb("vis_el", "El (kr/kWh)", this._bool("vis_el", true));
-      html += cb("vis_ladeoversigt", "Ladesteder (popup pr. selskab)", this._bool("vis_ladeoversigt", true));
-      html += cb("vis_andet", "Andet (billigst, fuld tank, position)", this._bool("vis_andet", true));
-      html += "<h4>Tank- og ladeselskaber (alle forvalgt)</h4>";
+      html += '<h4>Visning <span class="trfe-tip" tabindex="0" title="Vælg hvilke energityper og oplysninger kortet skal vise." aria-label="Hjælp: Vælg hvilke energityper og oplysninger kortet skal vise.">i</span></h4>';
+      html += cb("vis_benzin", "Benzin (95/100-oktan)", this._bool("vis_benzin", true), "Vis benzinpriser fra de valgte selskaber.");
+      html += cb("vis_diesel", "Diesel", this._bool("vis_diesel", false), "Vis dieselpriser fra de valgte selskaber.");
+      html += cb("vis_el", "El (kr/kWh)", this._bool("vis_el", true), "Vis ladepriser og ladesteder.");
+      html += cb("vis_ladeoversigt", "Ladesteder pr. selskab", this._bool("vis_ladeoversigt", true), "Vis en liste over ladesteder for hvert valgt ladeselskab.");
+      html += cb("vis_andet", "Prisoversigt og beregninger", this._bool("vis_andet", true), "Vis blandt andet billigste pris og beregning af fuld tank eller opladning.");
+      var activeBrands = BRANDS.filter(function (brand) { return !(c.kaeder && c.kaeder[brand.key] === false); }).length;
+      html += '<details class="trfe-section"><summary><span>Stationer og udbydere</span><span class="trfe-summary-meta">' +
+        activeBrands + " af " + BRANDS.length + ' valgt</span></summary><div class="trfe-section-body">' +
+        '<div class="trfe-hint">Vælg de selskaber, der skal vises på kortet. Som standard er alle valgt.</div><div class="trfe-brand-grid">';
       for (var i = 0; i < BRANDS.length; i++) {
         var b = BRANDS[i];
         var on = !(c.kaeder && c.kaeder[b.key] === false);
-        html += cb("kæde:" + b.key, b.brand, on);
+        html += cb("kæde:" + b.key, b.brand, on, "Vis eller skjul " + b.brand + " på dette kort.");
       }
-      html += "<h4>Biler (katalog, tank, telefon)</h4>";
+      html += "</div></div></details>";
+      html += "<h4>Biler <span class=\"trfe-tip\" tabindex=\"0\" title=\"Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
       this._loadKatalog();
-      var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [{ navn: "Bil 1" }];
+      var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [];
       var trackers = [];
       if (this._hass && this._hass.states) {
         for (var ek in this._hass.states) {
@@ -1679,10 +1710,18 @@
       var gB = this._bool("vis_benzin", true), gD = this._bool("vis_diesel", false),
           gE = this._bool("vis_el", true), gA = this._bool("vis_andet", true);
       var fuels = [["benzin", "Benzin"], ["diesel", "Diesel"], ["el", "El"], ["hybrid", "Hybrid (uden stik)"], ["plug_in_hybrid", "Plug-in-hybrid"]];
+      if (!biler.length) {
+        html += '<div class="trfe-empty-car"><strong>Ingen bil tilføjet endnu</strong>' +
+          'Kortet viser de energityper, du har slået til ovenfor. Uden en bil filtreres priserne ikke efter drivmiddel, og manuel hentning tager alle typer. ' +
+          'Fuld tank bruger tankstørrelses-helperen, som som standard er 50 L.</div>';
+      }
       for (var bi2 = 0; bi2 < biler.length; bi2++) {
         var bb = biler[bi2] || {};
-        html += '<div class="trfe-car"><b>' + esc(bb.navn || ("Bil " + (bi2 + 1))) + "</b>";
-        html += '<div class="trfe-hint">Mærke (fra katalog)</div><select data-key="bil:' + bi2 + ':mærke">';
+        var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Bil " + (bi2 + 1)));
+        var carHint = bb.brændstof ? ({ benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[bb.brændstof] || bb.brændstof) : "Vælg drivmiddel";
+        html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '"><span>' +
+          esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
+        html += '<div class="trfe-hint">Mærke <span class="trfe-tip" tabindex="0" title="Vælg et mærke fra bilkataloget, eller brug manuel indtastning." aria-label="Hjælp: Vælg et mærke fra bilkataloget, eller brug manuel indtastning.">i</span></div><select data-key="bil:' + bi2 + ':mærke">';
         html += '<option value="">Manuel indtastning…</option>';
         for (var mi = 0; mi < katBrands.length; mi++) {
           html += '<option value="' + esc(katBrands[mi].mærke) + '"' +
@@ -1738,9 +1777,10 @@
         if (biler.length > 1 || (c.biler && c.biler.length)) {
           html += '<div class="trfe-hint"><a href="#" data-bil-del="' + bi2 + '">Fjern bilen</a></div>';
         }
-        html += "</div>";
+        html += '<div class="trfe-hint"><a href="#" data-bil-del="' + bi2 + '">Fjern bilen</a></div>';
+        html += "</div></details>";
       }
-      html += '<div class="trfe-hint"><a href="#" data-bil-add>Tilføj bil</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
+      html += '<div class="trfe-hint"><a href="#" data-bil-add>' + (biler.length ? "Tilføj endnu en bil" : "＋ Tilføj bil") + '</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
       html += "<h4>Bilkatalog (mærker/modeller)</h4>";
       html += '<div class="trfe-hint">Katalogkilde (tom = indbygget: ' +
         this._katalogBrands().length + ' mærker)</div><input type="text" data-key="katalog_url" value="' +
