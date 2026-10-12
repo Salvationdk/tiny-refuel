@@ -89,8 +89,13 @@ assert.equal(card._evBenefits({ brand: 'Q8', address: 'B vej 2', kind: 'DC' }, '
 const html = card._evHtml({ lat: 55.63, lon: 12.08 });
 assert.ok(html.includes('<div class="trf-ev-grid">'));
 assert.equal((html.match(/logo-q8.svg/g) || []).length, 1);
-assert.ok(html.includes('3 ladesteder'));
-assert.ok(html.includes('1 med lokal elpris'));
+const evSummary = card._evDataSummary(card._evEntries());
+assert.ok(evSummary.includes('3 ladesteder'));
+assert.ok(evSummary.includes('1 med lokal elpris'));
+assert.ok(evSummary.includes('class="trf-info-section"'));
+assert.ok(!evSummary.includes('<details class="trf-data-counts"'));
+assert.ok(frontendSource.includes('Information og datagrundlag'));
+assert.ok(frontendSource.includes('.trf-info-panel {'));
 assert.ok(html.includes('3,99'));
 assert.ok(html.includes('Pris opdateret'));
 assert.ok(html.includes('den faktiske stationspris kan være højere'));
