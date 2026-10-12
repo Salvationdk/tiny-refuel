@@ -81,7 +81,9 @@ Lokale priser, generelle selskabstakster og startpriser markeres forskelligt. **
 
 Den sammenklappelige informationsbjælke samler kildeoversigt, manglende koordinater, beregninger og forklaring af priser og energityper. Footer viser integrationens version.
 
-![Udvidet Information og datagrundlag med footer v0.2.1](docs/screenshots/information.png)
+| Benzin og beregninger | Brændstof og opladning samlet |
+|---|---|
+| ![Udvidet Information og datagrundlag med footer v0.2.1](docs/screenshots/information.png) | ![Samlet datastatus for brændstof og opladning samt hybridberegning](docs/screenshots/information-all-fuels.png) |
 
 ### Visuel editor
 
@@ -182,10 +184,3 @@ node tests/frontend.test.js
 ```
 
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
-
-
-## Rettelser i 0.1.1
-
-Priser og adresser vises også uden koordinater. Kortet angiver, når nærmeste station ikke kan bestemmes eller kun er valgt blandt stationer med kendte koordinater. Op til 30 nye adresseopslag pr. kørsel fordeles på skift mellem selskaberne efter frasortering af cachede og gentagne adresser.
-
-
