@@ -90,6 +90,26 @@ def get_text(url, headers=None, timeout=45):
     return get(url, headers, timeout).decode("utf-8", errors="replace")
 
 
+def load_clever_locations():
+    """Fetch Clever's large public location feed, retrying malformed JSON without cache."""
+    headers = {"User-Agent": UA, "Accept": "application/json"}
+    raw = get_text(CLEVER_LOCATIONS_URL, headers=headers, timeout=45)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # Clever's nationwide feed can be several megabytes. A truncated or
+        # stale edge response should not make the source fail without one retry.
+        retry_headers = {**headers, "Cache-Control": "no-cache", "Pragma": "no-cache"}
+        retry_raw = get_text(CLEVER_LOCATIONS_URL, headers=retry_headers, timeout=45)
+        try:
+            return json.loads(retry_raw)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"Clever returned invalid JSON on cache-free retry at character "
+                f"{exc.pos} of {len(retry_raw)}: {exc.msg}"
+            ) from exc
+
+
 def to_float(value):
     if value is None:
         return None
