@@ -146,7 +146,9 @@ Ved vellykket hentning erstattes selskabets tidligere liste. Ved kildefejl bevar
 
 En downloaddato er ikke en garanti for selskabets egen kontroltid. En hentning kan give data fra nogle selskaber og fejl fra andre; fejlene vises i kortet.
 
-Adressekoordinater, der ikke findes i selskabets kilde, kan slås op med Nominatim, maksimalt 30 nye adresser pr. kørsel. Det er stationsadresser, ikke din GPS-position.
+Adressekoordinater, der ikke findes i selskabets kilde, kan slås op med Nominatim, maksimalt 30 nye adresser pr. kørsel samlet for brændstof- og ladestationer i de hentede drivmidler. Det er stationsadresser, ikke din GPS-position.
+
+Under **Information og datagrundlag** skelnes mellem unikke adresser klar til opslag, adresser søgt uden resultat og stationer uden en adresse at søge på. Seneste kørsel viser forsøg, fund, manglende resultater og fejl. De konkrete adresser og første mulige genforsøg vises i en liste. Adresser uden søgeresultat prøves tidligst igen efter syv dage; netværksfejl stopper resten af kørslen. Der loves ikke en slutdato, da udbydernes oplysninger og søgeresultater kan mangle. Visningen bliver detaljeret efter første hentning med denne version. Koordinatopslag finder koordinater fra en adresse; der foretages ikke automatisk opslag af gadenavne fra koordinater.
 
 Din valgte telefonposition bruges i browseren til afstande. Den ønskede destination sendes til Waze eller Google Maps ved navigation.
 

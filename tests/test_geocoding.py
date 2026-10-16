@@ -43,3 +43,38 @@ class GeocodingTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class CoordinateStatusTests(unittest.TestCase):
+    def test_queue_separates_recent_misses_duplicates_and_missing_addresses(self):
+        stations = [
+            {'brand': 'A', 'address': 'Ready', 'lat': None},
+            {'brand': 'B', 'address': 'Ready', 'lat': None},
+            {'brand': 'A', 'address': 'Miss', 'lat': None},
+            {'brand': 'A', 'address': 'Expired', 'lat': None},
+            {'brand': 'A', 'address': '', 'lat': None},
+            {'brand': 'A', 'liste': True, 'address': '', 'lat': None},
+            {'brand': 'A', 'address': 'Found', 'lat': 55, 'lon': 12},
+        ]
+        cache = {'miss': {'none': True, 'ts': 999900}, 'expired': {'none': True, 'ts': 1}}
+        status = scraper.coordinate_status(stations, cache, now=1000000)
+        self.assertEqual(status['queued'], 2)
+        self.assertEqual(status['not_found'], 1)
+        self.assertEqual(status['missing_address'], 1)
+        self.assertEqual(len(status['pending_addresses']), 3)
+        miss = next(row for row in status['pending_addresses'] if row['address'] == 'Miss')
+        self.assertIsNotNone(miss['retry_after'])
+        ready = next(row for row in status['pending_addresses'] if row['address'] == 'Ready')
+        self.assertIsNone(ready['retry_after'])
+
+    def test_attempt_statistics_distinguish_success_no_match_and_failure(self):
+        response = MagicMock()
+        response.__enter__.return_value.read.side_effect = [b'[{"lat":"55", "lon":"12"}]', b'[]']
+        stats, errors = {}, []
+        with patch.object(scraper, 'load_json', return_value={}), patch.object(scraper, 'save_json'), patch.object(scraper.time, 'sleep'), patch.object(scraper.urllib.request, 'urlopen', side_effect=[response, response, OSError('offline')]):
+            scraper.geocode_new(['Found', 'Not found', 'Failure'], errors, stats=stats)
+        self.assertEqual(stats['attempted'], 3)
+        self.assertEqual(stats['found'], 1)
+        self.assertEqual(stats['not_found'], 1)
+        self.assertEqual(stats['failed'], 1)
+        self.assertEqual(stats['error'], 'offline')

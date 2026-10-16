@@ -1088,7 +1088,7 @@
       var legendHtml = legends.length ? '<div class="trf-legend"><b>Energityper:</b> ' + legends.join(' · ') + '</div>' : '';
       if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
       var infoSections = (visBenzin || visDiesel ? this._fuelDataSummary() : '') +
-        (visEl ? this._evDataSummary(this._evEntries()) : '') + infoMetrics + legendHtml;
+        (visEl ? this._evDataSummary(this._evEntries()) : '') + this._coordinateSummary() + infoMetrics + legendHtml;
       var infoPanelHtml = infoSections ? '<details class=\"trf-info-panel\" data-card-panel=\"information\"><summary>Information og datagrundlag</summary><div class=\"trf-info-content\">' + infoSections + '</div></details>' : '';
       var selectedFuel = this._car() && this._car().brændstof;
       var cardTitle = selectedFuel === 'plug_in_hybrid' && visBenzin && visEl ? 'Hybrid – benzin og opladning' :
@@ -1398,9 +1398,35 @@
           '</td><td' + detail + '>' + esc(state + " · " + this._fmtStamp(stamp)) + '</td></tr>';
       }, this);
       html += '</tbody></table></div>';
-      var pending = Number(data.geocode_pending) || 0;
-      if (pending) html += '<div>' + pending + ' adresser afventer koordinater. De behandles gradvist ved senere hentninger.</div>';
-      else html += '<div>Koordinater er slået op for alle adresser med kendte adresser.</div>';
+      html += '</section>';
+      return html;
+    }
+
+    _coordinateSummary() {
+      var data = this._data;
+      if (!data) return '';
+      var html = '<section class="trf-info-section">';
+      var pending = Number(data.geocode_pending) || 0, geo = data.geocoding;
+      if (!geo) {
+        html += pending ? '<div>' + pending + ' stationer mangler koordinater. Detaljeret køstatus bliver tilgængelig efter næste hentning.</div>' : '<div>Ingen registrerede stationer mangler koordinater.</div>';
+      } else {
+        html += '<div><b>Koordinatopslag:</b> ' + (Number(geo.queued) || 0) + ' unikke adresser klar til opslag · ' +
+          (Number(geo.not_found) || 0) + ' forsøgt uden resultat · ' + (Number(geo.missing_address) || 0) + ' stationer uden adresse til opslag.</div>';
+        var run = geo.run;
+        if (run && run.checked_at) {
+          html += '<div>Seneste kontrol: ' + esc(this._fmtStamp(run.checked_at)) + '. ' + (Number(run.attempted) || 0) + ' opslag forsøgt: ' +
+            (Number(run.found) || 0) + ' fundet, ' + (Number(run.not_found) || 0) + ' uden resultat, ' + (Number(run.failed) || 0) + ' fejl.</div>';
+          if (run.error) html += '<div>Opslagene blev stoppet af en fejl: ' + esc(run.error) + '. Se fejloversigten.</div>';
+        } else html += '<div>Koordinatopslag blev ikke kørt i denne hentning (fx hvis alle koordinater allerede fandtes).</div>';
+        if (geo.queued) html += '<div>Der behandles højst ' + (Number(geo.limit) || 30) + ' adresser ved næste hentning af relevante drivmidler, fordelt mellem selskaberne. En slutdato kan ikke garanteres.</div>';
+        if (geo.not_found) html += '<div>Adresser uden søgeresultat prøves tidligst igen efter syv dage. Tidspunktet nedenfor er første mulige genforsøg, ikke en garanti for et resultat.</div>';
+        var missing = Array.isArray(geo.pending_addresses) ? geo.pending_addresses : [];
+        if (missing.length) html += '<div class="trf-info-table-wrap" style="max-height:240px;overflow:auto"><table><thead><tr><th>Station / adresse</th><th>Årsag</th><th>Tidligste genforsøg</th></tr></thead><tbody>' + missing.map(function (item) {
+          return '<tr><td>' + esc([item.brand, item.name, item.address].filter(Boolean).join(' · ')) + '</td><td>' +
+            (item.status === 'not_found' ? 'Søgt uden resultat' : 'Klar til opslag') + '</td><td>' +
+            (item.retry_after ? esc(this._fmtStamp(item.retry_after)) : 'Næste hentning af relevante drivmidler') + '</td></tr>';
+        }, this).join('') + '</tbody></table></div>';
+      }
       html += '</section>';
       return html;
     }

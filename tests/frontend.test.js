@@ -363,10 +363,10 @@ assert.ok(!frontendSource.includes('grid-template-columns: minmax(0, 1fr) minmax
     'api.circlek.com': { status: 'stale', records: 8, priced: 7, missing_coordinates: 2, last_attempt: '2026-10-10T10:00:00Z', error: 'Offline' },
     'goon.nu': { status: 'ok', records: 4, priced: 4, missing_coordinates: 0, last_success: '2026-10-10T10:00:00Z' },
   } };
-  const summary = status._fuelDataSummary();
+  const summary = status._fuelDataSummary() + status._coordinateSummary();
   assert.ok(summary.includes('Circle K og Ingo'));
   assert.ok(summary.includes('Gemte data · nyt forsøg fejlede'));
-  assert.ok(summary.includes('2 adresser afventer koordinater'));
+  assert.ok(summary.includes('2 stationer mangler koordinater'));
   assert.ok(summary.includes('Offline'));
 }
 
@@ -466,3 +466,28 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   assert.ok(html.includes('Fordele · OK'));
 }
 console.log('PASS: persistent panels and redacted GitHub issue drafts');
+{
+  const queue = new Card();
+  queue._config = { vis_benzin: true };
+  queue._data = { fuel_sources: { 'f24.dk': { status: 'ok' } }, geocoding: {
+    queued: 4, not_found: 2, missing_address: 1, limit: 30,
+    run: { checked_at: '2026-10-16T17:00:00Z', attempted: 3, found: 1, not_found: 1, failed: 1, error: 'Offline' },
+    pending_addresses: [{ brand: 'Q8', name: 'Teststed', address: 'Testvej 1', status: 'not_found', retry_after: '2026-10-23T17:00:00Z' }],
+  } };
+  const html = queue._coordinateSummary();
+  assert.ok(html.includes('4 unikke adresser klar til opslag'));
+  assert.ok(html.includes('2 forsøgt uden resultat'));
+  assert.ok(html.includes('3 opslag forsøgt: 1 fundet, 1 uden resultat, 1 fejl'));
+  assert.ok(html.includes('Testvej 1'));
+  assert.ok(html.includes('Tidligste genforsøg'));
+  assert.ok(html.includes('Opslagene blev stoppet af en fejl'));
+  assert.ok(!html.includes('behandles gradvist'));
+}
+
+queueCoverage();
+function queueCoverage() {
+  const onlyElectric = new Card();
+  onlyElectric._data = { geocoding: { queued: 1, not_found: 0, missing_address: 0, pending_addresses: [] } };
+  onlyElectric.setConfig({ vis_benzin: false, vis_diesel: false, vis_el: true });
+  assert.ok(onlyElectric.innerHTML.includes('1 unikke adresser klar til opslag'));
+}
