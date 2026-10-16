@@ -1223,7 +1223,8 @@ def geocode_new(addresses, errors, brands=None, progress_callback=None, stats=No
             continue
         seen.add(key)
         hit = cache.get(key)
-        if hit and (hit.get("lat") or now - hit.get("ts", 0) < 7 * 86400):
+        if hit and ((hit.get("lat") is not None and hit.get("lon") is not None) or
+                    (hit.get("none") and now - hit.get("ts", 0) < 7 * 86400)):
             continue
         brand = brands[i] if brands is not None else "all"
         queues.setdefault(brand, deque()).append(addr)
@@ -1242,7 +1243,8 @@ def geocode_new(addresses, errors, brands=None, progress_callback=None, stats=No
             break
         key = norm_addr(addr)
         hit = cache.get(key)
-        if hit and (hit.get("lat") or now - hit.get("ts", 0) < 7 * 86400):
+        if hit and ((hit.get("lat") is not None and hit.get("lon") is not None) or
+                    (hit.get("none") and now - hit.get("ts", 0) < 7 * 86400)):
             continue
         q = re.sub(r"\s*danmark\s*$", "", addr.strip(), flags=re.I) + ", Danmark"
         _report_progress(progress_callback, "geokodning", brand_by_address.get(key, "Station"),
@@ -1499,9 +1501,9 @@ def _collect(progress_callback=None, fuel_types=None):
                 location["lat"], location["lon"] = hit["lat"], hit["lon"]
     stations = []
     for s in fresh:
-        if s.get("lat") is None and s.get("address"):
+        if (s.get("lat") is None or s.get("lon") is None) and s.get("address"):
             hit = cache.get(norm_addr(s["address"]), {})
-            if hit.get("lat"):
+            if hit.get("lat") is not None and hit.get("lon") is not None:
                 s["lat"], s["lon"] = hit["lat"], hit["lon"]
         key = s["brand"] + "|" + norm_addr(s.get("address"))
         if key in prev_prices and s.get("p95") is not None:

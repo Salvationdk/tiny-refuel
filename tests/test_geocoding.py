@@ -78,3 +78,11 @@ class CoordinateStatusTests(unittest.TestCase):
         self.assertEqual(stats['not_found'], 1)
         self.assertEqual(stats['failed'], 1)
         self.assertEqual(stats['error'], 'offline')
+
+    def test_partial_cached_coordinate_does_not_block_a_new_lookup(self):
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = b'[{"lat":"55", "lon":"12"}]'
+        with patch.object(scraper, 'load_json', return_value={'partial': {'lat': 55, 'ts': 9999999999}}), patch.object(scraper, 'save_json'), patch.object(scraper.time, 'sleep'), patch.object(scraper.urllib.request, 'urlopen', return_value=response) as get:
+            result = scraper.geocode_new(['Partial'], [])
+        self.assertEqual(get.call_count, 1)
+        self.assertEqual(result['partial']['lon'], 12)
