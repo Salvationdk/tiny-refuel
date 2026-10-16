@@ -23,6 +23,7 @@ import re
 import sys
 import time
 import urllib.parse
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
@@ -82,8 +83,16 @@ IONITY_EV_TARIFFS_URL = "https://www.ionity.eu/dk/abonnementer"
 
 def get(url, headers=None, timeout=45):
     req = urllib.request.Request(url, headers=headers or {"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read()
+    # Only retry idempotent public GETs, once, for transient upstream errors.
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as exc:
+            if attempt or exc.code not in (500, 502, 503, 504):
+                raise
+            exc.close()
+            time.sleep(0.5)
 
 
 def get_text(url, headers=None, timeout=45):
@@ -1543,3 +1552,4 @@ def collect(data_dir, progress_callback=None, fuel_types=None):
     if _collect(progress_callback, fuel_types) != 0:
         raise ValueError("Ingen brugbare priser eller ladesteder")
     return load_json(OUT, {})
+

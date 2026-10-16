@@ -1,5 +1,6 @@
 {
   "name": "Tiny Refuel",
   "homeassistant": "2025.11.2",
-  "render_readme": true
+  "render_readme": true,
+  "country": "DK"
 }

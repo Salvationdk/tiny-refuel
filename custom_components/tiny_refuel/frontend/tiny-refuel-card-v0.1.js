@@ -314,13 +314,20 @@
       this.addEventListener("cancel", function (ev) {
         if (ev.target && ev.target.classList.contains("trf-ev-dialog")) {
           ev.preventDefault();
-          self._closeEvPopup();
+          // Keep the dialog open until an explicit close or another dialog.
         }
       }, true);
       this.addEventListener("click", function (ev) {
+        var summary = ev.target && ev.target.closest ? ev.target.closest("details[data-card-panel] > summary") : null;
+        if (summary && !summary.parentElement.open) {
+          self.querySelectorAll("details[data-card-panel]").forEach(function (panel) {
+            if (panel !== summary.parentElement) panel.open = false;
+          });
+        }
         var openEv = ev.target && ev.target.closest ? ev.target.closest("[data-open-ev]") : null;
         if (openEv) {
           ev.preventDefault();
+          self._openFordel = null;
           self._openEvBrand = openEv.getAttribute("data-open-ev");
           self._evPopupLimit = 10;
           self._evPopupKind = "all";
@@ -332,13 +339,6 @@
           ev.preventDefault();
           self._closeEvPopup();
           return;
-        }
-        if (ev.target && ev.target.classList && ev.target.classList.contains("trf-ev-dialog")) {
-          var rect = ev.target.getBoundingClientRect();
-          if (ev.clientX < rect.left || ev.clientX > rect.right || ev.clientY < rect.top || ev.clientY > rect.bottom) {
-            self._closeEvPopup();
-            return;
-          }
         }
         var kindEv = ev.target && ev.target.closest ? ev.target.closest("[data-ev-kind]") : null;
         if (kindEv) {
@@ -684,6 +684,7 @@
       var self = this;
       if (!this._hass || typeof this._hass.callApi !== "function") return Promise.resolve(null);
       return this._hass.callApi("GET", "tiny_refuel/data").then(function (data) {
+        self._dataApiError = null;
         self._data = data;
         self._dataFetchedAt = Date.now();
         self._dataLoading = false;
@@ -691,7 +692,9 @@
         clearTimeout(self._dataTimer);
         self._dataTimer = setTimeout(function () { self._maybeLoad(); }, data.refreshing || !data.updated ? 5000 : 60000);
         return data;
-      }).catch(function () {
+      }).catch(function (error) {
+        var code = error && (error.status_code || error.status);
+        self._dataApiError = code ? "HTTP " + code : "Data-API kunne ikke kontaktes";
         self._dataLoading = false;
         self._dataFetchFailedAt = Date.now();
         self._render();
@@ -824,6 +827,10 @@
     _render() {
       if (!this._config) return;
       if (Array.isArray(this._config.biler) && this._config.biler.length) loadVehicleCatalog(this);
+      var openPanels = {};
+      this.querySelectorAll("details[data-card-panel]").forEach(function (node) {
+        openPanels[node.getAttribute("data-card-panel")] = node.open;
+      });
       var previousList = this.querySelector && this.querySelector(".trf-ev-list");
       var popupScroll = previousList ? previousList.scrollTop : 0;
       var cfg = this._config;
@@ -1082,7 +1089,7 @@
       if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
       var infoSections = (visBenzin || visDiesel ? this._fuelDataSummary() : '') +
         (visEl ? this._evDataSummary(this._evEntries()) : '') + infoMetrics + legendHtml;
-      var infoPanelHtml = infoSections ? '<details class=\"trf-info-panel\"><summary>Information og datagrundlag</summary><div class=\"trf-info-content\">' + infoSections + '</div></details>' : '';
+      var infoPanelHtml = infoSections ? '<details class=\"trf-info-panel\" data-card-panel=\"information\"><summary>Information og datagrundlag</summary><div class=\"trf-info-content\">' + infoSections + '</div></details>' : '';
       var selectedFuel = this._car() && this._car().brændstof;
       var cardTitle = selectedFuel === 'plug_in_hybrid' && visBenzin && visEl ? 'Hybrid – benzin og opladning' :
         (selectedFuel === 'hybrid' && visBenzin && !visEl ? 'Hybrid – benzin' :
@@ -1107,6 +1114,9 @@
         infoPanelHtml +
         '<div class="trf-foot"><span>Hentet fra selskabernes egne lister: ' + esc(upd) + '</span><span>Tiny Refuel v' + esc(integrationVersion || "ukendt") + '</span></div>' +
         "</div>" + this._evPopupHtml(loc);
+      this.querySelectorAll("details[data-card-panel]").forEach(function (node) {
+        node.open = !!openPanels[node.getAttribute("data-card-panel")];
+      });
       var popup = this.querySelector && this.querySelector(".trf-ev-dialog");
       if (popup) {
         if (typeof popup.showModal === "function") popup.showModal();
@@ -1442,17 +1452,50 @@
       return html;
     }
 
+    _errorGroups() {
+      var data = this._data || {}, groups = [];
+      if (this._dataApiError) groups.push({ source: "Home Assistant data-API", message: this._dataApiError });
+      if (data.last_error) groups.push({ source: "Hentning", message: data.last_error });
+      (Array.isArray(data.errors) ? data.errors : []).forEach(function (error) {
+        if (!error || typeof error !== "object") { groups.push({ source: "Datakilde", message: String(error) }); return; }
+        var source = error.source || Object.keys(error).filter(function (key) { return key !== "stale_reused"; })[0] || "Datakilde";
+        groups.push({ source: source, message: error.error || error[source] || "Hentningen fejlede" });
+      });
+      (Array.isArray(data.benefit_errors) ? data.benefit_errors : []).forEach(function (error) {
+        groups.push({ source: "Fordele · " + (error.provider || "Udbyder"), message: error.error || "Hentningen fejlede" });
+      });
+      return groups;
+    }
+
+    _issueUrl() {
+      // Allow only error categories and HTTP codes into the public draft.
+      // Raw exceptions may contain local paths, URLs, addresses or credentials.
+      var lines = this._errorGroups().slice(0, 20).map(function (error) {
+        var source = String(error.source || "");
+        var known = ["Home Assistant data-API", "Hentning", "Datakilde", "ck_api", "stations_cache", "f24q8", "q8_el", "circlek_el", "eon_el", "ionity_el", "unox", "goon", "shell_pdf", "shell", "ok_fuel_api", "oil_fuel_api", "ok", "ok_el", "oil", "geocode", "clever.dk", "eon.dk", "ionity.eu", "shell.dk", "unox.dk", "ok.dk", "oil-tankstationer.dk", "circlek.dk", "stale_reused"];
+        BRANDS.forEach(function (brand) { known.push("Fordele · " + brand.brand); });
+        known.push("Fordele · IONITY");
+        if (known.indexOf(source) < 0) source = "Datakilde";
+        var message = String(error.message || "");
+        var http = message.match(/(?:HTTP(?: Error)?|status(?: code)?)[ :]*(\d{3})/i);
+        var category = http ? "HTTP " + http[1] : /json|delimiter/i.test(message) ? "Ugyldigt JSON-svar" :
+          /timeout|timed out/i.test(message) ? "Timeout" : "Hentningen fejlede (tilføj evt. renset fejltekst)";
+        return "- " + source + ": " + category;
+      });
+      var version = String(this._data && this._data.version || "ukendt").replace(/[^a-zA-Z0-9.+_-]/g, "").slice(0, 32);
+      var body = "Tiny Refuel: " + version + "\n\nFejl:\n" + lines.join("\n") +
+        "\n\nHvad skete der?\n[Beskriv her]\n\nForventet resultat:\n[Beskriv her]\n\nRapporten indeholder kun fejlkategorier og HTTP-koder. Tilføj gerne relevant logtekst efter at have fjernet personlige oplysninger.";
+      return "https://github.com/Salvationdk/tiny-refuel/issues/new?" + new URLSearchParams({ title: "Fejl ved hentning i Tiny Refuel", body: body }).toString();
+    }
+
     _dataErrorsHtml() {
-      var html = this._data && this._data.last_error ? '<div class="trf-em">Hentningen fejlede: ' + esc(this._data.last_error) + '</div>' : '';
+      var groups = this._errorGroups(), html = "";
       if (this._data && this._data.refreshing) html += '<div class="trf-em">Tiny Refuel henter nye data…</div>';
-      var errors = this._data && this._data.errors;
-      if (Array.isArray(errors) && errors.length) html += '<details class="trf-data-counts"><summary>' + errors.length + ' fejl i seneste hentning</summary>' +
-        errors.map(function (error) {
-          if (!error || typeof error !== 'object') return '<div>' + esc(error) + '</div>';
-          var source = error.source || Object.keys(error).filter(function (key) { return key !== 'stale_reused'; })[0] || 'Datakilde';
-          var message = error.error || error[source] || 'Hentningen fejlede';
-          return '<div>' + esc(source) + ': ' + esc(message) + '</div>';
-        }).join('') + '</details>';
+      if (groups.length) html += '<details class="trf-data-counts" data-card-panel="errors"><summary>' + groups.length + ' fejl i seneste hentning</summary>' +
+        groups.map(function (error) { return '<div>' + esc(error.source) + ': ' + esc(error.message) + '</div>'; }).join('') +
+        '<p>HTTP 500 betyder, at serveren ikke kunne behandle forespørgslen. Datakilden står ved fejlen; gemte data kan stadig vises.</p>' +
+        '<a class="trf-ev-button" href="' + esc(this._issueUrl()) + '" target="_blank" rel="noopener noreferrer">Rapportér på GitHub</a>' +
+        '<div class="trf-em">Åbner et udkast med fejlkategorier og HTTP-koder. Gennemse og indsend selv; GitHub kan bede dig logge ind.</div></details>';
       return html;
     }
 
@@ -1986,3 +2029,4 @@
   customElements.define("tiny-refuel-card-editor", TinyRefuelCardEditor);
   window.TinyRefuelCardEditor = TinyRefuelCardEditor;
 }(window);
+
