@@ -296,8 +296,15 @@ for (const nav of ['waze', 'google']) {
   await new Promise(setImmediate);
   assert.equal(card._scraping, false);
   assert.ok(card._scrapeMessage.includes('Failed source'));
-  card._hass.callApi = () => Promise.reject(new Error('Offline'));
+  const retainedData = card._data;
+  card._hass.callApi = () => Promise.reject({ status_code: 500 });
   assert.equal(await card._fetchJson(), null);
+  assert.equal(card._data, retainedData, 'data-API errors must retain cached prices');
+  assert.equal(card._dataApiError, 'HTTP 500');
+  assert.ok(decodeURIComponent(card._issueUrl().replace(/\+/g, ' ')).includes('Home Assistant data-API: HTTP 500'));
+  card._hass.callApi = () => Promise.resolve(retainedData);
+  await card._fetchJson();
+  assert.equal(card._dataApiError, null, 'successful recovery clears the API error');
   card.disconnectedCallback();
   assert.equal(card._scraping, false);
   console.log('PASS: frontend grouping, counts, navigation, authenticated API and shared refresh');
