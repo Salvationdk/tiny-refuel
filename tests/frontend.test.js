@@ -543,3 +543,10 @@ function queueCoverage() {
   assert.equal(form._modelSuggestions('Test', 'aeldre').total, 1);
   assert.ok(form._variantOptions('Test', 'Ældre årgang').includes('1.6 TDI'));
 }
+
+{
+  const form = new StableEditor();
+  form._katalog = { brands: [{ mærke: 'Test', modeller: [{ model: 'Van', variants: Array.from({ length: 2000 }, (_, i) => ({ name: 'Variant ' + i, fuel_types: ['Diesel'] })) }] }] };
+  assert.equal((form._variantOptions('Test', 'Van').match(/<option /g) || []).length, 100);
+  assert.ok(form._variantOptions('Test', 'Van', '1999').includes('Variant 1999'));
+}

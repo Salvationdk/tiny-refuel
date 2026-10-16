@@ -1637,9 +1637,14 @@
       var self = this;
       this.addEventListener("input", function (ev) {
         var target = ev.target, key = target && target.dataset && target.dataset.key;
-        var match = key && key.match(/^bil:(\d+):model$/);
+        var match = key && key.match(/^bil:(\d+):(model|variant)$/);
         if (!match) return;
         var index = Number(match[1]), car = (self._config.biler || [])[index] || {};
+        if (match[2] === "variant") {
+          var variants = self.querySelector('[data-variant-options="' + index + '"]');
+          if (variants) variants.innerHTML = self._variantOptions(car.mærke, car.model, target.value);
+          return;
+        }
         var suggestions = self._modelSuggestions(car.mærke, target.value);
         var list = self.querySelector('[data-model-options="' + index + '"]');
         if (list) list.innerHTML = suggestions.html;
@@ -1866,9 +1871,11 @@
       };
     }
 
-    _variantOptions(make, model) {
+    _variantOptions(make, model, query) {
       var entry = this._katalogFind(make, model);
-      return ((entry && entry.variants) || []).slice(0, 100).map(function (variant) {
+      return ((entry && entry.variants) || []).filter(function (variant) {
+        return String(variant.name || "").toLowerCase().indexOf(String(query || "").toLowerCase()) !== -1;
+      }).slice(0, 100).map(function (variant) {
         return '<option value="' + esc(variant.name) + '">' + esc((variant.fuel_types || []).join(" / ")) + '</option>';
       }).join("");
     }
