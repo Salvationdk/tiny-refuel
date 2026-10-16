@@ -21,8 +21,12 @@ const context = { window, HTMLElement: Element, customElements: window.customEle
   setTimeout: fn => { timers.set(++timerId, fn); return timerId; },
   clearTimeout: id => timers.delete(id),
 };
-const frontendSource = fs.readFileSync('custom_components/tiny_refuel/frontend/tiny-refuel-card-v0.1.js', 'utf8');
+const frontendSource = fs.readFileSync('custom_components/tiny_refuel/frontend/tiny-refuel-card.js', 'utf8');
 vm.runInNewContext(frontendSource, context);
+// Loading the canonical module through both HA and a legacy resource is harmless.
+const beforeReload = new Map(registry);
+vm.runInNewContext(frontendSource, context);
+assert.deepEqual(registry, beforeReload);
 const Card = registry.get('tiny-refuel-card');
 assert.ok(Card);
 assert.ok(registry.get('tiny-refuel-card-editor'));
