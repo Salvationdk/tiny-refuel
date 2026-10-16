@@ -1635,6 +1635,18 @@
       vehicleLogoFailure(this);
       this._config = {};
       var self = this;
+      this.addEventListener("input", function (ev) {
+        var target = ev.target, key = target && target.dataset && target.dataset.key;
+        var match = key && key.match(/^bil:(\d+):model$/);
+        if (!match) return;
+        var index = Number(match[1]), car = (self._config.biler || [])[index] || {};
+        var suggestions = self._modelSuggestions(car.mærke, target.value);
+        var list = self.querySelector('[data-model-options="' + index + '"]');
+        if (list) list.innerHTML = suggestions.html;
+        var count = self.querySelector('[data-model-count="' + index + '"]');
+        if (count) count.textContent = suggestions.message;
+        // Only the option list changes. The live input, caret and config survive.
+      });
       this.addEventListener("click", function (ev) {
         var copy = ev.target && ev.target.closest ? ev.target.closest("[data-yaml-copy]") : null;
         if (copy) {
@@ -1702,10 +1714,12 @@
             if (mk) biler[bi].mærke = mk;
             else delete biler[bi].mærke;
             delete biler[bi].model;
+            delete biler[bi].variant;
             needRender = true;
           } else if (field === "model") {
             var md = String(t.value || "");
             if (md) {
+              if (biler[bi].model !== md) delete biler[bi].variant;
               biler[bi].model = md;
               var entry = self._katalogFind(biler[bi].mærke, md);
               if (entry) {
@@ -1833,6 +1847,32 @@
       return [];
     }
 
+    _modelSuggestions(make, query) {
+      var normalize = function (value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/æ/g, "ae").replace(/ø/g, "o"); };
+      var words = normalize(query).trim().split(/\s+/).filter(Boolean);
+      var matches = this._katalogModels(make).filter(function (entry) {
+        var name = normalize(entry.model);
+        return words.every(function (word) { return name.indexOf(word) !== -1; });
+      });
+      var visible = matches.slice(0, 60);
+      return {
+        html: visible.map(function (entry) {
+          return '<option value="' + esc(entry.model) + '">' + esc(entry.model + " · " + (entry.brændstof || "vælg drivmiddel") +
+            (entry.tank_l != null ? " · " + entry.tank_l + " L" : "")) + '</option>';
+        }).join(""),
+        total: matches.length,
+        message: matches.length > visible.length ? "Viser " + visible.length + " af " + matches.length + " match — skriv mere for at indsnævre." :
+          (matches.length ? matches.length + " modeller matcher. Du kan også skrive din egen model." : "Ingen katalogmatch. Du kan skrive din egen model."),
+      };
+    }
+
+    _variantOptions(make, model) {
+      var entry = this._katalogFind(make, model);
+      return ((entry && entry.variants) || []).slice(0, 100).map(function (variant) {
+        return '<option value="' + esc(variant.name) + '">' + esc((variant.fuel_types || []).join(" / ")) + '</option>';
+      }).join("");
+    }
+
     _katalogFind(maerke, model) {
       var models = this._katalogModels(maerke);
       for (var i = 0; i < models.length; i++) {
@@ -1850,7 +1890,7 @@
       var car = this._config.biler && this._config.biler[index];
       if (!car) return;
       var self = this;
-      ["model", "navn", "tank_liters", "batteri_kwh"].forEach(function (field) {
+      ["model", "variant", "navn", "tank_liters", "batteri_kwh"].forEach(function (field) {
         var node = self.querySelector('[data-key="bil:' + index + ':' + field + '"]');
         if (node) node.value = car[field] == null ? "" : String(car[field]);
       });
@@ -1868,6 +1908,8 @@
       var modelNote = this.querySelector('[data-model-note="' + index + '"]');
       var selectedModel = this._katalogFind(car.mærke, car.model);
       if (modelNote) modelNote.textContent = selectedModel && selectedModel.specification_note || "";
+      var variantOptions = this.querySelector('[data-variant-options="' + index + '"]');
+      if (variantOptions) variantOptions.innerHTML = this._variantOptions(car.mærke, car.model);
       var logo = this.querySelector('[data-model-logo="' + index + '"]');
       if (logo) logo.innerHTML = vehicleLogoHtml(this._katalog, car, "trfe-model-logo", true);
     }
@@ -1958,16 +2000,15 @@
         html += "</select>";
         var katModels = bb.mærke ? this._katalogModels(bb.mærke) : [];
         var dlmId = "trf-models-" + bi2;
-        var dlm = '<datalist id="' + dlmId + '">';
-        for (var mj = 0; mj < katModels.length; mj++) {
-          var _mm0 = katModels[mj];
-          dlm += '<option value="' + esc(_mm0.model) + '">' +
-            esc(_mm0.model + " · " + (_mm0.brændstof || "vælg drivmiddel") + (_mm0.tank_l != null ? " · " + _mm0.tank_l + " L" : "")) + "</option>";
-        }
-        dlm += "</datalist>";
-        html += '<div class="trfe-hint">Model (forslag fra katalog — eller skriv selv)</div>' +
+        var suggestions = this._modelSuggestions(bb.mærke, bb.model);
+        var dlm = '<datalist id="' + dlmId + '" data-model-options="' + bi2 + '">' + suggestions.html + '</datalist>';
+        html += '<div class="trfe-hint">Model (søg i fabrikantens modeller — eller skriv selv)</div>' +
           '<input type="text" list="' + dlmId + '" data-key="bil:' + bi2 + ':model" value="' +
           esc(bb.model || "") + '" placeholder="fx up!" ' + (katModels.length ? "" : 'disabled title="Vælg mærke først"') + ">" + dlm;
+        html += '<div class="trfe-hint" data-model-count="' + bi2 + '">' + esc(suggestions.message) + '</div>';
+        html += '<div class="trfe-hint">Årgang / variant (valgfrit — eller skriv selv)</div>' +
+          '<input type="text" data-key="bil:' + bi2 + ':variant" list="trf-variants-' + bi2 + '" value="' + esc(bb.variant || '') + '" placeholder="fx 2018 · 1.6 TDI">' +
+          '<datalist id="trf-variants-' + bi2 + '" data-variant-options="' + bi2 + '">' + this._variantOptions(bb.mærke, bb.model) + '</datalist>';
         var selectedModel = this._katalogFind(bb.mærke, bb.model);
         html += '<div class="trfe-hint" data-model-note="' + bi2 + '">' +
           esc(selectedModel && selectedModel.specification_note || '') + '</div>';

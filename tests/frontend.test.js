@@ -517,3 +517,29 @@ function queueCoverage() {
   assert.equal(form._config.biler[0].brændstof, 'benzin');
   assert.equal(form._config.biler[0].vis.benzin, true);
 }
+// Large bundled catalogs filter locally without replacing the input or emitting config.
+{
+  const form = new StableEditor();
+  form._katalog = { brands: [{ mærke: 'Test', modeller: Array.from({ length: 5000 }, (_, i) => ({ model: 'Model ' + i })) }] };
+  form.setConfig({ biler: [{ mærke: 'Test', model: '', navn: 'Min bil' }] });
+  assert.equal((form._modelSuggestions('Test', '').html.match(/<option /g) || []).length, 60);
+  assert.equal(form._modelSuggestions('Test', '4999').total, 1);
+  assert.ok(form._modelSuggestions('Test', '4999').html.includes('Model 4999'));
+  const list = {}, count = {};
+  form.querySelector = selector => selector === '[data-model-options="0"]' ? list : selector === '[data-model-count="0"]' ? count : null;
+  let renders = 0, events = 0;
+  form._render = () => { renders++; };
+  form.dispatchEvent = () => { events++; };
+  const input = { dataset: { key: 'bil:0:model' }, value: '4999', selectionStart: 4 };
+  form.events.input({ target: input });
+  assert.ok(list.innerHTML.includes('Model 4999'));
+  assert.equal(count.textContent, '1 modeller matcher. Du kan også skrive din egen model.');
+  assert.equal(form._config.biler[0].model, '');
+  assert.equal(input.selectionStart, 4);
+  assert.equal(renders, 0);
+  assert.equal(events, 0);
+  assert.ok(form._modelSuggestions('Missing', 'Custom').message.includes('skrive din egen model'));
+  form._katalog.brands[0].modeller.push({ model: 'Ældre årgang', variants: [{ name: '1.6 TDI', fuel_types: ['Diesel'] }] });
+  assert.equal(form._modelSuggestions('Test', 'aeldre').total, 1);
+  assert.ok(form._variantOptions('Test', 'Ældre årgang').includes('1.6 TDI'));
+}

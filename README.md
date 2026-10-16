@@ -212,3 +212,24 @@ python scripts/vehicle_catalog.py merge --input /tmp/toyota-models.json
 ```
 
 Uden --write viser importen kun, hvilke navne der ville blive tilføjet. Kendte poster, logoer, tankstørrelser og brugerdata overskrives ikke. De gennemgåede tilføjelser ligger i scripts/data/vehicle-model-additions-2026-10.json.
+
+### Dansk registerkatalog og lokal modelsøgning
+
+Biloprettelsen bruger det medfølgende katalog: vælg fabrikant, søg model og vælg selv drivmiddel samt eventuelt årgang/variant. Der hentes ikke modeldata fra eksterne sider under oprettelsen. Højst 60 forslag vises ad gangen; skriv mere for at indsnævre. Egne modeller og egne JSON-kataloger kan stadig bruges.
+
+Motorstyrelsens gratis statistikudtræk er hovedkilden til den nye importfunktion. Den læser personbiler/busser, varebiler og lastbiler (DMR-art 1–4) fra en hentet XML- eller ZIP-fil og samler mærker, modeller og variantnavne. Eksisterende modelværdier og logoer bevares. Ukendte mærker har tekstfallback. Nummerplader, stelnumre og køretøjs-ID'er eksporteres ikke til kataloget. Årgang og tank-/batteristørrelse udledes ikke af første registrering eller modelnavnet.
+
+**Status:** Det medfølgende katalog har fortsat 645 kuraterede modelnavne på 54 mærker. Den fulde, aktuelle DMR-fil er endnu ikke importeret. Importværktøjet er testet med syntetiske XML/ZIP-eksempler. Et komplet registerkatalog må først beskrives som medfølgende, når den fulde import er kørt og resultatet gennemgået. Dækningen gælder de relevante poster i det anvendte udtræk, ikke alle kommende modeller eller alle specifikationer.
+
+Kilde og gratis adgang: [Motorstyrelsen – statistikudtræk](https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange). Udtrækket er stort og behandles uden for Home Assistant.
+
+Når workflowet er tilgængeligt på standardbranchen, kan vedligeholderen åbne **Actions → Build Danish vehicle catalog → Run workflow**. Kørslen henter den seneste officielle fil, læser den uden at pakke den store XML ud på disk og leverer et lille katalogforslag samt en importstatus som artifact. Den ændrer ikke repository eller udgiver noget automatisk. FTP-serveren kan være utilgængelig; en mislykket import erstatter ikke det medfølgende katalog.
+
+Alternativt kan importen køres lokalt:
+
+```bash
+python scripts/dmr_catalog.py download --output /tmp/dmr.zip
+python scripts/dmr_catalog.py build --input /tmp/dmr.zip --source-date YYYY-MM-DD --output /tmp/bilkatalog-candidate.json --report /tmp/dmr-import-report.json
+```
+
+Brug datoen i det officielle filnavn som source-date. Gennemgå status, dubletter og nye mærker, og læg derefter det godkendte katalog i integrationens frontend/bilkatalog.json før udgivelse. Kildefilen er ikke en del af integrationen.

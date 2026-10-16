@@ -1,0 +1,39 @@
+name: Build Danish vehicle catalog
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Download official DMR extract
+        id: source
+        shell: bash
+        run: |
+          source_name=$(python scripts/dmr_catalog.py download --output "$RUNNER_TEMP/dmr.zip")
+          echo "name=$source_name" >> "$GITHUB_OUTPUT"
+          date_part=${source_name#ESStatistikListeModtag-}
+          date_part=${date_part:0:8}
+          echo "date=${date_part:0:4}-${date_part:4:2}-${date_part:6:2}" >> "$GITHUB_OUTPUT"
+      - name: Build catalog candidate without vehicle identifiers
+        env:
+          SOURCE_NAME: ${{ steps.source.outputs.name }}
+          SOURCE_DATE: ${{ steps.source.outputs.date }}
+        run: >-
+          python scripts/dmr_catalog.py build
+          --input "$RUNNER_TEMP/dmr.zip"
+          --source-file "$SOURCE_NAME"
+          --source-date "$SOURCE_DATE"
+          --output catalog-candidate/bilkatalog.json
+          --report catalog-candidate/import-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: danish-vehicle-catalog-candidate
+          path: catalog-candidate/
+          retention-days: 14
