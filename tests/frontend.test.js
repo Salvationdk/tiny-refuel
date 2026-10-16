@@ -550,3 +550,19 @@ function queueCoverage() {
   assert.equal((form._variantOptions('Test', 'Van').match(/<option /g) || []).length, 100);
   assert.ok(form._variantOptions('Test', 'Van', '1999').includes('Variant 1999'));
 }
+
+{
+  const form = new StableEditor();
+  form._katalog = packagedCatalog;
+  form.dispatchEvent = () => {};
+  form.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'Golf', brændstof: 'diesel', tank_liters: 50 }] });
+  form.events.change({ target: { dataset: { key: 'bil:0:variant' }, value: '2018 · 1.4 benzin' } });
+  assert.equal(form._config.biler[0].variant, '2018 · 1.4 benzin');
+  assert.equal(form._config.biler[0].brændstof, undefined);
+  assert.equal(form._config.biler[0].tank_liters, undefined);
+  form.events.change({ target: { dataset: { key: 'bil:0:brændstof' }, value: 'benzin' } });
+  form.events.change({ target: { dataset: { key: 'bil:0:tank_liters' }, value: '45' } });
+  form.events.change({ target: { dataset: { key: 'bil:0:variant' }, value: '2018 · 1.4 benzin' } });
+  assert.equal(form._config.biler[0].brændstof, 'benzin');
+  assert.equal(form._config.biler[0].tank_liters, 45, 'unchanged variant preserves confirmed manual specifications');
+}

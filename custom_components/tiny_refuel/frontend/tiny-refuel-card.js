@@ -1747,6 +1747,17 @@
             } else {
               delete biler[bi].model;
             }
+          } else if (field === "variant") {
+            var variant = String(t.value || "").trim();
+            if (variant !== (biler[bi].variant || "")) {
+              // A model-wide default is not a verified specification for a new variant.
+              delete biler[bi].brændstof;
+              delete biler[bi].vis;
+              delete biler[bi].tank_liters;
+              delete biler[bi].batteri_kwh;
+            }
+            if (variant) biler[bi].variant = variant;
+            else delete biler[bi].variant;
           } else if (field === "brændstof") {
             var fb = String(t.value || "");
             if (fb) {
@@ -1914,7 +1925,7 @@
       if (hint) hint.textContent = { benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[car.brændstof] || car.brændstof || "Vælg drivmiddel";
       var modelNote = this.querySelector('[data-model-note="' + index + '"]');
       var selectedModel = this._katalogFind(car.mærke, car.model);
-      if (modelNote) modelNote.textContent = selectedModel && selectedModel.specification_note || "";
+      if (modelNote) modelNote.textContent = selectedModel && selectedModel.specification_note || (car.variant ? "Variant valgt: vælg drivmiddel og kontrollér tank/batteri for denne variant." : "");
       var variantOptions = this.querySelector('[data-variant-options="' + index + '"]');
       if (variantOptions) variantOptions.innerHTML = this._variantOptions(car.mærke, car.model);
       var logo = this.querySelector('[data-model-logo="' + index + '"]');
@@ -2018,7 +2029,7 @@
           '<datalist id="trf-variants-' + bi2 + '" data-variant-options="' + bi2 + '">' + this._variantOptions(bb.mærke, bb.model) + '</datalist>';
         var selectedModel = this._katalogFind(bb.mærke, bb.model);
         html += '<div class="trfe-hint" data-model-note="' + bi2 + '">' +
-          esc(selectedModel && selectedModel.specification_note || '') + '</div>';
+          esc(selectedModel && selectedModel.specification_note || (bb.variant ? 'Variant valgt: vælg drivmiddel og kontrollér tank/batteri for denne variant.' : '')) + '</div>';
         var bfuel = bb.brændstof || "";
         html += '<div class="trfe-hint">Drivmiddel (sætter fornuftig visning)</div><div class="trfe-row">';
         for (var fi = 0; fi < fuels.length; fi++) {
