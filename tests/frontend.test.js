@@ -495,3 +495,25 @@ function queueCoverage() {
   onlyElectric.setConfig({ vis_benzin: false, vis_diesel: false, vis_el: true });
   assert.ok(onlyElectric.innerHTML.includes('1 unikke adresser klar til opslag'));
 }
+// A model-name-only addition must never carry over the preceding car's fuel/specs.
+{
+  const form = new StableEditor();
+  form._katalog = packagedCatalog;
+  form.dispatchEvent = () => {};
+  form.setConfig({ biler: [{ mærke: 'Toyota', model: 'Prius', brændstof: 'hybrid', tank_liters: 45, batteri_kwh: 8, vis: { benzin: true } }] });
+  form.events.change({ target: { dataset: { key: 'bil:0:model' }, value: 'Aygo' } });
+  const car = form._config.biler[0];
+  assert.equal(car.model, 'Aygo');
+  assert.equal(car.brændstof, undefined);
+  assert.equal(car.tank_liters, undefined);
+  assert.equal(car.batteri_kwh, undefined);
+  assert.equal(car.vis, undefined);
+  form._render();
+  assert.ok(form.innerHTML.includes('Aygo · vælg drivmiddel'));
+  assert.ok(form.innerHTML.includes('Vælg drivmiddel og kontrollér tank/batteri'));
+  assert.ok(!form.innerHTML.includes('Aygo · null'));
+  assert.ok(form.innerHTML.includes('54 mærker · 645 modeller'));
+  form.events.change({ target: { dataset: { key: 'bil:0:brændstof' }, value: 'benzin' } });
+  assert.equal(form._config.biler[0].brændstof, 'benzin');
+  assert.equal(form._config.biler[0].vis.benzin, true);
+}

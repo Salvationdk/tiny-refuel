@@ -1716,6 +1716,9 @@
                 if (entry.brændstof) {
                   biler[bi].brændstof = entry.brændstof;
                   biler[bi].vis = visForFuel(entry.brændstof);
+                } else if (entry.requires_fuel_selection) {
+                  delete biler[bi].brændstof;
+                  delete biler[bi].vis;
                 }
                 var nm = biler[bi].navn || "";
                 if (!nm || /^Bil \d+$/.test(nm)) {
@@ -1862,6 +1865,9 @@
       if (title) title.textContent = car.navn || [car.mærke, car.model].filter(Boolean).join(" ") || "Bil " + (index + 1);
       var hint = this.querySelector('[data-car-card="' + index + '"] .trfe-summary-meta');
       if (hint) hint.textContent = { benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[car.brændstof] || car.brændstof || "Vælg drivmiddel";
+      var modelNote = this.querySelector('[data-model-note="' + index + '"]');
+      var selectedModel = this._katalogFind(car.mærke, car.model);
+      if (modelNote) modelNote.textContent = selectedModel && selectedModel.specification_note || "";
       var logo = this.querySelector('[data-model-logo="' + index + '"]');
       if (logo) logo.innerHTML = vehicleLogoHtml(this._katalog, car, "trfe-model-logo", true);
     }
@@ -1956,12 +1962,15 @@
         for (var mj = 0; mj < katModels.length; mj++) {
           var _mm0 = katModels[mj];
           dlm += '<option value="' + esc(_mm0.model) + '">' +
-            esc(_mm0.model + " · " + _mm0.brændstof + (_mm0.tank_l != null ? " · " + _mm0.tank_l + " L" : "")) + "</option>";
+            esc(_mm0.model + " · " + (_mm0.brændstof || "vælg drivmiddel") + (_mm0.tank_l != null ? " · " + _mm0.tank_l + " L" : "")) + "</option>";
         }
         dlm += "</datalist>";
         html += '<div class="trfe-hint">Model (forslag fra katalog — eller skriv selv)</div>' +
           '<input type="text" list="' + dlmId + '" data-key="bil:' + bi2 + ':model" value="' +
           esc(bb.model || "") + '" placeholder="fx up!" ' + (katModels.length ? "" : 'disabled title="Vælg mærke først"') + ">" + dlm;
+        var selectedModel = this._katalogFind(bb.mærke, bb.model);
+        html += '<div class="trfe-hint" data-model-note="' + bi2 + '">' +
+          esc(selectedModel && selectedModel.specification_note || '') + '</div>';
         var bfuel = bb.brændstof || "";
         html += '<div class="trfe-hint">Drivmiddel (sætter fornuftig visning)</div><div class="trfe-row">';
         for (var fi = 0; fi < fuels.length; fi++) {
@@ -2002,7 +2011,7 @@
       html += '<div class="trfe-hint"><a href="#" data-bil-add>' + (biler.length ? "Tilføj endnu en bil" : "＋ Tilføj bil") + '</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
       html += "<h4>Bilkatalog (mærker/modeller)</h4>";
       html += '<div class="trfe-hint">Katalogkilde (tom = indbygget: ' +
-        this._katalogBrands().length + ' mærker)</div><input type="text" data-key="katalog_url" value="' +
+        this._katalogBrands().length + ' mærker · ' + this._katalogBrands().reduce(function (total, brand) { return total + (brand.modeller || []).length; }, 0) + ' modeller)</div><input type="text" data-key="katalog_url" value="' +
         esc(c.katalog_url || "") + '" placeholder="/tiny_refuel/static/bilkatalog.json">';
       html += '<div class="trfe-hint">Peg på en anden JSON i samme format {brands:[{mærke, modeller:[{model, brændstof, tank_l, batteri_kwh}]}]} for at udvide — fx din egen fil under www/. Indlæses hver gang editoren åbnes.</div>';
       html += '<details class="trfe-yaml" data-editor-section="yaml"><summary>Vis hele kortets YAML</summary>';

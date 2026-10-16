@@ -95,7 +95,7 @@ Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af v
 |---|---|
 | ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Bilsektion med fire sammenklappede biler og mærkelogoer](docs/screenshots/editor-vehicles.png) |
 
-En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 54 mærker og 470 modeller, inklusive benzin, diesel, el, hybrider og varevogne. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst.
+En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 54 mærker og 645 modeller, inklusive benzin, diesel, el, hybrider og varevogne. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst. Modeller uden verificeret årgang/variant kræver valg af drivmiddel og manuel kontrol af tank og batteri. Kataloget garanterer ikke alle motorvarianter eller årgange.
 
 ![Udvidet bilopsætning for en dieselbil](docs/screenshots/editor-vehicle-details.png)
 
@@ -197,3 +197,18 @@ node tests/frontend.test.js
 
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
 
+
+### Vedligeholdelse af bilkataloget
+
+Kataloget indeholder også ældre benzin- og dieselmodeller samt større biler og varevogne. Modelnavne og tekniske specifikationer behandles hver for sig. De 175 nye navne i 0.2.2 har kildelinks, men ingen gættede tank-, batteri- eller drivmiddelværdier. Eksisterende poster og egne kataloger bevares.
+
+Et udviklerværktøj kan hente modelnavne fra Toyota Danmarks officielle, strukturerede modeloversigt. Det skriver en kandidatliste til gennemgang og ændrer ikke integrationens katalog automatisk. Det kører ikke ved almindelig pris-scraping. Flere producentadaptere kan tilføjes senere; den første dækker Toyota, ikke alle mærker.
+
+```bash
+python scripts/vehicle_catalog.py scrape --source toyota-dk --output /tmp/toyota-models.json
+# Gennemgå navnene og sæt reviewed til true i kandidatfilen.
+python scripts/vehicle_catalog.py merge --input /tmp/toyota-models.json
+# Tilføj --write for at gemme efter gennemgang.
+```
+
+Uden --write viser importen kun, hvilke navne der ville blive tilføjet. Kendte poster, logoer, tankstørrelser og brugerdata overskrives ikke. De gennemgåede tilføjelser ligger i scripts/data/vehicle-model-additions-2026-10.json.

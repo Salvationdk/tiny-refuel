@@ -1,13 +1,77 @@
 {
-  "note": "Kurateret dansk katalog med populære nye og brugte personbiler, større familiebiler, varevogne og minibusser. Tank- og batteristørrelser er vejledende modelværdier; kontroller altid mod bilens instruktionsbog. brændstof: benzin|diesel|el|hybrid|plug_in_hybrid. tank_l: liter (null for el). batteri_kwh: vejledende batteristørrelse.",
+  "note": "Kurateret dansk katalog med populære nye og brugte personbiler, større familiebiler, varevogne og minibusser. Tank- og batteristørrelser er vejledende modelværdier; kontroller altid mod bilens instruktionsbog. brændstof: benzin|diesel|el|hybrid|plug_in_hybrid. tank_l: liter (null for el). batteri_kwh: vejledende batteristørrelse. Nye poster uden verificeret variant kræver valg af drivmiddel; tank og batteri udfyldes manuelt. Se source_url på den enkelte post.",
   "brands": [
     {
       "mærke": "Alfa Romeo",
       "modeller": [
         {
+          "model": "147",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "156",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "159",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Brera",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Giulia",
           "brændstof": "benzin",
           "tank_l": 58
+        },
+        {
+          "model": "Giulietta",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "GT",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "MiTo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Spider",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Stelvio",
@@ -29,6 +93,14 @@
           "model": "A1",
           "brændstof": "benzin",
           "tank_l": 40
+        },
+        {
+          "model": "A2",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.audi-mediacenter.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "A3",
@@ -60,6 +132,14 @@
           "brændstof": "plug_in_hybrid",
           "tank_l": 55,
           "batteri_kwh": 17
+        },
+        {
+          "model": "A8",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.audi-mediacenter.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "e-tron",
@@ -101,16 +181,48 @@
           "batteri_kwh": 94
         },
         {
+          "model": "Q7",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.audi-mediacenter.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Q7 e-hybrid",
           "brændstof": "plug_in_hybrid",
           "tank_l": 75,
           "batteri_kwh": 25
         },
         {
+          "model": "Q8",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.audi-mediacenter.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Q8 e-tron",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 95
+        },
+        {
+          "model": "R8",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.audi-mediacenter.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "TT",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.audi-mediacenter.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         }
       ]
     },
@@ -123,9 +235,25 @@
           "tank_l": 42
         },
         {
+          "model": "2-serie Active Tourer",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "2-serie Gran Coupé",
           "brændstof": "benzin",
           "tank_l": 42
+        },
+        {
+          "model": "2-serie Gran Tourer",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "3-serie",
@@ -143,10 +271,26 @@
           "tank_l": 68
         },
         {
+          "model": "6-serie",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "7-serie",
           "brændstof": "plug_in_hybrid",
           "tank_l": 65,
           "batteri_kwh": 18
+        },
+        {
+          "model": "8-serie",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "i3",
@@ -208,15 +352,79 @@
           "batteri_kwh": 16
         },
         {
+          "model": "X2",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "X3",
           "brændstof": "diesel",
           "tank_l": 60
+        },
+        {
+          "model": "X4",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "X5",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "X5 plug-in hybrid",
           "brændstof": "plug_in_hybrid",
           "tank_l": 69,
           "batteri_kwh": 25
+        },
+        {
+          "model": "X6",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "X7",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "XM",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Z3",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Z4",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         }
       ]
     },
@@ -297,6 +505,14 @@
       "mærke": "Citroën",
       "modeller": [
         {
+          "model": "2CV",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Berlingo",
           "brændstof": "diesel",
           "tank_l": 50
@@ -307,9 +523,49 @@
           "tank_l": 50
         },
         {
+          "model": "BX",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C-Crosser",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C-Elysée",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C-Zero",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "C1",
           "brændstof": "benzin",
           "tank_l": 35
+        },
+        {
+          "model": "C2",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "C3",
@@ -322,14 +578,70 @@
           "tank_l": 45
         },
         {
+          "model": "C3 Picasso",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C3 Pluriel",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "C4",
           "brændstof": "benzin",
           "tank_l": 50
         },
         {
+          "model": "C4 Aircross",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C4 Cactus",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C4 Picasso",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C4 SpaceTourer",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "C4 X",
           "brændstof": "benzin",
           "tank_l": 50
+        },
+        {
+          "model": "C5",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "C5 Aircross",
@@ -343,16 +655,111 @@
           "batteri_kwh": 13
         },
         {
-          "model": "ë-Berlingo Van",
-          "brændstof": "el",
+          "model": "C6",
+          "brændstof": null,
           "tank_l": null,
-          "batteri_kwh": 50
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C8",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "e-C3",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 44
+        },
+        {
+          "model": "Grand C4 Picasso",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Grand C4 SpaceTourer",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Jumper",
+          "brændstof": "diesel",
+          "tank_l": 90
+        },
+        {
+          "model": "Jumpy",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
+          "model": "Nemo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Saxo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "SpaceTourer",
+          "brændstof": "diesel",
+          "tank_l": 69
+        },
+        {
+          "model": "Xantia",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "XM",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Xsara",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Xsara Picasso",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "ë-Berlingo Van",
+          "brændstof": "el",
+          "tank_l": null,
+          "batteri_kwh": 50
         },
         {
           "model": "ë-C3 Aircross",
@@ -377,21 +784,6 @@
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 75
-        },
-        {
-          "model": "Jumper",
-          "brændstof": "diesel",
-          "tank_l": 90
-        },
-        {
-          "model": "Jumpy",
-          "brændstof": "diesel",
-          "tank_l": 69
-        },
-        {
-          "model": "SpaceTourer",
-          "brændstof": "diesel",
-          "tank_l": 69
         }
       ]
     },
@@ -602,6 +994,14 @@
       "mærke": "Ford",
       "modeller": [
         {
+          "model": "B-Max",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "C-Max",
           "brændstof": "benzin",
           "tank_l": 53
@@ -631,6 +1031,22 @@
           "batteri_kwh": 64
         },
         {
+          "model": "EcoSport",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Edge",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Explorer",
           "brændstof": "el",
           "tank_l": null,
@@ -650,6 +1066,22 @@
           "model": "Galaxy",
           "brændstof": "diesel",
           "tank_l": 70
+        },
+        {
+          "model": "Ka",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Ka+",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Kuga",
@@ -699,6 +1131,14 @@
           "tank_l": 60
         },
         {
+          "model": "Tourneo Courier",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Tourneo Custom",
           "brændstof": "diesel",
           "tank_l": 70
@@ -744,10 +1184,42 @@
           "tank_l": 57
         },
         {
+          "model": "CR-Z",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "CRX",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "e:Ny1",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 61
+        },
+        {
+          "model": "FR-V",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "e",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "HR-V",
@@ -760,14 +1232,46 @@
           "tank_l": 40
         },
         {
+          "model": "Integra",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Jazz",
           "brændstof": "hybrid",
           "tank_l": 40
         },
         {
+          "model": "Legend",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Prelude",
           "brændstof": "hybrid",
           "tank_l": 40
+        },
+        {
+          "model": "S2000",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Stream",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://global.honda/en/pressroom/products/auto/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "ZR-V",
@@ -808,6 +1312,14 @@
           "tank_l": 40
         },
         {
+          "model": "Getz",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.hyundai.fi/omistajalle/kayttoohjekirjat/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "i10",
           "brændstof": "benzin",
           "tank_l": 36
@@ -821,6 +1333,14 @@
           "model": "i30",
           "brændstof": "benzin",
           "tank_l": 50
+        },
+        {
+          "model": "i40",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.hyundai.fi/omistajalle/kayttoohjekirjat/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Inster",
@@ -851,6 +1371,22 @@
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 110
+        },
+        {
+          "model": "ix20",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.hyundai.fi/omistajalle/kayttoohjekirjat/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "ix35",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.hyundai.fi/omistajalle/kayttoohjekirjat/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Kona",
@@ -1380,6 +1916,22 @@
           "tank_l": 51
         },
         {
+          "model": "CLK",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "CLS",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "E-klasse",
           "brændstof": "diesel",
           "tank_l": 66
@@ -1439,6 +1991,22 @@
           "batteri_kwh": 60
         },
         {
+          "model": "G-klasse",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "GL-klasse",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "GLA",
           "brændstof": "benzin",
           "tank_l": 43
@@ -1460,10 +2028,74 @@
           "batteri_kwh": 25
         },
         {
+          "model": "GLE",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "GLE plug-in hybrid",
           "brændstof": "plug_in_hybrid",
           "tank_l": 65,
           "batteri_kwh": 25
+        },
+        {
+          "model": "GLK",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "GLS",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "ML-klasse",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "S-klasse",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "SL",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "SLC",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "SLK",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://mercedes-benz-publicarchive.com/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Sprinter",
@@ -1739,15 +2371,63 @@
       "mærke": "Opel",
       "modeller": [
         {
+          "model": "Adam",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Agila",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Ampera",
           "brændstof": "plug_in_hybrid",
           "tank_l": 35,
           "batteri_kwh": 16
         },
         {
+          "model": "Antara",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Astra",
           "brændstof": "benzin",
           "tank_l": 52
+        },
+        {
+          "model": "Astra GTC",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Cascada",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Combo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Combo Cargo",
@@ -1777,6 +2457,14 @@
           "tank_l": 45
         },
         {
+          "model": "Crossland X",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Frontera",
           "brændstof": "benzin",
           "tank_l": 44
@@ -1799,9 +2487,41 @@
           "batteri_kwh": 73
         },
         {
+          "model": "Grandland X",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "GT",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Insignia",
           "brændstof": "diesel",
           "tank_l": 62
+        },
+        {
+          "model": "Karl",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Meriva",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Mokka",
@@ -1809,9 +2529,49 @@
           "tank_l": 41
         },
         {
+          "model": "Mokka X",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Movano",
           "brændstof": "diesel",
           "tank_l": 90
+        },
+        {
+          "model": "Omega",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Signum",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Tigra",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Vectra",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Vivaro",
@@ -1825,15 +2585,55 @@
           "batteri_kwh": 75
         },
         {
+          "model": "Zafira",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Zafira Life",
           "brændstof": "diesel",
           "tank_l": 69
+        },
+        {
+          "model": "Zafira Tourer",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         }
       ]
     },
     {
       "mærke": "Peugeot",
       "modeller": [
+        {
+          "model": "1007",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "106",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "107",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
         {
           "model": "108",
           "brændstof": "benzin",
@@ -1843,6 +2643,38 @@
           "model": "2008",
           "brændstof": "benzin",
           "tank_l": 44
+        },
+        {
+          "model": "206",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "206 CC",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "207",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "207 CC",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "208",
@@ -1855,6 +2687,30 @@
           "tank_l": 53
         },
         {
+          "model": "306",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "307",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "307 CC",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "308",
           "brændstof": "benzin",
           "tank_l": 52
@@ -1864,6 +2720,38 @@
           "brændstof": "plug_in_hybrid",
           "tank_l": 40,
           "batteri_kwh": 12
+        },
+        {
+          "model": "4007",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "4008",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "406",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "407",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "408",
@@ -1885,6 +2773,38 @@
           "brændstof": "plug_in_hybrid",
           "tank_l": 43,
           "batteri_kwh": 12
+        },
+        {
+          "model": "607",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "806",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "807",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Bipper",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Boxer",
@@ -1950,9 +2870,25 @@
           "tank_l": 50
         },
         {
+          "model": "Partner Tepee",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Partner Van",
           "brændstof": "diesel",
           "tank_l": 50
+        },
+        {
+          "model": "RCZ",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Rifter",
@@ -2026,6 +2962,14 @@
       "mærke": "Renault",
       "modeller": [
         {
+          "model": "19",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "4 E-Tech",
           "brændstof": "el",
           "tank_l": null,
@@ -2062,6 +3006,22 @@
           "tank_l": 50
         },
         {
+          "model": "Fluence",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Grand Modus",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Kadjar",
           "brændstof": "diesel",
           "tank_l": 55
@@ -2078,9 +3038,25 @@
           "batteri_kwh": 45
         },
         {
+          "model": "Laguna",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Master",
           "brændstof": "diesel",
           "tank_l": 80
+        },
+        {
+          "model": "Modus",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Mégane",
@@ -2120,6 +3096,22 @@
           "model": "Twingo",
           "brændstof": "benzin",
           "tank_l": 35
+        },
+        {
+          "model": "Vel Satis",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Wind",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Zoe",
@@ -2316,15 +3308,39 @@
           "tank_l": 55
         },
         {
+          "model": "Alto",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://suzuki.dk/redaktionen/suzuki-runder-80-mio-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Baleno",
           "brændstof": "benzin",
           "tank_l": 37
+        },
+        {
+          "model": "Celerio",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://suzuki.dk/redaktionen/suzuki-runder-80-mio-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "e Vitara",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 61
+        },
+        {
+          "model": "Grand Vitara",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://suzuki.dk/crossover",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Ignis",
@@ -2337,9 +3353,25 @@
           "tank_l": 40
         },
         {
+          "model": "Liana",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://suzuki.dk/redaktionen/suzuki-runder-80-mio-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "S-Cross",
           "brændstof": "benzin",
           "tank_l": 47
+        },
+        {
+          "model": "Splash",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://suzuki.dk/suzuki-basisservice",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Swace",
@@ -2360,6 +3392,14 @@
           "model": "Vitara",
           "brændstof": "benzin",
           "tank_l": 47
+        },
+        {
+          "model": "Wagon R",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://suzuki.dk/redaktionen/suzuki-runder-80-mio-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         }
       ]
     },
@@ -2432,6 +3472,14 @@
           "tank_l": 60
         },
         {
+          "model": "Aygo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Aygo X",
           "brændstof": "benzin",
           "tank_l": 35
@@ -2443,14 +3491,54 @@
           "batteri_kwh": 71
         },
         {
+          "model": "bZ4X Touring",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.toyota.dk/nye-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "C-HR",
           "brændstof": "hybrid",
           "tank_l": 43
         },
         {
+          "model": "C-HR+",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.toyota.dk/nye-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Camry",
           "brændstof": "hybrid",
           "tank_l": 50
+        },
+        {
+          "model": "Carina",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Carina E",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Celica",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Corolla",
@@ -2463,9 +3551,73 @@
           "tank_l": 36
         },
         {
+          "model": "Corolla Verso",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/archive-/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Corona",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Crown",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Hilux",
           "brændstof": "diesel",
           "tank_l": 80
+        },
+        {
+          "model": "Land Cruiser",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.toyota.dk/nye-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "MR2",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Paseo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Picnic",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Previa",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Prius",
@@ -2477,6 +3629,14 @@
           "brændstof": "plug_in_hybrid",
           "tank_l": 40,
           "batteri_kwh": 13
+        },
+        {
+          "model": "Prius+",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Proace",
@@ -2506,6 +3666,22 @@
           "batteri_kwh": 75
         },
         {
+          "model": "Proace Max",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.toyota.dk/nye-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Proace Max Electric",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.toyota.dk/nye-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Proace Verso",
           "brændstof": "diesel",
           "tank_l": 69
@@ -2520,6 +3696,54 @@
           "model": "RAV4",
           "brændstof": "hybrid",
           "tank_l": 55
+        },
+        {
+          "model": "Starlet",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Supra",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Tercel",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Urban Cruiser",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.toyota.dk/nye-biler",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Verso",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/archive-/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Verso-S",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://newsroom.toyota.eu/historic/",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Yaris",
@@ -2545,6 +3769,22 @@
           "model": "Arteon",
           "brændstof": "diesel",
           "tank_l": 66
+        },
+        {
+          "model": "Beetle",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Bora",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Caddy",
@@ -2580,6 +3820,14 @@
           "batteri_kwh": 32
         },
         {
+          "model": "Eos",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Golf",
           "brændstof": "benzin",
           "tank_l": 50
@@ -2589,6 +3837,14 @@
           "brændstof": "plug_in_hybrid",
           "tank_l": 50,
           "batteri_kwh": 13
+        },
+        {
+          "model": "Golf Plus",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "ID. Buzz",
@@ -2633,6 +3889,22 @@
           "batteri_kwh": 77
         },
         {
+          "model": "Jetta",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "Lupo",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Multivan",
           "brændstof": "plug_in_hybrid",
           "tank_l": 45,
@@ -2650,9 +3922,25 @@
           "batteri_kwh": 13
         },
         {
+          "model": "Phaeton",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Polo",
           "brændstof": "benzin",
           "tank_l": 40
+        },
+        {
+          "model": "Scirocco",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "Sharan",
@@ -2691,6 +3979,14 @@
           "batteri_kwh": 20
         },
         {
+          "model": "Touareg",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "Touran",
           "brændstof": "diesel",
           "tank_l": 58
@@ -2711,10 +4007,66 @@
       "mærke": "Volvo",
       "modeller": [
         {
+          "model": "240",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "740",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "850",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "940",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "960",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "C30",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "C40 Recharge",
           "brændstof": "el",
           "tank_l": null,
           "batteri_kwh": 78
+        },
+        {
+          "model": "C70",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "EC40",
@@ -2741,10 +4093,34 @@
           "batteri_kwh": 107
         },
         {
+          "model": "S40",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "S60",
           "brændstof": "plug_in_hybrid",
           "tank_l": 60,
           "batteri_kwh": 18
+        },
+        {
+          "model": "S70",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
+          "model": "S80",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "S90",
@@ -2758,10 +4134,26 @@
           "tank_l": 62
         },
         {
+          "model": "V50",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
+        },
+        {
           "model": "V60",
           "brændstof": "plug_in_hybrid",
           "tank_l": 60,
           "batteri_kwh": 18
+        },
+        {
+          "model": "V70",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "V90",
@@ -2778,6 +4170,14 @@
           "model": "XC60",
           "brændstof": "diesel",
           "tank_l": 70
+        },
+        {
+          "model": "XC70",
+          "brændstof": null,
+          "tank_l": null,
+          "requires_fuel_selection": true,
+          "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+          "specification_note": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant."
         },
         {
           "model": "XC90 plug-in hybrid",

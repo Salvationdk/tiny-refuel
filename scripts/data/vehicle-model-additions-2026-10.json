@@ -1,0 +1,302 @@
+{
+  "reviewed": true,
+  "reviewed_on": "2026-10-16",
+  "note": "Modelnavne kontrolleret mod producenternes modelarkiver og instruktionsbogsoversigter. Dette er navne, ikke verificerede specifikationer eller en garanti for dansk salg af alle varianter. Ingen tank, batteri eller drivmiddel udledes.",
+  "brands": [
+    {
+      "mærke": "Alfa Romeo",
+      "source_url": "https://www.technicalinformation.alfaromeo.com/tech-info-web/web/pageLarge.do?id=343",
+      "models": [
+        "147",
+        "156",
+        "159",
+        "Brera",
+        "Spider",
+        "MiTo",
+        "GT",
+        "Giulietta"
+      ]
+    },
+    {
+      "mærke": "Audi",
+      "source_url": "https://www.audi-mediacenter.com/",
+      "models": [
+        "A2",
+        "A8",
+        "TT",
+        "R8",
+        "Q7",
+        "Q8"
+      ]
+    },
+    {
+      "mærke": "BMW",
+      "source_url": "https://www.bmw.dk/da/alle-modeller.html",
+      "models": [
+        "2-serie Active Tourer",
+        "2-serie Gran Tourer",
+        "6-serie",
+        "8-serie",
+        "X2",
+        "X4",
+        "X5",
+        "X6",
+        "X7",
+        "XM",
+        "Z3",
+        "Z4"
+      ]
+    },
+    {
+      "mærke": "Citroën",
+      "source_url": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "models": [
+        "C2",
+        "C3 Picasso",
+        "C3 Pluriel",
+        "C4 Cactus",
+        "C4 Picasso",
+        "Grand C4 Picasso",
+        "C4 SpaceTourer",
+        "Grand C4 SpaceTourer",
+        "C4 Aircross",
+        "C5",
+        "C6",
+        "C8",
+        "C-Crosser",
+        "C-Zero",
+        "C-Elysée",
+        "Nemo",
+        "Xsara Picasso"
+      ]
+    },
+    {
+      "mærke": "Citroën",
+      "source_url": "https://www.citroen.dk/citroen-universet/historie.html",
+      "models": [
+        "Saxo",
+        "Xsara",
+        "Xantia",
+        "XM",
+        "BX",
+        "2CV"
+      ]
+    },
+    {
+      "mærke": "Ford",
+      "source_url": "https://media.ford.com/content/fordmedia/feu/en/news/2016/09/19/big-value-in-a-small-package--all-new-ford-ka--offers-outstandin.html",
+      "models": [
+        "Ka",
+        "Ka+",
+        "B-Max",
+        "EcoSport",
+        "Edge",
+        "Tourneo Courier"
+      ]
+    },
+    {
+      "mærke": "Honda",
+      "source_url": "https://global.honda/en/pressroom/products/auto/",
+      "models": [
+        "CR-Z",
+        "Legend",
+        "FR-V",
+        "Stream",
+        "CRX",
+        "Integra",
+        "S2000",
+        "e"
+      ]
+    },
+    {
+      "mærke": "Hyundai",
+      "source_url": "https://www.hyundai.fi/omistajalle/kayttoohjekirjat/",
+      "models": [
+        "Getz",
+        "i40",
+        "ix20",
+        "ix35"
+      ]
+    },
+    {
+      "mærke": "Mercedes",
+      "source_url": "https://mercedes-benz-publicarchive.com/",
+      "models": [
+        "S-klasse",
+        "CLK",
+        "CLS",
+        "SLK",
+        "SLC",
+        "SL",
+        "GLK",
+        "G-klasse",
+        "GL-klasse",
+        "GLS",
+        "ML-klasse",
+        "GLE"
+      ]
+    },
+    {
+      "mærke": "Opel",
+      "source_url": "https://www.opel.at/service/betriebsanleitungen.html",
+      "models": [
+        "Adam",
+        "Agila",
+        "Antara",
+        "Astra GTC",
+        "Cascada",
+        "Combo",
+        "Crossland X",
+        "Grandland X",
+        "GT",
+        "Karl",
+        "Meriva",
+        "Mokka X",
+        "Omega",
+        "Signum",
+        "Tigra",
+        "Vectra",
+        "Zafira",
+        "Zafira Tourer"
+      ]
+    },
+    {
+      "mærke": "Peugeot",
+      "source_url": "https://public.servicebox.peugeot.com/APddb/index.html?lang=nl",
+      "models": [
+        "106",
+        "107",
+        "206",
+        "206 CC",
+        "207",
+        "207 CC",
+        "306",
+        "307",
+        "307 CC",
+        "406",
+        "407",
+        "607",
+        "806",
+        "807",
+        "1007",
+        "4007",
+        "4008",
+        "RCZ",
+        "Bipper",
+        "Partner Tepee"
+      ]
+    },
+    {
+      "mærke": "Renault",
+      "source_url": "https://www.renault.de/tipps-und-anleitungen/rettungskarten.html",
+      "models": [
+        "Laguna",
+        "Modus",
+        "Grand Modus",
+        "Vel Satis",
+        "Fluence",
+        "Wind",
+        "19"
+      ]
+    },
+    {
+      "mærke": "Suzuki",
+      "source_url": "https://suzuki.dk/redaktionen/suzuki-runder-80-mio-biler",
+      "models": [
+        "Alto",
+        "Celerio",
+        "Liana",
+        "Wagon R"
+      ]
+    },
+    {
+      "mærke": "Suzuki",
+      "source_url": "https://suzuki.dk/suzuki-basisservice",
+      "models": [
+        "Splash"
+      ]
+    },
+    {
+      "mærke": "Suzuki",
+      "source_url": "https://suzuki.dk/crossover",
+      "models": [
+        "Grand Vitara"
+      ]
+    },
+    {
+      "mærke": "Toyota",
+      "source_url": "https://newsroom.toyota.eu/historic/",
+      "models": [
+        "Aygo",
+        "Starlet",
+        "Tercel",
+        "Carina",
+        "Carina E",
+        "Corona",
+        "Crown",
+        "Prius+",
+        "Verso-S",
+        "Picnic",
+        "Previa",
+        "Paseo",
+        "Celica",
+        "MR2",
+        "Supra"
+      ]
+    },
+    {
+      "mærke": "Toyota",
+      "source_url": "https://newsroom.toyota.eu/archive-/",
+      "models": [
+        "Verso",
+        "Corolla Verso"
+      ]
+    },
+    {
+      "mærke": "Toyota",
+      "source_url": "https://www.toyota.dk/nye-biler",
+      "models": [
+        "Land Cruiser",
+        "Proace Max",
+        "Proace Max Electric",
+        "C-HR+",
+        "bZ4X Touring",
+        "Urban Cruiser"
+      ]
+    },
+    {
+      "mærke": "Volkswagen",
+      "source_url": "https://www.volkswagen.se/sv/om-volkswagen/broschyrer/broschyrarkiv.html",
+      "models": [
+        "Beetle",
+        "Bora",
+        "Eos",
+        "Golf Plus",
+        "Jetta",
+        "Lupo",
+        "Phaeton",
+        "Scirocco",
+        "Touareg"
+      ]
+    },
+    {
+      "mærke": "Volvo",
+      "source_url": "https://www.volvocars.com/us/v/discover/heritage-car-models",
+      "models": [
+        "C30",
+        "C70",
+        "S40",
+        "S70",
+        "S80",
+        "V50",
+        "V70",
+        "XC70",
+        "240",
+        "740",
+        "850",
+        "940",
+        "960"
+      ]
+    }
+  ]
+}
