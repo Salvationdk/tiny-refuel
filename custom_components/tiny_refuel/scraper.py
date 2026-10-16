@@ -89,9 +89,9 @@ def get(url, headers=None, timeout=45):
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return resp.read()
         except urllib.error.HTTPError as exc:
+            exc.close()
             if attempt or exc.code not in (500, 502, 503, 504):
                 raise
-            exc.close()
             time.sleep(0.5)
 
 

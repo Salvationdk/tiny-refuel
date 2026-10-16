@@ -93,7 +93,7 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(any(row.get('brand') == 'Tesla' for row in manager.data['ev']))
         self.assertNotIn('tesla',manager.data['ev_sources'])
         self.assertNotIn('tesla',manager.data['benefits'])
-        self.assertEqual(manager.snapshot()['version'], '0.2.1')
+        self.assertEqual(manager.snapshot()['version'], '0.2.2')
         self.hass.data['tiny_refuel']={'manager':manager}
         view=tiny_refuel.RefuelDataView(self.hass);self.assertTrue(view.requires_auth)
         response=await view.get(None);self.assertEqual(response.status,200);self.assertEqual(response.headers['Cache-Control'],'no-store')
