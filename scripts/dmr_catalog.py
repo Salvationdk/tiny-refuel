@@ -4,10 +4,11 @@ import argparse
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import date
-from ftplib import FTP
+from ftplib import FTP, error_perm
 import json
 from pathlib import Path
 import re
+import sys
 import tempfile
 import unicodedata
 import xml.etree.ElementTree as ET
@@ -38,27 +39,54 @@ def clean(value):
 
 
 def download_latest(destination, ftp_factory=FTP):
-    """Download the latest official archive once; partial files never replace output."""
+    """Retry interrupted transfers with FTP REST; never replace a valid local file."""
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with ftp_factory(FTP_HOST, timeout=60) as ftp:
-        ftp.login(FTP_USER, FTP_PASSWORD)
-        ftp.cwd('ESStatistikListeModtag')
-        names = [name.rsplit('/', 1)[-1] for name in ftp.nlst()]
-        names = [name for name in names if re.fullmatch(r'ESStatistikListeModtag-\d{8}-\d{6}\.zip', name)]
-        if not names:
-            raise ValueError('No official DMR archive found; existing file left untouched')
-        name = max(names)
-        with tempfile.NamedTemporaryFile('wb', dir=destination.parent, delete=False) as handle:
-            temporary = Path(handle.name)
-            try:
-                ftp.retrbinary('RETR ' + name, handle.write, blocksize=1024 * 1024)
-            except BaseException:
-                handle.close()
-                temporary.unlink(missing_ok=True)
-                raise
+    name = None
+    with tempfile.NamedTemporaryFile('wb', dir=destination.parent, delete=False) as handle:
+        temporary = Path(handle.name)
     try:
-        # Check the container directory; full XML/CRC validation happens while importing.
+        for attempt in range(1, 4):
+            try:
+                print(f'DMR: connection attempt {attempt}/3', file=sys.stderr, flush=True)
+                with ftp_factory(FTP_HOST, timeout=180) as ftp:
+                    ftp.login(FTP_USER, FTP_PASSWORD)
+                    ftp.cwd('ESStatistikListeModtag')
+                    if name is None:
+                        names = [item.rsplit('/', 1)[-1] for item in ftp.nlst()]
+                        names = [item for item in names if re.fullmatch(r'ESStatistikListeModtag-\d{8}-\d{6}\.zip', item)]
+                        if not names:
+                            raise ValueError('No official DMR archive found; existing file left untouched')
+                        name = max(names)
+                    offset = temporary.stat().st_size
+                    print(f'DMR: {name}; starting at {offset // (1024 * 1024)} MiB', file=sys.stderr, flush=True)
+                    with temporary.open('ab') as handle:
+                        transferred = offset
+                        last_report = offset
+
+                        def write_chunk(chunk):
+                            nonlocal transferred, last_report
+                            handle.write(chunk)
+                            transferred += len(chunk)
+                            if transferred - last_report >= 64 * 1024 * 1024:
+                                print(f'DMR: downloaded {transferred // (1024 * 1024)} MiB', file=sys.stderr, flush=True)
+                                last_report = transferred
+
+                        try:
+                            kwargs = {'rest': offset} if offset else {}
+                            ftp.retrbinary('RETR ' + name, write_chunk, blocksize=1024 * 1024, **kwargs)
+                        except error_perm:
+                            if not offset:
+                                raise
+                            # Some servers reject REST: reconnect and restart on next attempt.
+                            handle.close()
+                            temporary.write_bytes(b'')
+                            raise
+                break
+            except (OSError, EOFError, error_perm) as exc:
+                print(f'DMR: transfer interrupted ({type(exc).__name__}); saved {temporary.stat().st_size // (1024 * 1024)} MiB', file=sys.stderr, flush=True)
+                if attempt == 3:
+                    raise
         with zipfile.ZipFile(temporary) as archive:
             if not any(info.filename.lower().endswith('.xml') for info in archive.infolist()):
                 raise ValueError('Downloaded ZIP contains no XML')

@@ -6,6 +6,7 @@ on:
       - fix/hacs-validation-and-persistent-popups
     paths:
       - .github/workflows/vehicle-catalog.yml
+      - scripts/dmr_catalog.py
 permissions:
   contents: read
 jobs:

@@ -88,3 +88,34 @@ class DmrCatalogTests(unittest.TestCase):
             self.assertEqual(path.read_bytes(), b'old file')
             self.assertEqual(list(Path(folder).iterdir()), [path])
             self.assertEqual(ftp.retrbinary.call_args.args[0], 'RETR ESStatistikListeModtag-20261015-010000.zip')
+
+    def test_timeout_resumes_partial_zip_on_fresh_connection(self):
+        payload = BytesIO()
+        with zipfile.ZipFile(payload, 'w') as archive:
+            archive.writestr('data.xml', xml(record()))
+        data = payload.getvalue()
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'dmr.zip'
+            path.write_bytes(b'previous catalog download')
+            factory = MagicMock()
+            first, second = MagicMock(), MagicMock()
+            factory.side_effect = [first, second]
+            a, b = first.__enter__.return_value, second.__enter__.return_value
+            a.nlst.return_value = ['ESStatistikListeModtag-20261015-010000.zip']
+
+            def interrupted(command, callback, **kwargs):
+                callback(data[:80])
+                raise TimeoutError('idle socket')
+
+            def resumed(command, callback, **kwargs):
+                self.assertEqual(kwargs['rest'], 80)
+                callback(data[80:])
+
+            a.retrbinary.side_effect = interrupted
+            b.retrbinary.side_effect = resumed
+            name = dmr.download_latest(path, factory)
+            self.assertEqual(name, 'ESStatistikListeModtag-20261015-010000.zip')
+            self.assertEqual(path.read_bytes(), data)
+            b.nlst.assert_not_called()
+            self.assertEqual(factory.call_args.kwargs['timeout'], 180)
+            self.assertEqual(list(Path(folder).iterdir()), [path])
