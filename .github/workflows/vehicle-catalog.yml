@@ -1,6 +1,11 @@
 name: Build Danish vehicle catalog
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - fix/hacs-validation-and-persistent-popups
+    paths:
+      - .github/workflows/vehicle-catalog.yml
 permissions:
   contents: read
 jobs:
