@@ -1,4 +1,4 @@
-# Tiny Refuel v0.2.1
+# Tiny Refuel v0.2.2
 
 Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, bilkatalog og scraping i én HACS-integration.
 
@@ -54,7 +54,7 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.2.1
+/tiny_refuel/static/tiny-refuel-card-v0.1.js?v=0.2.2
 ```
 
 ## Skærmbilleder
@@ -118,6 +118,16 @@ En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, 
 
 AC og DC på samme sted tælles én gang pr. selskab. Generelle selskabstakster tæller ikke som lokale priser. Medlemsrabat trækkes ikke automatisk fra priserne.
 
+## Fejl og rapportering
+
+Åbne informations- og fejlfelter bevares ved automatiske opdateringer. Åbnes et andet informationsfelt, lukkes det foregående. Ladeoversigten bliver åben, indtil du trykker **Luk** eller åbner en anden ladeoversigt.
+
+Fejloversigten viser også fejl ved hentning af officielle kundefordele og ved kontakt til integrationens data-API. Fordele hentes normalt højst én gang om ugen; tidligere brugbare oplysninger bevares ved kildefejl. Kortets afslutningsstatus tæller også fordelsfejl med.
+
+HTTP 500 betyder en intern fejl hos den server, der besvarer kaldet. Udbyderfejl og fejl fra Home Assistants data-API vises med hver sin kilde. Offentlige GET-kald forsøges én gang igen efter en kort pause ved HTTP 500, 502, 503 eller 504. En vedvarende fejl vises stadig; genforsøget gælder ikke 403, 404 eller 429.
+
+**Rapportér på GitHub** åbner et issueudkast med Tiny Refuel-version, kendte kildebetegnelser, fejlkategorier og HTTP-koder. Rå fejltekster, adresser, positioner, biler og Home Assistant-konfiguration indsættes ikke i udkastet. Brugeren gennemser og indsender selv; GitHub beder om login, hvis nødvendigt. Integrationens kode registrerer ikke, om brugeren allerede er logget ind på GitHub.
+
 ## Datakilder
 
 Kun frit tilgængelige kilder uden betalt eller registreret API-adgang bruges.
@@ -174,7 +184,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests bestået med Home Assistant **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.1**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. JavaScript-filens `v0.1` i filnavnet er kortformatserien.
+Teknisk integrationsversion: **0.2.2**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. JavaScript-filens `v0.1` i filnavnet er kortformatserien.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
@@ -184,3 +194,4 @@ node tests/frontend.test.js
 ```
 
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
+

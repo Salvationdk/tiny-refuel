@@ -649,7 +649,7 @@
         }
         var stamp = data && Date.parse(data.updated);
         if (data && data.updated !== self._scrapeBaseline && isFinite(stamp) && stamp >= self._scrapeStarted - 1000) {
-          var errors = Array.isArray(data.errors) ? data.errors.length : 0;
+          var errors = self._errorGroups().length;
           self._finishScrape(errors ? "Nye data indlæst · " + errors + " fejl i hentningen. Se datastatus nedenfor." : "Nye data indlæst · hentningen er afsluttet uden registrerede fejl.");
         } else if (Date.now() - self._scrapeStarted > 12 * 60000) {
           self._finishScrape("Ingen ny datafil efter 12 minutter. Kontrollér Tiny Refuels fejl i Home Assistant-loggen.");

@@ -403,3 +403,59 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   assert.equal(form._katalog, newer);
   console.log('PASS: stable editor, shared vehicle catalogs, logo fallbacks and theme switching');
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
+// Data refreshes must retain the user's expanded panel and popup state.
+{
+  const persistent = new Card();
+  persistent._config = { vis_benzin: true, vis_el: true };
+  persistent._data = { stations: [], ev: [], errors: [{ source: 'clever.dk', error: 'HTTP Error 500' }] };
+  let panels = [
+    { open: true, getAttribute: () => 'information' },
+    { open: false, getAttribute: () => 'errors' },
+  ];
+  persistent.querySelectorAll = selector => selector === 'details[data-card-panel]' ? panels : [];
+  let html;
+  Object.defineProperty(persistent, 'innerHTML', {
+    get: () => html,
+    set: value => { html = value; panels = panels.map(panel => ({ ...panel, open: false })); },
+  });
+  persistent._openEvBrand = 'Q8';
+  persistent._openFordel = 'chosen-benefit';
+  persistent._render();
+  assert.equal(panels[0].open, true);
+  assert.equal(panels[1].open, false);
+  assert.equal(persistent._openEvBrand, 'Q8');
+  assert.equal(persistent._openFordel, 'chosen-benefit');
+  persistent._data.updated = '2026-10-16T18:00:00Z';
+  persistent._render();
+  assert.equal(panels[0].open, true);
+  // Opening another panel explicitly collapses the previous panel.
+  const summary = { parentElement: panels[1] };
+  persistent.events.click({ target: { closest: selector => selector === 'details[data-card-panel] > summary' ? summary : null } });
+  assert.equal(panels[0].open, false);
+  let prevented = false;
+  persistent.events.cancel({ target: { classList: { contains: () => true } }, preventDefault: () => { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(persistent._openEvBrand, 'Q8');
+}
+// A public issue draft contains useful error categories, never raw snapshots.
+{
+  const report = new Card();
+  report._data = { version: '0.2.1', stations: [{ address: 'PRIVATE ADDRESS' }],
+    errors: [{ source: 'clever.dk', error: 'HTTP Error 500: https://secret.invalid/?token=PRIVATE_TOKEN' },
+      { source: 'PRIVATE_SOURCE', error: 'PRIVATE_MESSAGE' }],
+    benefit_errors: [{ provider: 'OK', error: 'HTTP Error 503' }] };
+  const url = new URL(report._issueUrl());
+  const body = url.searchParams.get('body');
+  assert.equal(url.origin, 'https://github.com');
+  assert.ok(body.includes('clever.dk: HTTP 500'));
+  assert.ok(body.includes('Fordele · OK: HTTP 503'));
+  assert.ok(!body.includes('PRIVATE'));
+  assert.ok(!body.includes('secret.invalid'));
+  const html = report._dataErrorsHtml();
+  assert.ok(html.includes('3 fejl'));
+  assert.ok(html.includes('Rapportér på GitHub'));
+  assert.ok(html.includes('target="_blank" rel="noopener noreferrer"'));
+  assert.ok(html.includes('Fordele · OK'));
+}
+console.log('PASS: persistent panels and redacted GitHub issue drafts');
