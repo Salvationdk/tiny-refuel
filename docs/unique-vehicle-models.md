@@ -59,3 +59,28 @@ Scriptet viser faktisk input-/outputstørrelse og antal fjernede profiler.
 Nye CLI-kørsler af `build` udelader nu de tunge profiler som standard. Tilføj
 `--include-technical-profiles`, hvis et detaljeret forskningsudtræk ønskes.
 Denne valgmulighed ændrer ikke den eksisterende store fil.
+
+## Rensning efter import
+
+```bat
+python scripts/clean_vehicle_catalog.py --input "E:\DRM\catalog-candidate\bilkatalog-kompakt.json" --output-dir "E:\DRM\catalog-clean"
+```
+
+Scriptet bevarer originalen og skriver et separat katalog, en oprydningsrapport
+og de udskilte originalposter. Det retter kun en lille udtrykkelig liste af
+stavefejl, samler store/små bogstaver og mellemrum og bevarer øvrige modelnavne.
+Rene tal er ugyldige som fabrikantnavne, men kan være gyldige modelnavne.
+Historiske mærker, opbyggere og usikre forkortelser bevares. Ingen fuzzy matching.
+Alle oprindelige SVG-/PNG-payloads bevares. Eksakte mærkealiasser forbindes med
+eksisterende logoer, men sammensatte mærker får ikke blot chassismærkets logo.
+Logodækningen genberegnes for hele det rensede katalog. Dette er en teknisk
+oprydning, ikke en fuld historisk verifikation af alle fabrikantbetegnelser.
+
+Kontrollen af brugerens fulde kompakte udtræk gav 1.829 mærkebetegnelser,
+27.425 modeller og 98.937 variantposter. Fire ugyldige mærker med i alt 46
+modelrækker blev udskilt: `-`, `10279`, `TESTKØRSEL` og `USPEC.MÆRKE`.
+Sammenlægningerne gav ingen konflikter. Tank-/batteriværdier, årgangslister,
+drivmidler og variantdrivmidler blev sammenholdt med alle bevarede kildeposter;
+logoernes indhold blev sammenlignet direkte med originalen.
+Kataloget er leveret separat til gennemgang og erstatter endnu ikke det
+medfølgende katalog i integrationens frontend.
