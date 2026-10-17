@@ -75,6 +75,33 @@ class DmrCatalogTests(unittest.TestCase):
             self.assertEqual(list(Path(folder).iterdir()), [path])
             self.assertEqual(sum(len(b['modeller']) for b in result['brands']), 1)
 
+    def test_powered_types_profiles_and_inspection_are_bounded_and_identifier_free(self):
+        motorcycle = record('HONDA', 'CB500', '999').replace(
+            '</ns:Statistik>', '<ns:KoeretoejArtNavn>Motorcykel</ns:KoeretoejArtNavn>'
+            '<ns:KoeretoejOplysningModelAar>2020</ns:KoeretoejOplysningModelAar>'
+            '<ns:KoeretoejMotorKmPerLiter>25.0</ns:KoeretoejMotorKmPerLiter></ns:Statistik>')
+        later = motorcycle.replace('2020', '2022').replace('25.0', '27.0')
+        trailer = record('TRAILER', 'DROP', '999').replace('</ns:Statistik>',
+            '<ns:KoeretoejArtNavn>Påhængsvogn</ns:KoeretoejArtNavn></ns:Statistik>')
+        result, report = dmr.build_catalog(BytesIO(xml(motorcycle, later, motorcycle, trailer)),
+                                           base(), '2026-10-07', 'input.zip')
+        self.assertEqual(report['included_records'], 3)
+        model = next(b for b in result['brands'] if b['mærke'] == 'HONDA')['modeller'][0]
+        profiles = model['dmr_profiles']
+        self.assertEqual(len(profiles), 2)
+        self.assertEqual({(p['KoeretoejOplysningModelAar'][0], p['KoeretoejMotorKmPerLiter'][0])
+                          for p in profiles}, {('2020', '25.0'), ('2022', '27.0')})
+        self.assertNotIn('PRIVATE', json.dumps(result))
+        self.assertIsNone(model['tank_l'])
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'source.zip'
+            with zipfile.ZipFile(path, 'w') as archive:
+                archive.writestr('source.xml', xml(motorcycle, later, trailer))
+            inspection = dmr.inspect_archive(path, limit=2)
+            self.assertEqual(inspection['processed_records'], 2)
+            self.assertEqual(inspection['vehicle_kinds'][0]['records'], 2)
+            self.assertNotIn('PRIVATE', json.dumps(inspection))
+
     def test_download_uses_latest_archive_and_keeps_old_file_on_interrupted_download(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'dmr.zip'

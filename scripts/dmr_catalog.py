@@ -25,7 +25,32 @@ FTP_HOST = '5.44.137.84'
 FTP_USER = 'dmr-ftp-user'
 FTP_PASSWORD = 'dmrpassword'
 KINDS = {'1', '2', '3', '4'}  # DMR personbiler/busser, varebiler and lastbiler.
-KIND_NAMES = {'personbil', 'bus', 'varebil', 'lastbil', 'stor personbil'}
+KIND_NAMES = {'personbil', 'bus', 'varebil', 'lastbil', 'stor personbil',
+              'motorcykel', 'knallert', 'stor knallert', 'lille knallert',
+              'traktor', 'motorredskab', 'motorkøretøj', 'atv'}
+# Retain raw values and field names until their units and structure are verified.
+TECHNICAL_FIELDS = {
+    'KoeretoejOplysningModelAar', 'KoeretoejOplysningEUVariant',
+    'KoeretoejOplysningEUVersion', 'KoeretoejMotorElektriskForbrug',
+    'KoeretoejMotorKmPerLiter', 'KoeretoejMotorMaaleNormTypeNavn',
+    'KoeretoejMotorMaaleNormTypeNummer', 'KoeretoejMotorStoersteEffekt',
+    'KoeretoejMotorSlagVolumen', 'KoeretoejMotorCylinderAntal',
+    'KoeretoejMotorDrivmiddelPrimaer', 'NormTypeNavn', 'NormTypeNummer',
+}
+FIELDS = TECHNICAL_FIELDS | {
+    'KoeretoejMaerkeTypeNavn', 'KoeretoejModelTypeNavn', 'KoeretoejVariantTypeNavn',
+    'KoeretoejArtNummer', 'KoeretoejArtNavn', 'DrivkraftTypeNavn',
+}
+
+
+def powered_kind(row):
+    names = {name.casefold() for name in row.get('KoeretoejArtNavn', ())}
+    # A trailer can have an auxiliary engine; a fuel field alone is insufficient.
+    if any(word in name for name in names for word in
+           ('påhæng', 'paahaeng', 'sættevogn', 'saettevogn', 'campingvogn', 'sidevogn')):
+        return False
+    return bool(row.get('KoeretoejArtNummer', set()) & KINDS or names & KIND_NAMES)
+
 ALIASES = {'vw': 'Volkswagen', 'volkswagen': 'Volkswagen', 'mercedesbenz': 'Mercedes',
            'mercedes': 'Mercedes', 'ds': 'DS Automobiles', 'kgmobility': 'KGM'}
 
@@ -114,8 +139,6 @@ def input_xml(path):
 
 def iter_records(stream):
     """Keep at most one Statistik subtree; discard every record after extraction."""
-    fields = {'KoeretoejMaerkeTypeNavn', 'KoeretoejModelTypeNavn', 'KoeretoejVariantTypeNavn',
-              'KoeretoejArtNummer', 'KoeretoejArtNavn', 'DrivkraftTypeNavn'}
     stack = []
     for event, element in ET.iterparse(stream, events=('start', 'end')):
         if event == 'start':
@@ -125,7 +148,7 @@ def iter_records(stream):
             values = {}
             for child in element.iter():
                 tag = child.tag.rsplit('}', 1)[-1]
-                if tag in fields and clean(child.text):
+                if tag in FIELDS and clean(child.text):
                     values.setdefault(tag, set()).add(clean(child.text))
             yield values
             element.clear()
@@ -143,12 +166,13 @@ def build_catalog(stream, base, source_date, source_file):
     indexes = {key: {normalized(model['model']): model for model in brand['modeller']}
                for key, brand in brands.items()}
     variants = {}
+    profiles = {}
     records = included = skipped = added_models = added_brands = 0
     for row in iter_records(stream):
         records += 1
-        kind = row.get('KoeretoejArtNummer', set())
-        kind_name = {name.casefold() for name in row.get('KoeretoejArtNavn', set())}
-        if not (kind & KINDS or kind_name & KIND_NAMES):
+        if records % 100000 == 0:
+            print(f'DMR: processed {records:,} records', file=sys.stderr, flush=True)
+        if not powered_kind(row):
             skipped += 1
             continue
         makes, models = row.get('KoeretoejMaerkeTypeNavn', set()), row.get('KoeretoejModelTypeNavn', set())
@@ -177,6 +201,14 @@ def build_catalog(stream, base, source_date, source_file):
         included += 1
         # Only explicitly allowlisted model-level facts leave the record parser.
         entry_key = (key, model_key)
+        # Keep each observed combination intact, rather than cross-combining years,
+        # engine figures, fuel types or measurement norms across vehicles.
+        profile = {field: sorted(row[field]) for field in
+                   sorted(TECHNICAL_FIELDS | {'KoeretoejArtNummer', 'KoeretoejArtNavn',
+                                              'DrivkraftTypeNavn', 'KoeretoejVariantTypeNavn'})
+                   if row.get(field)}
+        signature = json.dumps(profile, ensure_ascii=False, sort_keys=True)
+        profiles.setdefault(entry_key, {})[signature] = profile
         for variant in row.get('KoeretoejVariantTypeNavn', set()):
             if len(variant) > 200 or variant.casefold() in {'uoplyst', 'ukendt', '-'}:
                 continue
@@ -192,6 +224,12 @@ def build_catalog(stream, base, source_date, source_file):
             existing[name] = {**previous, 'name': name,
                               'fuel_types': sorted(set(previous.get('fuel_types', [])) | fuels)}
         entry['variants'] = sorted(existing.values(), key=lambda row: row['name'].casefold())
+    for (key, model_key), values in profiles.items():
+        entry = indexes[key][model_key]
+        existing = {json.dumps(p, ensure_ascii=False, sort_keys=True): p
+                    for p in entry.get('dmr_profiles', [])}
+        existing.update(values)
+        entry['dmr_profiles'] = [existing[k] for k in sorted(existing)]
     for brand in result['brands']:
         brand['modeller'].sort(key=lambda row: row['model'].casefold())
     result['brands'].sort(key=lambda row: row['mærke'].casefold())
@@ -200,9 +238,38 @@ def build_catalog(stream, base, source_date, source_file):
               'added_makes': added_brands, 'added_models': added_models,
               'makes': len(result['brands']), 'models': sum(len(row['modeller']) for row in result['brands']),
               'identifier_fields_exported': False,
-              'scope': 'DMR vehicle kinds 1-4; records present in the supplied extract, including historic records; not every future model or specification.'}
+              'technical_values': 'Raw source fields; units not inferred; not used as confirmed tank, battery or consumption specifications.',
+              'scope': 'DMR kinds 1-4 plus recognized named powered vehicle kinds; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
     result['dmr_catalog'] = report
     return result, report
+
+
+def inspect_archive(path, limit=None):
+    """Aggregate only allowlisted technical values; never export whole records."""
+    kinds, samples = {}, {}
+    count = 0
+    with input_xml(path) as stream:
+        for row in iter_records(stream):
+            count += 1
+            kind = json.dumps([sorted(row.get('KoeretoejArtNummer', [])),
+                               sorted(row.get('KoeretoejArtNavn', []))], ensure_ascii=False)
+            kinds[kind] = kinds.get(kind, 0) + 1
+            for field in sorted(TECHNICAL_FIELDS | {'DrivkraftTypeNavn'}):
+                bucket = samples.setdefault(field, set())
+                # Bounded deterministic examples, independent of record count.
+                bucket.update(row.get(field, ()))
+                if len(bucket) > 20:
+                    samples[field] = set(sorted(bucket)[:20])
+            if count % 100000 == 0:
+                print(f'DMR: inspected {count:,} records', file=sys.stderr, flush=True)
+            if limit is not None and count >= limit:
+                break
+    return {'processed_records': count, 'sample_limit': limit,
+            'vehicle_kinds': [{'codes': json.loads(k)[0], 'names': json.loads(k)[1],
+                               'records': n} for k, n in sorted(kinds.items())],
+            'technical_value_examples': {k: sorted(v) for k, v in sorted(samples.items())},
+            'identifier_fields_exported': False,
+            'note': 'Raw values only; samples do not establish units or complete coverage.'}
 
 
 def main():
@@ -217,9 +284,21 @@ def main():
     build.add_argument('--base', type=Path, default=CATALOG)
     build.add_argument('--output', type=Path, required=True)
     build.add_argument('--report', type=Path, required=True)
+    inspect = commands.add_parser('inspect')
+    inspect.add_argument('--input', type=Path, required=True)
+    inspect.add_argument('--output', type=Path, required=True)
+    inspect.add_argument('--limit', type=int)
     args = parser.parse_args()
     if args.command == 'download':
         print(download_latest(args.output))
+    elif args.command == 'inspect':
+        if args.limit is not None and args.limit < 1:
+            parser.error('--limit must be positive')
+        if args.output.resolve() == args.input.resolve():
+            parser.error('Output must not overwrite the input archive')
+        report = inspect_archive(args.input, args.limit)
+        save_json(args.output, report)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
         if args.output.resolve() in {args.input.resolve(), args.base.resolve()}:
             parser.error('Write a separate candidate file; review it before replacing the shipped catalog')
