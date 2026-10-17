@@ -151,6 +151,18 @@ class DmrCatalogTests(unittest.TestCase):
         self.assertEqual(golf['tank_l'], 50)
         self.assertEqual(len(golf['dmr_profiles']), 2)
 
+    def test_compact_build_omits_profiles_but_retains_variant_fuel_and_year(self):
+        payload = record().replace('</ns:Statistik>',
+            '<ns:KoeretoejOplysningModelAar>2021</ns:KoeretoejOplysningModelAar></ns:Statistik>')
+        result, report = dmr.build_catalog(BytesIO(xml(payload)), base(),
+            '2026-10-07', 'input.zip', include_profiles=False)
+        model = result['brands'][0]['modeller'][0]
+        self.assertNotIn('dmr_profiles', model)
+        self.assertEqual(model['model_years'], ['2021'])
+        self.assertEqual(model['fuel_types'], ['Diesel'])
+        self.assertEqual(model['variants'], [{'name': '1.6 TDI', 'fuel_types': ['Diesel']}])
+        self.assertFalse(report['technical_profiles_included'])
+
     def test_download_uses_latest_archive_and_keeps_old_file_on_interrupted_download(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'dmr.zip'

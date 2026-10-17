@@ -260,7 +260,7 @@ def iter_records(stream):
         stack.pop()
 
 
-def build_catalog(stream, base, source_date, source_file, limit=None):
+def build_catalog(stream, base, source_date, source_file, limit=None, include_profiles=True):
     """Preserve curated specs; aggregate names/variants, never individual vehicles."""
     date.fromisoformat(source_date)
     result, cleanup = deduplicate_catalog(base)
@@ -314,12 +314,13 @@ def build_catalog(stream, base, source_date, source_file, limit=None):
         entry_key = (key, model_key)
         # Keep each observed combination intact, rather than cross-combining years,
         # engine figures, fuel types or measurement norms across vehicles.
-        profile = {field: sorted(row[field]) for field in
-                   sorted(TECHNICAL_FIELDS | {'KoeretoejArtNummer', 'KoeretoejArtNavn',
-                                              'DrivkraftTypeNavn', 'KoeretoejVariantTypeNavn'})
-                   if row.get(field)}
-        signature = json.dumps(profile, ensure_ascii=False, sort_keys=True)
-        profiles.setdefault(entry_key, {})[signature] = profile
+        if include_profiles:
+            profile = {field: sorted(row[field]) for field in
+                       sorted(TECHNICAL_FIELDS | {'KoeretoejArtNummer', 'KoeretoejArtNavn',
+                                                  'DrivkraftTypeNavn', 'KoeretoejVariantTypeNavn'})
+                       if row.get(field)}
+            signature = json.dumps(profile, ensure_ascii=False, sort_keys=True)
+            profiles.setdefault(entry_key, {})[signature] = profile
         for variant in row.get('KoeretoejVariantTypeNavn', set()):
             if len(variant) > 200 or variant.casefold() in {'uoplyst', 'ukendt', '-'}:
                 continue
@@ -351,6 +352,7 @@ def build_catalog(stream, base, source_date, source_file, limit=None):
               'identifier_fields_exported': False,
               'sample_limit': limit,
               'deduplication': cleanup,
+              'technical_profiles_included': include_profiles,
               'technical_values': 'Raw source fields; units not inferred; not used as confirmed tank, battery or consumption specifications.',
               'scope': 'DMR powered kinds 1,2,3,4,7,8,12,16,17,91 plus recognized powered kind names; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
     result, final_cleanup = deduplicate_catalog(result)
@@ -402,6 +404,8 @@ def main():
     build.add_argument('--output', type=Path, required=True)
     build.add_argument('--report', type=Path, required=True)
     build.add_argument('--limit', type=int, help='First N records only; omit for full catalog')
+    build.add_argument('--include-technical-profiles', action='store_true',
+                       help='Large research export; omit for a compact UI catalog')
     dedup = commands.add_parser('deduplicate')
     dedup.add_argument('--input', type=Path, required=True)
     dedup.add_argument('--output', type=Path, required=True)
@@ -440,7 +444,7 @@ def main():
             parser.error('Write a separate candidate file; review it before replacing the shipped catalog')
         base = json.loads(args.base.read_text(encoding='utf-8'))
         with input_xml(args.input) as stream:
-            catalog, report = build_catalog(stream, base, args.source_date, args.source_file or args.input.name, limit=args.limit)
+            catalog, report = build_catalog(stream, base, args.source_date, args.source_file or args.input.name, limit=args.limit, include_profiles=args.include_technical_profiles)
         save_json(args.output, catalog)
         save_json(args.report, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
