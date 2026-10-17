@@ -2,13 +2,13 @@
   "summary": {
     "scope": "882 make names in the supplied cleaned DMR catalog; not the shipped 54-make model list",
     "register_makes": 882,
-    "covered": 259,
-    "pending": 623,
+    "covered": 263,
+    "pending": 619,
     "pending_combined": 234,
-    "svg_assets": 243,
+    "svg_assets": 247,
     "png_assets": 20,
     "external_assets": 0,
-    "pending_single_names": 389
+    "pending_single_names": 385
   },
   "makes": [
     {
@@ -140,8 +140,9 @@
     },
     {
       "make": "Albach",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Albach",
+      "format": "svg"
     },
     {
       "make": "ALFA",
@@ -156,8 +157,9 @@
     },
     {
       "make": "ALKE",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "ALKE",
+      "format": "svg"
     },
     {
       "make": "ALLDAYS",
@@ -2423,8 +2425,9 @@
     },
     {
       "make": "KEEWAY",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "KEEWAY",
+      "format": "svg"
     },
     {
       "make": "KENWORTH",
@@ -3371,8 +3374,9 @@
     },
     {
       "make": "Paxster",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Paxster",
+      "format": "svg"
     },
     {
       "make": "PETERBILT",

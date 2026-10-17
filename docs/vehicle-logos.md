@@ -156,3 +156,20 @@ review. It is not a Home Assistant dependency or runtime scraper. Example:
 ```sh
 python scripts/vectorize_vehicle_logo.py --input logo.png --output candidate.svg --source-url https://example.com/brand --monochrome --polygon
 ```
+
+## Further native SVG review, 17 October 2026
+
+Four more native SVG assets are included: Albach, ALKE, Paxster and KEEWAY.
+Albach, ALKE and Paxster come directly from manufacturer websites. KEEWAY
+is the 2023 wordmark from Wikimedia Commons, whose description credits the
+manufacturer about-us page; it is retained as a historical mark, not described
+as the latest brand identity. Source and available license metadata are kept.
+Static CSS was flattened and editor-only attributes removed. Paxster's local
+clip IDs were prefixed to satisfy the existing sanitizer; vector paths and
+colors are preserved. All four were rendered and visually checked.
+
+Current totals supersede earlier dated batches: 247 SVG, 20 PNG, no external
+make assets (267 asset names). Coverage of the 882-name register list is
+263 available and 619 pending: 385 single names and 234 composite names.
+20 additional register names have PNG but still lack SVG, so 639 register
+names lack SVG. The shipped model list remains 645 models / 54 makes.

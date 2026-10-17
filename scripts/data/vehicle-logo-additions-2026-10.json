@@ -1,6 +1,6 @@
 {
   "reviewed": true,
-  "count": 156,
+  "count": 160,
   "assets": [
     {
       "make": "AC",
@@ -1130,6 +1130,41 @@
       "sha256": "8b5bbadc4295a5eebc40006af8edb712d7e1f4a55fcd1de64c51d314fa8633ae",
       "visual_reviewed": true,
       "normalized_mae": 0.00926
+    },
+    {
+      "make": "Albach",
+      "source_url": "https://www.albach-maschinenbau.de/fileadmin/cn_modified/cn_website_mod/Resources/Public/Images/logo_albach_maschinenbau.svg",
+      "official_page": "https://www.albach-maschinenbau.de/en/",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "sha256": "dae2bccbedffb82fe1049067b11e79fae521a7d90b4d89b02bd871c78ada542b",
+      "monochrome": false
+    },
+    {
+      "make": "ALKE",
+      "source_url": "https://www.alke.com/images/stories/articles/0863/favicon/alke.svg",
+      "official_page": "https://www.alke.com/",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "sha256": "8de0cfa8e821932c5b53ae68acee542810d3e108a19d41911b559a5102714fb9",
+      "monochrome": false
+    },
+    {
+      "make": "Paxster",
+      "source_url": "https://paxster.no/wp-content/uploads/2025/01/Paxster-logo-svg-undrum.svg",
+      "official_page": "https://paxster.no/",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "sha256": "36504b76e1bfde24f582d61b470048429e75d009d33f735a255468e1a142a295",
+      "monochrome": false
+    },
+    {
+      "make": "KEEWAY",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Keeway_logo.svg",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Keeway_logo.svg",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "LicenseShortName": "Public domain (PD-textlogo); trademark restrictions remain",
+      "Artist": "Unknown author",
+      "ImageDescription": "Logo for the motorcycle company Keeway, sourced from manufacturer about-us page; historical 2023 mark.",
+      "sha256": "e53e2e52fe83978d9c8ffa767dbf50179c1518e59c1c561c85e71369c99f6365",
+      "monochrome": true
     }
   ]
 }
