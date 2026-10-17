@@ -74,3 +74,17 @@ in each new asset's source URL. Every embedded file passed the strict SVG
 allowlist; incompatible source files were skipped. Multi-color source marks
 retain their colors. Text fallback and manual/custom vehicle catalogs remain
 supported. Prepared assets do not add unverified vehicle models.
+
+## Third logo expansion
+
+100 additional make names now have embedded SVG assets. The asset pool contains
+187 SVG make marks, 4 PNG marks and 1 external mark (192 names). This does not
+mean the shipped 54-make model list has expanded. New names are prepared for
+manual vehicles and the later DMR catalog import. Model wordmarks are unchanged.
+
+The reviewed manifest is scripts/data/vehicle-logo-additions-2026-10.json.
+Sources include node-vehicle-logos, vehiclespecs/brand-logos and detain/svg-logos,
+with pinned revisions and SHA-256 hashes. The visual review excluded unrelated
+football, tool, university and other company marks with matching names.
+Static gradients and allowlisted inline paint declarations are supported;
+scripts, external references and active SVG content are rejected.
