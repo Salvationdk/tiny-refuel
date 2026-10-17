@@ -566,3 +566,17 @@ function queueCoverage() {
   assert.equal(form._config.biler[0].brændstof, 'benzin');
   assert.equal(form._config.biler[0].tank_liters, 45, 'unchanged variant preserves confirmed manual specifications');
 }
+
+// Prepared vehicle makes work in both editor and dashboard before model import.
+for (const make of Object.keys(packagedCatalog.logo_assets)) {
+  for (const name of [make, ...Object.keys(packagedCatalog.logo_aliases).filter(k => packagedCatalog.logo_aliases[k] === make)]) {
+    const src = 'data:image/svg+xml,' + encodeURIComponent(packagedCatalog.logos[make]);
+    editor._katalog = packagedCatalog;
+    editor.setConfig({biler:[{mærke:name, model:'Egen model'}]});
+    assert.ok(editor.innerHTML.includes(src), 'embedded editor logo: ' + name);
+    const panel = new Card(); panel._katalog = packagedCatalog;
+    panel.setConfig({biler:[{mærke:name, model:'Egen model'}]});
+    assert.ok(panel.innerHTML.includes(src), 'embedded dashboard logo: ' + name);
+    assert.ok(panel.innerHTML.includes('Egen model'));
+  }
+}

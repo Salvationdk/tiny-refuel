@@ -241,11 +241,12 @@
       label = car.model + " logo" + (entry.generation ? " (" + entry.generation + ")" : "");
       color = entry.monochrome === false;
     } else {
-      svg = catalog.logos && catalog.logos[car.mærke];
-      png = catalog.logo_pngs && catalog.logo_pngs[car.mærke];
+      var makeKey = catalog.logo_aliases && catalog.logo_aliases[car.mærke] || car.mærke;
+      svg = catalog.logos && catalog.logos[makeKey];
+      png = catalog.logo_pngs && catalog.logo_pngs[makeKey];
       label = car.mærke + " logo";
-      color = catalog.logo_colors && catalog.logo_colors[car.mærke] === true;
-      var source = catalog.logo_urls && catalog.logo_urls[car.mærke];
+      color = catalog.logo_colors && catalog.logo_colors[makeKey] === true;
+      var source = catalog.logo_urls && catalog.logo_urls[makeKey];
       if (source) { url = source.url; white = source.white === true; color = source.monochrome === false; }
     }
     var data = typeof png === "string" ? png.replace(/\s+/g, "") : "";

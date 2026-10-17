@@ -46,3 +46,17 @@ tank, battery and fuel changes update existing fields. A needed catalog or
 structural render retains open sections, focus, cursor and the focused draft.
 Each car has one removal link.
 
+
+## Prepared motor-vehicle makes
+
+Ten additional monochrome SVG marks are embedded in JSON: DUCATI, YAMAHA
+(Yamaha Motor), KTM, VESPA, JOHN DEERE, CATERPILLAR, SCANIA, MAN, IVECO and DAF.
+They are available for manual vehicles and future DMR catalogs without adding
+unverified models. `logo_aliases` resolves title-case versions to the same asset.
+`logo_assets` records a source URL and SHA-256 for each prepared SVG.
+
+These assets use the existing fixed-size logo boxes and dark-theme foreground
+filter in both editor and dashboard. Existing full-color logos are unchanged.
+The strict sanitizer in `scripts/prepare_vehicle_logos.py` rejects scripts,
+external references, embedded images, CSS and document entities. Other makes
+and model wordmarks retain the existing text fallback; this is partial coverage.
