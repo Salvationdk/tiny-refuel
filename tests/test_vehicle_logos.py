@@ -6,10 +6,11 @@ from scripts.prepare_vehicle_logos import sanitize_svg
 class VehicleLogoTests(unittest.TestCase):
     def test_prepared_assets_are_self_contained_and_have_source(self):
         d=json.loads(Path('custom_components/tiny_refuel/frontend/bilkatalog.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(d['logo_assets']),148)
+        self.assertEqual(len(d['logo_assets']),178)
         for name,asset in d['logo_assets'].items():
             self.assertIn('<svg',sanitize_svg(d['logos'][name]))
-            self.assertTrue(asset['source_url'].startswith(('https://github.com/simple-icons/','https://github.com/vehiclespecs/','https://github.com/detain/svg-logos/','https://github.com/tipstrade/node-vehicle-logos/','https://github.com/cardog-ai/icons/')))
+            self.assertTrue(asset['source_url'].startswith('https://'))
+            self.assertEqual(__import__('hashlib').sha256(d['logos'][name].encode()).hexdigest(), asset['sha256'])
             self.assertEqual(len(asset['sha256']),64)
     def test_active_and_external_content_is_rejected(self):
         for content in ('<script/>','<foreignObject/>','<image href="https://x"/>','<path onclick="x"/>','<path fill="url(https://x)"/>'):
@@ -32,3 +33,8 @@ class VehicleLogoTests(unittest.TestCase):
         self.assertEqual(report['summary']['covered']+report['summary']['pending'],len(report['makes']))
         for row in report['makes']:
             if row['status']=='pending':self.assertIn('reason',row)
+
+    def test_local_static_mask_is_supported_but_remote_mask_is_rejected(self):
+        svg='<svg viewBox="0 0 10 10"><defs><mask id="m" style="mask-type:luminance"><path fill="#fff" d="M0 0h10v10H0z"/></mask></defs><path mask="url(#m)" d="M0 0h10v10H0z"/></svg>'
+        self.assertIn('mask="url(#m)"',sanitize_svg(svg))
+        with self.assertRaises(ValueError):sanitize_svg(svg.replace('url(#m)','url(https://example.com/m)'))

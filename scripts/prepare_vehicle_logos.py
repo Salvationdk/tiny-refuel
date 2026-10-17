@@ -6,8 +6,8 @@ def sanitize_svg(svg):
     if len(svg)>200000 or re.search(r'<!DOCTYPE|<!ENTITY',svg,re.I):
         raise ValueError('Unsupported SVG document')
     root=ET.fromstring(svg)
-    allowed={'svg','path','g','title','desc','circle','ellipse','rect','polygon','polyline','line','defs','linearGradient','radialGradient','stop','clipPath'}
-    attrs={'viewBox','width','height','d','fill','fill-rule','clip-rule','transform','cx','cy','r','rx','ry','x','y','x1','y1','x2','y2','points','stroke','stroke-width','stroke-linecap','stroke-linejoin','role','opacity','id','preserveAspectRatio','gradientUnits','gradientTransform','spreadMethod','fx','fy','offset','stop-color','stop-opacity','fill-opacity','stroke-opacity','clip-path','clipPathUnits','stroke-miterlimit','stroke-dasharray','stroke-dashoffset','vector-effect','display'}
+    allowed={'svg','path','g','title','desc','circle','ellipse','rect','polygon','polyline','line','defs','linearGradient','radialGradient','stop','clipPath','mask'}
+    attrs={'viewBox','width','height','d','fill','fill-rule','clip-rule','transform','cx','cy','r','rx','ry','x','y','x1','y1','x2','y2','points','stroke','stroke-width','stroke-linecap','stroke-linejoin','role','opacity','id','preserveAspectRatio','gradientUnits','gradientTransform','spreadMethod','fx','fy','offset','stop-color','stop-opacity','fill-opacity','stroke-opacity','clip-path','clipPathUnits','stroke-miterlimit','stroke-dasharray','stroke-dashoffset','vector-effect','display','mask','mask-type','maskUnits','maskContentUnits'}
     if root.tag.rsplit('}',1)[-1]!='svg' or not root.get('viewBox'):
         raise ValueError('SVG requires a viewBox')
     for e in root.iter():

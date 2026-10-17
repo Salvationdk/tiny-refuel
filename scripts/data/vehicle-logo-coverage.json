@@ -2,12 +2,13 @@
   "summary": {
     "scope": "882 make names in the supplied cleaned DMR catalog; not the shipped 54-make model list",
     "register_makes": 882,
-    "covered": 198,
-    "pending": 684,
+    "covered": 228,
+    "pending": 654,
     "pending_combined": 234,
-    "svg_assets": 197,
+    "svg_assets": 227,
     "png_assets": 4,
-    "external_assets": 1
+    "external_assets": 1,
+    "pending_single_names": 420
   },
   "makes": [
     {
@@ -81,8 +82,9 @@
     },
     {
       "make": "AEBI",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "AEBI",
+      "format": "svg"
     },
     {
       "make": "AEC",
@@ -304,8 +306,9 @@
     },
     {
       "make": "AUTO-UNION",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "AUTO-UNION",
+      "format": "svg"
     },
     {
       "make": "AUTOBIANCHI",
@@ -439,8 +442,9 @@
     },
     {
       "make": "BMC",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "BMC",
+      "format": "svg"
     },
     {
       "make": "BMW",
@@ -541,8 +545,9 @@
     },
     {
       "make": "BÜRSTNER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "BÜRSTNER",
+      "format": "svg"
     },
     {
       "make": "BÜSSING",
@@ -578,8 +583,9 @@
     },
     {
       "make": "CARADO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "CARADO",
+      "format": "svg"
     },
     {
       "make": "CARBODIES",
@@ -593,8 +599,9 @@
     },
     {
       "make": "CARTHAGO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "CARTHAGO",
+      "format": "svg"
     },
     {
       "make": "CASE",
@@ -630,8 +637,9 @@
     },
     {
       "make": "CF MOTO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "CF MOTO",
+      "format": "svg"
     },
     {
       "make": "Chamonix",
@@ -912,8 +920,9 @@
     },
     {
       "make": "DAIMLER BENZ",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "DAIMLER BENZ",
+      "format": "svg"
     },
     {
       "make": "DAIMLER/CHRYSLER",
@@ -975,8 +984,9 @@
     },
     {
       "make": "DELAGE",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "DELAGE",
+      "format": "svg"
     },
     {
       "make": "DELAHAYE",
@@ -1006,8 +1016,9 @@
     },
     {
       "make": "DETHLEFFS",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "DETHLEFFS",
+      "format": "svg"
     },
     {
       "make": "Detroit",
@@ -1126,8 +1137,9 @@
     },
     {
       "make": "EAGLE",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "EAGLE",
+      "format": "svg"
     },
     {
       "make": "EBUSCO",
@@ -1176,8 +1188,9 @@
     },
     {
       "make": "ETESIA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "ETESIA",
+      "format": "svg"
     },
     {
       "make": "ETON",
@@ -1849,8 +1862,9 @@
     },
     {
       "make": "GOUPIL",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "GOUPIL",
+      "format": "svg"
     },
     {
       "make": "Graham",
@@ -1963,13 +1977,15 @@
     },
     {
       "make": "HISUN",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "HISUN",
+      "format": "svg"
     },
     {
       "make": "HOBBY",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "HOBBY",
+      "format": "svg"
     },
     {
       "make": "HOLDEN",
@@ -2033,8 +2049,9 @@
     },
     {
       "make": "HYMER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "HYMER",
+      "format": "svg"
     },
     {
       "make": "HYMER MOBIL",
@@ -2129,8 +2146,9 @@
     },
     {
       "make": "Italcar",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Italcar",
+      "format": "svg"
     },
     {
       "make": "IVECO",
@@ -2447,8 +2465,9 @@
     },
     {
       "make": "KREIDLER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "KREIDLER",
+      "format": "svg"
     },
     {
       "make": "Krismar",
@@ -2537,8 +2556,9 @@
     },
     {
       "make": "LEYLAND",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "LEYLAND",
+      "format": "svg"
     },
     {
       "make": "Lichi",
@@ -2584,8 +2604,9 @@
     },
     {
       "make": "LMC",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "LMC",
+      "format": "svg"
     },
     {
       "make": "Locost",
@@ -2741,8 +2762,9 @@
     },
     {
       "make": "MATRA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "MATRA",
+      "format": "svg"
     },
     {
       "make": "MATRA SIMCA",
@@ -2811,8 +2833,9 @@
     },
     {
       "make": "Mercedes-AMG",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Mercedes-AMG",
+      "format": "svg"
     },
     {
       "make": "Mercedes-Benz/ACBUS",
@@ -3155,8 +3178,9 @@
     },
     {
       "make": "MULTICAR",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "MULTICAR",
+      "format": "svg"
     },
     {
       "make": "NASH",
@@ -3481,8 +3505,9 @@
     },
     {
       "make": "POLSKI FIAT",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "POLSKI FIAT",
+      "format": "svg"
     },
     {
       "make": "PONTIAC",
@@ -3749,8 +3774,9 @@
     },
     {
       "make": "SAVIEM",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "SAVIEM",
+      "format": "svg"
     },
     {
       "make": "Saxon Roadsters",
@@ -4027,8 +4053,9 @@
     },
     {
       "make": "SUNLIGHT",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "SUNLIGHT",
+      "format": "svg"
     },
     {
       "make": "SUPERFORMANCE",
@@ -4108,8 +4135,9 @@
     },
     {
       "make": "TEMSA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "TEMSA",
+      "format": "svg"
     },
     {
       "make": "Tesla",
@@ -4119,8 +4147,9 @@
     },
     {
       "make": "TGB",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "TGB",
+      "format": "svg"
     },
     {
       "make": "TGL",
@@ -4272,8 +4301,9 @@
     },
     {
       "make": "VDL",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "VDL",
+      "format": "svg"
     },
     {
       "make": "VDL BUS/BERGHOF",
@@ -4578,8 +4608,9 @@
     },
     {
       "make": "Yutong",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Yutong",
+      "format": "svg"
     },
     {
       "make": "ZASTAVA",

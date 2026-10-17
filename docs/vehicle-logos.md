@@ -104,3 +104,23 @@ assigned a chassis logo as though it were an authentic composite brand mark.
 The complete audit is scripts/data/vehicle-logo-coverage.json; its counts are
 also in catalog.logo_coverage. Pending names retain text fallback. This is not
 complete logo coverage and the large DMR model catalog is still not shipped.
+
+## Single-name search (30 additional assets)
+
+The requested next batch of 100 could not be verified. 30 single register names
+were added after source and visual checks: Bürstner, Carado, Carthago, Dethleffs,
+Etesia, Goupil, Hisun, Hobby, LMC, Sunlight, TGB, Yutong, Polski Fiat, Daimler Benz,
+VDL, Mercedes-AMG, Auto-Union, Temsa, Saviem, Multicar, Kreidler, Aebi, BMC, Delage,
+Leyland, CF Moto, Eagle, Italcar, Matra and Hymer. No composite labels were added.
+
+Assets from manufacturer websites, Wikimedia Commons, theSVG and the reviewed
+logo collections record their provenance. Available Commons attribution and
+license metadata is retained with the asset. Static masks are supported only
+with local fragment references; external/active content remains rejected.
+White foregrounds on Carado, Carthago and Goupil were normalized for light-theme
+contrast, with mask paint preserved. Colored marks keep their palette.
+
+Current pool: 227 SVG, 4 PNG and 1 external asset (232 names). Coverage of the
+882-name cleaned register catalog is 228 available, 654 pending; pending is
+234 composite names and 420 single names. These are make/logo-pool counts,
+not additions to the shipped 54-make model list. Model wordmarks are unchanged.

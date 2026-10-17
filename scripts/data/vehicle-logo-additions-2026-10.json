@@ -1,6 +1,6 @@
 {
   "reviewed": true,
-  "count": 110,
+  "count": 140,
   "assets": [
     {
       "make": "AC",
@@ -664,6 +664,229 @@
       "source_url": "https://github.com/cardog-ai/icons/blob/05c4001e83a09a189721a0851546291f71f7e31c/core/optimized/Vinfast%20Icon.svg",
       "sha256": "feddcd5843eaf45a111d62b72dda645af72b90fa19ee8a3841aa01e7565b9766",
       "monochrome": false
+    },
+    {
+      "make": "BÜRSTNER",
+      "source_url": "https://www.buerstner.com/_default_upload_bucket/buerstner-relaunch-logo_1.svg",
+      "sha256": "38f10b668894c6331bf855e2496708492cf99de65582ae22c8c910fe695effea",
+      "monochrome": true,
+      "official_page": "https://www.buerstner.com/gb/buerstner"
+    },
+    {
+      "make": "CARADO",
+      "source_url": "https://carado.com/carado/carado-logo.svg",
+      "sha256": "f9af47daadce3704bcf9a7364f177e606a4d700eb339e9e164f902e49f0a97a4",
+      "monochrome": true,
+      "normalization": "Static paint flattened; white foreground changed to black for light-theme contrast; mask paint preserved.",
+      "official_page": "https://carado.com/de/en"
+    },
+    {
+      "make": "CARTHAGO",
+      "source_url": "https://www.carthago.com/wp-content/themes/carthago/assets/img/logo-carthago-white.svg",
+      "sha256": "752d1e6cba68ccc61db19ede7355c6969e7ab8c7742b797f0c89c35dec619175",
+      "monochrome": false,
+      "normalization": "Static paint flattened; white foreground changed to black for light-theme contrast; mask paint preserved.",
+      "official_page": "https://www.carthago.com"
+    },
+    {
+      "make": "DETHLEFFS",
+      "source_url": "https://www.dethleffs.de/dethleffs/general-media/logos/global/dethleffs-logo.svg",
+      "sha256": "682a2b17a360bef42a77396cc47326b4bda39220694a8d59c11c6323da673c84",
+      "monochrome": false,
+      "official_page": "https://www.dethleffs.de"
+    },
+    {
+      "make": "ETESIA",
+      "source_url": "https://www.etesia.fr/sites/all/themes/etesia/logo.svg",
+      "sha256": "78f7a53d91bf29446a8090673bf24c7848b5526e29c218bfedf67a405fb40e3b",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.etesia.com"
+    },
+    {
+      "make": "GOUPIL",
+      "source_url": "https://www.goupil-ev.com/img/logo-goupil-w.svg",
+      "sha256": "ef8463d968e92b4516d5c06d00f8f1aa5cab4309f4c015db59086273ae994b83",
+      "monochrome": true,
+      "normalization": "Static paint flattened; white foreground changed to black for light-theme contrast; mask paint preserved.",
+      "official_page": "https://www.goupil-ev.com/en/"
+    },
+    {
+      "make": "HISUN",
+      "source_url": "https://www.hisunmotors.com/images/logo/black/main.svg",
+      "sha256": "d8c6e28c0eeae7c9420d240c3f99aa8968dcafb77f277ae2fada238127945335",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.hisunmotors.com"
+    },
+    {
+      "make": "HOBBY",
+      "source_url": "https://www.hobby-caravan.de/_assets/3f7d91fdbc2ec2791c3280e2c8fc3c13/images/logo.svg",
+      "sha256": "9de99275f253b0bc333211e569cf71785ce3cf33386303730c64ae6e5c47629a",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.hobby-caravan.de"
+    },
+    {
+      "make": "LMC",
+      "source_url": "https://www.lmc-caravan.com/lmc/logo/lmc-logo1.svg",
+      "sha256": "c908af8523ac2d3fdc9a7c44511cd79dc8a8d375c5e014877983d4f3a250f48a",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.lmc-caravan.com/de/de"
+    },
+    {
+      "make": "SUNLIGHT",
+      "source_url": "https://www.sunlight.de/wp-content/themes/sun/img/logo-black.svg",
+      "sha256": "81989ccd10d640595049cc0f7be0ed409662589900359d3b0f023679e18f672b",
+      "monochrome": true,
+      "official_page": "https://www.sunlight.de"
+    },
+    {
+      "make": "TGB",
+      "source_url": "https://www.tgb.com.tw/images/logo.svg",
+      "sha256": "066c097cad4baf24992736054bc4f39f02c382adca282a3f1e6b8727f62f1cff",
+      "monochrome": false,
+      "official_page": "https://www.tgb.com.tw"
+    },
+    {
+      "make": "Yutong",
+      "source_url": "https://en.yutong.com/res/template/en2023/resource/images/LOGO2.svg",
+      "sha256": "ee060415f67f3ecd93de3a5216f6e2848f7172414de392ec0f77d5283df96026",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://en.yutong.com/"
+    },
+    {
+      "make": "POLSKI FIAT",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/p/polski-fiat-logo-1.svg",
+      "sha256": "c72f58c21505c8cc566a4deddca60291013aae53707813bda31bf69fddc10139",
+      "monochrome": false
+    },
+    {
+      "make": "DAIMLER BENZ",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/d/daimler-benz-1.svg",
+      "sha256": "221acb353288859c039533bbccd7ea78a133e4f63f9a0c3030587e0a7d896eb3",
+      "monochrome": true
+    },
+    {
+      "make": "VDL",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/v/vdl-logo.svg",
+      "sha256": "c327086a5047d4166f2f74652327bfff44a2cd5474858d85c803e7711e1a492b",
+      "monochrome": false
+    },
+    {
+      "make": "Mercedes-AMG",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/mercedes-amg-logo.svg",
+      "sha256": "2c33677ff4d5327f969249c9bac8d5ed8b0e1dbf052fb225cbb1783e2e3f0fa4",
+      "monochrome": false
+    },
+    {
+      "make": "AUTO-UNION",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/a/autounion-1.svg",
+      "sha256": "0621bd9c96544797c86b49c5722b061e6aa30cc9c25314197044541ea7969ba0",
+      "monochrome": true
+    },
+    {
+      "make": "TEMSA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/t/temsa-logo.svg",
+      "sha256": "898226680251fd914403948b3452eae998e093500c959c3e68330cf6ffdbf2d6",
+      "monochrome": false
+    },
+    {
+      "make": "SAVIEM",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/saviem-1.svg",
+      "sha256": "336dc14e3a1c71078898e9f6c88718f705bb85302e202fea17edaa71ec0db4c9",
+      "monochrome": true
+    },
+    {
+      "make": "MULTICAR",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/multicar-logo.svg",
+      "sha256": "3d915a2ee3d0273e0bf63d63bfa92744914998a2ec09face7c287d21c331fb81",
+      "monochrome": false
+    },
+    {
+      "make": "KREIDLER",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/k/kreidler-logo-1.svg",
+      "sha256": "91d2a7526eff095e2d7123e130bccb7e0a1af1049967d2bd76d0e9b52bdbc54d",
+      "monochrome": false
+    },
+    {
+      "make": "AEBI",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Aebi_Logo.svg",
+      "sha256": "b73cc2ea0f841ba54e537dc53b3f03f9fc15b7f7ef7b2250c522eaea1234209f",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Aebi_Logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "Unknown author<span style=\"display: none;\">Unknown author</span>",
+      "ImageDescription": "Aebi (a brand of Aebi Schmidt) logo"
+    },
+    {
+      "make": "BMC",
+      "source_url": "https://commons.wikimedia.org/wiki/File:BMC_logo.svg",
+      "sha256": "9463769047891b983e58ca3b6b0625dcfade55647b68523b8c826578eb419877",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/BMC_logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "BMC",
+      "ImageDescription": "BMC logo"
+    },
+    {
+      "make": "DELAGE",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Delage_logo.svg",
+      "sha256": "1ac85e688345bff5216bdc2ed9552c3610b83375e8d050c25f14db5de02438ac",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Delage_logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "<a href=\"https://en.wikipedia.org/wiki/Louis_Del%C3%A2ge\" class=\"extiw\" title=\"en:Louis Delâge\">Louis Delâge</a>",
+      "ImageDescription": "Logo of <a href=\"https://en.wikipedia.org/wiki/Delage\" class=\"extiw\" title=\"en:Delage\">Delage</a>"
+    },
+    {
+      "make": "LEYLAND",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Leyland-Logo.svg",
+      "sha256": "caf789c2538b77e716fc98c92c89f0c1c7829f2feb71b8fb7840c566c8cb2484",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/5/57/Leyland-Logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "<a href=\"//commons.wikimedia.org/wiki/User:%E5%BF%8D%E8%80%85%E7%8C%AB\" title=\"User:忍者猫\">忍者猫</a>",
+      "ImageDescription": "Leyland Motors logo"
+    },
+    {
+      "make": "CF MOTO",
+      "source_url": "https://commons.wikimedia.org/wiki/File:CFMOTO_Logo.svg",
+      "sha256": "88bc67fe67afbcbbd48ba695443a055db76412ecb8bfccd56b26c3ff9487c681",
+      "monochrome": true,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/CFMOTO_Logo.svg"
+    },
+    {
+      "make": "EAGLE",
+      "source_url": "https://cdn.worldvectorlogo.com/logos/eagle.svg",
+      "sha256": "b84c0ab52c17c16b30031b8fe265cf34cfa349f26302f3dc1deadae96ad97d47",
+      "monochrome": true
+    },
+    {
+      "make": "Italcar",
+      "source_url": "https://cdn.worldvectorlogo.com/logos/italcar.svg",
+      "sha256": "87f9750a92b9591c674080c985b47db83031c79857470719622e5c4404ed2bd9",
+      "monochrome": false
+    },
+    {
+      "make": "MATRA",
+      "source_url": "https://cdn.worldvectorlogo.com/logos/matra-2.svg",
+      "sha256": "3c1b2ca5be7ea2e8f8b160bc67bae56371703ebd72bd5b1a95cf13e0b0536165",
+      "monochrome": false
+    },
+    {
+      "make": "HYMER",
+      "source_url": "https://github.com/GLINCKER/thesvg/blob/bdfcb7cf0209c140f38afeb73ebccd432eff5c92/public/icons/hymer/default.svg",
+      "sha256": "613862b5ed79a782d89348379b6a650be6c92baea370eaa2b4e1f9dc32ccc296",
+      "monochrome": true,
+      "official_page": "https://www.hymer.com/de/en/brand-value"
     }
   ]
 }
