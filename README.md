@@ -235,3 +235,5 @@ python scripts/dmr_catalog.py build --input /tmp/dmr.zip --source-date YYYY-MM-D
 ```
 
 Brug datoen i det officielle filnavn som source-date. Gennemgå status, dubletter og nye mærker, og læg derefter det godkendte katalog i integrationens frontend/bilkatalog.json før udgivelse. Kildefilen er ikke en del af integrationen.
+
+Byg et katalog med unikke modelrækker, bevarede varianter og rapport over sammenlægninger: se [vejledningen til modelimport](docs/unique-vehicle-models.md). Prøver kan køres med `build --limit 100000`; eksisterende JSON-kataloger kan kontrolleres med `deduplicate`.

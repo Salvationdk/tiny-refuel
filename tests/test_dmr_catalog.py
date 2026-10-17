@@ -109,6 +109,48 @@ class DmrCatalogTests(unittest.TestCase):
             self.assertFalse(dmr.powered_kind({'KoeretoejArtNummer': {code},
                                               'DrivkraftTypeNavn': {'Diesel'}}))
 
+    def test_deduplication_preserves_punctuation_variants_specs_and_custom_metadata(self):
+        original = base()
+        original['brands'][0]['modeller'].extend([
+            {'model': ' GOLF ', 'tank_l': 55, 'variants': [{'name': ' 1.6 TDI ', 'fuel_types': ['Diesel']}]},
+            {'model': 'G-O-L-F', 'tank_l': 40},
+            {'model': 'C4', 'tank_l': 50},
+            {'model': 'C 4', 'tank_l': 60},
+        ])
+        original['brands'].append({'mærke': 'VW', 'modeller': [
+            {'model': 'golf', 'battery_kwh': 12, 'variants': [{'name': '1.6 tdi', 'fuel_types': ['Benzin']}]}]})
+        result, report = dmr.deduplicate_catalog(original)
+        self.assertEqual(len(result['brands']), 1)
+        models = result['brands'][0]['modeller']
+        self.assertEqual(len(models), 4)
+        golf = next(m for m in models if m['model'] == 'Golf')
+        self.assertEqual(golf['tank_l'], 50)
+        self.assertEqual(golf['deduplication_alternatives']['tank_l'], [50, 55])
+        self.assertEqual(golf['battery_kwh'], 12)
+        self.assertEqual(len(golf['variants']), 1)
+        self.assertEqual(set(golf['variants'][0]['fuel_types']), {'Diesel', 'Benzin'})
+        self.assertTrue(report['requires_review'])
+        self.assertEqual(result['logos'], original['logos'])
+        self.assertEqual(result['custom_metadata'], {'keep': True})
+        again, _ = dmr.deduplicate_catalog(result)
+        self.assertEqual(result, again)
+        self.assertEqual(len(original['brands']), 2)
+
+    def test_limited_build_keeps_distinct_technical_combinations_without_fuzzy_model_merge(self):
+        a = record(model='Golf').replace('</ns:Statistik>',
+              '<ns:KoeretoejOplysningModelAar>2020</ns:KoeretoejOplysningModelAar></ns:Statistik>')
+        b = a.replace('2020', '2021').replace('Diesel', 'Benzin')
+        result, report = dmr.build_catalog(BytesIO(xml(a, b, record(model='G-OLF'))),
+                                          base(), '2026-10-07', 'input.zip', limit=2)
+        self.assertEqual(report['processed_records'], 2)
+        self.assertEqual(report['sample_limit'], 2)
+        self.assertEqual(report['unique_profiles'], 2)
+        golf = result['brands'][0]['modeller'][0]
+        self.assertEqual(golf['model_years'], ['2020', '2021'])
+        self.assertEqual(golf['fuel_types'], ['Benzin', 'Diesel'])
+        self.assertEqual(golf['tank_l'], 50)
+        self.assertEqual(len(golf['dmr_profiles']), 2)
+
     def test_download_uses_latest_archive_and_keeps_old_file_on_interrupted_download(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'dmr.zip'

@@ -64,6 +64,108 @@ def clean(value):
     return re.sub(r'\s+', ' ', value or '').strip()
 
 
+def name_key(value):
+    """Ignore case/spacing only; punctuation and accented letters distinguish models."""
+    return clean(unicodedata.normalize('NFC', value)).casefold()
+
+
+def make_key(value):
+    # Only the explicit manufacturer aliases may discard punctuation.
+    return name_key(ALIASES.get(normalized(value), value))
+
+
+def merge_metadata(target, incoming, conflicts, context):
+    """Preserve curated values; record every incompatible scalar without guessing."""
+    for field, value in incoming.items():
+        if field not in target or target[field] is None:
+            target[field] = deepcopy(value)
+        elif value is None or target[field] == value:
+            continue
+        elif isinstance(value, dict) and isinstance(target[field], dict):
+            merge_metadata(target[field], value, conflicts, context + '.' + field)
+        elif isinstance(value, list) and isinstance(target[field], list):
+            for item in value:
+                if item not in target[field]:
+                    target[field].append(deepcopy(item))
+        else:
+            alternatives = target.setdefault('deduplication_alternatives', {}).setdefault(field, [])
+            for item in (target[field], value):
+                if item not in alternatives:
+                    alternatives.append(deepcopy(item))
+            conflict = {'context': context, 'field': field,
+                        'kept': deepcopy(target[field]), 'alternative': deepcopy(value)}
+            if conflict not in conflicts:
+                conflicts.append(conflict)
+
+
+def deduplicate_catalog(base):
+    """Consolidate exact normalized names, retaining variants and conflicting specs."""
+    result = deepcopy(base)
+    brands, changes, conflicts = {}, [], []
+    before_models = sum(len(b['modeller']) for b in base['brands'])
+    for original in result['brands']:
+        brand = deepcopy(original)
+        brand['mærke'] = clean(brand['mærke'])
+        key = make_key(brand['mærke'])
+        if key not in brands:
+            brands[key] = brand
+        else:
+            target = brands[key]
+            changes.append({'type': 'make', 'from': brand['mærke'], 'into': target['mærke']})
+            target.setdefault('source_names', [])
+            for n in [brand['mærke']] + brand.get('source_names', []):
+                if n != target['mærke'] and n not in target['source_names']:
+                    target['source_names'].append(n)
+            incoming = {k: v for k, v in brand.items() if k not in {'mærke', 'modeller', 'source_names'}}
+            merge_metadata(target, incoming, conflicts, target['mærke'])
+            target['modeller'].extend(brand['modeller'])
+    for brand in brands.values():
+        models = {}
+        for original in brand['modeller']:
+            model = deepcopy(original)
+            model['model'] = clean(model['model'])
+            key = name_key(model['model'])
+            if key not in models:
+                models[key] = model
+            else:
+                target = models[key]
+                changes.append({'type': 'model', 'make': brand['mærke'],
+                                'from': model['model'], 'into': target['model']})
+                target.setdefault('source_names', [])
+                for n in [model['model']] + model.get('source_names', []):
+                    if n != target['model'] and n not in target['source_names']:
+                        target['source_names'].append(n)
+                merge_metadata(target, {k: v for k, v in model.items()
+                                       if k not in {'model', 'source_names'}},
+                               conflicts, brand['mærke'] + '/' + target['model'])
+        for model in models.values():
+            variants = {}
+            for original in model.get('variants', []):
+                variant = deepcopy(original)
+                variant['name'] = clean(variant['name'])
+                key = name_key(variant['name'])
+                if key not in variants:
+                    variants[key] = variant
+                else:
+                    merge_metadata(variants[key], {k: v for k, v in variant.items() if k != 'name'},
+                                   conflicts, brand['mærke'] + '/' + model['model'] + '/' + variant['name'])
+            if 'variants' in model:
+                model['variants'] = sorted(variants.values(), key=lambda x: name_key(x['name']))
+            if 'dmr_profiles' in model:
+                profiles = {json.dumps(x, ensure_ascii=False, sort_keys=True): x
+                            for x in model['dmr_profiles']}
+                model['dmr_profiles'] = [profiles[k] for k in sorted(profiles)]
+        brand['modeller'] = sorted(models.values(), key=lambda x: name_key(x['model']))
+    result['brands'] = sorted(brands.values(), key=lambda b: name_key(b['mærke']))
+    report = {'makes_before': len(base['brands']), 'makes_after': len(result['brands']),
+              'models_before': before_models,
+              'models_after': sum(len(b['modeller']) for b in result['brands']),
+              'merges': changes, 'conflicts': conflicts,
+              'requires_review': bool(conflicts),
+              'policy': 'Case, whitespace and NFC only; explicit make aliases. Punctuation and accents preserved. No fuzzy matching.'}
+    return result, report
+
+
 def download_latest(destination, ftp_factory=FTP):
     """Retry interrupted transfers with FTP REST; never replace a valid local file."""
     destination = Path(destination)
@@ -158,18 +260,19 @@ def iter_records(stream):
         stack.pop()
 
 
-def build_catalog(stream, base, source_date, source_file):
+def build_catalog(stream, base, source_date, source_file, limit=None):
     """Preserve curated specs; aggregate names/variants, never individual vehicles."""
     date.fromisoformat(source_date)
-    result = deepcopy(base)
-    brands = {normalized(row['mærke']): row for row in result['brands']}
-    aliases = {key: normalized(value) for key, value in ALIASES.items()}
-    indexes = {key: {normalized(model['model']): model for model in brand['modeller']}
+    result, cleanup = deduplicate_catalog(base)
+    brands = {make_key(row['mærke']): row for row in result['brands']}
+    indexes = {key: {name_key(model['model']): model for model in brand['modeller']}
                for key, brand in brands.items()}
     variants = {}
     profiles = {}
     records = included = skipped = added_models = added_brands = 0
     for row in iter_records(stream):
+        if limit is not None and records >= limit:
+            break
         records += 1
         if records % 100000 == 0:
             print(f'DMR: processed {records:,} records', file=sys.stderr, flush=True)
@@ -184,14 +287,14 @@ def build_catalog(stream, base, source_date, source_file):
         if len(make) > 100 or len(model) > 200 or model.casefold() in {'uoplyst', 'ukendt', 'unknown', '-'}:
             skipped += 1
             continue
-        key = aliases.get(normalized(make), normalized(make))
+        key = make_key(make)
         if key not in brands:
             brand = {'mærke': make, 'modeller': []}
             result['brands'].append(brand)
             brands[key], indexes[key] = brand, {}
             added_brands += 1
         index, brand = indexes[key], brands[key]
-        model_key = normalized(model)
+        model_key = name_key(model)
         if model_key not in index:
             entry = {'model': model, 'brændstof': None, 'tank_l': None,
                      'requires_fuel_selection': True, 'source_url': SOURCE,
@@ -200,6 +303,13 @@ def build_catalog(stream, base, source_date, source_file):
             brand['modeller'].append(entry)
             added_models += 1
         included += 1
+        entry = index[model_key]
+        if model != entry['model']:
+            names = entry.setdefault('source_names', [])
+            if model not in names:
+                names.append(model)
+        entry['fuel_types'] = sorted(set(entry.get('fuel_types', [])) | row.get('DrivkraftTypeNavn', set()))
+        entry['model_years'] = sorted(set(entry.get('model_years', [])) | row.get('KoeretoejOplysningModelAar', set()))
         # Only explicitly allowlisted model-level facts leave the record parser.
         entry_key = (key, model_key)
         # Keep each observed combination intact, rather than cross-combining years,
@@ -239,8 +349,14 @@ def build_catalog(stream, base, source_date, source_file):
               'added_makes': added_brands, 'added_models': added_models,
               'makes': len(result['brands']), 'models': sum(len(row['modeller']) for row in result['brands']),
               'identifier_fields_exported': False,
+              'sample_limit': limit,
+              'deduplication': cleanup,
               'technical_values': 'Raw source fields; units not inferred; not used as confirmed tank, battery or consumption specifications.',
               'scope': 'DMR powered kinds 1,2,3,4,7,8,12,16,17,91 plus recognized powered kind names; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
+    result, final_cleanup = deduplicate_catalog(result)
+    report['deduplication']['variant_conflicts'] = final_cleanup['conflicts']
+    report['deduplication']['requires_review'] = bool(cleanup['conflicts'] or final_cleanup['conflicts'])
+    report['unique_profiles'] = sum(len(m.get('dmr_profiles', [])) for b in result['brands'] for m in b['modeller'])
     result['dmr_catalog'] = report
     return result, report
 
@@ -285,13 +401,32 @@ def main():
     build.add_argument('--base', type=Path, default=CATALOG)
     build.add_argument('--output', type=Path, required=True)
     build.add_argument('--report', type=Path, required=True)
+    build.add_argument('--limit', type=int, help='First N records only; omit for full catalog')
+    dedup = commands.add_parser('deduplicate')
+    dedup.add_argument('--input', type=Path, required=True)
+    dedup.add_argument('--output', type=Path, required=True)
+    dedup.add_argument('--report', type=Path, required=True)
     inspect = commands.add_parser('inspect')
     inspect.add_argument('--input', type=Path, required=True)
     inspect.add_argument('--output', type=Path, required=True)
     inspect.add_argument('--limit', type=int)
     args = parser.parse_args()
+    if args.command in {'build', 'deduplicate'}:
+        protected = {args.input.resolve()}
+        if args.command == 'build':
+            protected.add(args.base.resolve())
+            if args.limit is not None and args.limit < 1:
+                parser.error('--limit must be positive')
+        if args.output.resolve() in protected or args.report.resolve() in protected or args.report.resolve() == args.output.resolve():
+            parser.error('Input, base, output and report must be separate files')
     if args.command == 'download':
         print(download_latest(args.output))
+    elif args.command == 'deduplicate':
+        base = json.loads(args.input.read_text(encoding='utf-8-sig'))
+        catalog, report = deduplicate_catalog(base)
+        save_json(args.output, catalog)
+        save_json(args.report, report)
+        print(json.dumps({k: v for k, v in report.items() if k not in {'merges', 'conflicts'}}, ensure_ascii=False, indent=2))
     elif args.command == 'inspect':
         if args.limit is not None and args.limit < 1:
             parser.error('--limit must be positive')
@@ -305,7 +440,7 @@ def main():
             parser.error('Write a separate candidate file; review it before replacing the shipped catalog')
         base = json.loads(args.base.read_text(encoding='utf-8'))
         with input_xml(args.input) as stream:
-            catalog, report = build_catalog(stream, base, args.source_date, args.source_file or args.input.name)
+            catalog, report = build_catalog(stream, base, args.source_date, args.source_file or args.input.name, limit=args.limit)
         save_json(args.output, catalog)
         save_json(args.report, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))

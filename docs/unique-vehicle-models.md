@@ -1,0 +1,37 @@
+# Byg et katalog med unikke modeller
+
+Brug Python 3.10 eller nyere. Kør kommandoerne fra roden af den udpakkede Tiny Refuel-kildekode, hvor `scripts` og `custom_components` ligger. ZIP-filen med DMR-data skal ikke pakkes ud.
+
+## Prøve: første 100.000 poster
+
+```bat
+python scripts/dmr_catalog.py build --input "E:\DRM\ESStatistikListeModtag\ESStatistikListeModtag-20261007-160843.zip" --source-date 2026-10-07 --limit 100000 --output "E:\DRM\catalog-test\bilkatalog.json" --report "E:\DRM\catalog-test\import-report.json"
+```
+
+## Hele udtrækket
+
+```bat
+python scripts/dmr_catalog.py build --input "E:\DRM\ESStatistikListeModtag\ESStatistikListeModtag-20261007-160843.zip" --source-date 2026-10-07 --output "E:\DRM\catalog-candidate\bilkatalog.json" --report "E:\DRM\catalog-candidate\import-report.json"
+```
+
+Fremdrift vises for hver 100.000 poster. Resultatet skrives, når gennemløbet er afsluttet. Den fulde kørsel kan tage lang tid. XML læses som en strøm, men hukommelsesforbruget vokser med antallet af forskellige modeller og tekniske kombinationer i resultatet. Det er ikke en konstant grænse på eksempelvis 24 MB.
+
+Den medfølgende katalogfil er grundlaget, så logoer, kuraterede specifikationer og egne metadata bevares. De nye filer er kandidater; de erstatter ikke automatisk integrationens katalog.
+
+## Hvad er en dublet?
+
+Store/små bogstaver, overflødige mellemrum og forskellige Unicode-kodninger af samme bogstav ignoreres. Kun udtrykkeligt angivne fabrikantaliasser, eksempelvis VW og Volkswagen, samles. Tegnsætning og accenter fjernes ikke: `C4` og `C 4`, eller `AB` og `A-B`, forbliver forskellige. Lignende navne kræver manuel gennemgang.
+
+En fabrikant/model vises som én katalogrække. Variantnavne og alle observerede drivmidler bevares. `model_years` og `fuel_types` giver et råt overblik pr. model; `dmr_profiles` bevarer kombinationerne fra de enkelte kildeposter, så et forbrugstal fra én årgang ikke blandes med motoren fra en anden. Flere værdier fra samme kildepost forbliver lister; scriptet gætter ikke deres indbyrdes relation. Flere drivmidler på modelniveau betyder ikke automatisk hybrid.
+
+Profilerne er rå registeroplysninger og anvendes endnu ikke som bekræftede årgangs-/specifikationsvalg i kortets editor. Tank- og batterikapacitet udledes ikke. Eksisterende verificerede værdier bevares. Konflikter mellem eksisterende oplysninger gemmes i `deduplication_alternatives` og rapporten med `requires_review: true`. Ingen af de modstridende værdier bortkastes.
+
+Den separate rapport viser antal kildeposter, frasorterede poster, mærker, modeller og unikke profiler samt sammenlægninger og konflikter fra grundkataloget. Katalogets `source_names` bevarer alternative modelstavemåder. Der bruges ingen fuzzy matching.
+
+## Oprydning i et allerede dannet JSON-katalog
+
+```bat
+python scripts/dmr_catalog.py deduplicate --input "E:\DRM\catalog-candidate\bilkatalog.json" --output "E:\DRM\catalog-clean\bilkatalog.json" --report "E:\DRM\catalog-clean\oprydningsrapport.json"
+```
+
+Dette går hurtigt, men kan kun samle oplysninger, som allerede findes i JSON-filen. Det kan ikke tilføje de køretøjstyper eller tekniske felter, der blev udeladt af en ældre import, og kan heller ikke genskabe tidligere sammenlagte modelbetegnelser.
