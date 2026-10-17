@@ -26,4 +26,9 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          ignore: brands
+
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: home-assistant/actions/hassfest@master

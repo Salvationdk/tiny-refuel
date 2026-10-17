@@ -93,12 +93,12 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(any(row.get('brand') == 'Tesla' for row in manager.data['ev']))
         self.assertNotIn('tesla',manager.data['ev_sources'])
         self.assertNotIn('tesla',manager.data['benefits'])
-        self.assertEqual(manager.snapshot()['version'], '0.2.1')
+        self.assertEqual(manager.snapshot()['version'], '0.2.2')
         self.hass.data['tiny_refuel']={'manager':manager}
         view=tiny_refuel.RefuelDataView(self.hass);self.assertTrue(view.requires_auth)
         response=await view.get(None);self.assertEqual(response.status,200);self.assertEqual(response.headers['Cache-Control'],'no-store')
         self.assertEqual(json.loads(response.text)['project'],'Tiny Refuel')
-        self.assertEqual(json.loads(response.text)['version'],'0.2.1')
+        self.assertEqual(json.loads(response.text)['version'],'0.2.2')
         self.hass.data['tiny_refuel'].pop('manager');self.assertEqual((await view.get(None)).status,503)
 
     async def test_setup_service_entities_and_unload(self):
@@ -201,9 +201,10 @@ class SourceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'.storage/tiny_refuel'
             fuel={'brand':'OK','name':'Test','address':'A','lat':55,'lon':12,'p95':17,'source':'mobility-prices.ok.dk'}
-            with patch.multiple(scraper,fetch_ck_ingo=lambda e:([],True),fetch_f24q8=lambda e:([],True),fetch_goon=lambda e:([],True),fetch_shell=lambda e:([],True),fetch_oil=lambda e:([],True),fetch_oil_fuel=lambda e:([],True),fetch_unox=lambda e:(([],[]),True),fetch_ok=lambda e:([],[],True),fetch_q8_el=lambda e:[],fetch_circlek_ev_prices=lambda e:[],fetch_eon_ev_tariffs=lambda e:[],fetch_ionity_ev_tariffs=lambda e:[],geocode_new=lambda addresses, errors, brands=None:{},fetch_ok_fuel=lambda e:([fuel],True),fetch_public_ev_locations=lambda *a,**k:([],{'status':'error','records':0}),fetch_benefits=lambda *a,**k:({},[])):
+            with patch.multiple(scraper,fetch_ck_ingo=lambda e:([],True),fetch_f24q8=lambda e:([],True),fetch_goon=lambda e:([],True),fetch_shell=lambda e:([],True),fetch_oil=lambda e:([],True),fetch_oil_fuel=lambda e:([],True),fetch_unox=lambda e:(([],[]),True),fetch_ok=lambda e:([],[],True),fetch_q8_el=lambda e:[],fetch_circlek_ev_prices=lambda e:[],fetch_eon_ev_tariffs=lambda e:[],fetch_ionity_ev_tariffs=lambda e:[],geocode_new=lambda addresses, errors, brands=None, stats=None:{},fetch_ok_fuel=lambda e:([fuel],True),fetch_public_ev_locations=lambda *a,**k:([],{'status':'error','records':0}),fetch_benefits=lambda *a,**k:({},[])):
                 data=scraper.collect(path)
             self.assertTrue((path/'priser-og-ladesteder.json').exists());self.assertEqual(data['scraper_version'],'v0.1');self.assertEqual(len(data['stations'][0]['h95']),1)
 
 
 if __name__=='__main__':unittest.main()
+

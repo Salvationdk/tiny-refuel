@@ -21,8 +21,12 @@ const context = { window, HTMLElement: Element, customElements: window.customEle
   setTimeout: fn => { timers.set(++timerId, fn); return timerId; },
   clearTimeout: id => timers.delete(id),
 };
-const frontendSource = fs.readFileSync('custom_components/tiny_refuel/frontend/tiny-refuel-card-v0.1.js', 'utf8');
+const frontendSource = fs.readFileSync('custom_components/tiny_refuel/frontend/tiny-refuel-card.js', 'utf8');
 vm.runInNewContext(frontendSource, context);
+// Loading the canonical module through both HA and a legacy resource is harmless.
+const beforeReload = new Map(registry);
+vm.runInNewContext(frontendSource, context);
+assert.deepEqual(registry, beforeReload);
 const Card = registry.get('tiny-refuel-card');
 assert.ok(Card);
 assert.ok(registry.get('tiny-refuel-card-editor'));
@@ -296,8 +300,15 @@ for (const nav of ['waze', 'google']) {
   await new Promise(setImmediate);
   assert.equal(card._scraping, false);
   assert.ok(card._scrapeMessage.includes('Failed source'));
-  card._hass.callApi = () => Promise.reject(new Error('Offline'));
+  const retainedData = card._data;
+  card._hass.callApi = () => Promise.reject({ status_code: 500 });
   assert.equal(await card._fetchJson(), null);
+  assert.equal(card._data, retainedData, 'data-API errors must retain cached prices');
+  assert.equal(card._dataApiError, 'HTTP 500');
+  assert.ok(decodeURIComponent(card._issueUrl().replace(/\+/g, ' ')).includes('Home Assistant data-API: HTTP 500'));
+  card._hass.callApi = () => Promise.resolve(retainedData);
+  await card._fetchJson();
+  assert.equal(card._dataApiError, null, 'successful recovery clears the API error');
   card.disconnectedCallback();
   assert.equal(card._scraping, false);
   console.log('PASS: frontend grouping, counts, navigation, authenticated API and shared refresh');
@@ -356,10 +367,10 @@ assert.ok(!frontendSource.includes('grid-template-columns: minmax(0, 1fr) minmax
     'api.circlek.com': { status: 'stale', records: 8, priced: 7, missing_coordinates: 2, last_attempt: '2026-10-10T10:00:00Z', error: 'Offline' },
     'goon.nu': { status: 'ok', records: 4, priced: 4, missing_coordinates: 0, last_success: '2026-10-10T10:00:00Z' },
   } };
-  const summary = status._fuelDataSummary();
+  const summary = status._fuelDataSummary() + status._coordinateSummary();
   assert.ok(summary.includes('Circle K og Ingo'));
   assert.ok(summary.includes('Gemte data · nyt forsøg fejlede'));
-  assert.ok(summary.includes('2 adresser afventer koordinater'));
+  assert.ok(summary.includes('2 stationer mangler koordinater'));
   assert.ok(summary.includes('Offline'));
 }
 
@@ -403,3 +414,181 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   assert.equal(form._katalog, newer);
   console.log('PASS: stable editor, shared vehicle catalogs, logo fallbacks and theme switching');
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
+// Data refreshes must retain the user's expanded panel and popup state.
+{
+  const persistent = new Card();
+  persistent._config = { vis_benzin: true, vis_el: true };
+  persistent._data = { stations: [], ev: [], errors: [{ source: 'clever.dk', error: 'HTTP Error 500' }] };
+  let panels = [
+    { open: true, getAttribute: () => 'information' },
+    { open: false, getAttribute: () => 'errors' },
+  ];
+  persistent.querySelectorAll = selector => selector === 'details[data-card-panel]' ? panels : [];
+  let html;
+  Object.defineProperty(persistent, 'innerHTML', {
+    get: () => html,
+    set: value => { html = value; panels = panels.map(panel => ({ ...panel, open: false })); },
+  });
+  persistent._openEvBrand = 'Q8';
+  persistent._openFordel = 'chosen-benefit';
+  persistent._render();
+  assert.equal(panels[0].open, true);
+  assert.equal(panels[1].open, false);
+  assert.equal(persistent._openEvBrand, 'Q8');
+  assert.equal(persistent._openFordel, 'chosen-benefit');
+  persistent._data.updated = '2026-10-16T18:00:00Z';
+  persistent._render();
+  assert.equal(panels[0].open, true);
+  // Opening another panel explicitly collapses the previous panel.
+  const summary = { parentElement: panels[1] };
+  persistent.events.click({ target: { closest: selector => selector === 'details[data-card-panel] > summary' ? summary : null } });
+  assert.equal(panels[0].open, false);
+  let prevented = false;
+  persistent.events.cancel({ target: { classList: { contains: () => true } }, preventDefault: () => { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(persistent._openEvBrand, 'Q8');
+}
+// A public issue draft contains useful error categories, never raw snapshots.
+{
+  const report = new Card();
+  report._data = { version: '0.2.1', stations: [{ address: 'PRIVATE ADDRESS' }],
+    errors: [{ source: 'clever.dk', error: 'HTTP Error 500: https://secret.invalid/?token=PRIVATE_TOKEN' },
+      { source: 'PRIVATE_SOURCE', error: 'PRIVATE_MESSAGE' }],
+    benefit_errors: [{ provider: 'OK', error: 'HTTP Error 503' }] };
+  const url = new URL(report._issueUrl());
+  const body = url.searchParams.get('body');
+  assert.equal(url.origin, 'https://github.com');
+  assert.ok(body.includes('clever.dk: HTTP 500'));
+  assert.ok(body.includes('Fordele · OK: HTTP 503'));
+  assert.ok(!body.includes('PRIVATE'));
+  assert.ok(!body.includes('secret.invalid'));
+  const html = report._dataErrorsHtml();
+  assert.ok(html.includes('3 fejl'));
+  assert.ok(html.includes('Rapportér på GitHub'));
+  assert.ok(html.includes('target="_blank" rel="noopener noreferrer"'));
+  assert.ok(html.includes('Fordele · OK'));
+}
+console.log('PASS: persistent panels and redacted GitHub issue drafts');
+{
+  const queue = new Card();
+  queue._config = { vis_benzin: true };
+  queue._data = { fuel_sources: { 'f24.dk': { status: 'ok' } }, geocoding: {
+    queued: 4, not_found: 2, missing_address: 1, limit: 30,
+    run: { checked_at: '2026-10-16T17:00:00Z', attempted: 3, found: 1, not_found: 1, failed: 1, error: 'Offline' },
+    pending_addresses: [{ brand: 'Q8', name: 'Teststed', address: 'Testvej 1', status: 'not_found', retry_after: '2026-10-23T17:00:00Z' }],
+  } };
+  const html = queue._coordinateSummary();
+  assert.ok(html.includes('4 unikke adresser klar til opslag'));
+  assert.ok(html.includes('2 forsøgt uden resultat'));
+  assert.ok(html.includes('3 opslag forsøgt: 1 fundet, 1 uden resultat, 1 fejl'));
+  assert.ok(html.includes('Testvej 1'));
+  assert.ok(html.includes('Tidligste genforsøg'));
+  assert.ok(html.includes('Opslagene blev stoppet af en fejl'));
+  assert.ok(!html.includes('behandles gradvist'));
+}
+
+queueCoverage();
+function queueCoverage() {
+  const onlyElectric = new Card();
+  onlyElectric._data = { geocoding: { queued: 1, not_found: 0, missing_address: 0, pending_addresses: [] } };
+  onlyElectric.setConfig({ vis_benzin: false, vis_diesel: false, vis_el: true });
+  assert.ok(onlyElectric.innerHTML.includes('1 unikke adresser klar til opslag'));
+}
+// A model-name-only addition must never carry over the preceding car's fuel/specs.
+{
+  const form = new StableEditor();
+  form._katalog = packagedCatalog;
+  form.dispatchEvent = () => {};
+  form.setConfig({ biler: [{ mærke: 'Toyota', model: 'Prius', brændstof: 'hybrid', tank_liters: 45, batteri_kwh: 8, vis: { benzin: true } }] });
+  form.events.change({ target: { dataset: { key: 'bil:0:model' }, value: 'Aygo' } });
+  const car = form._config.biler[0];
+  assert.equal(car.model, 'Aygo');
+  assert.equal(car.brændstof, undefined);
+  assert.equal(car.tank_liters, undefined);
+  assert.equal(car.batteri_kwh, undefined);
+  assert.equal(car.vis, undefined);
+  form._render();
+  assert.ok(form.innerHTML.includes('Aygo · vælg drivmiddel'));
+  assert.ok(form.innerHTML.includes('Vælg drivmiddel og kontrollér tank/batteri'));
+  assert.ok(!form.innerHTML.includes('Aygo · null'));
+  assert.ok(form.innerHTML.includes('54 mærker · 645 modeller'));
+  form.events.change({ target: { dataset: { key: 'bil:0:brændstof' }, value: 'benzin' } });
+  assert.equal(form._config.biler[0].brændstof, 'benzin');
+  assert.equal(form._config.biler[0].vis.benzin, true);
+}
+// Large bundled catalogs filter locally without replacing the input or emitting config.
+{
+  const form = new StableEditor();
+  form._katalog = { brands: [{ mærke: 'Test', modeller: Array.from({ length: 5000 }, (_, i) => ({ model: 'Model ' + i })) }] };
+  form.setConfig({ biler: [{ mærke: 'Test', model: '', navn: 'Min bil' }] });
+  assert.equal((form._modelSuggestions('Test', '').html.match(/<option /g) || []).length, 60);
+  assert.equal(form._modelSuggestions('Test', '4999').total, 1);
+  assert.ok(form._modelSuggestions('Test', '4999').html.includes('Model 4999'));
+  const list = {}, count = {};
+  form.querySelector = selector => selector === '[data-model-options="0"]' ? list : selector === '[data-model-count="0"]' ? count : null;
+  let renders = 0, events = 0;
+  form._render = () => { renders++; };
+  form.dispatchEvent = () => { events++; };
+  const input = { dataset: { key: 'bil:0:model' }, value: '4999', selectionStart: 4 };
+  form.events.input({ target: input });
+  assert.ok(list.innerHTML.includes('Model 4999'));
+  assert.equal(count.textContent, '1 modeller matcher. Du kan også skrive din egen model.');
+  assert.equal(form._config.biler[0].model, '');
+  assert.equal(input.selectionStart, 4);
+  assert.equal(renders, 0);
+  assert.equal(events, 0);
+  assert.ok(form._modelSuggestions('Missing', 'Custom').message.includes('skrive din egen model'));
+  form._katalog.brands[0].modeller.push({ model: 'Ældre årgang', variants: [{ name: '1.6 TDI', fuel_types: ['Diesel'] }] });
+  assert.equal(form._modelSuggestions('Test', 'aeldre').total, 1);
+  assert.ok(form._variantOptions('Test', 'Ældre årgang').includes('1.6 TDI'));
+}
+
+{
+  const form = new StableEditor();
+  form._katalog = { brands: [{ mærke: 'Test', modeller: [{ model: 'Van', variants: Array.from({ length: 2000 }, (_, i) => ({ name: 'Variant ' + i, fuel_types: ['Diesel'] })) }] }] };
+  assert.equal((form._variantOptions('Test', 'Van').match(/<option /g) || []).length, 100);
+  assert.ok(form._variantOptions('Test', 'Van', '1999').includes('Variant 1999'));
+}
+
+{
+  const form = new StableEditor();
+  form._katalog = packagedCatalog;
+  form.dispatchEvent = () => {};
+  form.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'Golf', brændstof: 'diesel', tank_liters: 50 }] });
+  form.events.change({ target: { dataset: { key: 'bil:0:variant' }, value: '2018 · 1.4 benzin' } });
+  assert.equal(form._config.biler[0].variant, '2018 · 1.4 benzin');
+  assert.equal(form._config.biler[0].brændstof, undefined);
+  assert.equal(form._config.biler[0].tank_liters, undefined);
+  form.events.change({ target: { dataset: { key: 'bil:0:brændstof' }, value: 'benzin' } });
+  form.events.change({ target: { dataset: { key: 'bil:0:tank_liters' }, value: '45' } });
+  form.events.change({ target: { dataset: { key: 'bil:0:variant' }, value: '2018 · 1.4 benzin' } });
+  assert.equal(form._config.biler[0].brændstof, 'benzin');
+  assert.equal(form._config.biler[0].tank_liters, 45, 'unchanged variant preserves confirmed manual specifications');
+}
+
+// Prepared vehicle makes work in both editor and dashboard before model import.
+for (const make of Object.keys(packagedCatalog.logo_assets)) {
+  for (const name of [make, ...Object.keys(packagedCatalog.logo_aliases).filter(k => packagedCatalog.logo_aliases[k] === make)]) {
+    const src = 'data:image/svg+xml,' + encodeURIComponent(packagedCatalog.logos[make]);
+    editor._katalog = packagedCatalog;
+    editor.setConfig({biler:[{mærke:name, model:'Egen model'}]});
+    assert.ok(editor.innerHTML.includes(src), 'embedded editor logo: ' + name);
+    const panel = new Card(); panel._katalog = packagedCatalog;
+    panel.setConfig({biler:[{mærke:name, model:'Egen model'}]});
+    assert.ok(panel.innerHTML.includes(src), 'embedded dashboard logo: ' + name);
+    assert.ok(panel.innerHTML.includes('Egen model'));
+  }
+}
+
+// New raster fallbacks also work for makes not yet in the shipped model list.
+for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
+  assert.equal(Buffer.from(png, 'base64').subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  editor._katalog = packagedCatalog;
+  editor.setConfig({biler:[{mærke:make, model:'Egen model'}]});
+  assert.ok(editor.innerHTML.includes('data:image/png;base64,' + png));
+  const panel = new Card(); panel._katalog = packagedCatalog;
+  panel.setConfig({biler:[{mærke:make, model:'Egen model'}]});
+  assert.ok(panel.innerHTML.includes('data:image/png;base64,' + png));
+  assert.ok(panel.innerHTML.includes('Egen model'));
+}

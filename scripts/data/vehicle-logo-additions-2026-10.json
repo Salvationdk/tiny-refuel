@@ -1,0 +1,1282 @@
+{
+  "reviewed": true,
+  "count": 174,
+  "assets": [
+    {
+      "make": "AC",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/ac.svg",
+      "sha256": "fde8e276098014413135739dcc20d04ff2fbaa99bea6e8700568d5b187e5b7c0",
+      "monochrome": true
+    },
+    {
+      "make": "ADRIA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/a/adria.svg",
+      "sha256": "ce89c5eeedfe6e45bb667d61ead8e84640f0f3e2d2fd14a49d29ecca44a92b20",
+      "monochrome": true
+    },
+    {
+      "make": "AIXAM",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/aixam.svg",
+      "sha256": "379914cd52b59d64ef810a0ccf1d2f438329786aee0f392807ee4593a4777cff",
+      "monochrome": true
+    },
+    {
+      "make": "ALPINE",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/alpine.svg",
+      "sha256": "89cef4cd0d6bb3f9f17f5590024eeb749301469663ebf04e35c4b9f1bd8727fa",
+      "monochrome": true
+    },
+    {
+      "make": "ALVIS",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/alvis.svg",
+      "sha256": "8c47f7717f39b21d67fbb181dfd139691a9217ad9cbd51feac063620eac91aa4",
+      "monochrome": true
+    },
+    {
+      "make": "AMC",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/a/amc.svg",
+      "sha256": "2c2c046e256774fe2654c4c4f377b8d898c9ae60479be34d5441fbea9a93ab71",
+      "monochrome": true
+    },
+    {
+      "make": "ARCTIC CAT",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/a/arctic-cat.svg",
+      "sha256": "7f093ba0133f73007ad5d7d175ce940e65d11fa59a8b7a85511fbb657fdeebd5",
+      "monochrome": true
+    },
+    {
+      "make": "ARIEL",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/ariel.svg",
+      "sha256": "2c506166303c71ed338a9238899130ba5a196a65999bf2f4c1c921ef54685a02",
+      "monochrome": true
+    },
+    {
+      "make": "ARO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/a/aro.svg",
+      "sha256": "66fc7072b180212c696f0e8df41e9c78aa7db2ca431b03d785e3bb8224b95268",
+      "monochrome": true
+    },
+    {
+      "make": "AUSTIN",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/austin.svg",
+      "sha256": "f6fa55ecb31e4e7a7fdb102a68140723964f34356c91b3029e966a9fe115ce38",
+      "monochrome": true
+    },
+    {
+      "make": "BEDFORD",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/b/bedford.svg",
+      "sha256": "a894b9871bdf89df90fade96177ac1b7baa9e9c1a712d90ff11ece3d0285c330",
+      "monochrome": true
+    },
+    {
+      "make": "BOSS HOSS",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/b/boss-hoss.svg",
+      "sha256": "98835f9aa707663624cbcab378d6462df5f2e50c5e4500f8bb451d2379748d2a",
+      "monochrome": true
+    },
+    {
+      "make": "BRISTOL",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/bristol.svg",
+      "sha256": "3874ce26432953c2883d3088c35d15fab56c4b09b7617998630594662a74e61b",
+      "monochrome": true
+    },
+    {
+      "make": "BUICK",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/b/buick.svg",
+      "sha256": "4f928f43af79d1eddfffe2237c44f6820f19e2c44ec5ae72b60f8a5c8bebc47d",
+      "monochrome": true
+    },
+    {
+      "make": "Bombardier",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/b/bombardier.svg",
+      "sha256": "46d55f24fd3b7dfc505fec350164949567bd749f2e1f1d20248ab30c1e4caa5f",
+      "monochrome": true
+    },
+    {
+      "make": "CASE",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/c/case.svg",
+      "sha256": "8eef4d2544e3778805d5046795e95ca3155d8794d917249606f2b5eb5d414c4c",
+      "monochrome": true
+    },
+    {
+      "make": "CHECKER",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/c/checker.svg",
+      "sha256": "d50658a5e812ac8277720fd76f3c4a8728128826f76222e181fa85ddb622b6d3",
+      "monochrome": true
+    },
+    {
+      "make": "CLUB CAR",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/c/club-car.svg",
+      "sha256": "2e4863f5e9891195190b57b0ea66671862c77c4230f7d485911bc309abc1c648",
+      "monochrome": true
+    },
+    {
+      "make": "CORVETTE",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/corvette.svg",
+      "sha256": "7b0aa56664580650167820fa10a877a967edc1d66bc3c8b734f3cb6a3d982685",
+      "monochrome": true
+    },
+    {
+      "make": "DAEWOO",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/daewoo.svg",
+      "sha256": "5f0e6fa7de8a720a62af70fdb3dd8e096c664cb25b6939530cbb05530baa403d",
+      "monochrome": true
+    },
+    {
+      "make": "DAIHATSU",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/d/daihatsu.svg",
+      "sha256": "76b25eb776bd86f334d54b2c51e42f40f6a873c4a70527bcc7a62bbde99b5279",
+      "monochrome": true
+    },
+    {
+      "make": "DAIMLER",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/daimler.svg",
+      "sha256": "2221ffeb819382dc6c6da221b4934cbe2085c118e2f3e2b6e7d601105ad6005f",
+      "monochrome": true
+    },
+    {
+      "make": "DATSUN",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/d/datsun.svg",
+      "sha256": "45c4c8458377860437d8f67bf4fa594853a9e55e51564d9f5e185b11f80f604a",
+      "monochrome": false
+    },
+    {
+      "make": "DE TOMASO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/d/de-tomaso.svg",
+      "sha256": "2939c1386c08bc5182a5d77a20f24038ea00a0b1b6a3a452e29fd5f60c0f79f7",
+      "monochrome": true
+    },
+    {
+      "make": "DELOREAN",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/delorean.svg",
+      "sha256": "a56023ae4cbfceaef83495819dc0c15ed383f1ad096b7894ba605e6cdf4c6cfa",
+      "monochrome": true
+    },
+    {
+      "make": "DONKERVOORT",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/d/donkervoort.svg",
+      "sha256": "017e1ccac121ce27c2a4cc8eca6314193208c5934252997d769d0a9ef7e94f12",
+      "monochrome": true
+    },
+    {
+      "make": "EXCALIBUR",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/e/excalibur.svg",
+      "sha256": "02e27f051b6efecb3411911761756f24203a37ca297727fcbf217552d8fe31a7",
+      "monochrome": true
+    },
+    {
+      "make": "FSO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/f/fso.svg",
+      "sha256": "3ec457088e68083e9f861a4d613e9a646924363b628ac19d5213221cac4ea19d",
+      "monochrome": true
+    },
+    {
+      "make": "FUSO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/f/fuso.svg",
+      "sha256": "600e0a8e7697952e3f4e97330d27ac449f3c002f3e39851069faa14ed9ca835c",
+      "monochrome": true
+    },
+    {
+      "make": "GAZ",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/g/gaz.svg",
+      "sha256": "0b89ae8a8c81153feac2413b2e608a611fa4180e688b66fc460553d5ee3e2a95",
+      "monochrome": true
+    },
+    {
+      "make": "GENERAL MOTORS",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/g/general-motors.svg",
+      "sha256": "531f77f52e073731f4eb303dfdfda8c08475b3953258cd5a4ca8670601fe98fb",
+      "monochrome": false
+    },
+    {
+      "make": "GMC",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/g/gmc.svg",
+      "sha256": "800d671f2704f41b353e30494bcdb4cc2b1557b3b94c05aec07e82961b50396e",
+      "monochrome": true
+    },
+    {
+      "make": "HAKO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/h/hako.svg",
+      "sha256": "8e3b15cdb6278f57343eb817d74aa3df481f3436ec8f87ee5efa3318f4d3c9d6",
+      "monochrome": true
+    },
+    {
+      "make": "HANOMAG",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/h/hanomag.svg",
+      "sha256": "1153c558580bd12c5cad2985e831a64a0e85c8760791d57dfdd67fa2ec5b4295",
+      "monochrome": true
+    },
+    {
+      "make": "HISPANO-SUIZA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/h/hispano-suiza.svg",
+      "sha256": "2459ed816b3ea17296f43a2b10399a3731d9a1f6a0a7f64acd9342ce0d8045a4",
+      "monochrome": true
+    },
+    {
+      "make": "HUDSON",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/h/hudson.svg",
+      "sha256": "65809f97e87783036f096f21223086fdfd47af8a97aedc845f8a6d56ceb663c3",
+      "monochrome": true
+    },
+    {
+      "make": "HUMMER",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/hummer.svg",
+      "sha256": "00db3fba958a3c7dbd966733c62ecfbffb8dd91bb8e1544022459bc07d338f3e",
+      "monochrome": true
+    },
+    {
+      "make": "IFA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/i/ifa.svg",
+      "sha256": "7e98b5f1f7639b731f247094f70eb294a48b356c7c640bd93c9b023431a8593d",
+      "monochrome": false
+    },
+    {
+      "make": "INTERNATIONAL",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/i/international.svg",
+      "sha256": "8bdb444bcb0a65c83d0a145b2d3affcd6fee643a9a69a6a4ce7676d87c006cc0",
+      "monochrome": true
+    },
+    {
+      "make": "JCB",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/j/jcb.svg",
+      "sha256": "55f7856bf7e77c08162685d480fd0f7cfe8043ec718582428c62984b56732d2d",
+      "monochrome": true
+    },
+    {
+      "make": "JENSEN",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/jensen.svg",
+      "sha256": "a5a95dc9750f1ca0af2479567a65b124544ad354a5437558f9299b99f3191266",
+      "monochrome": true
+    },
+    {
+      "make": "KAWASAKI",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/kawasaki.svg",
+      "sha256": "90f441b5fbd463cbcfefc032fb5101874f01e4cb80b988216d8378266a0bb493",
+      "monochrome": true
+    },
+    {
+      "make": "KENWORTH",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/k/kenworth.svg",
+      "sha256": "192f318bcf6e9f3d914b63e6ec0f99f6472f5e21436d566fc7747d2114406398",
+      "monochrome": true
+    },
+    {
+      "make": "KNAUS",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/k/knaus.svg",
+      "sha256": "d72fb89e74eb67523b854a7ed73136855ecda52cd61467d10fb5fb620cb27e3d",
+      "monochrome": false
+    },
+    {
+      "make": "KYMCO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/k/kymco.svg",
+      "sha256": "d957b9e8fb08db8445d2327a1ed4e5d521062edbd929a06d35bdb034eda1d1b3",
+      "monochrome": false
+    },
+    {
+      "make": "LANCIA",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/lancia.svg",
+      "sha256": "4d8392ea6a00a3f1dfa99b8ffc42f2f4190f26d4593e4500dc46d703d4dbae19",
+      "monochrome": true
+    },
+    {
+      "make": "LDV",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/ldv.svg",
+      "sha256": "f8c390fdd86397d634cde5bf3d0aa7f90e4b0b891a224f010dfc67bbcd5febfc",
+      "monochrome": true
+    },
+    {
+      "make": "LLOYD",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/l/lloyd.svg",
+      "sha256": "26a08c03d0ab6388dc64d4e26a45b6744622dc89b2cba2760281deea56e15609",
+      "monochrome": false
+    },
+    {
+      "make": "MACK",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/mack.svg",
+      "sha256": "d40c59e17a66b71af0a17e22f5e938450d29bea1851a702a12de3be6a756d87e",
+      "monochrome": true
+    },
+    {
+      "make": "MAYBACH",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/maybach.svg",
+      "sha256": "5045cc5192eae34196ae981334fdf5e9c5d804071a1a50eb896d2e44f6f20c9b",
+      "monochrome": true
+    },
+    {
+      "make": "MERCURY",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/mercury.svg",
+      "sha256": "b783480cdcb0039086386ecc21d7b7d703f50b1d5470657c6bc3f8cc82b61c1d",
+      "monochrome": true
+    },
+    {
+      "make": "MITSUBISHI FUSO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/mitsubishifuso.svg",
+      "sha256": "82146ee15ccaefc5e1ced9fa85790b56c91c11de3e8e72305da97b6241aeaccb",
+      "monochrome": false
+    },
+    {
+      "make": "MORGAN",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/morgan.svg",
+      "sha256": "d4281a476232f21e6c1d91a0104142a29ae05c2dbc0161bedc3b55910dd0584a",
+      "monochrome": true
+    },
+    {
+      "make": "MOTO GUZZI",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/moto-guzzi.svg",
+      "sha256": "8401f46bfee88347924eb26c57ba7283d0ba2781c42563937372d83a0aa07322",
+      "monochrome": false
+    },
+    {
+      "make": "NAYLOR",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/n/naylor.svg",
+      "sha256": "9db67d69e4d7297a33b10d650d7b1151fcaab98e0b1fa83ba9b76c18f641d333",
+      "monochrome": false
+    },
+    {
+      "make": "NEOPLAN",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/neoplan.svg",
+      "sha256": "d2c2ddd9f2d20f3c31d40a4e9abc1d4c4b73ea981ce1a40017cd3dbf09bc87a0",
+      "monochrome": true
+    },
+    {
+      "make": "OLDSMOBILE",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/o/oldsmobile.svg",
+      "sha256": "1eceafde6a2aef222d3dafb43969508843d73cce8a1e251e6b6f2a2f43fe4aef",
+      "monochrome": true
+    },
+    {
+      "make": "OVERLAND",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/o/overland.svg",
+      "sha256": "ffdf2002617535abd0f8355b78ddb82044640c491bca412295513f3519e1b90d",
+      "monochrome": true
+    },
+    {
+      "make": "PETERBILT",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/p/peterbilt.svg",
+      "sha256": "4819121c1de793c5b59146348a89ab300b5bbb4953fe43d643f7fc33fa72c989",
+      "monochrome": true
+    },
+    {
+      "make": "PIAGGIO",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/piaggio.svg",
+      "sha256": "adc808bfc6af09773d3d8cb3e2d2287bc3c41f24c4f9225532e507e12bae384e",
+      "monochrome": true
+    },
+    {
+      "make": "PININFARINA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/p/pininfarina.svg",
+      "sha256": "2e9f26398199e57ab0f9f0eff4005d7835adac736130ffeb87e75add82b50bea",
+      "monochrome": false
+    },
+    {
+      "make": "PLYMOUTH",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/p/plymouth.svg",
+      "sha256": "e63df7dfb93d665a388ef7b70983672f9b85ddb6a8c86d511dfb8a52836486cf",
+      "monochrome": true
+    },
+    {
+      "make": "POLARIS",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/p/polaris.svg",
+      "sha256": "9c7e4cf547a307ab1c2fd877ad389adfb8c4af4a9d7412acbc273d7762b5d192",
+      "monochrome": true
+    },
+    {
+      "make": "PONTIAC",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/pontiac.svg",
+      "sha256": "1a1278f29d6e4bf195c6aca6585aeb393fe5ebab72f56568a9d9fbe958a338f0",
+      "monochrome": true
+    },
+    {
+      "make": "RAMBLER",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/r/rambler.svg",
+      "sha256": "e54ab6bd78e6258905964a655c2654a5d35465943324d62cff14877934cd35d7",
+      "monochrome": false
+    },
+    {
+      "make": "ROVER",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/rover.svg",
+      "sha256": "2a99e26f8e75cc6eb4a0b2e8053a9fcf9a1f491971dd0c9f410e2551450f9d45",
+      "monochrome": true
+    },
+    {
+      "make": "Robur",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/r/robur.svg",
+      "sha256": "d83f2b61db50abb19408a5ae57c0cee5be91d9ac853b84a05e6262a3ca16ab3b",
+      "monochrome": false
+    },
+    {
+      "make": "SCION",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/scion.svg",
+      "sha256": "ef337a144fd090e10627631b57ab3d55073a433bd50cb9768645601e4158998c",
+      "monochrome": true
+    },
+    {
+      "make": "SETRA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/setra.svg",
+      "sha256": "ac922bdee4b50a9c7ebe4eeb7e1ccf3b2d6239fd7d7bb6e7fbb0231bba605000",
+      "monochrome": false
+    },
+    {
+      "make": "SIMCA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/simca.svg",
+      "sha256": "6611529f491d14f0de1ad73b7e9111b0835fafe62eb67b571538cf585d24ada7",
+      "monochrome": false
+    },
+    {
+      "make": "SSANGYONG",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/ssangyong.svg",
+      "sha256": "3e13d273013d2c260c33770a9ce842f5d1efae1899d7c4fa62d2e287984f43cf",
+      "monochrome": true
+    },
+    {
+      "make": "STEYR",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/steyr.svg",
+      "sha256": "fae5339d9b09be3b7be1aef889440903d338c9d719ceca8e407b9f82fedd729e",
+      "monochrome": true
+    },
+    {
+      "make": "STUDEBAKER",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/studebaker.svg",
+      "sha256": "4f0db5323d6eb2c8d49533cb0a1a6da1645fa924ed9da80944f230b625319c52",
+      "monochrome": true
+    },
+    {
+      "make": "SUNBEAM",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/sunbeam.svg",
+      "sha256": "155a3aa00ebecdb7aa39353be69f0c6f497a2cd15a1b42440740d4ba4b233746",
+      "monochrome": false
+    },
+    {
+      "make": "SYM",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/sym.svg",
+      "sha256": "732abd587e672194ea457b919f0299f90250ebc1eaaeecacd684b3d6201a2bb9",
+      "monochrome": false
+    },
+    {
+      "make": "Stutz",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/stutz.svg",
+      "sha256": "8e0210fe1c7331a77d9c145d138e4d0f81d71b2940ed3adc9625465afcc8d6eb",
+      "monochrome": false
+    },
+    {
+      "make": "TALBOT",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/t/talbot.svg",
+      "sha256": "3ca5e4e1ffb79986df07577631e8024c1704f8b8ee9441e7b30965a34cb6119c",
+      "monochrome": false
+    },
+    {
+      "make": "TATRA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/t/tatra.svg",
+      "sha256": "81aa8f6d89bb548c0bb1cd2809179ee05781e764e98751a7ab38efb1081387f2",
+      "monochrome": false
+    },
+    {
+      "make": "TRIUMPH",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/triumph.svg",
+      "sha256": "a4b2457b76cd9649da0aa367e99745b606d7a433dee595b33f99212a9d4bfe15",
+      "monochrome": true
+    },
+    {
+      "make": "TVR",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/tvr.svg",
+      "sha256": "0af0ad938560578b577316874e445687d559f06fb0732d9574d8ebd706479af3",
+      "monochrome": true
+    },
+    {
+      "make": "UAZ",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/u/uaz.svg",
+      "sha256": "96ec027eb95a95ef39568e19ee04ed4e719062f1882fb3f0c52e7aef891f9b01",
+      "monochrome": false
+    },
+    {
+      "make": "VAN HOOL",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/v/vanhool.svg",
+      "sha256": "69dac5eb385703c78b34efdfccc281b1e8537573c4a0bb8969995951d8aa974a",
+      "monochrome": true
+    },
+    {
+      "make": "VAZ",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/v/vaz.svg",
+      "sha256": "096381b8c58f55b78322ef95122a009b4432491fe5e5bfd8ab34fe817f7edb84",
+      "monochrome": false
+    },
+    {
+      "make": "WARTBURG",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/w/wartburg.svg",
+      "sha256": "8515bd66d30b6da97971810edd23c4e8794c3650b2a98cca6217084cef1cb28b",
+      "monochrome": true
+    },
+    {
+      "make": "WESTFIELD",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/westfield.svg",
+      "sha256": "537f55a2a7f4bd6ac0316be0aac5f1afd45baa2dfdba111d2513115b1be586ae",
+      "monochrome": true
+    },
+    {
+      "make": "WOLSELEY",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/w/wolseley.svg",
+      "sha256": "a8cec7df6342237dcd24ae0e12b185babdcfd423fe4def30f7a22d0f46a67d1f",
+      "monochrome": false
+    },
+    {
+      "make": "Wiesmann",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/w/wiesmann.svg",
+      "sha256": "c8f3d8b90c1499c0c92320ca8eb4cee9d2f69babc7c2d27f30f84e6f69fe045c",
+      "monochrome": false
+    },
+    {
+      "make": "YUGO",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/y/yugo.svg",
+      "sha256": "665d573cd0da276dc2e581c8ec72846f203ca2b9b45c3842513a97d3e4b8dc1e",
+      "monochrome": true
+    },
+    {
+      "make": "ZAZ",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/z/zaz.svg",
+      "sha256": "c7fb047a63bbb289e4679e3dcbf5f7e871121d378f353acb8d4aad3fffffa151",
+      "monochrome": false
+    },
+    {
+      "make": "APRILIA",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/aprilia.svg",
+      "sha256": "47a78bdbecfa6f6043d6bb6b802f5e6bfc2bb86c7a64110be0685adcab8de69b",
+      "monochrome": true
+    },
+    {
+      "make": "CAN-AM",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/can-am.svg",
+      "sha256": "00a029f8fc49c4ba4e83a5cfa393838dfb7c3c7fdd4a82cbdb0db76625eab6fa",
+      "monochrome": true
+    },
+    {
+      "make": "FISKER",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/fisker.svg",
+      "sha256": "58dbb012e076fa5adf1252921f2e3b323cc1981266ede9ff1331fff0fe28947e",
+      "monochrome": true
+    },
+    {
+      "make": "GARIA",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/garia.svg",
+      "sha256": "f6fd40fc53515ae22cfab203331e8f2388bdd707bfd86ab056eb1b13cbb25f64",
+      "monochrome": true
+    },
+    {
+      "make": "Levc",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/levc.svg",
+      "sha256": "8bb7aa30de03f7bbc6092cce07adc416105bae1ad1cb0b596cc75fecba7e7358",
+      "monochrome": true
+    },
+    {
+      "make": "REVA",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/reva.svg",
+      "sha256": "e5bd5caa56e5651eee10a143bcacadb974e5de976fe8a52dff838e3a5acdad07",
+      "monochrome": true
+    },
+    {
+      "make": "SWIFT",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/swift.svg",
+      "sha256": "4d0a324bfba90265917a1d9c65082384c65089e60ddfc05e5c13f56e88973c4e",
+      "monochrome": true
+    },
+    {
+      "make": "DEEPAL",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/deepal-logo.svg",
+      "sha256": "761e6115837073bdcc4b79d899d2900f8e029b6811f4ae0990b035f0b4fa4657",
+      "monochrome": false
+    },
+    {
+      "make": "DFSK",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/dfsk-logo.svg",
+      "sha256": "24bc6a7c7514348a0789f55e7d4824f5744a4dd80786ea180a84777d3b646825",
+      "monochrome": false
+    },
+    {
+      "make": "GINETTA",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/ginetta-logo.svg",
+      "sha256": "bbc2a371873e770c9a9508090ffa428b1e2d261c16461f640f937ae9346c735b",
+      "monochrome": false
+    },
+    {
+      "make": "FAW",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/faw-logo.svg",
+      "sha256": "20fa5a9a052565ae91e64f87924e22e4de95eb497a958f92fe9e17f8a40ad70e",
+      "monochrome": false
+    },
+    {
+      "make": "CATERHAM",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/caterham.svg",
+      "sha256": "928ccf5e7775f7766f5a33065aaa139019deffbcf46c85c9e5620b701e05e2b2",
+      "monochrome": true
+    },
+    {
+      "make": "HARLEY DAVIDSON",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/harley-davidson.svg",
+      "sha256": "278be9c78fe6858c0b102ad90764216452347fbbc82a5d0de062ef09f9eaf345",
+      "monochrome": true
+    },
+    {
+      "make": "MOKE",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/moke.svg",
+      "sha256": "7a1961522dc66699f9fae74da872a6cb133245738deb93ac76507d9f432b94d8",
+      "monochrome": true,
+      "normalization": "Preserved geometry; explicit canvas viewBox or static class declarations flattened."
+    },
+    {
+      "make": "MORRIS",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/morris.svg",
+      "sha256": "6b7b00a8c6cbb14d79fc7d98a8305d965f2416a913f8f10094fec229072ed2de",
+      "monochrome": true
+    },
+    {
+      "make": "BAC",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/bac-logo.svg",
+      "sha256": "8a73d5b26c7dc300f2cf8e45228758fa3f82e302accf3e1961fd3886462aa046",
+      "monochrome": true
+    },
+    {
+      "make": "BAW",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/baw-logo.svg",
+      "sha256": "41989394d310806a0a0213b4c559aed1fcfebe7343baa5573025b58fac9bc786",
+      "monochrome": false,
+      "normalization": "Preserved geometry; explicit canvas viewBox or static class declarations flattened."
+    },
+    {
+      "make": "e.GO",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/ego-logo.svg",
+      "sha256": "350086d7ede619dc8caebb2fa1ab506f90b1691dabbfc31a29b68eba98ccc9ec",
+      "monochrome": false
+    },
+    {
+      "make": "LADA",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/lada-logo.svg",
+      "sha256": "c667a89d9c0e5169c53f5dcc5830e94b304834f8ddd5a6de43704a065849c6ed",
+      "monochrome": false
+    },
+    {
+      "make": "PUCH",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/puch-logo.svg",
+      "sha256": "c534b0c271b5e91002eebc697a14c8149d49ba60b6455844db2ab5ff51c3d92d",
+      "monochrome": false,
+      "normalization": "Preserved geometry; explicit canvas viewBox or static class declarations flattened."
+    },
+    {
+      "make": "VINFAST",
+      "source_url": "https://github.com/cardog-ai/icons/blob/05c4001e83a09a189721a0851546291f71f7e31c/core/optimized/Vinfast%20Icon.svg",
+      "sha256": "feddcd5843eaf45a111d62b72dda645af72b90fa19ee8a3841aa01e7565b9766",
+      "monochrome": false
+    },
+    {
+      "make": "BÜRSTNER",
+      "source_url": "https://www.buerstner.com/_default_upload_bucket/buerstner-relaunch-logo_1.svg",
+      "sha256": "38f10b668894c6331bf855e2496708492cf99de65582ae22c8c910fe695effea",
+      "monochrome": true,
+      "official_page": "https://www.buerstner.com/gb/buerstner"
+    },
+    {
+      "make": "CARADO",
+      "source_url": "https://carado.com/carado/carado-logo.svg",
+      "sha256": "f9af47daadce3704bcf9a7364f177e606a4d700eb339e9e164f902e49f0a97a4",
+      "monochrome": true,
+      "normalization": "Static paint flattened; white foreground changed to black for light-theme contrast; mask paint preserved.",
+      "official_page": "https://carado.com/de/en"
+    },
+    {
+      "make": "CARTHAGO",
+      "source_url": "https://www.carthago.com/wp-content/themes/carthago/assets/img/logo-carthago-white.svg",
+      "sha256": "752d1e6cba68ccc61db19ede7355c6969e7ab8c7742b797f0c89c35dec619175",
+      "monochrome": false,
+      "normalization": "Static paint flattened; white foreground changed to black for light-theme contrast; mask paint preserved.",
+      "official_page": "https://www.carthago.com"
+    },
+    {
+      "make": "DETHLEFFS",
+      "source_url": "https://www.dethleffs.de/dethleffs/general-media/logos/global/dethleffs-logo.svg",
+      "sha256": "682a2b17a360bef42a77396cc47326b4bda39220694a8d59c11c6323da673c84",
+      "monochrome": false,
+      "official_page": "https://www.dethleffs.de"
+    },
+    {
+      "make": "ETESIA",
+      "source_url": "https://www.etesia.fr/sites/all/themes/etesia/logo.svg",
+      "sha256": "78f7a53d91bf29446a8090673bf24c7848b5526e29c218bfedf67a405fb40e3b",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.etesia.com"
+    },
+    {
+      "make": "GOUPIL",
+      "source_url": "https://www.goupil-ev.com/img/logo-goupil-w.svg",
+      "sha256": "ef8463d968e92b4516d5c06d00f8f1aa5cab4309f4c015db59086273ae994b83",
+      "monochrome": true,
+      "normalization": "Static paint flattened; white foreground changed to black for light-theme contrast; mask paint preserved.",
+      "official_page": "https://www.goupil-ev.com/en/"
+    },
+    {
+      "make": "HISUN",
+      "source_url": "https://www.hisunmotors.com/images/logo/black/main.svg",
+      "sha256": "d8c6e28c0eeae7c9420d240c3f99aa8968dcafb77f277ae2fada238127945335",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.hisunmotors.com"
+    },
+    {
+      "make": "HOBBY",
+      "source_url": "https://www.hobby-caravan.de/_assets/3f7d91fdbc2ec2791c3280e2c8fc3c13/images/logo.svg",
+      "sha256": "9de99275f253b0bc333211e569cf71785ce3cf33386303730c64ae6e5c47629a",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.hobby-caravan.de"
+    },
+    {
+      "make": "LMC",
+      "source_url": "https://www.lmc-caravan.com/lmc/logo/lmc-logo1.svg",
+      "sha256": "c908af8523ac2d3fdc9a7c44511cd79dc8a8d375c5e014877983d4f3a250f48a",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://www.lmc-caravan.com/de/de"
+    },
+    {
+      "make": "SUNLIGHT",
+      "source_url": "https://www.sunlight.de/wp-content/themes/sun/img/logo-black.svg",
+      "sha256": "81989ccd10d640595049cc0f7be0ed409662589900359d3b0f023679e18f672b",
+      "monochrome": true,
+      "official_page": "https://www.sunlight.de"
+    },
+    {
+      "make": "TGB",
+      "source_url": "https://www.tgb.com.tw/images/logo.svg",
+      "sha256": "066c097cad4baf24992736054bc4f39f02c382adca282a3f1e6b8727f62f1cff",
+      "monochrome": false,
+      "official_page": "https://www.tgb.com.tw"
+    },
+    {
+      "make": "Yutong",
+      "source_url": "https://en.yutong.com/res/template/en2023/resource/images/LOGO2.svg",
+      "sha256": "ee060415f67f3ecd93de3a5216f6e2848f7172414de392ec0f77d5283df96026",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "official_page": "https://en.yutong.com/"
+    },
+    {
+      "make": "POLSKI FIAT",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/p/polski-fiat-logo-1.svg",
+      "sha256": "c72f58c21505c8cc566a4deddca60291013aae53707813bda31bf69fddc10139",
+      "monochrome": false
+    },
+    {
+      "make": "DAIMLER BENZ",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/d/daimler-benz-1.svg",
+      "sha256": "221acb353288859c039533bbccd7ea78a133e4f63f9a0c3030587e0a7d896eb3",
+      "monochrome": true
+    },
+    {
+      "make": "VDL",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/v/vdl-logo.svg",
+      "sha256": "c327086a5047d4166f2f74652327bfff44a2cd5474858d85c803e7711e1a492b",
+      "monochrome": false
+    },
+    {
+      "make": "Mercedes-AMG",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/mercedes-amg-logo.svg",
+      "sha256": "2c33677ff4d5327f969249c9bac8d5ed8b0e1dbf052fb225cbb1783e2e3f0fa4",
+      "monochrome": false
+    },
+    {
+      "make": "AUTO-UNION",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/a/autounion-1.svg",
+      "sha256": "0621bd9c96544797c86b49c5722b061e6aa30cc9c25314197044541ea7969ba0",
+      "monochrome": true
+    },
+    {
+      "make": "TEMSA",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/t/temsa-logo.svg",
+      "sha256": "898226680251fd914403948b3452eae998e093500c959c3e68330cf6ffdbf2d6",
+      "monochrome": false
+    },
+    {
+      "make": "SAVIEM",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/s/saviem-1.svg",
+      "sha256": "336dc14e3a1c71078898e9f6c88718f705bb85302e202fea17edaa71ec0db4c9",
+      "monochrome": true
+    },
+    {
+      "make": "MULTICAR",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/m/multicar-logo.svg",
+      "sha256": "3d915a2ee3d0273e0bf63d63bfa92744914998a2ec09face7c287d21c331fb81",
+      "monochrome": false
+    },
+    {
+      "make": "KREIDLER",
+      "source_url": "https://github.com/detain/svg-logos/blob/b02ee1ac30c7ff4757278337c95588b01ed0954b/svg/k/kreidler-logo-1.svg",
+      "sha256": "91d2a7526eff095e2d7123e130bccb7e0a1af1049967d2bd76d0e9b52bdbc54d",
+      "monochrome": false
+    },
+    {
+      "make": "AEBI",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Aebi_Logo.svg",
+      "sha256": "b73cc2ea0f841ba54e537dc53b3f03f9fc15b7f7ef7b2250c522eaea1234209f",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Aebi_Logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "Unknown author<span style=\"display: none;\">Unknown author</span>",
+      "ImageDescription": "Aebi (a brand of Aebi Schmidt) logo"
+    },
+    {
+      "make": "BMC",
+      "source_url": "https://commons.wikimedia.org/wiki/File:BMC_logo.svg",
+      "sha256": "9463769047891b983e58ca3b6b0625dcfade55647b68523b8c826578eb419877",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/BMC_logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "BMC",
+      "ImageDescription": "BMC logo"
+    },
+    {
+      "make": "DELAGE",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Delage_logo.svg",
+      "sha256": "1ac85e688345bff5216bdc2ed9552c3610b83375e8d050c25f14db5de02438ac",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Delage_logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "<a href=\"https://en.wikipedia.org/wiki/Louis_Del%C3%A2ge\" class=\"extiw\" title=\"en:Louis Delâge\">Louis Delâge</a>",
+      "ImageDescription": "Logo of <a href=\"https://en.wikipedia.org/wiki/Delage\" class=\"extiw\" title=\"en:Delage\">Delage</a>"
+    },
+    {
+      "make": "LEYLAND",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Leyland-Logo.svg",
+      "sha256": "caf789c2538b77e716fc98c92c89f0c1c7829f2feb71b8fb7840c566c8cb2484",
+      "monochrome": false,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/5/57/Leyland-Logo.svg",
+      "LicenseShortName": "Public domain",
+      "Artist": "<a href=\"//commons.wikimedia.org/wiki/User:%E5%BF%8D%E8%80%85%E7%8C%AB\" title=\"User:忍者猫\">忍者猫</a>",
+      "ImageDescription": "Leyland Motors logo"
+    },
+    {
+      "make": "CF MOTO",
+      "source_url": "https://commons.wikimedia.org/wiki/File:CFMOTO_Logo.svg",
+      "sha256": "88bc67fe67afbcbbd48ba695443a055db76412ecb8bfccd56b26c3ff9487c681",
+      "monochrome": true,
+      "normalization": "Static paint classes flattened; obsolete enable-background metadata removed.",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/CFMOTO_Logo.svg"
+    },
+    {
+      "make": "EAGLE",
+      "source_url": "https://cdn.worldvectorlogo.com/logos/eagle.svg",
+      "sha256": "b84c0ab52c17c16b30031b8fe265cf34cfa349f26302f3dc1deadae96ad97d47",
+      "monochrome": true
+    },
+    {
+      "make": "Italcar",
+      "source_url": "https://cdn.worldvectorlogo.com/logos/italcar.svg",
+      "sha256": "87f9750a92b9591c674080c985b47db83031c79857470719622e5c4404ed2bd9",
+      "monochrome": false
+    },
+    {
+      "make": "MATRA",
+      "source_url": "https://cdn.worldvectorlogo.com/logos/matra-2.svg",
+      "sha256": "3c1b2ca5be7ea2e8f8b160bc67bae56371703ebd72bd5b1a95cf13e0b0536165",
+      "monochrome": false
+    },
+    {
+      "make": "HYMER",
+      "source_url": "https://github.com/GLINCKER/thesvg/blob/bdfcb7cf0209c140f38afeb73ebccd432eff5c92/public/icons/hymer/default.svg",
+      "sha256": "613862b5ed79a782d89348379b6a650be6c92baea370eaa2b4e1f9dc32ccc296",
+      "monochrome": true,
+      "official_page": "https://www.hymer.com/de/en/brand-value"
+    },
+    {
+      "make": "Bitter",
+      "source_url": "https://www.carlogos.org/logo/Bitter-logo-1920x1080.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/bitter.png",
+      "source_sha256": "5feb75dd84c2516c089fd97dd17862dad0f97b6a920fd8dfe2118f1827348b64",
+      "raster_width": 1920,
+      "raster_height": 1080,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": false,
+      "sha256": "196f9c273d5b746767de19a0ff6910bd740c58d596363d0b5a5c1b08f15e00fa",
+      "visual_reviewed": true,
+      "normalized_mae": 0.00279
+    },
+    {
+      "make": "DKW",
+      "source_url": "https://www.carlogos.org/logo/DKW-logo-black-640x550.jpg",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/dkw.jpg",
+      "source_sha256": "3a74543d8466f853984e599222b4930b7044188eef3c3c39bbec1cb4654b565c",
+      "raster_width": 640,
+      "raster_height": 550,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "e4d92f70d585127e1515521990116b3fd0132c7f807236101522786ae81a3acc",
+      "visual_reviewed": true,
+      "normalized_mae": 0.00572
+    },
+    {
+      "make": "HUPMOBILE",
+      "source_url": "https://www.carlogos.org/logo/Hupmobile-logo-640x138.jpg",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/hupmobile.jpg",
+      "source_sha256": "0fdd253d5aa5bc7932e748e3892161c6bf6242ff97a8f79dc2abd56194ad60e0",
+      "raster_width": 640,
+      "raster_height": 138,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "1ae9e672c360c72b9654b72ad3dac8a4bed6eadd6747fa6d6170b31ca3242ff9",
+      "visual_reviewed": true,
+      "normalized_mae": 0.02721
+    },
+    {
+      "make": "INNOCENTI",
+      "source_url": "https://www.carlogos.org/logo/Innocenti-logo-310x310.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/innocenti.png",
+      "source_sha256": "fbc675a8994807aa1cefade0dd19e0b24cdf06dc8282e03bdf67f624b4662086",
+      "raster_width": 310,
+      "raster_height": 310,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "f9fb1f33ef9066fd7960a64e0ca6b8f50057c3f8308f39ebfcf0124e62276e54",
+      "visual_reviewed": true,
+      "normalized_mae": 0.01236
+    },
+    {
+      "make": "LIFAN",
+      "source_url": "https://www.carlogos.org/logo/Lifan-logo-4000x1200.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/lifan.png",
+      "source_sha256": "c704239c58a04e5575f3c9375912915b465612725e2a3282cab1d59510a4a023",
+      "raster_width": 4000,
+      "raster_height": 1200,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": false,
+      "sha256": "0bda405811cd63d67ed6f83488007aff6e6856a0e7428ebd325389093b51f90b",
+      "visual_reviewed": true,
+      "normalized_mae": 0.00535
+    },
+    {
+      "make": "PANHARD",
+      "source_url": "https://www.carlogos.org/logo/Panhard-logo.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/panhard.png",
+      "source_sha256": "886568fd22b5083345af051e07277930b169320f0961774c24040bf7ce53b67f",
+      "raster_width": 240,
+      "raster_height": 180,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": false,
+      "sha256": "78bfa91204703b071d3252845b2cca9e713af9da0c1c9a74036db0d15dc490ac",
+      "visual_reviewed": true,
+      "normalized_mae": 0.03495
+    },
+    {
+      "make": "PIERCE ARROW",
+      "source_url": "https://www.carlogos.org/logo/Pierce-Arrow-logo-640x416.jpg",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/pierce-arrow.jpg",
+      "source_sha256": "17c53ba27076c36d9023283f839eb9c01a29ef2904bc288b7f2b5c9db3b3362a",
+      "raster_width": 640,
+      "raster_height": 416,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "346beb1c6a0e646103782d4e0664c73fcce2fda46ab87d6e0cdbf5d70c7b821d",
+      "visual_reviewed": true,
+      "normalized_mae": 0.02241
+    },
+    {
+      "make": "Radical",
+      "source_url": "https://www.carlogos.org/logo/Radical-Sportscars-logo-2000x800.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/radical.png",
+      "source_sha256": "642852eb95006d15706b5edf16e4112058e53404924f68e141e322f82d3f6034",
+      "raster_width": 2000,
+      "raster_height": 800,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": false,
+      "sha256": "40be93f49b01356c7047550ebf59ee89a6aaec4fddfc734262a7e5f9d30bf7f9",
+      "visual_reviewed": true,
+      "normalized_mae": 0.00643
+    },
+    {
+      "make": "RILEY",
+      "source_url": "https://www.carlogos.org/logo/Riley-logo-640x389.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/riley.png",
+      "source_sha256": "98bf5c7f593223393f1ef72b35e6182242910a0c8e9c38e72c08e5262455397a",
+      "raster_width": 640,
+      "raster_height": 389,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": false,
+      "sha256": "00497c00054c8d3fa442cfdd359d12b9cb3540f0bb651632b497cca2a86fa01f",
+      "visual_reviewed": true,
+      "normalized_mae": 0.01041
+    },
+    {
+      "make": "ULTIMA",
+      "source_url": "https://www.carlogos.org/logo/Ultima-Sports-logo-640x480.png",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/ultima.png",
+      "source_sha256": "e2c107a7d57037c37169f998d696c89b3230f78aa48598030740684d03afb9a0",
+      "raster_width": 640,
+      "raster_height": 480,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "3756f951a927762dc3ecc1bee336ffd35bf7fb957f42f239c964991f1fe2b5e2",
+      "visual_reviewed": true,
+      "normalized_mae": 0.0035
+    },
+    {
+      "make": "WANDERER",
+      "source_url": "https://www.carlogos.org/logo/Wanderer-logo-black-640x311.jpg",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/wanderer.jpg",
+      "source_sha256": "a641553fe5c23a0601f4bca907aa52432aa978d0822d4831fde02186297efd6c",
+      "raster_width": 640,
+      "raster_height": 311,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "618bd27224ee3e1dc3071f5fb713847428041777677e89cb806b2f5de991f09a",
+      "visual_reviewed": true,
+      "normalized_mae": 0.01534
+    },
+    {
+      "make": "ZASTAVA",
+      "source_url": "https://www.carlogos.org/logo/Zastava-logo-640x274.jpg",
+      "asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/zastava.jpg",
+      "source_sha256": "b9e66e12a458030d938245e6b12b375bf5bb1294985f510d31398853f02f4268",
+      "raster_width": 640,
+      "raster_height": 274,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": false,
+      "sha256": "ff46042699f9fca4bb9900b31b5e0c19a9b817ba5a52e120aede69044a20e742",
+      "visual_reviewed": true,
+      "normalized_mae": 0.01445
+    },
+    {
+      "make": "Leapmotor",
+      "source_url": "https://www.carlogos.org/car-logos/leapmotor-logo-1000x650-show.png",
+      "source_sha256": "2cae4e5fbe444fb4db5004cbf8732436737b0b4005ad5f85ccefadc1d77468c4",
+      "raster_width": 640,
+      "raster_height": 480,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "polygon",
+      "monochrome": true,
+      "sha256": "6fc591b3a8fcfefc37357e0c86d7c1e50c0cb7498e112f2136f78c174173df5e",
+      "visual_reviewed": true,
+      "normalized_mae": null,
+      "input_source_url": "https://github.com/Salvationdk/tiny-refuel/blob/6bb676120d6f4f3155ef822c2f9715d7627e6f90/custom_components/tiny_refuel/frontend/bilkatalog.json",
+      "reference_asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/leapmotor.png"
+    },
+    {
+      "make": "NIO",
+      "source_url": "https://www.carlogos.org/car-logos/nio-logo-1800x700-show.png",
+      "source_sha256": "8d4812ad7d05e0ad986c89d7e07d35953cef320dd90ea1e709f42a35f15c8926",
+      "raster_width": 640,
+      "raster_height": 480,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "8f4a3d33eb75af4d26055e14d3bf82b8d6d9d6d08d5fcf31168d5f2c65d38c00",
+      "visual_reviewed": true,
+      "normalized_mae": 0.01568,
+      "input_source_url": "https://github.com/Salvationdk/tiny-refuel/blob/6bb676120d6f4f3155ef822c2f9715d7627e6f90/custom_components/tiny_refuel/frontend/bilkatalog.json",
+      "reference_asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/nio.png"
+    },
+    {
+      "make": "Zeekr",
+      "source_url": "https://www.carlogos.org/car-logos/zeekr-logo-2300x700-show.png",
+      "source_sha256": "a8bb59ce487dd30f6784f31dbbaf64b22974dbb3a2b071e6917ca00f0caf23cf",
+      "raster_width": 640,
+      "raster_height": 427,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "polygon",
+      "monochrome": true,
+      "sha256": "9d286eff1852656073a0ae53f57a8a9e23d8b55d1ba473f636f2c64539120f9e",
+      "visual_reviewed": true,
+      "normalized_mae": null,
+      "input_source_url": "https://github.com/Salvationdk/tiny-refuel/blob/6bb676120d6f4f3155ef822c2f9715d7627e6f90/custom_components/tiny_refuel/frontend/bilkatalog.json",
+      "reference_asset_url": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/bb2d661f28ce617dba8a51bdfc2069a3381a23b0/logos/original/zeekr.png"
+    },
+    {
+      "make": "Navor",
+      "source_url": "https://navor.dk/om-os/",
+      "asset_url": "https://navor.dk/wp-content/uploads/2024/11/NAVOR_white_RGB.png",
+      "source_sha256": "9f788eeed9579c5cee9d0aa724cd533123fa3dbb018992aa8e27490a7ea0762f",
+      "raster_width": 1589,
+      "raster_height": 236,
+      "origin": "raster_trace",
+      "tracer": "vtracer 0.6.12",
+      "trace_mode": "spline",
+      "monochrome": true,
+      "sha256": "8b5bbadc4295a5eebc40006af8edb712d7e1f4a55fcd1de64c51d314fa8633ae",
+      "visual_reviewed": true,
+      "normalized_mae": 0.00926
+    },
+    {
+      "make": "Albach",
+      "source_url": "https://www.albach-maschinenbau.de/fileadmin/cn_modified/cn_website_mod/Resources/Public/Images/logo_albach_maschinenbau.svg",
+      "official_page": "https://www.albach-maschinenbau.de/en/",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "sha256": "dae2bccbedffb82fe1049067b11e79fae521a7d90b4d89b02bd871c78ada542b",
+      "monochrome": false
+    },
+    {
+      "make": "ALKE",
+      "source_url": "https://www.alke.com/images/stories/articles/0863/favicon/alke.svg",
+      "official_page": "https://www.alke.com/",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "sha256": "8de0cfa8e821932c5b53ae68acee542810d3e108a19d41911b559a5102714fb9",
+      "monochrome": false
+    },
+    {
+      "make": "Paxster",
+      "source_url": "https://paxster.no/wp-content/uploads/2025/01/Paxster-logo-svg-undrum.svg",
+      "official_page": "https://paxster.no/",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "sha256": "36504b76e1bfde24f582d61b470048429e75d009d33f735a255468e1a142a295",
+      "monochrome": false
+    },
+    {
+      "make": "KEEWAY",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Keeway_logo.svg",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Keeway_logo.svg",
+      "normalization": "Flattened static CSS paint; removed non-rendering editor attributes; original vector paths preserved.",
+      "LicenseShortName": "Public domain (PD-textlogo); trademark restrictions remain",
+      "Artist": "Unknown author",
+      "ImageDescription": "Logo for the motorcycle company Keeway, sourced from manufacturer about-us page; historical 2023 mark.",
+      "sha256": "e53e2e52fe83978d9c8ffa767dbf50179c1518e59c1c561c85e71369c99f6365",
+      "monochrome": true
+    },
+    {
+      "make": "EBUSCO",
+      "source_url": "https://www.ebusco.com/wp-content/themes/ebusco/images/logo.svg",
+      "official_page": "https://www.ebusco.com/",
+      "normalization": "Static CSS flattened and non-rendering editor attributes removed; vector paths preserved.",
+      "sha256": "0f181f089f8c6e02f67658fb3ca2e25764015fb781db7bc69b519ad372e1fe4e",
+      "monochrome": false
+    },
+    {
+      "make": "MELEX",
+      "source_url": "https://melex.com.pl/",
+      "official_page": "https://melex.com.pl/",
+      "normalization": "Extracted canonical header SVG; anniversary footer badge not used.",
+      "sha256": "3c8c48d614b04b65f5856ad186f83195ab3e111b45f75a6ecc71284e2b4ac2aa",
+      "monochrome": false
+    },
+    {
+      "make": "Cenntro",
+      "source_url": "https://cenntroauto.com/wp-content/uploads/2021/10/cenntro-logo-black.svg",
+      "official_page": "https://cenntroauto.com/",
+      "normalization": "Static CSS flattened and non-rendering editor attributes removed; vector paths preserved.",
+      "sha256": "1fb6a25bea69f5dc43aad676522ef6b5d1476ef7273a28e5872570780338ea4b",
+      "monochrome": true
+    },
+    {
+      "make": "KABE",
+      "source_url": "https://www.kabe.se/images/kabe-logo.svg",
+      "official_page": "https://www.kabe.se/en/",
+      "normalization": "Static CSS flattened and non-rendering editor attributes removed; vector paths preserved.",
+      "sha256": "578382626c5cdf309b1e0c0afd599da1436272a7ba6984ecc8f6de22d1186887",
+      "monochrome": false
+    },
+    {
+      "make": "KALMAR",
+      "source_url": "https://www.kalmarglobal.com/",
+      "official_page": "https://www.kalmarglobal.com/",
+      "normalization": "Extracted self-contained logo vector from manufacturer HTML.",
+      "sha256": "1830d556e8d412a41e6f614fa9e8698c43bb9ef2566e713c697e6206a0f4ef74",
+      "monochrome": false
+    },
+    {
+      "make": "MICRO",
+      "source_url": "https://microlino-car.com/",
+      "official_page": "https://microlino-car.com/",
+      "normalization": "Extracted header SVG; static CSS flattened; white foreground normalized to black for theme inversion.",
+      "sha256": "86b42cd37e13b0d08ad8f4526ef68b7f25d89419c65c0e04aa3f347088c564f4",
+      "monochrome": true
+    },
+    {
+      "make": "DULEVO",
+      "source_url": "https://www.dulevo.com/",
+      "official_page": "https://www.dulevo.com/",
+      "normalization": "Extracted header SVG; CSS brand foreground normalized to black for theme inversion; viewBox includes leftmost emblem paths.",
+      "sha256": "ab85025729a43cc876d8e841a5f54df96a089e9ab80e9d1f48cd1b858b078226",
+      "monochrome": true
+    },
+    {
+      "make": "B-ON",
+      "source_url": "https://cdn.prod.website-files.com/661804756e539fc792438583/661ce7e4f68a1d352ebb483d_B-ON%20logo.svg",
+      "official_page": "https://b-on.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "0cde401dd4ecfb9260854f62f133b45881fb82ce51e1bd1b61fbaff089ae56bf",
+      "monochrome": false
+    },
+    {
+      "make": "BUCHER",
+      "source_url": "https://www.buchermunicipal.com/themes/custom/buchermunicipal/logo.svg",
+      "official_page": "https://www.buchermunicipal.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "6d804496825266a96a48285f248f95106900a4d313a8bca4e325deee84c3d779",
+      "monochrome": false
+    },
+    {
+      "make": "Kayo",
+      "source_url": "https://static.kayomoto.com/skin/default/images/home/logo.svg",
+      "official_page": "https://www.kayomoto.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "ff556a9788686d06450f506ca4579640b443329e06ff717e2597397599a5f432",
+      "monochrome": false
+    },
+    {
+      "make": "MCLOUIS",
+      "source_url": "https://www.mclouis.com/wp-content/uploads/2024/07/logo-mc.svg",
+      "official_page": "https://www.mclouis.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "2c6bf8bef5f962a571294fc96014e3cf00a0ad99382987203fbf49166f048118",
+      "monochrome": true
+    },
+    {
+      "make": "NILSSON",
+      "source_url": "https://nilssonvehicles.com/wp-content/uploads/2026/05/logo-dark.svg",
+      "official_page": "https://nilssonvehicles.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "f002988f6c829ed6159d8f2ea955d97f53420d9f334639c6e49a2dc0a5e82895",
+      "monochrome": true
+    },
+    {
+      "make": "REWACO",
+      "source_url": "https://www.rewaco.com/assets/images/rewaco-logo-white.svg",
+      "official_page": "https://www.rewaco.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "205953e0debc32209210275a98f006b51575dda6406efa0c7af17765a6217dc2",
+      "monochrome": false
+    },
+    {
+      "make": "Devinci",
+      "source_url": "https://devinci-cars.com/wp-content/uploads/2019/06/DEVINCI-color-light.svg",
+      "official_page": "https://devinci-cars.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "d1046a59667028ba2130425825984dfe6fb3fdfda8a23f64c58fa6cf84d86760",
+      "monochrome": true
+    }
+  ]
+}

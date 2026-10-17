@@ -8,9 +8,12 @@ from homeassistant.components.http import HomeAssistantView, StaticPathConfig
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers import config_validation as cv
 
 from .const import CARD_URL, CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS, DOMAIN, STATIC_URL
 from .manager import RefuelManager
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 PLATFORMS = [Platform.SENSOR, Platform.BUTTON]
 
@@ -70,3 +73,4 @@ async def async_unload_entry(hass: HomeAssistant, entry) -> bool:
     await entry.runtime_data.async_close()
     hass.data[DOMAIN].pop("manager", None)
     return True
+

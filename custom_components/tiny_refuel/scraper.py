@@ -23,6 +23,7 @@ import re
 import sys
 import time
 import urllib.parse
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
@@ -82,8 +83,16 @@ IONITY_EV_TARIFFS_URL = "https://www.ionity.eu/dk/abonnementer"
 
 def get(url, headers=None, timeout=45):
     req = urllib.request.Request(url, headers=headers or {"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read()
+    # Only retry idempotent public GETs, once, for transient upstream errors.
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as exc:
+            exc.close()
+            if attempt or exc.code not in (500, 502, 503, 504):
+                raise
+            time.sleep(0.5)
 
 
 def get_text(url, headers=None, timeout=45):
@@ -1198,10 +1207,13 @@ def fetch_oil(errors):
 
 # ---------- Nominatim geocoding (cached, bounded) ----------
 
-def geocode_new(addresses, errors, brands=None, progress_callback=None):
+def geocode_new(addresses, errors, brands=None, progress_callback=None, stats=None):
     cache = load_json(ADDRESS_CACHE, {})
     now = int(time.time())
     fresh = dict(cache)
+    if stats is not None:
+        stats.update({"checked_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now)),
+                      "attempted": 0, "found": 0, "not_found": 0, "failed": 0, "error": None})
     # Filter cached and duplicate addresses before sharing the budget fairly.
     queues = {}
     seen = set()
@@ -1211,7 +1223,8 @@ def geocode_new(addresses, errors, brands=None, progress_callback=None):
             continue
         seen.add(key)
         hit = cache.get(key)
-        if hit and (hit.get("lat") or now - hit.get("ts", 0) < 7 * 86400):
+        if hit and ((hit.get("lat") is not None and hit.get("lon") is not None) or
+                    (hit.get("none") and now - hit.get("ts", 0) < 7 * 86400)):
             continue
         brand = brands[i] if brands is not None else "all"
         queues.setdefault(brand, deque()).append(addr)
@@ -1230,19 +1243,24 @@ def geocode_new(addresses, errors, brands=None, progress_callback=None):
             break
         key = norm_addr(addr)
         hit = cache.get(key)
-        if hit and (hit.get("lat") or now - hit.get("ts", 0) < 7 * 86400):
+        if hit and ((hit.get("lat") is not None and hit.get("lon") is not None) or
+                    (hit.get("none") and now - hit.get("ts", 0) < 7 * 86400)):
             continue
         q = re.sub(r"\s*danmark\s*$", "", addr.strip(), flags=re.I) + ", Danmark"
         _report_progress(progress_callback, "geokodning", brand_by_address.get(key, "Station"),
                          addr, index, len(pending))
         params = urllib.parse.urlencode(
             {"q": q, "format": "json", "limit": 1, "countrycodes": "dk"})
+        if stats is not None:
+            stats["attempted"] += 1
         try:
             req = urllib.request.Request(
                 "https://nominatim.openstreetmap.org/search?" + params,
                 headers={"User-Agent": GEO_UA})
             with urllib.request.urlopen(req, timeout=30) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
+            if stats is not None:
+                stats["found" if data else "not_found"] += 1
             if data:
                 fresh[key] = {"lat": round(float(data[0]["lat"]), 5),
                               "lon": round(float(data[0]["lon"]), 5),
@@ -1252,11 +1270,41 @@ def geocode_new(addresses, errors, brands=None, progress_callback=None):
             made += 1
         except Exception as exc:  # noqa: BLE001
             errors.append({"geocode": str(exc)[:100]})
+            if stats is not None:
+                stats["failed"] += 1
+                stats["error"] = str(exc)[:100]
             break
         time.sleep(NOM_SLEEP)
     if made:
         save_json(ADDRESS_CACHE, fresh)
     return fresh
+
+
+def coordinate_status(stations, cache, run=None, now=None):
+    """Explain each unresolved fuel-station location without optimistic ETAs."""
+    now = int(time.time()) if now is None else int(now)
+    waiting, seen, missing_address = [], set(), 0
+    for station in stations:
+        if station.get("liste") or (station.get("lat") is not None and station.get("lon") is not None):
+            continue
+        address = station.get("address")
+        if not address:
+            missing_address += 1
+            continue
+        key = norm_addr(address)
+        if key in seen:
+            continue
+        seen.add(key)
+        hit = cache.get(key, {})
+        retry_ts = int(hit.get("ts", 0)) + 7 * 86400 if hit.get("none") else 0
+        blocked = retry_ts > now
+        waiting.append({"brand": station.get("brand"), "name": station.get("name"),
+                        "address": address, "status": "not_found" if blocked else "queued",
+                        "last_lookup": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(int(hit["ts"]))) if hit.get("ts") else None,
+                        "retry_after": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(retry_ts)) if blocked else None})
+    return {"run": run, "limit": NOM_MAX_NEW, "queued": sum(row["status"] == "queued" for row in waiting),
+            "not_found": sum(row["status"] == "not_found" for row in waiting),
+            "missing_address": missing_address, "pending_addresses": waiting}
 
 
 # ---------- main ----------
@@ -1434,20 +1482,28 @@ def _collect(progress_callback=None, fuel_types=None):
         ok_ev = q8_ev = circlek_ev = eon_tariffs = ionity_tariffs = []
         unox_chargers = []
 
-    missing_coords = ([s for s in fresh if s.get("address") and s.get("lat") is None]
-                      if selected & {"benzin", "diesel"} else [])
+    coordinate_candidates = (fresh if selected & {"benzin", "diesel"} else []) + (ev_locations if "el" in selected else [])
+    missing_coords = [s for s in coordinate_candidates if s.get("address") and
+                      (s.get("lat") is None or s.get("lon") is None)]
+    geocode_run = None
     if missing_coords:
-        geocode_args = {"brands": [s["brand"] for s in missing_coords]}
+        geocode_run = {}
+        geocode_args = {"brands": [s["brand"] for s in missing_coords], "stats": geocode_run}
         if progress_callback is not None:
             geocode_args["progress_callback"] = progress_callback
         cache = geocode_new([s["address"] for s in missing_coords], errors, **geocode_args)
     else:
         cache = load_json(ADDRESS_CACHE, {})
+    for location in ev_locations:
+        if location.get("address") and (location.get("lat") is None or location.get("lon") is None):
+            hit = cache.get(norm_addr(location["address"]), {})
+            if hit.get("lat") is not None and hit.get("lon") is not None:
+                location["lat"], location["lon"] = hit["lat"], hit["lon"]
     stations = []
     for s in fresh:
-        if s.get("lat") is None and s.get("address"):
+        if (s.get("lat") is None or s.get("lon") is None) and s.get("address"):
             hit = cache.get(norm_addr(s["address"]), {})
-            if hit.get("lat"):
+            if hit.get("lat") is not None and hit.get("lon") is not None:
                 s["lat"], s["lon"] = hit["lat"], hit["lon"]
         key = s["brand"] + "|" + norm_addr(s.get("address"))
         if key in prev_prices and s.get("p95") is not None:
@@ -1527,6 +1583,7 @@ def _collect(progress_callback=None, fuel_types=None):
         "ev_sources": ev_statuses,
         "fuel_sources": fuel_sources,
         "geocode_pending": geocode_pending,
+        "geocoding": coordinate_status(stations + [row for row in ev if row.get("address") or row.get("location_id")], cache, geocode_run),
     })
     # Partial errors must not fail the sensor: data is still written and the
     # errors array inside priser-og-ladesteder.json shows what missed. Only fail on no data.
@@ -1543,3 +1600,4 @@ def collect(data_dir, progress_callback=None, fuel_types=None):
     if _collect(progress_callback, fuel_types) != 0:
         raise ValueError("Ingen brugbare priser eller ladesteder")
     return load_json(OUT, {})
+
