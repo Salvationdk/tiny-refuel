@@ -60,3 +60,17 @@ filter in both editor and dashboard. Existing full-color logos are unchanged.
 The strict sanitizer in `scripts/prepare_vehicle_logos.py` rejects scripts,
 external references, embedded images, CSS and document entities. Other makes
 and model wordmarks retain the existing text fallback; this is partial coverage.
+
+## Second logo expansion
+
+28 further SVG marks are embedded, bringing the prepared extra-make pool to 38:
+Acura, Aston Martin, Bentley, Bugatti, Cadillac, Chevrolet, Ferrari, Husqvarna,
+Infiniti, Koenigsegg, Lamborghini, Lucid, Mahindra, McLaren, Rolls Royce, Saturn,
+Tata, Vauxhall, Abarth, Aiways, Alpina, Autobianchi, Holden, Ineos, Lincoln, RAM,
+Rivian and Trabant. These are make marks, not model-specific wordmarks.
+
+Sources are Simple Icons and vehiclespecs/brand-logos, using pinned revisions
+in each new asset's source URL. Every embedded file passed the strict SVG
+allowlist; incompatible source files were skipped. Multi-color source marks
+retain their colors. Text fallback and manual/custom vehicle catalogs remain
+supported. Prepared assets do not add unverified vehicle models.
