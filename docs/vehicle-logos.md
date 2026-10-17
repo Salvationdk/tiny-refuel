@@ -173,3 +173,21 @@ make assets (267 asset names). Coverage of the 882-name register list is
 263 available and 619 pending: 385 single names and 234 composite names.
 20 additional register names have PNG but still lack SVG, so 639 register
 names lack SVG. The shipped model list remains 645 models / 54 makes.
+
+## Manufacturer-site vectors, second review on 17 October 2026
+
+Seven additional native SVG assets were verified: EBUSCO, MELEX, Cenntro,
+KABE, KALMAR, MICRO and DULEVO. Every source is the manufacturer's own site.
+Kalmar, Micro, Dulevo and Melex are extracted from the header's inline vector
+markup; no remote dependencies remain. Melex's canonical header logo is used
+instead of the anniversary footer badge. Micro's white header foreground is
+normalized to black for the existing theme inversion. Dulevo's CSS foreground
+is normalized to black; its viewBox includes the left edge of the emblem.
+Sources, normalization and exact hashes are recorded. Shapes were rendered
+and checked; colored marks retain their palette, monochrome marks use the
+existing foreground filter in dark mode.
+
+Latest totals: 254 SVG, 20 PNG, no external make assets (274 asset names).
+Register coverage: 270 of 882 names have an asset, 612 pending (378 single
+names and 234 composite names). Including 20 PNG-only names, 632 register
+names still lack SVG. The 645-model / 54-make bundled model list is unchanged.

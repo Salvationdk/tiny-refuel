@@ -6,7 +6,7 @@ from scripts.prepare_vehicle_logos import sanitize_svg
 class VehicleLogoTests(unittest.TestCase):
     def test_prepared_assets_are_self_contained_and_have_source(self):
         d=json.loads(Path('custom_components/tiny_refuel/frontend/bilkatalog.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(d['logo_assets']),198)
+        self.assertEqual(len(d['logo_assets']),205)
         for name,asset in d['logo_assets'].items():
             self.assertIn('<svg',sanitize_svg(d['logos'][name]))
             self.assertTrue(asset['source_url'].startswith('https://'))

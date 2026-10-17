@@ -2,13 +2,13 @@
   "summary": {
     "scope": "882 make names in the supplied cleaned DMR catalog; not the shipped 54-make model list",
     "register_makes": 882,
-    "covered": 263,
-    "pending": 619,
+    "covered": 270,
+    "pending": 612,
     "pending_combined": 234,
-    "svg_assets": 247,
+    "svg_assets": 254,
     "png_assets": 20,
     "external_assets": 0,
-    "pending_single_names": 385
+    "pending_single_names": 378
   },
   "makes": [
     {
@@ -637,8 +637,9 @@
     },
     {
       "make": "Cenntro",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Cenntro",
+      "format": "svg"
     },
     {
       "make": "CF MOTO",
@@ -1109,8 +1110,9 @@
     },
     {
       "make": "DULEVO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "DULEVO",
+      "format": "svg"
     },
     {
       "make": "DUNNET",
@@ -1151,8 +1153,9 @@
     },
     {
       "make": "EBUSCO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "EBUSCO",
+      "format": "svg"
     },
     {
       "make": "Econelo",
@@ -2383,8 +2386,9 @@
     },
     {
       "make": "KABE",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "KABE",
+      "format": "svg"
     },
     {
       "make": "KAISER",
@@ -2394,8 +2398,9 @@
     },
     {
       "make": "KALMAR",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "KALMAR",
+      "format": "svg"
     },
     {
       "make": "KANDI",
@@ -2841,8 +2846,9 @@
     },
     {
       "make": "MELEX",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "MELEX",
+      "format": "svg"
     },
     {
       "make": "Mercedes",
@@ -3110,8 +3116,9 @@
     },
     {
       "make": "MICRO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "MICRO",
+      "format": "svg"
     },
     {
       "make": "MICRO COMPACT CAR",

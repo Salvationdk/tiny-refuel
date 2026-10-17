@@ -1,6 +1,6 @@
 {
   "reviewed": true,
-  "count": 160,
+  "count": 167,
   "assets": [
     {
       "make": "AC",
@@ -1164,6 +1164,62 @@
       "Artist": "Unknown author",
       "ImageDescription": "Logo for the motorcycle company Keeway, sourced from manufacturer about-us page; historical 2023 mark.",
       "sha256": "e53e2e52fe83978d9c8ffa767dbf50179c1518e59c1c561c85e71369c99f6365",
+      "monochrome": true
+    },
+    {
+      "make": "EBUSCO",
+      "source_url": "https://www.ebusco.com/wp-content/themes/ebusco/images/logo.svg",
+      "official_page": "https://www.ebusco.com/",
+      "normalization": "Static CSS flattened and non-rendering editor attributes removed; vector paths preserved.",
+      "sha256": "0f181f089f8c6e02f67658fb3ca2e25764015fb781db7bc69b519ad372e1fe4e",
+      "monochrome": false
+    },
+    {
+      "make": "MELEX",
+      "source_url": "https://melex.com.pl/",
+      "official_page": "https://melex.com.pl/",
+      "normalization": "Extracted canonical header SVG; anniversary footer badge not used.",
+      "sha256": "3c8c48d614b04b65f5856ad186f83195ab3e111b45f75a6ecc71284e2b4ac2aa",
+      "monochrome": false
+    },
+    {
+      "make": "Cenntro",
+      "source_url": "https://cenntroauto.com/wp-content/uploads/2021/10/cenntro-logo-black.svg",
+      "official_page": "https://cenntroauto.com/",
+      "normalization": "Static CSS flattened and non-rendering editor attributes removed; vector paths preserved.",
+      "sha256": "1fb6a25bea69f5dc43aad676522ef6b5d1476ef7273a28e5872570780338ea4b",
+      "monochrome": true
+    },
+    {
+      "make": "KABE",
+      "source_url": "https://www.kabe.se/images/kabe-logo.svg",
+      "official_page": "https://www.kabe.se/en/",
+      "normalization": "Static CSS flattened and non-rendering editor attributes removed; vector paths preserved.",
+      "sha256": "578382626c5cdf309b1e0c0afd599da1436272a7ba6984ecc8f6de22d1186887",
+      "monochrome": false
+    },
+    {
+      "make": "KALMAR",
+      "source_url": "https://www.kalmarglobal.com/",
+      "official_page": "https://www.kalmarglobal.com/",
+      "normalization": "Extracted self-contained logo vector from manufacturer HTML.",
+      "sha256": "1830d556e8d412a41e6f614fa9e8698c43bb9ef2566e713c697e6206a0f4ef74",
+      "monochrome": false
+    },
+    {
+      "make": "MICRO",
+      "source_url": "https://microlino-car.com/",
+      "official_page": "https://microlino-car.com/",
+      "normalization": "Extracted header SVG; static CSS flattened; white foreground normalized to black for theme inversion.",
+      "sha256": "86b42cd37e13b0d08ad8f4526ef68b7f25d89419c65c0e04aa3f347088c564f4",
+      "monochrome": true
+    },
+    {
+      "make": "DULEVO",
+      "source_url": "https://www.dulevo.com/",
+      "official_page": "https://www.dulevo.com/",
+      "normalization": "Extracted header SVG; CSS brand foreground normalized to black for theme inversion; viewBox includes leftmost emblem paths.",
+      "sha256": "ab85025729a43cc876d8e841a5f54df96a089e9ab80e9d1f48cd1b858b078226",
       "monochrome": true
     }
   ]
