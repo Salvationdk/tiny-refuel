@@ -191,3 +191,18 @@ Latest totals: 254 SVG, 20 PNG, no external make assets (274 asset names).
 Register coverage: 270 of 882 names have an asset, 612 pending (378 single
 names and 234 composite names). Including 20 PNG-only names, 632 register
 names still lack SVG. The 645-model / 54-make bundled model list is unchanged.
+
+## Further manufacturer downloads, 17 October 2026
+
+Seven more SVGs were reviewed and included: B-ON, BUCHER, Kayo, MCLOUIS,
+NILSSON, REWACO and Devinci. All files are linked from their manufacturer
+pages; CDN assets retain the referring manufacturer page in metadata.
+Static paint rules were flattened, with pale header foregrounds normalized
+for legibility. Paths are unchanged. The HDK candidate was rejected as an
+unverified text-based badge, and Concorde remains pending due to unsupported
+SVG references requiring separate review. Downloaded does not mean accepted.
+
+Latest totals: 261 SVG, 20 PNG, 281 asset names; register coverage 277 of 882.
+605 register labels lack any logo (371 single labels, 234 composite labels).
+Including 20 PNG-only labels, 625 register labels still lack SVG. This work
+does not establish that all register labels have a separate manufacturer logo.

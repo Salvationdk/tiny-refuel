@@ -39,7 +39,7 @@ class DmrCatalogTests(unittest.TestCase):
         original = base()
         payload = xml(record(), record(), record('MERCEDES-BENZ', 'SPRINTER', '3'),
                       record('IVECO', 'DAILY', '4'), record('VOLKSWAGEN', 'CRAFTER', '2'),
-                      record('TRAILER', 'DROP', '5'), record('MOTORBIKE', 'DROP', '7'))
+                      record('TRAILER', 'DROP', '5'), record('UNKNOWN', 'DROP', '999'))
         result, report = dmr.build_catalog(BytesIO(payload), original, '2026-10-16', 'ESStatistikListeModtag-20261016-000000.zip')
         self.assertEqual(report['processed_records'], 7)
         self.assertEqual(report['included_records'], 5)
@@ -61,7 +61,7 @@ class DmrCatalogTests(unittest.TestCase):
         self.assertTrue(new['requires_fuel_selection'])
 
     def test_truncated_or_empty_xml_and_unknown_layout_fail_before_replacing_catalog(self):
-        for payload in (b'<root/>', xml(record(kind='7')), b'<root><Statistik>'):
+        for payload in (b'<root/>', xml(record(kind='999')), b'<root><Statistik>'):
             with self.assertRaises((ValueError, ET.ParseError)):
                 dmr.build_catalog(BytesIO(payload), base(), '2026-10-16', 'input.xml')
 
@@ -101,6 +101,13 @@ class DmrCatalogTests(unittest.TestCase):
             self.assertEqual(inspection['processed_records'], 2)
             self.assertEqual(inspection['vehicle_kinds'][0]['records'], 2)
             self.assertNotIn('PRIVATE', json.dumps(inspection))
+
+    def test_full_extract_kind_codes_include_all_observed_powered_types(self):
+        for code in ('1', '2', '3', '4', '7', '8', '12', '16', '17', '91'):
+            self.assertTrue(dmr.powered_kind({'KoeretoejArtNummer': {code}}))
+        for code in ('5', '6', '9', '10', '11', '96', '999'):
+            self.assertFalse(dmr.powered_kind({'KoeretoejArtNummer': {code},
+                                              'DrivkraftTypeNavn': {'Diesel'}}))
 
     def test_download_uses_latest_archive_and_keeps_old_file_on_interrupted_download(self):
         with tempfile.TemporaryDirectory() as folder:

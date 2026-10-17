@@ -97,7 +97,7 @@ Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af v
 
 En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 54 mærker og 645 modeller, inklusive benzin, diesel, el, hybrider og varevogne. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst. Modeller uden verificeret årgang/variant kræver valg af drivmiddel og manuel kontrol af tank og batteri. Kataloget garanterer ikke alle motorvarianter eller årgange.
 
-Logopuljen er klargjort til 274 mærkenavne: 254 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og bilknapper, også til manuelt indtastede køretøjer. Modeludvalget er fortsat de 54 mærker ovenfor. Se [logodokumentationen](docs/vehicle-logos.md).
+Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og bilknapper, også til manuelt indtastede køretøjer. Modeludvalget er fortsat de 54 mærker ovenfor. Se [logodokumentationen](docs/vehicle-logos.md).
 
 ![Udvidet bilopsætning for en dieselbil](docs/screenshots/editor-vehicle-details.png)
 

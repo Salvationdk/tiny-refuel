@@ -1,6 +1,6 @@
 {
   "reviewed": true,
-  "count": 167,
+  "count": 174,
   "assets": [
     {
       "make": "AC",
@@ -1220,6 +1220,62 @@
       "official_page": "https://www.dulevo.com/",
       "normalization": "Extracted header SVG; CSS brand foreground normalized to black for theme inversion; viewBox includes leftmost emblem paths.",
       "sha256": "ab85025729a43cc876d8e841a5f54df96a089e9ab80e9d1f48cd1b858b078226",
+      "monochrome": true
+    },
+    {
+      "make": "B-ON",
+      "source_url": "https://cdn.prod.website-files.com/661804756e539fc792438583/661ce7e4f68a1d352ebb483d_B-ON%20logo.svg",
+      "official_page": "https://b-on.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "0cde401dd4ecfb9260854f62f133b45881fb82ce51e1bd1b61fbaff089ae56bf",
+      "monochrome": false
+    },
+    {
+      "make": "BUCHER",
+      "source_url": "https://www.buchermunicipal.com/themes/custom/buchermunicipal/logo.svg",
+      "official_page": "https://www.buchermunicipal.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "6d804496825266a96a48285f248f95106900a4d313a8bca4e325deee84c3d779",
+      "monochrome": false
+    },
+    {
+      "make": "Kayo",
+      "source_url": "https://static.kayomoto.com/skin/default/images/home/logo.svg",
+      "official_page": "https://www.kayomoto.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "ff556a9788686d06450f506ca4579640b443329e06ff717e2597397599a5f432",
+      "monochrome": false
+    },
+    {
+      "make": "MCLOUIS",
+      "source_url": "https://www.mclouis.com/wp-content/uploads/2024/07/logo-mc.svg",
+      "official_page": "https://www.mclouis.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "2c6bf8bef5f962a571294fc96014e3cf00a0ad99382987203fbf49166f048118",
+      "monochrome": true
+    },
+    {
+      "make": "NILSSON",
+      "source_url": "https://nilssonvehicles.com/wp-content/uploads/2026/05/logo-dark.svg",
+      "official_page": "https://nilssonvehicles.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "f002988f6c829ed6159d8f2ea955d97f53420d9f334639c6e49a2dc0a5e82895",
+      "monochrome": true
+    },
+    {
+      "make": "REWACO",
+      "source_url": "https://www.rewaco.com/assets/images/rewaco-logo-white.svg",
+      "official_page": "https://www.rewaco.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "205953e0debc32209210275a98f006b51575dda6406efa0c7af17765a6217dc2",
+      "monochrome": false
+    },
+    {
+      "make": "Devinci",
+      "source_url": "https://devinci-cars.com/wp-content/uploads/2019/06/DEVINCI-color-light.svg",
+      "official_page": "https://devinci-cars.com/",
+      "normalization": "Static CSS flattened; editor metadata removed; viewBox added where absent. Pale/white monochrome foreground normalized to black for Devinci, Rewaco and Nilsson; original paths preserved.",
+      "sha256": "d1046a59667028ba2130425825984dfe6fb3fdfda8a23f64c58fa6cf84d86760",
       "monochrome": true
     }
   ]

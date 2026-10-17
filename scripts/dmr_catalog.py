@@ -24,10 +24,11 @@ SOURCE = 'https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-
 FTP_HOST = '5.44.137.84'
 FTP_USER = 'dmr-ftp-user'
 FTP_PASSWORD = 'dmrpassword'
-KINDS = {'1', '2', '3', '4'}  # DMR personbiler/busser, varebiler and lastbiler.
+# Code/name pairs verified against the full 2026-10-07 extract inspection.
+KINDS = {'1', '2', '3', '4', '7', '8', '12', '16', '17', '91'}
 KIND_NAMES = {'personbil', 'bus', 'varebil', 'lastbil', 'stor personbil',
               'motorcykel', 'knallert', 'stor knallert', 'lille knallert',
-              'traktor', 'motorredskab', 'motorkøretøj', 'atv'}
+              'traktor', 'motorredskab', 'motorkøretøj', 'atv', 'motordrevet blokvogn'}
 # Retain raw values and field names until their units and structure are verified.
 TECHNICAL_FIELDS = {
     'KoeretoejOplysningModelAar', 'KoeretoejOplysningEUVariant',
@@ -239,7 +240,7 @@ def build_catalog(stream, base, source_date, source_file):
               'makes': len(result['brands']), 'models': sum(len(row['modeller']) for row in result['brands']),
               'identifier_fields_exported': False,
               'technical_values': 'Raw source fields; units not inferred; not used as confirmed tank, battery or consumption specifications.',
-              'scope': 'DMR kinds 1-4 plus recognized named powered vehicle kinds; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
+              'scope': 'DMR powered kinds 1,2,3,4,7,8,12,16,17,91 plus recognized powered kind names; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
     result['dmr_catalog'] = report
     return result, report
 

@@ -2,13 +2,13 @@
   "summary": {
     "scope": "882 make names in the supplied cleaned DMR catalog; not the shipped 54-make model list",
     "register_makes": 882,
-    "covered": 270,
-    "pending": 612,
+    "covered": 277,
+    "pending": 605,
     "pending_combined": 234,
-    "svg_assets": 254,
+    "svg_assets": 261,
     "png_assets": 20,
     "external_assets": 0,
-    "pending_single_names": 378
+    "pending_single_names": 371
   },
   "makes": [
     {
@@ -336,8 +336,9 @@
     },
     {
       "make": "B-ON",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "B-ON",
+      "format": "svg"
     },
     {
       "make": "BAC",
@@ -522,8 +523,9 @@
     },
     {
       "make": "BUCHER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "BUCHER",
+      "format": "svg"
     },
     {
       "make": "BUGATTI",
@@ -1040,8 +1042,9 @@
     },
     {
       "make": "Devinci",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Devinci",
+      "format": "svg"
     },
     {
       "make": "DFSK",
@@ -2420,8 +2423,9 @@
     },
     {
       "make": "Kayo",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Kayo",
+      "format": "svg"
     },
     {
       "make": "KAZUMA",
@@ -2836,8 +2840,9 @@
     },
     {
       "make": "MCLOUIS",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "MCLOUIS",
+      "format": "svg"
     },
     {
       "make": "MEGA",
@@ -3278,8 +3283,9 @@
     },
     {
       "make": "NILSSON",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "NILSSON",
+      "format": "svg"
     },
     {
       "make": "NIO",
@@ -3710,8 +3716,9 @@
     },
     {
       "make": "REWACO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "REWACO",
+      "format": "svg"
     },
     {
       "make": "REWAKO",
