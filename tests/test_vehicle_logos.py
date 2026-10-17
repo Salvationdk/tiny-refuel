@@ -6,7 +6,7 @@ from scripts.prepare_vehicle_logos import sanitize_svg
 class VehicleLogoTests(unittest.TestCase):
     def test_prepared_assets_are_self_contained_and_have_source(self):
         d=json.loads(Path('custom_components/tiny_refuel/frontend/bilkatalog.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(d['logo_assets']),178)
+        self.assertEqual(len(d['logo_assets']),194)
         for name,asset in d['logo_assets'].items():
             self.assertIn('<svg',sanitize_svg(d['logos'][name]))
             self.assertTrue(asset['source_url'].startswith('https://'))
@@ -38,3 +38,18 @@ class VehicleLogoTests(unittest.TestCase):
         svg='<svg viewBox="0 0 10 10"><defs><mask id="m" style="mask-type:luminance"><path fill="#fff" d="M0 0h10v10H0z"/></mask></defs><path mask="url(#m)" d="M0 0h10v10H0z"/></svg>'
         self.assertIn('mask="url(#m)"',sanitize_svg(svg))
         with self.assertRaises(ValueError):sanitize_svg(svg.replace('url(#m)','url(https://example.com/m)'))
+
+    def test_traces_are_paths_and_original_packaged_rasters_are_retained(self):
+        d=json.loads(Path('custom_components/tiny_refuel/frontend/bilkatalog.json').read_text(encoding='utf-8'))
+        traced=[n for n,a in d['logo_assets'].items() if a.get('origin')=='raster_trace']
+        self.assertEqual(len(traced),16)
+        for n in traced:
+            self.assertNotIn('<image',d['logos'][n])
+            self.assertIn('<path',d['logos'][n])
+            self.assertTrue(d['logo_assets'][n]['visual_reviewed'])
+            self.assertEqual(len(d['logo_assets'][n]['source_sha256']),64)
+        for n in ['Leapmotor','NIO','Zeekr','Navor']:
+            self.assertIn(n,d['logo_raster_sources'])
+            self.assertNotIn(n,d['logo_pngs'])
+        self.assertIn('Hongqi',d['logo_pngs'])
+        self.assertFalse(d['logo_urls'])

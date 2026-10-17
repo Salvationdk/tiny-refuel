@@ -580,3 +580,15 @@ for (const make of Object.keys(packagedCatalog.logo_assets)) {
     assert.ok(panel.innerHTML.includes('Egen model'));
   }
 }
+
+// New raster fallbacks also work for makes not yet in the shipped model list.
+for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
+  assert.equal(Buffer.from(png, 'base64').subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  editor._katalog = packagedCatalog;
+  editor.setConfig({biler:[{mærke:make, model:'Egen model'}]});
+  assert.ok(editor.innerHTML.includes('data:image/png;base64,' + png));
+  const panel = new Card(); panel._katalog = packagedCatalog;
+  panel.setConfig({biler:[{mærke:make, model:'Egen model'}]});
+  assert.ok(panel.innerHTML.includes('data:image/png;base64,' + png));
+  assert.ok(panel.innerHTML.includes('Egen model'));
+}

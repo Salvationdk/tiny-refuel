@@ -124,3 +124,35 @@ Current pool: 227 SVG, 4 PNG and 1 external asset (232 names). Coverage of the
 882-name cleaned register catalog is 228 available, 654 pending; pending is
 234 composite names and 420 single names. These are make/logo-pool counts,
 not additions to the shipped 54-make model list. Model wordmarks are unchanged.
+
+## Raster tracing and broader source search
+
+31 additional register makes were identified in the car-logos-dataset PNG
+collection. 12 were accepted as visually reviewed path-based raster traces:
+Bitter, DKW, Hupmobile, Innocenti, Lifan, Panhard, Pierce Arrow, Radical, Riley,
+Ultima, Wanderer and Zastava. 19 detailed marks use bundled transparent PNG
+fallbacks instead of large or inaccurate traces. The existing Leapmotor, NIO,
+Zeekr and NAVOR marks now use embedded traced SVG; their raster inputs remain
+in logo_raster_sources. Hongqi retains its colored PNG badge. NAVOR no longer
+requires a remote image request. These conversions are not original SVG artwork.
+
+Every trace has origin=raster_trace, source/input hashes, tool/mode and review
+metadata. Polygon tracing preserves angular Leapmotor/Zeekr edges; other marks
+use reviewed spline traces. scripts/data/vehicle-logo-raster-review.json records
+accepted traces and PNG decisions. Source raster URLs are pinned to the reviewed
+car-logos-dataset revision where applicable. Existing packaged input sources are
+identified separately from higher-resolution reference images.
+
+Current asset pool: 243 SVG + 20 PNG, no external make-logo images (263 names).
+Coverage of the cleaned register list is 259/882; 389 single names and 234
+composite names remain pending. Model wordmarks and the 54-make model list are
+unchanged. Text fallback remains available.
+
+The optional developer command scripts/vectorize_vehicle_logo.py requires
+Pillow and vtracer (reviewed with vtracer 0.6.12). It produces sanitized paths,
+retains provenance, enforces a size budget, and explicitly requires visual
+review. It is not a Home Assistant dependency or runtime scraper. Example:
+
+```sh
+python scripts/vectorize_vehicle_logo.py --input logo.png --output candidate.svg --source-url https://example.com/brand --monochrome --polygon
+```

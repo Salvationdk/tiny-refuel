@@ -2,13 +2,13 @@
   "summary": {
     "scope": "882 make names in the supplied cleaned DMR catalog; not the shipped 54-make model list",
     "register_makes": 882,
-    "covered": 228,
-    "pending": 654,
+    "covered": 259,
+    "pending": 623,
     "pending_combined": 234,
-    "svg_assets": 227,
-    "png_assets": 4,
-    "external_assets": 1,
-    "pending_single_names": 420
+    "svg_assets": 243,
+    "png_assets": 20,
+    "external_assets": 0,
+    "pending_single_names": 389
   },
   "makes": [
     {
@@ -284,8 +284,9 @@
     },
     {
       "make": "AUBURN",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "AUBURN",
+      "format": "png"
     },
     {
       "make": "Audi",
@@ -432,8 +433,9 @@
     },
     {
       "make": "Bitter",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Bitter",
+      "format": "svg"
     },
     {
       "make": "BLAUGAM",
@@ -470,8 +472,9 @@
     },
     {
       "make": "BORGWARD",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "BORGWARD",
+      "format": "png"
     },
     {
       "make": "Borile",
@@ -696,8 +699,9 @@
     },
     {
       "make": "Cisitalia",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Cisitalia",
+      "format": "png"
     },
     {
       "make": "Citroen Giottiline",
@@ -1011,8 +1015,9 @@
     },
     {
       "make": "DESOTO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "DESOTO",
+      "format": "png"
     },
     {
       "make": "DETHLEFFS",
@@ -1053,8 +1058,9 @@
     },
     {
       "make": "DKW",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "DKW",
+      "format": "svg"
     },
     {
       "make": "Dobo Racing",
@@ -1153,8 +1159,9 @@
     },
     {
       "make": "EDSEL",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "EDSEL",
+      "format": "png"
     },
     {
       "make": "Eggers",
@@ -1730,8 +1737,9 @@
     },
     {
       "make": "FREIGHTLINER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "FREIGHTLINER",
+      "format": "png"
     },
     {
       "make": "FRIKES",
@@ -1777,8 +1785,9 @@
     },
     {
       "make": "Gardner Douglas",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Gardner Douglas",
+      "format": "png"
     },
     {
       "make": "GARIA",
@@ -1852,8 +1861,9 @@
     },
     {
       "make": "Golden Dragon",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Golden Dragon",
+      "format": "png"
     },
     {
       "make": "GOLIATH",
@@ -1961,13 +1971,15 @@
     },
     {
       "make": "Higer",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Higer",
+      "format": "png"
     },
     {
       "make": "HILLMAN",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "HILLMAN",
+      "format": "png"
     },
     {
       "make": "HISPANO-SUIZA",
@@ -2044,8 +2056,9 @@
     },
     {
       "make": "HUPMOBILE",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "HUPMOBILE",
+      "format": "svg"
     },
     {
       "make": "HYMER",
@@ -2099,13 +2112,15 @@
     },
     {
       "make": "INNOCENTI",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "INNOCENTI",
+      "format": "svg"
     },
     {
       "make": "INTERMECCANICA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "INTERMECCANICA",
+      "format": "png"
     },
     {
       "make": "INTERNATIONAL",
@@ -2125,8 +2140,9 @@
     },
     {
       "make": "IRIZAR",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "IRIZAR",
+      "format": "png"
     },
     {
       "make": "Iso Rivolta",
@@ -2263,8 +2279,9 @@
     },
     {
       "make": "JAC",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "JAC",
+      "format": "png"
     },
     {
       "make": "Jaecoo",
@@ -2369,8 +2386,9 @@
     },
     {
       "make": "KAISER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "KAISER",
+      "format": "png"
     },
     {
       "make": "KALMAR",
@@ -2504,8 +2522,9 @@
     },
     {
       "make": "LAGONDA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "LAGONDA",
+      "format": "png"
     },
     {
       "make": "LAMBORGHINI",
@@ -2540,7 +2559,7 @@
       "make": "Leapmotor",
       "status": "available",
       "asset_key": "Leapmotor",
-      "format": "png"
+      "format": "svg"
     },
     {
       "make": "Levc",
@@ -2567,8 +2586,9 @@
     },
     {
       "make": "LIFAN",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "LIFAN",
+      "format": "svg"
     },
     {
       "make": "Lima",
@@ -2741,8 +2761,9 @@
     },
     {
       "make": "MARCOS",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "MARCOS",
+      "format": "png"
     },
     {
       "make": "MARMON",
@@ -3196,7 +3217,7 @@
       "make": "Navor",
       "status": "available",
       "asset_key": "Navor",
-      "format": "external"
+      "format": "svg"
     },
     {
       "make": "Navya",
@@ -3254,7 +3275,7 @@
       "make": "NIO",
       "status": "available",
       "asset_key": "NIO",
-      "format": "png"
+      "format": "svg"
     },
     {
       "make": "Nissan",
@@ -3328,13 +3349,15 @@
     },
     {
       "make": "PACKARD",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "PACKARD",
+      "format": "png"
     },
     {
       "make": "PANHARD",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "PANHARD",
+      "format": "svg"
     },
     {
       "make": "PANTERA",
@@ -3450,8 +3473,9 @@
     },
     {
       "make": "PGO",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "PGO",
+      "format": "png"
     },
     {
       "make": "PHØNIX",
@@ -3471,8 +3495,9 @@
     },
     {
       "make": "PIERCE ARROW",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "PIERCE ARROW",
+      "format": "svg"
     },
     {
       "make": "Pilgrim",
@@ -3549,8 +3574,9 @@
     },
     {
       "make": "Radical",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "Radical",
+      "format": "svg"
     },
     {
       "make": "RAM",
@@ -3688,8 +3714,9 @@
     },
     {
       "make": "RILEY",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "RILEY",
+      "format": "svg"
     },
     {
       "make": "RIVIAN",
@@ -3895,8 +3922,9 @@
     },
     {
       "make": "SINGER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "SINGER",
+      "format": "png"
     },
     {
       "make": "Skoda",
@@ -4253,8 +4281,9 @@
     },
     {
       "make": "ULTIMA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "ULTIMA",
+      "format": "svg"
     },
     {
       "make": "UNIMOC",
@@ -4486,8 +4515,9 @@
     },
     {
       "make": "WANDERER",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "WANDERER",
+      "format": "svg"
     },
     {
       "make": "WARTBURG",
@@ -4614,8 +4644,9 @@
     },
     {
       "make": "ZASTAVA",
-      "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "status": "available",
+      "asset_key": "ZASTAVA",
+      "format": "svg"
     },
     {
       "make": "ZAZ",
@@ -4627,7 +4658,7 @@
       "make": "Zeekr",
       "status": "available",
       "asset_key": "Zeekr",
-      "format": "png"
+      "format": "svg"
     },
     {
       "make": "ZELE",
