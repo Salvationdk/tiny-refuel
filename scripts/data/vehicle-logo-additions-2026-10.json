@@ -1,6 +1,6 @@
 {
   "reviewed": true,
-  "count": 100,
+  "count": 110,
   "assets": [
     {
       "make": "AC",
@@ -600,6 +600,69 @@
       "make": "FAW",
       "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/faw-logo.svg",
       "sha256": "20fa5a9a052565ae91e64f87924e22e4de95eb497a958f92fe9e17f8a40ad70e",
+      "monochrome": false
+    },
+    {
+      "make": "CATERHAM",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/caterham.svg",
+      "sha256": "928ccf5e7775f7766f5a33065aaa139019deffbcf46c85c9e5620b701e05e2b2",
+      "monochrome": true
+    },
+    {
+      "make": "HARLEY DAVIDSON",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/harley-davidson.svg",
+      "sha256": "278be9c78fe6858c0b102ad90764216452347fbbc82a5d0de062ef09f9eaf345",
+      "monochrome": true
+    },
+    {
+      "make": "MOKE",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/moke.svg",
+      "sha256": "7a1961522dc66699f9fae74da872a6cb133245738deb93ac76507d9f432b94d8",
+      "monochrome": true,
+      "normalization": "Preserved geometry; explicit canvas viewBox or static class declarations flattened."
+    },
+    {
+      "make": "MORRIS",
+      "source_url": "https://github.com/tipstrade/node-vehicle-logos/blob/845ef4ae8a2f8d576c694787293e2822cb30a8e0/assets/morris.svg",
+      "sha256": "6b7b00a8c6cbb14d79fc7d98a8305d965f2416a913f8f10094fec229072ed2de",
+      "monochrome": true
+    },
+    {
+      "make": "BAC",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/bac-logo.svg",
+      "sha256": "8a73d5b26c7dc300f2cf8e45228758fa3f82e302accf3e1961fd3886462aa046",
+      "monochrome": true
+    },
+    {
+      "make": "BAW",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/baw-logo.svg",
+      "sha256": "41989394d310806a0a0213b4c559aed1fcfebe7343baa5573025b58fac9bc786",
+      "monochrome": false,
+      "normalization": "Preserved geometry; explicit canvas viewBox or static class declarations flattened."
+    },
+    {
+      "make": "e.GO",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/ego-logo.svg",
+      "sha256": "350086d7ede619dc8caebb2fa1ab506f90b1691dabbfc31a29b68eba98ccc9ec",
+      "monochrome": false
+    },
+    {
+      "make": "LADA",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/lada-logo.svg",
+      "sha256": "c667a89d9c0e5169c53f5dcc5830e94b304834f8ddd5a6de43704a065849c6ed",
+      "monochrome": false
+    },
+    {
+      "make": "PUCH",
+      "source_url": "https://github.com/vehiclespecs/brand-logos/blob/3f0929e70e0a9a2a502063edc4b3e5c0146cba74/puch-logo.svg",
+      "sha256": "c534b0c271b5e91002eebc697a14c8149d49ba60b6455844db2ab5ff51c3d92d",
+      "monochrome": false,
+      "normalization": "Preserved geometry; explicit canvas viewBox or static class declarations flattened."
+    },
+    {
+      "make": "VINFAST",
+      "source_url": "https://github.com/cardog-ai/icons/blob/05c4001e83a09a189721a0851546291f71f7e31c/core/optimized/Vinfast%20Icon.svg",
+      "sha256": "feddcd5843eaf45a111d62b72dda645af72b90fa19ee8a3841aa01e7565b9766",
       "monochrome": false
     }
   ]

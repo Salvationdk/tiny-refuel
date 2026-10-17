@@ -88,3 +88,19 @@ with pinned revisions and SHA-256 hashes. The visual review excluded unrelated
 football, tool, university and other company marks with matching names.
 Static gradients and allowlisted inline paint declarations are supported;
 scripts, external references and active SVG content are rejected.
+
+## Remaining-name audit
+
+Ten further reviewed SVG marks were embedded: Caterham, Harley Davidson, Moke,
+Morris, BAC, BAW, e.GO, Lada, Puch and Vinfast. BAC and Lada use automotive
+collection sources rather than unrelated marks found in the broad logo set.
+The Puch 800x800 canvas is made explicit as a viewBox. Moke's static fill class
+is flattened; BAW's unused class labels are removed without changing paint.
+
+Current asset pool: 197 SVG, 4 PNG, 1 external logo (202 names). In the supplied
+882-name cleaned DMR catalog, 198 names match an asset and 684 remain pending.
+234 pending names are composite chassis/coachbuilder labels. They are not
+assigned a chassis logo as though it were an authentic composite brand mark.
+The complete audit is scripts/data/vehicle-logo-coverage.json; its counts are
+also in catalog.logo_coverage. Pending names retain text fallback. This is not
+complete logo coverage and the large DMR model catalog is still not shipped.
