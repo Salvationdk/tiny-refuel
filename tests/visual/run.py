@@ -166,9 +166,9 @@ def browsers(tokens):
                 expect(card.locator(".trf-row")).to_have_count(9)
                 card.locator('[data-fewer-stations="fuel"]').click()
                 expect(card.locator(".trf-row")).to_have_count(3)
-                diesel = {**CAR, "navn": "Dieselvarevogn", "brændstof": "diesel", "tank_liters": 70, "koeretoejstype": "varevogn"}
+                diesel = {**CAR, "navn": "Dieselvarevogn", "model": "Transporter", "brændstof": "diesel", "tank_liters": 70, "koeretoejstype": "varevogn"}
                 set_config({**CONFIG, "vis_benzin": False, "vis_diesel": True, "biler": [diesel]})
-                expect(card).to_contain_text("Billigst diesel")
+                expect(card).to_contain_text("Billigst Diesel")
                 shot(prefix + "-diesel")
                 electric = {**CAR, "navn": "Elbil", "mærke": "Aiways", "model": "U5", "brændstof": "el", "batteri_kwh": 63}
                 set_config({**CONFIG, "biler": [electric], "vis_benzin": False, "vis_el": True})
@@ -178,7 +178,7 @@ def browsers(tokens):
                 expect(card.locator("dialog[open]")).to_be_visible()
                 shot(prefix + "-charging-locations", card.locator("dialog[open]"))
                 card.locator('[data-close-ev]').first.click()
-                hybrid = {**CAR, "navn": "Plug-in-hybrid", "brændstof": "plug_in_hybrid", "batteri_kwh": 13}
+                hybrid = {**CAR, "navn": "Plug-in-hybrid", "model": "Golf", "tank_liters": 40, "brændstof": "plug_in_hybrid", "batteri_kwh": 13}
                 set_config({**CONFIG, "vis_el": True, "biler": [hybrid, electric]})
                 shot(prefix + "-hybrid")
                 set_config(CONFIG)
