@@ -37,6 +37,10 @@ FIXTURE = {
            for i, brand in enumerate(["OK", "Q8", "Circle K", "Clever", "E.ON", "Ionity"])],
     "fuel_sources": {}, "ev_sources": {}, "benefits": {}, "geocode_pending": 0,
 }
+FIXTURE["ev_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"]}
+                         for key in ["clever", "eon", "ionity", "ok", "oil", "shell", "circle_k", "q8"]}
+FIXTURE["fuel_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"], "records": count, "priced": count, "missing_coordinates": 0}
+                           for key, count in [("api.circlek.com", 2), ("f24.dk", 2), ("goon.nu", 1), ("unoxmobility.dk", 1), ("shellservice.dk", 1), ("mobility-prices.ok.dk", 1), ("oil-fuel-api", 1)]}
 
 
 def prepare(folder):
@@ -126,6 +130,26 @@ def browsers(tokens):
         page = context.new_page()
         errors = []
         rejections = []
+        websocket_errors = []
+        def watch_socket(socket):
+            commands = {}
+            def sent(payload):
+                try:
+                    message = json.loads(payload)
+                    if "id" in message:
+                        commands[message["id"]] = message.get("type")
+                except (ValueError, TypeError):
+                    pass
+            def received(payload):
+                try:
+                    message = json.loads(payload)
+                    if message.get("success") is False:
+                        websocket_errors.append({"command": commands.get(message.get("id")), "error": message.get("error")})
+                except (ValueError, TypeError):
+                    pass
+            socket.on("framesent", sent)
+            socket.on("framereceived", received)
+        page.on("websocket", watch_socket)
         page.expose_function("visualReportRejection", lambda message: rejections.append(message))
         page.on("pageerror", lambda error: errors.append({"message": str(error), "stack": error.stack}))
         page.goto(BASE + "/lovelace/test")
@@ -153,7 +177,8 @@ def browsers(tokens):
         def shot(name, target=card):
             target.scroll_into_view_if_needed()
             page.evaluate("document.fonts.ready")
-            target.screenshot(path=str(OUT / (name + ".png")), animations="disabled")
+            target.screenshot(path=str(OUT / (name + ".png")), animations="disabled",
+                              style="app-header, app-toolbar, ha-toast { visibility: hidden !important; }")
             results.append(name)
 
         for width, label in [(1280, "desktop"), (390, "mobile")]:
@@ -244,7 +269,7 @@ def browsers(tokens):
         expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)
         page.screenshot(path=str(OUT / "integration-settings.png"), full_page=True, animations="disabled")
         results.append("integration-settings")
-        diagnostics = {"errors": errors, "rejections": rejections}
+        diagnostics = {"errors": errors, "rejections": rejections, "websocket_errors": websocket_errors}
         (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
         assert not errors, diagnostics
         browser.close()

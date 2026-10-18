@@ -1743,8 +1743,8 @@
         if (!status) missingSetup.push(expected[key]);
         else if (status.status === 'error' || status.status === 'stale') failed.push(expected[key]);
       });
-      if (missingSetup.length && this._data && this._data.updated) html += '<div class="trf-em">Den indlæste datafil mangler de nye datakilder for ' + missingSetup.map(esc).join(', ') +
-        '. Udskift scraperscriptet fra den nyeste pakke, tryk på Scrape alle data, og tryk derefter på kortets opdateringsknap.</div>';
+      if (missingSetup.length && this._data && this._data.updated) html += '<div class="trf-em">De indlæste stationsdata mangler datakildestatus for ' + missingSetup.map(esc).join(', ') +
+        '. Opdatér Tiny Refuel-integrationen, og vælg Hent alle data på integrationens enhed i Home Assistant.</div>';
       if (failed.length) html += '<div class="trf-em">Seneste hentning fejlede hos ' + failed.map(esc).join(', ') + '. Eventuelle gemte steder er ikke bekræftet ved denne hentning.</div>';
       return html;
     }
