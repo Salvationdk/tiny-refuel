@@ -1,0 +1,114 @@
+[
+  {
+    "make": "ABARTH",
+    "model": "500e",
+    "url": "https://www.abarthcars.co.uk/new-abarth-500e-electric",
+    "parser": "reviewed_html",
+    "mapping_reviewed": true,
+    "allowed_host": "www.abarthcars.co.uk",
+    "identity_marker": "Abarth 500e",
+    "html_rules": [
+      {
+        "field": "batteri_kwh",
+        "pattern": "(?P<value>\\d+(?:[.,]\\d+)?)\\s*(?P<unit>kWh)\\s+lithium-ion battery"
+      }
+    ],
+    "battery_basis": "unspecified",
+    "mapping_reviewed_at": "2026-10-18",
+    "scope_note": "UK manufacturer page for 500e/500e Turismo. No model-year range stated; not a verified usable-capacity value."
+  },
+  {
+    "make": "ABARTH",
+    "model": "600e",
+    "url": "https://www.abarth.com/new-abarth-600e",
+    "parser": "reviewed_html",
+    "mapping_reviewed": true,
+    "allowed_host": "www.abarth.com",
+    "identity_marker": "Abarth 600e",
+    "html_rules": [
+      {
+        "field": "batteri_kwh",
+        "pattern": "Battery capacity\\s+(?P<value>\\d+(?:[.,]\\d+)?)\\s*(?P<unit>kWh)"
+      }
+    ],
+    "battery_basis": "unspecified",
+    "mapping_reviewed_at": "2026-10-18",
+    "scope_note": "Manufacturer page; charging specifications list the same capacity for the displayed trims. Years and usable/gross basis not established."
+  },
+  {
+    "make": "Aiways",
+    "model": "U5",
+    "url": "https://aiways.dk/pages/aiways-u5",
+    "parser": "reviewed_html",
+    "mapping_reviewed": true,
+    "allowed_host": "aiways.dk",
+    "identity_marker": "Aiways U5",
+    "html_rules": [
+      {
+        "field": "batteri_kwh",
+        "pattern": "Kapaciteten i batteriet er\\s+(?P<value>\\d+(?:[.,]\\d+)?)\\s*(?P<unit>kWh)"
+      }
+    ],
+    "battery_basis": "unspecified",
+    "mapping_reviewed_at": "2026-10-18",
+    "scope_note": "Danish manufacturer page for U5. Capacity basis and complete model-year/variant range unspecified."
+  },
+  {
+    "make": "Aiways",
+    "model": "U6",
+    "url": "https://www.ai-ways.fr/model/u6/",
+    "parser": "reviewed_html",
+    "mapping_reviewed": true,
+    "allowed_host": "www.ai-ways.fr",
+    "identity_marker": "Aiways U6",
+    "html_rules": [
+      {
+        "field": "batteri_kwh",
+        "pattern": "Batterie\\s+(?P<value>\\d+(?:[.,]\\d+)?)\\s*(?P<unit>kWh)"
+      }
+    ],
+    "battery_basis": "unspecified",
+    "mapping_reviewed_at": "2026-10-18",
+    "scope_note": "French manufacturer page for U6. Capacity basis and complete model-year/variant range unspecified."
+  },
+  {
+    "make": "ALPINE",
+    "model": "A290",
+    "url": "https://alpinecars.dk/",
+    "parser": "reviewed_html",
+    "mapping_reviewed": true,
+    "allowed_host": "alpinecars.dk",
+    "identity_marker": "Alpine A290 GTS",
+    "html_rules": [
+      {
+        "field": "batteri_kwh",
+        "pattern": "Alpine A290 GTS\\s+(?P<value>\\d+(?:[.,]\\d+)?)\\s*(?P<unit>kWh)"
+      }
+    ],
+    "battery_basis": "unspecified",
+    "mapping_reviewed_at": "2026-10-18",
+    "variant": "GTS",
+    "variant_evidence": "Alpine A290 GTS",
+    "scope_note": "Danish manufacturer page explicitly refers to A290 GTS; not all variants or years."
+  },
+  {
+    "make": "ALPINE",
+    "model": "A390",
+    "url": "https://alpinecars.dk/",
+    "parser": "reviewed_html",
+    "mapping_reviewed": true,
+    "allowed_host": "alpinecars.dk",
+    "identity_marker": "Alpine 390 GTS",
+    "html_rules": [
+      {
+        "field": "batteri_kwh",
+        "pattern": "Alpine 390 GTS\\s+(?P<value>\\d+(?:[.,]\\d+)?)\\s*(?P<unit>kWh)"
+      }
+    ],
+    "battery_basis": "unspecified",
+    "mapping_reviewed_at": "2026-10-18",
+    "variant": "GTS",
+    "variant_evidence": "Alpine 390 GTS",
+    "scope_note": "Reviewed spelling mapping: page labels the capacity line Alpine 390 GTS and advertises A390 elsewhere. GTS only; no year or usable/gross basis inferred."
+  }
+]

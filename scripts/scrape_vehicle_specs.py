@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inventory missing vehicle specifications and collect source-linked JSON-LD candidates.
+"""Collect vehicle specification candidates from reviewed HTML, JSON-LD and open datasets.
 Python 3.10+, standard library only. Never modifies the input catalog.
 """
 import argparse
@@ -156,6 +156,14 @@ def quantity(value, kind):
 
 
 def extract(page, source):
+    if source.get('parser') == 'reviewed_html':
+        if __package__:
+            from .vehicle_spec_html import extract_reviewed_html
+        else:
+            from vehicle_spec_html import extract_reviewed_html
+        return extract_reviewed_html(page, source)
+    if source.get('parser', 'jsonld') != 'jsonld':
+        raise ValueError('Unknown source parser')
     parser = JsonLdParser()
     parser.feed(page)
     found, warnings = [], []
@@ -231,11 +239,12 @@ def extract(page, source):
 
 
 class Fetcher:
-    def __init__(self, cache, delay):
+    def __init__(self, cache, delay, offline=False):
         self.cache = Path(cache)
         self.cache.mkdir(parents=True, exist_ok=True)
         self.delay = delay
         self.last = 0
+        self.offline = offline
         self.robots = {}
 
     def request(self, url):
@@ -254,6 +263,11 @@ class Fetcher:
             return body.decode(response.headers.get_content_charset() or 'utf-8', errors='replace')
 
     def get(self, url):
+        if self.offline:
+            path = self.cache / (sha256(url.encode()).hexdigest() + '.html')
+            if not path.exists():
+                raise ValueError('Page not cached; run once without --offline.')
+            return path.read_text(encoding='utf-8')
         parsed = urlsplit(url)
         if parsed.scheme not in ('https', 'http') or not parsed.netloc or parsed.username or parsed.password:
             raise ValueError('Invalid source URL.')
@@ -286,13 +300,20 @@ def run(args):
     rows = inventory(data)
     write = lambda name, value: (output / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     write('missing.json', rows)
-    sources = json.loads(Path(args.sources).read_text(encoding='utf-8-sig')) if args.sources else []
+    source_file = args.sources
+    if getattr(args, 'official_batch', False):
+        if source_file:
+            raise ValueError('Choose --official-batch or --sources, not both.')
+        source_file = Path(__file__).parent / 'data/vehicle-spec-sources.verified.json'
+    sources = json.loads(Path(source_file).read_text(encoding='utf-8-sig')) if source_file else []
+    write('sources.json', sources)
     if not isinstance(sources, list):
         raise ValueError('Sources must be a JSON list.')
     wanted = {(identity(r['make']), identity(r['model'])): r for r in rows}
     candidates, status = [], []
-    fetcher = Fetcher(output / 'cache', args.delay)
-    for source in sources:
+    fetcher = Fetcher(output / 'cache', args.delay, offline=getattr(args, 'offline', False))
+    for index, source in enumerate(sources, 1):
+        print(f"[{index}/{len(sources)}] {source.get('make', '?') if isinstance(source, dict) else '?'} {source.get('model', '?') if isinstance(source, dict) else '?'}", flush=True)
         try:
             if not isinstance(source, dict) or not all(isinstance(source.get(k), str) and source[k].strip() for k in ('make', 'model', 'url')):
                 raise ValueError('Each source needs non-empty make, model and url strings.')
@@ -307,7 +328,7 @@ def run(args):
                 item['retrieved_at'] = datetime.now(timezone.utc).isoformat()
                 item['page_sha256'] = sha256(page.encode()).hexdigest()
             candidates.extend(extracted)
-            status.append({'source': source, 'status': 'candidates' if extracted else 'no_matching_structured_specs', 'warnings': warnings})
+            status.append({'source': source, 'status': 'candidates' if extracted else 'no_matching_specs', 'warnings': warnings})
         except (ValueError, OSError, URLError) as exc:
             status.append({'source': source, 'status': 'error', 'error': str(exc)})
         # Checkpoint after each source for resumable large batches; pages are cached.
@@ -317,6 +338,38 @@ def run(args):
     write('without-source.json', [r for r in rows if (identity(r['make']), identity(r['model'])) not in covered])
     write('candidates.json', candidates)
     write('source-status.json', status)
+    if getattr(args, 'open_ev', False):
+        if __package__:
+            from .vehicle_spec_open_data import load_export, match_export
+        else:
+            from vehicle_spec_open_data import load_export, match_export
+        dataset, metadata = load_export(output / 'open-data-cache', offline=getattr(args, 'offline', False))
+        aliases = json.loads(Path(args.aliases).read_text(encoding='utf-8')) if getattr(args, 'aliases', None) else []
+        open_candidates, report = match_export(dataset, rows, metadata, aliases)
+        write('open-data-candidates.json', open_candidates)
+        write('open-data-report.json', report)
+        print(f"OpenEV: {report['dataset_rows']} records; {report['matched_models']} matched models; {len(open_candidates)} candidates.", flush=True)
+    if getattr(args, 'engine_data', False):
+        if __package__:
+            from .vehicle_spec_open_data import load_engine_export, match_engines
+        else:
+            from vehicle_spec_open_data import load_engine_export, match_engines
+        dataset, metadata = load_engine_export(output / 'open-data-cache', offline=getattr(args, 'offline', False))
+        engine_candidates, report = match_engines(dataset, rows, metadata)
+        write('engine-data-candidates.json', engine_candidates)
+        write('engine-data-report.json', report)
+        print(f"Engine data: {report['dataset_engine_rows']} records; {report['matched_models']} matched models; {len(engine_candidates)} candidates.", flush=True)
+    all_candidates = list(candidates)
+    for filename in ('open-data-candidates.json', 'engine-data-candidates.json'):
+        path = output / filename
+        if path.exists():
+            all_candidates.extend(json.loads(path.read_text(encoding='utf-8')))
+    write('all-candidates.json', all_candidates)
+    matched = {(identity(r['make']), identity(r['model'])) for r in all_candidates}
+    write('without-candidates.json', [r for r in rows if (identity(r['make']), identity(r['model'])) not in matched])
+    write('summary.json', {'inventory_models': len(rows), 'candidate_rows': len(all_candidates),
+        'models_with_candidates': len(matched), 'models_without_candidates': len(rows) - len(matched),
+        'note': 'Candidates do not mean complete or verified models. Catalog remains unchanged.'})
     print(f'{len(rows)} models with missing data; {len(sources)} sources; {len(candidates)} candidates. Output: {output}')
     print('Input unchanged. Review year, variant, fuel and battery basis before importing any candidate.')
 
@@ -324,6 +377,11 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--catalog', required=True, help='Unfiltered full JSON catalog')
+    parser.add_argument('--engine-data', action='store_true', help='Download the open engine dataset (~85 MB) for tank and fuel candidates')
+    parser.add_argument('--open-ev', action='store_true', help='Download and match the open OpenEV Data release, without LLM/API keys')
+    parser.add_argument('--offline', action='store_true', help='Use only cached manufacturer pages and datasets; no network requests')
+    parser.add_argument('--aliases', help='JSON list of explicitly reviewed source-to-catalog name mappings')
+    parser.add_argument('--official-batch', action='store_true', help='Use bundled reviewed manufacturer sources; no manual source list required')
     parser.add_argument('--sources', help='JSON list of make/model/url and optional year/variant')
     parser.add_argument('--output', default='vehicle-spec-results')
     parser.add_argument('--delay', type=float, default=2, help='Minimum seconds between requests (at least 1)')
