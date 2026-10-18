@@ -76,6 +76,15 @@ def api(session, path, data):
     return response.json()
 
 
+def websocket_messages(payload):
+    """HA may coalesce multiple response messages into one WebSocket frame."""
+    try:
+        decoded = json.loads(payload)
+    except (ValueError, TypeError):
+        return []
+    return [item for item in (decoded if isinstance(decoded, list) else [decoded]) if isinstance(item, dict)]
+
+
 def onboard():
     session = requests.Session()
     for _ in range(240):
@@ -134,19 +143,13 @@ def browsers(tokens):
         def watch_socket(socket):
             commands = {}
             def sent(payload):
-                try:
-                    message = json.loads(payload)
+                for message in websocket_messages(payload):
                     if "id" in message:
                         commands[message["id"]] = message.get("type")
-                except (ValueError, TypeError):
-                    pass
             def received(payload):
-                try:
-                    message = json.loads(payload)
+                for message in websocket_messages(payload):
                     if message.get("success") is False:
                         websocket_errors.append({"command": commands.get(message.get("id")), "error": message.get("error")})
-                except (ValueError, TypeError):
-                    pass
             socket.on("framesent", sent)
             socket.on("framereceived", received)
         page.on("websocket", watch_socket)
