@@ -2,11 +2,12 @@ import unittest
 import json
 from pathlib import Path
 from scripts.prepare_vehicle_logos import sanitize_svg
+from scripts.vehicle_catalog import load_catalog
 
 class VehicleLogoTests(unittest.TestCase):
     def test_prepared_assets_are_self_contained_and_have_source(self):
-        d=json.loads(Path('custom_components/tiny_refuel/frontend/bilkatalog.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(d['logo_assets']),212)
+        d=load_catalog(Path('custom_components/tiny_refuel/frontend/bilkatalog.json'))
+        self.assertEqual(len(d['logo_assets']), 212)
         for name,asset in d['logo_assets'].items():
             self.assertIn('<svg',sanitize_svg(d['logos'][name]))
             self.assertTrue(asset['source_url'].startswith('https://'))
@@ -40,7 +41,7 @@ class VehicleLogoTests(unittest.TestCase):
         with self.assertRaises(ValueError):sanitize_svg(svg.replace('url(#m)','url(https://example.com/m)'))
 
     def test_traces_are_paths_and_original_packaged_rasters_are_retained(self):
-        d=json.loads(Path('custom_components/tiny_refuel/frontend/bilkatalog.json').read_text(encoding='utf-8'))
+        d=load_catalog(Path('custom_components/tiny_refuel/frontend/bilkatalog.json'))
         traced=[n for n,a in d['logo_assets'].items() if a.get('origin')=='raster_trace']
         self.assertEqual(len(traced),16)
         for n in traced:

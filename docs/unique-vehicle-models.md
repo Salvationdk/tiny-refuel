@@ -82,5 +82,42 @@ modelrækker blev udskilt: `-`, `10279`, `TESTKØRSEL` og `USPEC.MÆRKE`.
 Sammenlægningerne gav ingen konflikter. Tank-/batteriværdier, årgangslister,
 drivmidler og variantdrivmidler blev sammenholdt med alle bevarede kildeposter;
 logoernes indhold blev sammenlignet direkte med originalen.
-Kataloget er leveret separat til gennemgang og erstatter endnu ikke det
-medfølgende katalog i integrationens frontend.
+Kataloget er nu indarbejdet i frontend som et manifest med mindre katalogdele.
+
+
+## Yderligere oprydning 2026-10-18
+
+19 udtrykkelige alternative mærkebetegnelser er sammenlagt, blandt andet
+CITROEN/Citroën, CF MOTO/CFMOTO og ROLLS ROYCE/ROLLS-ROYCE. Selvbyg
+med fire modeller er fjernet efter brugerens ønske. Der er nu 1.809
+mærkebetegnelser, 27.349 modelrækker og 98.887 variantposter.
+Gamle mærkenavne bevares som søgealiaser, også for eksisterende opsætninger.
+Forskellige modeller og tekniske værdier bevares; sammenfaldende modeller
+og varianter samles. 32 forskelle i kildelinks/hjælpetekster bevares som
+alternativer. Der er ingen konflikter i kapacitetsværdier.
+Rapport: scripts/data/catalog-deduplication-report.json. Tvetydige initialer
+og ukendte fabrikantrelationer sammenlægges ikke automatisk.
+
+
+## Modelindeks og detaljer efter behov
+
+Oprydningen samler 99 modelrækker, hvor mærket gentages og den korte model
+allerede findes. Otte modelnavne bestående alene af symboler udskilles.
+Betegnelser med motorvolumen/effekt og ukendte modelnavne beholdes til gennemgang.
+Modelaliaser sikrer opslag i eksisterende konfigurationer. Resultatet er
+27.242 modelrækker og 98.768 variantposter. Rapporten ligger i
+scripts/data/model-label-cleanup-report.json.
+
+Pakningen gemmer fælles standardfelter én gang og leverer et lille modelindeks
+med logoer. Detailfiler under catalog-details er indholdshash-navngivne JSON-filer
+med afgrænsede grupper af modeller fra samme mærke. Kun den valgte models gruppe
+hentes. Grundindekset bruger fortsat catalog-parts og deles mellem kort/editorer.
+Modeldetaljer udfylder datalister og hjælpetekst uden at genopbygge formularen,
+ændre inputfelter eller udsende config-changed. Gamle svar kan ikke opdatere en
+editor, der har valgt et andet katalog. Ved fejl bevares modelvalget og manuel
+indtastning; hjælpeteksten forklarer fejlen.
+
+scripts.vehicle_catalog.load_catalog rekonstruerer det fulde katalog inklusive
+alle bevarede felter; details=False læser kun grundindekset. Pakning og fuld
+rekonstruktion sammenlignes direkte, inklusive samtlige logoer og varianter.
+Årgangslister giver fortsat ingen bekræftet sammenhæng til en bestemt variant.

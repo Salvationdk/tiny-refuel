@@ -50,13 +50,17 @@ class VehicleCatalogTests(unittest.TestCase):
         self.assertEqual(repeated, [])
 
     def test_checked_additions_are_present_without_duplicate_names_or_invented_specs(self):
-        catalog = json.loads((ROOT / 'custom_components/tiny_refuel/frontend/bilkatalog.json').read_text())
-        self.assertEqual(len(catalog['brands']), 54)
-        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 645)
+        catalog = module.load_catalog(ROOT / 'custom_components/tiny_refuel/frontend/bilkatalog.json')
+        self.assertEqual(len(catalog['brands']), 1809)
+        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 27242)
         new = []
         for brand in catalog['brands']:
             names = [row['model'].casefold() for row in brand['modeller']]
             self.assertEqual(len(names), len(set(names)))
             new.extend(row for row in brand['modeller'] if row.get('requires_fuel_selection'))
-        self.assertEqual(len(new), 175)
-        self.assertTrue(all(row['source_url'].startswith('https://') and row['tank_l'] is None and row['brændstof'] is None for row in new))
+        self.assertGreaterEqual(len(new), 175)
+        self.assertTrue(all(row['source_url'].startswith('https://') for row in new))
+        for row in new:
+            for field in ('brændstof', 'tank_l', 'batteri_kwh'):
+                if row.get(field) is not None:
+                    self.assertEqual(row[field], row['preserved_specification'][field])

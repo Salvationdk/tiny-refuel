@@ -1,20 +1,35 @@
 {
   "summary": {
-    "scope": "882 make names in the supplied cleaned DMR catalog; not the shipped 54-make model list",
-    "register_makes": 882,
-    "covered": 277,
-    "pending": 605,
+    "scope": "All make labels in this cleaned full motor-vehicle catalog",
+    "register_makes": 1809,
+    "covered": 281,
+    "pending": 1528,
     "pending_combined": 234,
+    "pending_single_names": 1294,
     "svg_assets": 261,
     "png_assets": 20,
-    "external_assets": 0,
-    "pending_single_names": 371
+    "external_assets": 0
   },
   "makes": [
     {
+      "make": "2 TWENTY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "3PLUSCOCO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "3PLUSMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "A D",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ABARTH",
@@ -31,22 +46,32 @@
     {
       "make": "AC ROASTER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Acbus Mercedes-benz",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Accell-Nederland",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ACCESS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Access Motor",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ACTROS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ACURA",
@@ -55,24 +80,34 @@
       "format": "svg"
     },
     {
+      "make": "AD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ADAMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Addax",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ADLER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ADLY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ADLY MOTO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ADRIA",
@@ -89,37 +124,77 @@
     {
       "make": "AEC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AEON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AERMACCHI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "AERO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Aero Minor",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AF",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AGCO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Agile",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AGM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AGRIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AGUSTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Ahlmann",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "AHRENS-FOX",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AIE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AIMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Aiways",
@@ -134,9 +209,24 @@
       "format": "svg"
     },
     {
+      "make": "AJP",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AJS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "AK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AKRODID",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Albach",
@@ -145,9 +235,14 @@
       "format": "svg"
     },
     {
+      "make": "Alcyon",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "ALFA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Alfa Romeo",
@@ -164,12 +259,17 @@
     {
       "make": "ALLDAYS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ALLIS CHALMERS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ALM",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ALPINA",
@@ -186,7 +286,7 @@
     {
       "make": "ALUCAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ALVIS",
@@ -197,12 +297,12 @@
     {
       "make": "AM",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AM General",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AMC",
@@ -213,27 +313,78 @@
     {
       "make": "AME",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AMERICAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "American Iron Horse",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "American Landmaster",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "AMERICAN MOTOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Anaig",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Anhui Ankai",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ANIONEO CARRARO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ANT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ANTONIO CARRARO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AONEW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "APL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "APOLLO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "APRILIA",
+      "status": "available",
+      "asset_key": "APRILIA",
+      "format": "svg"
+    },
+    {
+      "make": "ARBOS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ARCTIC CAT",
@@ -242,20 +393,50 @@
       "format": "svg"
     },
     {
+      "make": "ARDIE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ARES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ARGO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "ARIEL",
       "status": "available",
       "asset_key": "ARIEL",
       "format": "svg"
     },
     {
+      "make": "ARIIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ARMSTRONG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ARNGREN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "ARNOLT BRISTOL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Arntz",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ARO",
@@ -266,12 +447,22 @@
     {
       "make": "ARROW",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ARTIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ASIAWING",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ASQUITH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ASTON MARTIN",
@@ -282,7 +473,7 @@
     {
       "make": "ATV",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AUBURN",
@@ -297,9 +488,24 @@
       "format": "svg"
     },
     {
+      "make": "Augment",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "AURORA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AUSA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AUSA-D",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "AUSTIN",
@@ -320,19 +526,49 @@
       "format": "svg"
     },
     {
+      "make": "AUTOMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AVANT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Aviogei",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "AWS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AXION820",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "AXION850",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "AXOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "AYATS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "B Q T",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "B-ON",
@@ -349,42 +585,107 @@
     {
       "make": "BACH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Backdraft",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAD BOY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAFFI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAHNE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAJAJ",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Baker",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BALLOT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BANHE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Baodiao",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAOTIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAOTION",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAOXIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BAOYA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BARFORD",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BARKAS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BAROSSA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BASHAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BATIOAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Bauer-Werke",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BAVARIA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BAW",
@@ -393,15 +694,70 @@
       "format": "svg"
     },
     {
+      "make": "BCS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "BEDFORD",
       "status": "available",
       "asset_key": "BEDFORD",
       "format": "svg"
     },
     {
+      "make": "BELARUS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BELL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BELLA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "BELLIER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BELOS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BELTLOADER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BENDA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BENELLI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BENFORD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BENLING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BENMAL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BENTLEY",
@@ -412,27 +768,62 @@
     {
       "make": "Bentu",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Benz",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BENZHOU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BERGMANN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BERNARDS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BETA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BEYOND",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BFC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Big Dog",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BIMOTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BINZ",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Bitter",
@@ -441,9 +832,39 @@
       "format": "svg"
     },
     {
+      "make": "Black Tea Motorbikes",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BLACK'N ROLL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "BLAUGAM",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BLS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Blu:s",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BM-VOLVO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BMC",
@@ -458,6 +879,31 @@
       "format": "svg"
     },
     {
+      "make": "BOATIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BOBCAT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BOLINDER-MUNKTELL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BOLLNÆS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Boma",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Bombardier",
       "status": "available",
       "asset_key": "Bombardier",
@@ -466,12 +912,12 @@
     {
       "make": "BOND-BUG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BOOM",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BORGWARD",
@@ -482,12 +928,17 @@
     {
       "make": "Borile",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Borossi",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BOSS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BOSS HOSS",
@@ -498,7 +949,42 @@
     {
       "make": "BOVA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BOWN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BOXER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BRADBURY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Brammo",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BRANSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BRIDGESTONE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Briggs & Stratton",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BRISTOL",
@@ -507,25 +993,65 @@
       "format": "svg"
     },
     {
+      "make": "British Excelsior",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Brixton",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BROCKHOUSE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BROUGH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "BRP",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BRUNA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BRUSH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "BSA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BTC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BUBI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BUCHER",
       "status": "available",
       "asset_key": "BUCHER",
       "format": "svg"
+    },
+    {
+      "make": "BUELL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BUGATTI",
@@ -540,15 +1066,60 @@
       "format": "svg"
     },
     {
+      "make": "BUKH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BULLIT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Bulls",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Bulmor",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BULTACO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Burnout",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BUSETTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "BUYANG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "BWS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BYD",
       "status": "available",
       "asset_key": "BYD",
       "format": "svg"
+    },
+    {
+      "make": "Bye Bike",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "BÜRSTNER",
@@ -559,7 +1130,7 @@
     {
       "make": "BÜSSING",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CADILLAC",
@@ -570,12 +1141,37 @@
     {
       "make": "Caetano",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CAGIVA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Cajero",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Cake",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CALIFORNIA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CALTORPE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CAMPELL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CAN-AM",
@@ -586,7 +1182,17 @@
     {
       "make": "CAPRON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Caproni Trento",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Captain",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CARADO",
@@ -595,14 +1201,34 @@
       "format": "svg"
     },
     {
+      "make": "CARARO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "CARBODIES",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CARMANN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CARRARO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CARRY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CARRY ALL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CARTHAGO",
@@ -611,10 +1237,40 @@
       "format": "svg"
     },
     {
+      "make": "Carver",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Casalini",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "CASE",
       "status": "available",
       "asset_key": "CASE",
       "format": "svg"
+    },
+    {
+      "make": "CASE DAVID BROWN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CASE IH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CASER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Cast",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CATERHAM",
@@ -623,19 +1279,45 @@
       "format": "svg"
     },
     {
+      "make": "CATERPILLAR",
+      "status": "available",
+      "asset_key": "CATERPILLAR",
+      "format": "svg"
+    },
+    {
+      "make": "CATTAR PILLAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CAU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "CAV",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CCM",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CCMC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CECTEK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CEMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Cenntro",
@@ -644,20 +1326,60 @@
       "format": "svg"
     },
     {
-      "make": "CF MOTO",
+      "make": "CERGOS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CFMOTO",
       "status": "available",
       "asset_key": "CF MOTO",
       "format": "svg"
     },
     {
+      "make": "CHALLENGER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Chamonix",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHAMPION",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHANG JIANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHANG ZHOU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Chaoya",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHARLATTE",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CHARRON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHATER LEA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CHECKER",
@@ -668,7 +1390,7 @@
     {
       "make": "Chenowth",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CHEVROLET",
@@ -677,9 +1399,19 @@
       "format": "svg"
     },
     {
+      "make": "CHITUMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "CHONGQING",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHOPPER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Chrysler",
@@ -690,17 +1422,27 @@
     {
       "make": "CHRYSLER DOGDE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHUANL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CHUN LAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CI ELLIOT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Cisitalia",
@@ -711,7 +1453,7 @@
     {
       "make": "Citroen Giottiline",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Citroen/Benimar",
@@ -815,9 +1557,54 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "CITY HOPPER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CITY ROLLER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CITY-EL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CITYGOGO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CJ750",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CLAAS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CLAES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CLASS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Clean Motion",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "CLEMENT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CLUB CAR",
@@ -828,37 +1615,57 @@
     {
       "make": "CLUB CAR LLC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CNH",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "COBRA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "COCKUM",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "COMAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "COMARTH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "COMMER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CONCORD",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "CONCORDE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CONDOR",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Contemporary",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "CORVETTE",
@@ -867,9 +1674,44 @@
       "format": "svg"
     },
     {
+      "make": "Corvus",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "COSE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "COSMOPOLITAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Cotton",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CPI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CRALLE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CSR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CUBCADET",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Cupra",
@@ -878,14 +1720,34 @@
       "format": "svg"
     },
     {
+      "make": "CUSHMAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Custombike",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CVS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "CZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "DAB",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DABILFA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Dacia",
@@ -894,9 +1756,14 @@
       "format": "svg"
     },
     {
+      "make": "DADYW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "DAELIM",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DAEWOO",
@@ -913,7 +1780,7 @@
     {
       "make": "Dafenghe",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DAIHATSU",
@@ -946,12 +1813,22 @@
     {
       "make": "Dallara",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DALONG",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Dangel",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DAO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DATSUN",
@@ -960,19 +1837,49 @@
       "format": "svg"
     },
     {
+      "make": "DAVID BROWN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "DAX",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DAYAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DAYANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Dayi Motor",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DAYTONA MOTORS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DAYUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DAZON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "De Dion-Bouton",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DE TOMASO",
@@ -989,7 +1896,12 @@
     {
       "make": "DEFENDER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DEICI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DELAGE",
@@ -1000,7 +1912,7 @@
     {
       "make": "DELAHAYE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DELOREAN",
@@ -1009,14 +1921,29 @@
       "format": "svg"
     },
     {
+      "make": "DEMAG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "DENNIS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Dennis Eagle/PVI",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
+    },
+    {
+      "make": "DERBI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DERBY",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DESOTO",
@@ -1033,18 +1960,48 @@
     {
       "make": "Detroit",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DETROITER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DEUTS-FAHR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DEUTSCHE WERKE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DEUTZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DEUTZ-FAHR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Develon",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Devinci",
       "status": "available",
       "asset_key": "Devinci",
       "format": "svg"
+    },
+    {
+      "make": "DFH",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DFSK",
@@ -1055,12 +2012,27 @@
     {
       "make": "DIAMOND",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DIECI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DINLI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DISA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DJ Motor",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "DKW",
@@ -1069,9 +2041,14 @@
       "format": "svg"
     },
     {
+      "make": "DNEPR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Dobo Racing",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Dodge",
@@ -1080,9 +2057,24 @@
       "format": "svg"
     },
     {
+      "make": "Dogebos",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DOLLAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DONG FENG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "DONGFANG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DONKERVOORT",
@@ -1091,24 +2083,60 @@
       "format": "svg"
     },
     {
+      "make": "DOPPSTADT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DORTON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DOTTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DOUGLAS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Dpeco",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DREEMS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "DRESEL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DRESEL MCT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DRØMØLLER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DS Automobiles",
       "status": "available",
       "asset_key": "DS Automobiles",
+      "format": "svg"
+    },
+    {
+      "make": "DUCATI",
+      "status": "available",
+      "asset_key": "DUCATI",
       "format": "svg"
     },
     {
@@ -1120,27 +2148,72 @@
     {
       "make": "DUNNET",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DuroCar",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DUSENBERG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DUTTON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "DYNA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "DÜRKOPP",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E RIDE PRO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-CUIZER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-Force",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-MAX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-mio",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-MON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-SOLEX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "E-Z-GO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "e.GO",
@@ -1155,15 +2228,50 @@
       "format": "svg"
     },
     {
+      "make": "EASY RIDER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EBR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EBRETTI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "EBUSCO",
       "status": "available",
       "asset_key": "EBUSCO",
       "format": "svg"
     },
     {
+      "make": "ECO ZONE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Econelo",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ECOOTER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Ecorider",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Edlund",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EDSEL",
@@ -1172,34 +2280,154 @@
       "format": "png"
     },
     {
+      "make": "EFUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EGEHOLM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Eggers",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EGHOLM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Egli",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EGO CYCLE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Eicher",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ELCAT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Electric Dutchman",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Elleham",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ELON",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Elveon Motors",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EMCO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EML",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EMW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ENERGICA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ENERGREEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Eneway",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ENFIELD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ENGHOLM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Engtian",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EOS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Equickey",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Era",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ERIDER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ERLA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Erockit",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ESSEX",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ETALIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ETESIA",
@@ -1210,32 +2438,67 @@
     {
       "make": "ETON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Eura Mobil",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EURO PARD",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EURO-CARGO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EVADER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EVITALIA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EVO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Evoke",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EVOLUTION",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EVT",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EVUM Motors",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EWII",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "EXACTLY",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "EXCALIBUR",
@@ -1244,44 +2507,84 @@
       "format": "svg"
     },
     {
+      "make": "EXCELSIOR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Exlantix",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "F H",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FACEL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Factory Five",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FAHR",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Fairthorpe",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FALCON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FANTIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Fantic Motor",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FANTUZZI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "FAP",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FARESIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "FARIZON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FARMTRAC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FAUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "FAW",
@@ -1290,14 +2593,34 @@
       "format": "svg"
     },
     {
+      "make": "FB Mondial",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "FECHT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Feishen",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FELIX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FENDT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FERGUSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "FERRARI",
@@ -1314,7 +2637,7 @@
     {
       "make": "FIAT DUCATO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Fiat/Adria",
@@ -1407,7 +2730,7 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
-      "make": "Fiat/Etrusco",
+      "make": "Fiat/etrusco",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
     },
@@ -1592,15 +2915,65 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "FIATAGRI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FIGHTER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Firefly",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FISKER",
       "status": "available",
       "asset_key": "FISKER",
       "format": "svg"
+    },
+    {
+      "make": "FLENSBORG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FLEX TECH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Flistar",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FMR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FNM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FOD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Forca",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Ford",
@@ -1744,6 +3117,41 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "FORDSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Fort",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FORWARD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FOSTI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FOTON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FRANCIS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FRED",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "FREIGHTLINER",
       "status": "available",
       "asset_key": "FREIGHTLINER",
@@ -1752,12 +3160,12 @@
     {
       "make": "FRIKES",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FS LUBLIN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FSO",
@@ -1766,14 +3174,19 @@
       "format": "svg"
     },
     {
+      "make": "FUJIANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "FULU",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FUMO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "FUSO",
@@ -1782,14 +3195,44 @@
       "format": "svg"
     },
     {
+      "make": "FUTONG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FYM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "FYM-FEIYING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Fønix",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "G S",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "G.N.",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GAEA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GAGIVA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Gardner Douglas",
@@ -1798,10 +3241,25 @@
       "format": "png"
     },
     {
+      "make": "GARELLI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "GARIA",
       "status": "available",
       "asset_key": "GARIA",
       "format": "svg"
+    },
+    {
+      "make": "GARRARO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GAS GAS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "GAZ",
@@ -1810,14 +3268,24 @@
       "format": "svg"
     },
     {
+      "make": "GEELY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GEHL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "GEM",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "GEMCO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "GENERAL MOTORS",
@@ -1826,9 +3294,34 @@
       "format": "svg"
     },
     {
+      "make": "GENERIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "GENIOS/MB Sprinter",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
+    },
+    {
+      "make": "GGC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GIANT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GIANTCO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GILERA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "GINETTA",
@@ -1839,12 +3332,12 @@
     {
       "make": "GIOTTI VICTORIA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "GLAS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "GMC",
@@ -1858,14 +3351,24 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "GNOME & RHONE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "GOES",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GOGGO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "GOGGOMOBIL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Golden Dragon",
@@ -1874,9 +3377,34 @@
       "format": "png"
     },
     {
+      "make": "Golden Lion",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GOLDHOFER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GOLDONI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "GOLIATH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Goodyear",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GORGI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "GOUPIL",
@@ -1885,55 +3413,130 @@
       "format": "svg"
     },
     {
+      "make": "GOVECS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GRACE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GRADER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Graham",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GRAND",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "GRAVETTI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Great Wall Motor Company Limited",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GREEVES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GROVE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GRüNIG",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "GS-MOON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "GT Developments",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GT UNION",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GUAZZONI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Gumpert Aiways Automobile GmbH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GUOWEI KINYMH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "GUTBROD",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Güleryüz",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "H R G",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "HAILI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Haizhimeng",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HAKO",
       "status": "available",
       "asset_key": "HAKO",
       "format": "svg"
+    },
+    {
+      "make": "HAKOTRAC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HAMLET",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HANDITRIKE",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HANOMAG",
@@ -1944,12 +3547,22 @@
     {
       "make": "HANSA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Hanway",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HAOJIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Harbilt",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "HARLEY DAVIDSON",
@@ -1958,24 +3571,74 @@
       "format": "svg"
     },
     {
+      "make": "HARRIS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HARTMANN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HBM-NOBAS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "HDK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "HEALEY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Hecht",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HEINKEL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HENDERSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HENSIM",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HERCHEE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HERCULES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HERO MAJESTIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HG Machines",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Higer",
@@ -1990,10 +3653,20 @@
       "format": "png"
     },
     {
+      "make": "HINOMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "HISPANO-SUIZA",
       "status": "available",
       "asset_key": "HISPANO-SUIZA",
       "format": "svg"
+    },
+    {
+      "make": "HISUM",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HISUN",
@@ -2002,10 +3675,35 @@
       "format": "svg"
     },
     {
+      "make": "Hitachi",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HO. BASIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "HOBBY",
       "status": "available",
       "asset_key": "HOBBY",
       "format": "svg"
+    },
+    {
+      "make": "HOFFMANN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HOKEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HOLDEN",
@@ -2014,9 +3712,14 @@
       "format": "svg"
     },
     {
+      "make": "HOLDER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Homark",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Honda",
@@ -2031,19 +3734,84 @@
       "format": "png"
     },
     {
+      "make": "HONLEI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HOOPER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HORCH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HOREX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "HOTCHKISS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HOUNIAO RMC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HRD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HSUN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HTF",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HTT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Huafu",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HUANSONG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HUASHA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HUBOTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HUDDIG",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HUDSON",
@@ -2054,7 +3822,7 @@
     {
       "make": "HUMBER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "HUMMER",
@@ -2063,10 +3831,41 @@
       "format": "svg"
     },
     {
+      "make": "HUONIAO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HUONIAO RMC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "HUPMOBILE",
       "status": "available",
       "asset_key": "HUPMOBILE",
       "format": "svg"
+    },
+    {
+      "make": "HUSABERG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HUSQVARNA",
+      "status": "available",
+      "asset_key": "HUSQVARNA",
+      "format": "svg"
+    },
+    {
+      "make": "HY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "HYDREMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "HYMER",
@@ -2077,12 +3876,12 @@
     {
       "make": "HYMER MOBIL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "HYOSUNG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Hyundai",
@@ -2091,9 +3890,19 @@
       "format": "svg"
     },
     {
+      "make": "HÜRLIMANN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "IAV",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IEV",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "IFA",
@@ -2102,9 +3911,44 @@
       "format": "svg"
     },
     {
+      "make": "IH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IHC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IMPERIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IMPODAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IMT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "IMV",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "INDIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "INDIANA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "INEOS",
@@ -2139,12 +3983,12 @@
     {
       "make": "IPS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "IRISBUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "IRIZAR",
@@ -2153,14 +3997,39 @@
       "format": "png"
     },
     {
+      "make": "IRKUDSK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ISEKI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ISO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Iso Rivolta",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ISOTTA FRASCHINI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Issue",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ISTH",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Isuzu",
@@ -2175,6 +4044,21 @@
       "format": "svg"
     },
     {
+      "make": "ITALJET",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IVA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Ive Car",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "IVECO",
       "status": "available",
       "asset_key": "IVECO",
@@ -2183,12 +4067,12 @@
     {
       "make": "IVECO BUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "IVECO DAILY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Iveco Daily/Niesmann & Bischoff",
@@ -2198,17 +4082,17 @@
     {
       "make": "IVECO IRIS BUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "IVECO MAGIRUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "IVECO STRAUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Iveco/Carthago",
@@ -2286,10 +4170,35 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "IWL BERLIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "IZH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "J L",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "JAC",
       "status": "available",
       "asset_key": "JAC",
       "format": "png"
+    },
+    {
+      "make": "JACOBSEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Jaecoo",
@@ -2309,9 +4218,34 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "JAMES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JAVA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "JAVELIN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JAWA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JAWA-CZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JBC",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "JCB",
@@ -2320,10 +4254,20 @@
       "format": "svg"
     },
     {
+      "make": "JD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Jeep",
       "status": "available",
       "asset_key": "Jeep",
       "format": "svg"
+    },
+    {
+      "make": "JENBACHER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "JENSEN",
@@ -2332,29 +4276,109 @@
       "format": "svg"
     },
     {
+      "make": "JES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "JIA JI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Jiajue",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JIAN GSU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JIANGSUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JIANSU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JIANUO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Jiayuan",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JINAN QINGQI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JINCHENG",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "JINLING",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JINLUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "JINMA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "JINPENG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Jinyi",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JLG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JLU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JMSTAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JNEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "JOHN DEERE",
@@ -2365,27 +4389,62 @@
     {
       "make": "JOHNSTON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "JOKER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "JOLLY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JONWAY",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "JORDAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "JOWETT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JSEKI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JUNAK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Jungheinrich",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "JUST ENERGY POWER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "K 750",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KAASPEED",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "KABE",
@@ -2400,20 +4459,55 @@
       "format": "png"
     },
     {
+      "make": "KALKHOFF",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KALMAR",
       "status": "available",
       "asset_key": "KALMAR",
       "format": "svg"
     },
     {
+      "make": "KAMAG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KANDI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "KANGCHAO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KANGDA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KANGZIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KANUNI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KARR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KATO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "KAWASAKI",
@@ -2430,7 +4524,7 @@
     {
       "make": "KAZUMA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "KEEWAY",
@@ -2447,7 +4541,7 @@
     {
       "make": "KEWET",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "KGM",
@@ -2462,19 +4556,54 @@
       "format": "svg"
     },
     {
+      "make": "KINETIC HONDA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KINGCHE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KINLON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KINROAD",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KINROAD-XIN TIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KIOTI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "KLØCKNER-DEUTZ",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "KMC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KMZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "KNAUS",
@@ -2483,15 +4612,55 @@
       "format": "svg"
     },
     {
+      "make": "KOBOTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KOCHLER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Koehler Escoffier",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KOENIGSEGG",
       "status": "available",
       "asset_key": "KOENIGSEGG",
       "format": "svg"
     },
     {
+      "make": "KOMATSU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KONCED",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KORADO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KOUGAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KOVE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KRAMER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "KREIDLER",
@@ -2500,9 +4669,24 @@
       "format": "svg"
     },
     {
+      "make": "KREIDLERL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Krismar",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Krupp",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "KSR Moto",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "KTM",
@@ -2511,20 +4695,45 @@
       "format": "svg"
     },
     {
+      "make": "KUBOTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Kumpan Electric",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Kyburz",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KYMCO",
       "status": "available",
       "asset_key": "KYMCO",
       "format": "svg"
     },
     {
+      "make": "KÄRCHER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "KÄSSBOHRER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "L M",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "LA SALLE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "LADA",
@@ -2545,6 +4754,11 @@
       "format": "svg"
     },
     {
+      "make": "LAMBRETTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "LANCIA",
       "status": "available",
       "asset_key": "LANCIA",
@@ -2557,6 +4771,31 @@
       "format": "svg"
     },
     {
+      "make": "LANDINI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LANSIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LANSING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LAUGE JENSEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LAVERDA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "LDV",
       "status": "available",
       "asset_key": "LDV",
@@ -2565,7 +4804,7 @@
     {
       "make": "LEA FRANCIS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Leapmotor",
@@ -2574,10 +4813,25 @@
       "format": "svg"
     },
     {
+      "make": "LEDOW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LEONE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Levc",
       "status": "available",
       "asset_key": "Levc",
       "format": "svg"
+    },
+    {
+      "make": "LEVIS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Lexus",
@@ -2594,7 +4848,12 @@
     {
       "make": "Lichi",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Liebherr",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "LIFAN",
@@ -2603,9 +4862,19 @@
       "format": "svg"
     },
     {
+      "make": "LIFTON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Light Bee",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Lima",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "LINCOLN",
@@ -2614,19 +4883,59 @@
       "format": "svg"
     },
     {
+      "make": "LINDE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Lindebjerg",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Lindholdt Maskiner",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Lindner",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LINEXA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LINGBEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LINGDEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "LINHAI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Linkker",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LINXX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LIUGONG",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "LLOYD",
@@ -2635,25 +4944,50 @@
       "format": "svg"
     },
     {
+      "make": "LM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "LMC",
       "status": "available",
       "asset_key": "LMC",
       "format": "svg"
     },
     {
+      "make": "LMI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LML",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LOADER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Locost",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "LOCUST",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "LONCIN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LONGJIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Lotus",
@@ -2662,19 +4996,29 @@
       "format": "svg"
     },
     {
+      "make": "Lovol",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Loyds",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "LR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LS Tractor",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "LT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Lucid",
@@ -2683,14 +5027,39 @@
       "format": "svg"
     },
     {
+      "make": "LUNDBERG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LUQI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LUYUAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "LVGL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Lvneng",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "LVTONG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LYDERSEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Lynk & Co",
@@ -2699,14 +5068,54 @@
       "format": "svg"
     },
     {
+      "make": "LYNX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "LYRIC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Lännen",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "M 72",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "M-CAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "M.C.W.",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "M72",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Mabeco",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MACAL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MacDon",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MACK",
@@ -2715,15 +5124,55 @@
       "format": "svg"
     },
     {
+      "make": "Mademoto",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MADJAX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MAFI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "MAGIRUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MAGNAT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MAGNUM",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MAHINDRA",
       "status": "available",
       "asset_key": "MAHINDRA",
       "format": "svg"
+    },
+    {
+      "make": "MAICO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MALAGUTI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MALANCA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MAN",
@@ -2772,6 +5221,16 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "Mangosteen",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MANITOU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "MARCOS",
       "status": "available",
       "asset_key": "MARCOS",
@@ -2780,18 +5239,58 @@
     {
       "make": "MARMON",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MARSHALL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MASAI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Maserati",
       "status": "available",
       "asset_key": "Maserati",
       "format": "svg"
+    },
+    {
+      "make": "Mash",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MASSEY FERGUSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MASSEY HARRIS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Masu",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MATBRO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MATCHLESS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MATLHLESS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MATRA",
@@ -2802,7 +5301,32 @@
     {
       "make": "MATRA SIMCA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MAWAYRA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Maxibianca",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MAXIMILIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Maximus",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Maxmov",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Maxus",
@@ -2825,12 +5349,27 @@
     {
       "make": "MB(udgået)",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MBK",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MCC SMART",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MCCORMICK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MCCORMICK INTERNAT.",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "McLaren",
@@ -2845,15 +5384,45 @@
       "format": "svg"
     },
     {
+      "make": "MCP",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Mecalac",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "MEGA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MEIDUO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MEIJS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MEITIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MELEX",
       "status": "available",
       "asset_key": "MELEX",
       "format": "svg"
+    },
+    {
+      "make": "MERC",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Mercedes",
@@ -3091,12 +5660,42 @@
     {
       "make": "MERCUS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MERLO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MESSERSCHMIDT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MESSERSCHMITT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "METISSE",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "METRAKIT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Meyra",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MF",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MG",
@@ -3107,17 +5706,17 @@
     {
       "make": "MGA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "MGB",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "MIA ELECTRIC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "MICRO",
@@ -3128,18 +5727,53 @@
     {
       "make": "MICRO COMPACT CAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "MICRO-VETT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MIHINDRA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Mikilon",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Miku",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Mini",
       "status": "available",
       "asset_key": "Mini",
       "format": "svg"
+    },
+    {
+      "make": "MINI-EL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MINILAST",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Minimoto",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MINSK",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Mitsubishi",
@@ -3156,17 +5790,27 @@
     {
       "make": "MJT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Mob-ion",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MODEC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Moden",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MOHR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "MOKE",
@@ -3175,10 +5819,55 @@
       "format": "svg"
     },
     {
+      "make": "MOL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOLOTOV",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MONARK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MONKEY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Monnier",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Monobuggy",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MONTESA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MORE RAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "MORGAN",
       "status": "available",
       "asset_key": "MORGAN",
       "format": "svg"
+    },
+    {
+      "make": "MORINI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MORRIS",
@@ -3189,7 +5878,12 @@
     {
       "make": "MOSKVITCH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MOTO GUZZI",
@@ -3198,19 +5892,104 @@
       "format": "svg"
     },
     {
+      "make": "MOTO-MORINI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTOBECANE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTOBI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Motocr",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTOPAI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTOPLAST",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTOR MANIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTORHISPANIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "MOTORTEK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOTOWELL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Motrac",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Motron Motorrad",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MOVANO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Move",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MOWAG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MOXY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MPT-1200",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MSA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MTL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MULAG",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "MULTICAR",
@@ -3219,14 +5998,69 @@
       "format": "svg"
     },
     {
+      "make": "Multihog",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MULTIONE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MULTITRACK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MUTT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MUZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MV",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MV AGUSTA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MYTHOS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "MZ Imer",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NANCHANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "NASH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "NATIONAL MOTOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Navor",
@@ -3237,7 +6071,12 @@
     {
       "make": "Navya",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NAXEON",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "NAYLOR",
@@ -3248,12 +6087,17 @@
     {
       "make": "NB LUCK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NC",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "NECKAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "NEKAF/JEEP",
@@ -3261,9 +6105,14 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "Neomach",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "NEOMOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "NEOPLAN",
@@ -3272,20 +6121,105 @@
       "format": "svg"
     },
     {
+      "make": "NERACAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NEUSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NEW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "NEW FORCE MOTOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NEW HOLLAND",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "New Holland Fiat",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NEW HOLLAND FORD",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "NG TC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NHTL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NHTM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NHTN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NHTS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NICO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Nicodan",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Nihao Motor",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Nilfisk",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "NILSSON",
       "status": "available",
       "asset_key": "NILSSON",
       "format": "svg"
+    },
+    {
+      "make": "NIMBUS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NIMOS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "NIO",
@@ -3305,14 +6239,64 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "Niu",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Norcar",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NORSJÖ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NORTON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Nova Motors",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "NSU",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NUFFIELD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NV",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "NYC CUSTOMS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Nzita",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ODES",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "OK SUPREME",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "OLDSMOBILE",
@@ -3323,13 +6307,18 @@
     {
       "make": "OMNI NOVA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Omoda",
       "status": "available",
       "asset_key": "Omoda",
       "format": "svg"
+    },
+    {
+      "make": "OPAI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Opel",
@@ -3348,20 +6337,65 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "OPEN CONCEPTS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "OPTARE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Orcal",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ORION",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "OSCAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Ossa",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "OTA MONARK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "OTTAWA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "OUBAO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "OVERLAND",
       "status": "available",
       "asset_key": "OVERLAND",
       "format": "svg"
+    },
+    {
+      "make": "P.H.",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Pacam",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PACKARD",
@@ -3376,20 +6410,55 @@
       "format": "svg"
     },
     {
+      "make": "PANNONIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "PANTERA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "PANTHER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Panzer",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "PARILLA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Parktrac",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Paxster",
       "status": "available",
       "asset_key": "Paxster",
       "format": "svg"
+    },
+    {
+      "make": "PBR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "PEGASUS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "PERIPOLI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PETERBILT",
@@ -3479,14 +6548,24 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "PEXMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Pezzolato",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Pfanzelt",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PFAU",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "PGO",
@@ -3497,7 +6576,7 @@
     {
       "make": "PHØNIX",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "PIAGGIO",
@@ -3508,7 +6587,7 @@
     {
       "make": "Pickman",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "PIERCE ARROW",
@@ -3519,7 +6598,12 @@
     {
       "make": "Pilgrim",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "PINGANDAYUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PININFARINA",
@@ -3528,10 +6612,25 @@
       "format": "svg"
     },
     {
+      "make": "PIOGIO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "PIONIIR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "PLYMOUTH",
       "status": "available",
       "asset_key": "PLYMOUTH",
       "format": "svg"
+    },
+    {
+      "make": "PM-TRAC",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "POLARIS",
@@ -3546,10 +6645,20 @@
       "format": "svg"
     },
     {
+      "make": "POLINI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "POLSKI FIAT",
       "status": "available",
       "asset_key": "POLSKI FIAT",
       "format": "svg"
+    },
+    {
+      "make": "POLY",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PONTIAC",
@@ -3564,14 +6673,39 @@
       "format": "svg"
     },
     {
+      "make": "POWERFLEX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "POWERLAND",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "PPM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Praga",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Preet",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PRINCESS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Pro One",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "PUCH",
@@ -3580,20 +6714,75 @@
       "format": "svg"
     },
     {
+      "make": "Puviter",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QINGQI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QJMOTOR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "QUADDY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Quadro",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "QUADZELLA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QUANTYA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QUINGQI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "QVR",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Radical",
       "status": "available",
       "asset_key": "Radical",
       "format": "svg"
+    },
+    {
+      "make": "RAFAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RALEIGH",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RAM",
@@ -3610,47 +6799,97 @@
     {
       "make": "RANGE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RANGER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RAPIDO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RASANT",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RATO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RAU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Ravat",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RAVO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "RAYTON-FISSORE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "REACH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "READING STANDARD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RECTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RED ROCK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Reform",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "REGAL RAP",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Regal Raptor",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Regard",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "REIJU",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RELIANT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Renault",
@@ -3706,7 +6945,12 @@
     {
       "make": "REO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "REPOW",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "REVA",
@@ -3723,12 +6967,52 @@
     {
       "make": "REWAKO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "REX",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RF MOTO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RFN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RGNT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RHON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RICKMAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RIEJU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Riese & Müller",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RIGITRAC",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "RILEY",
@@ -3737,15 +7021,35 @@
       "format": "svg"
     },
     {
+      "make": "RIMAS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "RIVIAN",
       "status": "available",
       "asset_key": "RIVIAN",
       "format": "svg"
     },
     {
+      "make": "RM 4X4",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ROADMASTER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ROBERINE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Robin Hood",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Robur",
@@ -3754,20 +7058,55 @@
       "format": "svg"
     },
     {
-      "make": "Rolektro",
+      "make": "ROFAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
-      "make": "ROLLS ROYCE",
+      "make": "ROLBA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Rolektro",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ROLLS-ROYCE",
       "status": "available",
       "asset_key": "ROLLS ROYCE",
       "format": "svg"
     },
     {
+      "make": "Romet",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ROMET MOTORS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ROMET OGAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RONDO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Rooder",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "ROSENBAUER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "ROVER",
@@ -3776,9 +7115,29 @@
       "format": "svg"
     },
     {
+      "make": "ROYAL ENFIELD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "RR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RUDGE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "RUMI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Runhorse",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Saab",
@@ -3787,24 +7146,94 @@
       "format": "svg"
     },
     {
+      "make": "SACHS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Sakura",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Salmson",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Salsbury",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SAM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SAME",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SAME SILVER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SAN YANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SANDI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Sanglas",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SANILI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SANLI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SANOS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SANTANA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SANY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SAROLEA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "sas",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SATOH",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SATURN",
@@ -3815,7 +7244,7 @@
     {
       "make": "SAURER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SAVIEM",
@@ -3824,9 +7253,19 @@
       "format": "svg"
     },
     {
+      "make": "SAXON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Saxon Roadsters",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "scammell",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SCANIA",
@@ -3855,19 +7294,49 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "SCANTRAK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "SCHAMMEL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SCHANZLIN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SCHEFFER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SCHLEPPER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SCHMIDT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SCHOPF",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Schwarzmüller/STX",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
+    },
+    {
+      "make": "SCHÄFFER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SCION",
@@ -3876,9 +7345,44 @@
       "format": "svg"
     },
     {
+      "make": "Scogo",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Scoiattolo",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SCOOTER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Scooter4you",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SCOTT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Scrooser",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Scuddy",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SEARS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Seat",
@@ -3887,24 +7391,39 @@
       "format": "svg"
     },
     {
-      "make": "Segway",
+      "make": "SECMA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
-      "make": "Selvbyg",
+      "make": "SEEYES",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Segway",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SEKURA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SELZER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Sennebogen",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Seres",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SETRA",
@@ -3915,22 +7434,82 @@
     {
       "make": "Shamrock Cobra",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHANGHAI JMSTAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Shansu",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHE",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SHEE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHENG QOIBAO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHENKE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Sherco",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHIBAURA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SHINERAY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHINING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SHIWEII",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SIAMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Silence",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SILOKING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Simai",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SIMCA",
@@ -3939,10 +7518,35 @@
       "format": "svg"
     },
     {
+      "make": "SIMSON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "SINGER",
       "status": "available",
       "asset_key": "SINGER",
       "format": "png"
+    },
+    {
+      "make": "SINSKI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SISU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SK Europe",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Skand",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Skoda",
@@ -3953,22 +7557,37 @@
     {
       "make": "SKYGO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SKYJET",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SKYTEAM",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SKYWELL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SKYWORTH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Smarda",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Smart",
@@ -3979,37 +7598,87 @@
     {
       "make": "SMC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SMT-Trike",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SNAPPER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SNOW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SOCA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SOLANA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SOLARIS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Solbus",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SOLIS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SOMMER DIESEL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Southern Roadcraft",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "SOVAN",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Specialized",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SPEEDY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Spierings",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SPIJKSTAAL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SSANGYONG",
@@ -4018,39 +7687,69 @@
       "format": "svg"
     },
     {
+      "make": "ST",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Staho",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "STAMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "STANDARD",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "STANDARD MOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Standard motor corporation",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Standard Vanguard",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "STANDARD-TRIUMPH",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "STANLEY",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "STAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Stark",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "STEINBUCK",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "STEYER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "STEYR",
@@ -4059,19 +7758,44 @@
       "format": "svg"
     },
     {
+      "make": "Steyr-Puch",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "STIGA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "STILL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "STRALIS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "STRAUS AD",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Streetscooter",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "STROLLWHEEL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Stromer",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "STUDEBAKER",
@@ -4086,10 +7810,40 @@
       "format": "svg"
     },
     {
+      "make": "STYER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Subaru",
       "status": "available",
       "asset_key": "Subaru",
       "format": "svg"
+    },
+    {
+      "make": "SUDON",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUECIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUFAT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Sumco",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SUNBEAM",
@@ -4104,14 +7858,64 @@
       "format": "svg"
     },
     {
+      "make": "SUNNY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Sunra",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUPER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Super Soco",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUPER TANK",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "SUPERFORMANCE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUPERKING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUPERPARK",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Surrey Bliss",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Surron",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUZHOU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SUZUE",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Suzuki",
@@ -4120,10 +7924,30 @@
       "format": "svg"
     },
     {
+      "make": "SVALAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SWEI SWEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "SWIFT",
       "status": "available",
       "asset_key": "SWIFT",
       "format": "svg"
+    },
+    {
+      "make": "SWM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "SXT",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "SYM",
@@ -4132,9 +7956,39 @@
       "format": "svg"
     },
     {
+      "make": "SYMCO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "T.T. URO/Uromac",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
+    },
+    {
+      "make": "Tadano Faun",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TAFE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Taihong",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Takeuchi",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Talaria",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TALBOT",
@@ -4145,7 +7999,12 @@
     {
       "make": "Tangjunouling",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TANTE PAULA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TATA",
@@ -4160,24 +8019,39 @@
       "format": "svg"
     },
     {
+      "make": "TAYLOR-DUNN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TAYO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "TAZZARI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TEA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TEC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TEENER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TEMPO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TEMSA",
@@ -4186,10 +8060,40 @@
       "format": "svg"
     },
     {
+      "make": "TERA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TERBERG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TEREX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TERMEC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TERROT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Tesla",
       "status": "available",
       "asset_key": "Tesla",
       "format": "svg"
+    },
+    {
+      "make": "TEXAS",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TGB",
@@ -4200,38 +8104,173 @@
     {
       "make": "TGL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TGS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "THALER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "THINK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "THUMPSTAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "THURNER",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "THWAITES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TIGER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TIGER TIG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TIGRETRAC",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TIMAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TINBOT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TISONG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TISTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TITAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TLD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TMS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TO 10",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TOBI",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Today Sunshine",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TOKAIDO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TOL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TOMOS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Tong Yang Moolsan",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TOP STAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TORNAX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TORO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TOROS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TORROT",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TOTH-TWA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Toyota",
       "status": "available",
       "asset_key": "Toyota",
       "format": "svg"
+    },
+    {
+      "make": "TP",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TRABANT",
@@ -4242,22 +8281,62 @@
     {
       "make": "TRAC 100 SPORTS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TRACMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TRANS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TRANSPORTEL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TREFOR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TREPEL",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Treser",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TRI-STAR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TRIANGEL",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TRIBSA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TRIGGER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TRITON",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "TRIUMPH",
@@ -4266,24 +8345,39 @@
       "format": "svg"
     },
     {
+      "make": "Tromox",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Tropos Motors",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TRUCHMASTERS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TUBER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TUGGER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Tune",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Turner Sports Car",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "TVR",
@@ -4292,10 +8386,45 @@
       "format": "svg"
     },
     {
+      "make": "TW",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TWAITES",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TWN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "TYM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "U.T.",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "UAZ",
       "status": "available",
       "asset_key": "UAZ",
       "format": "svg"
+    },
+    {
+      "make": "Ubco",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ULMC",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ULTIMA",
@@ -4304,14 +8433,74 @@
       "format": "svg"
     },
     {
+      "make": "UNILOADER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "UNIMOC",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "UNION",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Unique Motorcars",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "UNITD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "UNIVERSAL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "UNU",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "UPMOTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "URAL",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "URSUS",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "V8 Chopper",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VALMET",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VALPADANA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VALTRA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "VAN HOOL",
@@ -4322,17 +8511,27 @@
     {
       "make": "VANDEN PLAS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "VANGUARD",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VARG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VARIANT",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "VARIO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "VAUXHALL",
@@ -4363,9 +8562,54 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "VECTRIX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "VEICOLI",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VEKEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VELOCETTE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Velocifero",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VELOREX",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Velosolex",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VENIERI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Verge",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Vervaet",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "VESPA",
@@ -4374,14 +8618,44 @@
       "format": "svg"
     },
     {
+      "make": "VESTERGAARD",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VGA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "VIANOR",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VIARELLI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VICTORIA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VICTORY",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Vigorous",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VINCENT",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "VINFAST",
@@ -4390,9 +8664,44 @@
       "format": "svg"
     },
     {
+      "make": "VINTAGE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VITRA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VITRA CITY",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VM Loader",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Vmoto",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VOGE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "VOLGA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VOLK",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Volkswagen",
@@ -4487,6 +8796,16 @@
       "format": "svg"
     },
     {
+      "make": "VOLVO BM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VOLVO BM VALMET",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Volvo/Cad-Tek",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
@@ -4522,14 +8841,59 @@
       "reason": "combined_name_requires_separate_review"
     },
     {
+      "make": "VOR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VOXAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Voyah",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VPM",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "vRbikes",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Vredo",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "VUX",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "VW/Westfalia",
       "status": "pending",
       "reason": "combined_name_requires_separate_review"
+    },
+    {
+      "make": "VÄSSLA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "WACKER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Wacker Neuson",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "WANDERER",
@@ -4538,15 +8902,45 @@
       "format": "svg"
     },
     {
+      "make": "WANGYE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Wards Riverside",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "WARTBURG",
       "status": "available",
       "asset_key": "WARTBURG",
       "format": "svg"
     },
     {
+      "make": "WEIDEMANN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "WEINSBERG",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "WELLING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "WENING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "WENLING",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "WESTFIELD",
@@ -4555,14 +8949,29 @@
       "format": "svg"
     },
     {
+      "make": "WEV",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Weycor",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "WHIT",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "WHITE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "WHIZZER",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Wiesmann",
@@ -4571,19 +8980,29 @@
       "format": "svg"
     },
     {
+      "make": "WILLE",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "WILLYS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Winora-Staiger",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "WK",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "WOLF TRIKES",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "WOLSELEY",
@@ -4592,34 +9011,74 @@
       "format": "svg"
     },
     {
+      "make": "WONDER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "WULFF",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "XCMG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "XEV",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "XGJAO",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Xiao An",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "XIAOFEILU",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "XINGYUE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Xingyun",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Xinjinli",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "XINLING",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Xinri",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "XINTIAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Xinyang",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "XPeng",
@@ -4630,7 +9089,22 @@
     {
       "make": "XS",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Y Z F",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YADEA",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YAMA",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "YAMAHA",
@@ -4639,20 +9113,75 @@
       "format": "svg"
     },
     {
+      "make": "YAMASAKI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YANMAR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YAQI",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YASAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YIBEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YINGANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YINXIANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YIYING",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "YTO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Yufeng",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "YUGO",
       "status": "available",
       "asset_key": "YUGO",
       "format": "svg"
     },
     {
+      "make": "Yuhanzhen",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
       "make": "Yulong Motors",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Yunlong",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     },
     {
       "make": "Yutong",
@@ -4681,22 +9210,132 @@
     {
       "make": "ZELE",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZENITH",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZERO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Zeths",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZETOR",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZETTELMEYER",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "zev",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZF",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZHANG TIANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZHEJIANG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZHEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ZHENHUA",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZHONGNENG",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZHONGSHAN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZHONGYU",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "Zhontong",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZLT",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZNEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZOJAZ",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZONGSHEN",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZP",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "Ztech",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZVENDAPP",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZXMCO",
+      "status": "pending",
+      "reason": "no_verified_asset"
+    },
+    {
+      "make": "ZÜNDAPP",
+      "status": "pending",
+      "reason": "no_verified_asset"
     },
     {
       "make": "ÖAF",
       "status": "pending",
-      "reason": "no_verified_svg_added_yet"
+      "reason": "no_verified_asset"
     }
   ]
 }

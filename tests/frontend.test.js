@@ -62,13 +62,33 @@ editor.setConfig({ biler: [{ navn: 'Anden bil', mærke: 'Mitsubishi' }] });
 assert.ok(!editor.innerHTML.includes('alt="Mitsubishi logo"'), 'brands without a packaged logo keep the text label');
 assert.ok(editor.innerHTML.includes('title="Vis benzinpriser fra de valgte selskaber."'));
 // Exercise every packaged logo through the editor, including real PNG files.
-const packagedCatalog = JSON.parse(fs.readFileSync('custom_components/tiny_refuel/frontend/bilkatalog.json', 'utf8'));
+const catalogRoot = 'custom_components/tiny_refuel/frontend/';
+const catalogManifest = JSON.parse(fs.readFileSync(catalogRoot + 'bilkatalog.json', 'utf8'));
+function readPackagedCatalog() {
+  const catalog = JSON.parse(catalogManifest.catalog_parts.map(part => fs.readFileSync(catalogRoot + part, 'utf8')).join(''));
+  const defaults = catalog.model_defaults || {};
+  delete catalog.model_defaults; delete catalog.catalog_schema;
+  for (const brand of catalog.brands) {
+    for (const model of brand.modeller) {
+      if (!model._no_defaults) for (const [key, value] of Object.entries(defaults)) if (model[key] === undefined) model[key] = value;
+      delete model._no_defaults;
+    }
+    for (const part of brand.detail_files || []) {
+      const details = JSON.parse(fs.readFileSync(catalogRoot + part.file, 'utf8'));
+      details.forEach((row, index) => Object.assign(brand.modeller[part.start + index], row));
+    }
+    delete brand.detail_files;
+  }
+  return catalog;
+}
+const packagedCatalog = readPackagedCatalog();
 editor._katalog = packagedCatalog;
 for (const brand of packagedCatalog.brands) {
   editor.setConfig({ biler: [{ mærke: brand.mærke }] });
-  const png = packagedCatalog.logo_pngs[brand.mærke];
-  const svg = packagedCatalog.logos[brand.mærke];
-  const source = packagedCatalog.logo_urls && packagedCatalog.logo_urls[brand.mærke];
+  const assetMake = packagedCatalog.logo_aliases[brand.mærke] || brand.mærke;
+  const png = packagedCatalog.logo_pngs[assetMake];
+  const svg = packagedCatalog.logos[assetMake];
+  const source = packagedCatalog.logo_urls && packagedCatalog.logo_urls[assetMake];
   if (png) {
     assert.equal(Buffer.from(png, 'base64').subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
     assert.ok(editor.innerHTML.includes('data:image/png;base64,' + png));
@@ -388,7 +408,8 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   const localContext = { ...context, window: localWindow, customElements: localWindow.customElements,
     fetch: url => {
       requests.push(url);
-      if (url === '/tiny_refuel/static/bilkatalog.json') return Promise.resolve({ ok: true, json: () => Promise.resolve(packagedCatalog) });
+      if (url === '/tiny_refuel/static/bilkatalog.json') return Promise.resolve({ ok: true, json: () => Promise.resolve(catalogManifest) });
+      if (url.startsWith('/tiny_refuel/static/catalog-parts/')) return Promise.resolve({ ok: true, text: () => Promise.resolve(fs.readFileSync(catalogRoot + url.replace('/tiny_refuel/static/', ''), 'utf8')) });
       return new Promise(resolve => { pending[url] = resolve; });
     },
   };
@@ -400,10 +421,38 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   second.setConfig({ biler: [{ mærke: 'Citroën', model: 'C3' }] });
   form.setConfig({ biler: [] });
   await new Promise(setImmediate);
-  assert.equal(requests.length, 1);
-  assert.equal(first._katalog, packagedCatalog);
-  assert.equal(second._katalog, packagedCatalog);
-  assert.equal(form._katalog, packagedCatalog);
+  assert.equal(requests.length, 1 + catalogManifest.catalog_parts.length);
+  assert.equal(first._katalog.brands.length, packagedCatalog.brands.length);
+  assert.equal(JSON.stringify(first._katalog.logos), JSON.stringify(packagedCatalog.logos));
+  assert.ok(!first._katalog.brands.some(b => b.modeller.some(m => m.variants)), 'initial catalog must not contain variant lists');
+  assert.equal(second._katalog, first._katalog);
+  assert.equal(form._katalog, first._katalog);
+  form.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'up!' }] });
+  const entry = form._katalogFind('Volkswagen', 'up!');
+  assert.ok(entry && !entry.variants);
+  const detailUrl = requests.find(url => url.includes('/catalog-details/'));
+  assert.ok(detailUrl, 'selecting a model starts its details request');
+  assert.equal(requests.filter(url => url === detailUrl).length, 1);
+  let renders = 0, changes = 0;
+  const variantInput = { value: 'min ufærdige variant', selectionStart: 4 };
+  const options = {}, years = {}, note = {};
+  form.querySelector = selector => selector === '[data-key="bil:0:variant"]' ? variantInput : selector === '[data-variant-options="0"]' ? options : selector === '[data-year-options="0"]' ? years : selector === '[data-model-note="0"]' ? note : null;
+  const render = form._render;
+  form._render = () => { renders++; };
+  form.dispatchEvent = () => { changes++; };
+  const beforeDetails = JSON.stringify(form._config);
+  const detailRows = JSON.parse(fs.readFileSync(catalogRoot + detailUrl.replace('/tiny_refuel/static/', ''), 'utf8'));
+  pending[detailUrl]({ ok: true, json: () => Promise.resolve(detailRows) });
+  await new Promise(setImmediate);
+  assert.ok(entry.variants.length > 0);
+  assert.equal(form._config.biler[0].model, 'up!');
+  assert.equal(JSON.stringify(form._config), beforeDetails);
+  assert.equal(variantInput.value, 'min ufærdige variant');
+  assert.equal(variantInput.selectionStart, 4);
+  assert.equal(renders, 0); assert.equal(changes, 0);
+  form._render = render;
+  form.querySelector = () => null;
+
   form.setConfig({ katalog_url: '/local/old.json' });
   form.setConfig({ katalog_url: '/local/new.json' });
   const newer = { brands: [{ mærke: 'Nyt mærke', modeller: [] }] };
@@ -412,6 +461,41 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   pending['/local/old.json']({ ok: true, json: () => Promise.resolve({ brands: [] }) });
   await new Promise(setImmediate);
   assert.equal(form._katalog, newer);
+  form.setConfig({ katalog_url: '/local/lazy.json', biler: [] });
+  pending['/local/lazy.json']({ ok: true, json: () => Promise.resolve({ catalog_schema: 2, model_defaults: {}, brands: [{ mærke: 'Test', modeller: [{ model: 'X' }], detail_files: [{ start: 0, file: 'catalog-details/aa.json' }] }] }) });
+  await new Promise(setImmediate);
+  form.setConfig({ katalog_url: '/local/lazy.json', biler: [{ mærke: 'Test', model: 'X' }] });
+  assert.ok(form._katalogFind('Test', 'X'));
+  const failureNote = {};
+  form.querySelector = selector => selector === '[data-model-note="0"]' ? failureNote : null;
+  pending['/local/catalog-details/aa.json']({ ok: false, status: 503 });
+  await new Promise(setImmediate);
+  assert.ok(form._katalogFind('Test', 'X'), 'failed details must retain model selection');
+  assert.ok(failureNote.textContent.includes('Årgang og varianter kunne ikke hentes'));
+  form.querySelector = () => null;
+  form.setConfig({ katalog_url: '/local/stale-details.json', biler: [{ mærke: 'Test', model: 'X' }] });
+  pending['/local/stale-details.json']({ ok: true, json: () => Promise.resolve({ catalog_schema: 2, model_defaults: {}, brands: [{ mærke: 'Test', modeller: [{ model: 'X' }], detail_files: [{ start: 0, file: 'catalog-details/bb.json' }] }] }) });
+  await new Promise(setImmediate);
+  const staleDetails = pending['/local/catalog-details/bb.json'];
+  assert.equal(typeof staleDetails, 'function');
+  form.setConfig({ katalog_url: '/local/new.json', biler: [] });
+  await new Promise(setImmediate);
+  const afterSwitch = JSON.stringify(form._config);
+  let staleRefreshes = 0;
+  const refreshDetails = form._refreshModelDetailFields;
+  form._refreshModelDetailFields = () => { staleRefreshes++; };
+  staleDetails({ ok: true, json: () => Promise.resolve([{ variants: [{ name: 'Old result' }] }]) });
+  await new Promise(setImmediate);
+  assert.equal(form._katalog, newer);
+  assert.equal(JSON.stringify(form._config), afterSwitch);
+  assert.equal(staleRefreshes, 0, 'old detail responses must not change the current form');
+  form._refreshModelDetailFields = refreshDetails;
+  form.setConfig({ katalog_url: '/local/broken.json' });
+  pending['/local/broken.json']({ ok: true, json: () => Promise.resolve({ catalog_parts: ['../outside.txt'] }) });
+  await new Promise(setImmediate);
+  assert.equal(form._katalogFailed, true);
+  assert.equal(form._katalog, null, 'an incomplete catalog must never be displayed');
+  assert.ok(!requests.some(url => url.includes('outside.txt')));
   console.log('PASS: stable editor, shared vehicle catalogs, logo fallbacks and theme switching');
 })().catch(error => { console.error(error); process.exitCode = 1; });
 
@@ -512,7 +596,7 @@ function queueCoverage() {
   assert.ok(form.innerHTML.includes('Aygo · vælg drivmiddel'));
   assert.ok(form.innerHTML.includes('Vælg drivmiddel og kontrollér tank/batteri'));
   assert.ok(!form.innerHTML.includes('Aygo · null'));
-  assert.ok(form.innerHTML.includes('54 mærker · 645 modeller'));
+  assert.ok(form.innerHTML.includes(packagedCatalog.brands.length + ' mærker · ' + packagedCatalog.brands.reduce((n, b) => n + b.modeller.length, 0) + ' modeller'));
   form.events.change({ target: { dataset: { key: 'bil:0:brændstof' }, value: 'benzin' } });
   assert.equal(form._config.biler[0].brændstof, 'benzin');
   assert.equal(form._config.biler[0].vis.benzin, true);
@@ -591,4 +675,40 @@ for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
   panel.setConfig({biler:[{mærke:make, model:'Egen model'}]});
   assert.ok(panel.innerHTML.includes('data:image/png;base64,' + png));
   assert.ok(panel.innerHTML.includes('Egen model'));
+}
+
+// Full DMR catalog uses bounded make/model suggestions and preserves manual vehicles.
+{
+  const form = new StableEditor();
+  form._katalog = packagedCatalog;
+  form.dispatchEvent = () => {};
+  form.setConfig({ biler: [{ mærke: 'Honda', model: 'CB 500', brændstof: 'benzin', tank_liters: 17 }] });
+  assert.ok(form._makeSuggestions('').total > 1800);
+  assert.ok((form._makeSuggestions('').html.match(/<option/g) || []).length <= 60);
+  assert.ok(form.innerHTML.includes('bil:0:koeretoejstype'));
+  assert.ok(form.innerHTML.includes('bil:0:aargang'));
+  const renderBefore = form.innerHTML;
+  form.events.input({ target: { dataset: { key: 'bil:0:mærke' }, value: 'Honda' } });
+  assert.equal(form.innerHTML, renderBefore, 'typing in make search must preserve input and form');
+  form.events.change({ target: { dataset: { key: 'bil:0:koeretoejstype' }, value: 'motorcykel' } });
+  assert.equal(form._config.biler[0].tank_liters, 17);
+  assert.equal(form._config.biler[0].brændstof, 'benzin');
+  form.events.change({ target: { dataset: { key: 'bil:0:mærke' }, value: 'Eget mærke' } });
+  assert.equal(form._config.biler[0].tank_liters, undefined);
+  assert.equal(form._config.biler[0].brændstof, undefined);
+  assert.ok(!form.innerHTML.match(/data-key="bil:0:model"[^>]*disabled/));
+  form.events.change({ target: { dataset: { key: 'bil:0:model' }, value: 'Egen model' } });
+  assert.equal(form._config.biler[0].model, 'Egen model');
+}
+console.log('PASS: full vehicle catalog, bounded make search, manual types and model years');
+
+// Previous make labels still resolve after deduplication, without duplicate choices.
+{
+  const form = new (registry.get('tiny-refuel-card-editor'))();
+  form._katalog = packagedCatalog;
+  assert.equal(form._katalogModels('CITROEN'), form._katalogModels('Citroën'));
+  assert.equal(form._katalogModels('CF MOTO'), form._katalogModels('CFMOTO'));
+  assert.ok(form._makeSuggestions('CITROEN').html.includes('value="Citroën"'));
+  assert.ok(!form._makeSuggestions('CITROEN').html.includes('value="CITROEN"'));
+  assert.ok(!packagedCatalog.brands.some(b => b.mærke.toLowerCase() === 'selvbyg'));
 }

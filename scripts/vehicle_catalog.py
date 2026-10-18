@@ -13,6 +13,53 @@ CATALOG = Path(__file__).resolve().parents[1] / 'custom_components/tiny_refuel/f
 TOYOTA_URL = 'https://www.toyota.dk/nye-biler'
 
 
+def load_catalog(path, details=True):
+    """Read a plain catalog or its packaged, relative chunk manifest."""
+    path = Path(path)
+    data = json.loads(path.read_text(encoding='utf-8-sig'))
+    if 'catalog_parts' not in data:
+        return data
+    parts = data['catalog_parts']
+    if not isinstance(parts, list) or not 1 <= len(parts) <= 256:
+        raise ValueError('Invalid catalog parts')
+    directory = path.parent.resolve()
+    chunks = []
+    for part in parts:
+        if not isinstance(part, str) or __import__('re').fullmatch(r'catalog-parts/[a-f0-9]+\.txt', part) is None:
+            raise ValueError('Invalid catalog part path')
+        chunk = (directory / part).resolve()
+        if not chunk.is_relative_to(directory):
+            raise ValueError('Invalid catalog part path')
+        chunks.append(chunk.read_text(encoding='utf-8'))
+    data = json.loads(''.join(chunks))
+    if data.get('catalog_schema') != 2: return data
+    defaults = data.pop('model_defaults')
+    data.pop('catalog_schema')
+    for brand in data.get('brands', []):
+        references = brand.pop('detail_files', [])
+        for model in brand['modeller']:
+            if not model.pop('_no_defaults', False):
+                for field, value in defaults.items(): model.setdefault(field, deepcopy(value))
+        if details:
+            expected_start = 0
+            for reference in references:
+                file = reference['file']
+                if not isinstance(file, str) or __import__('re').fullmatch(r'catalog-details/[a-f0-9]+\.json', file) is None:
+                    raise ValueError('Invalid model detail path')
+                asset = (directory / file).resolve()
+                if not asset.is_relative_to(directory): raise ValueError('Invalid model detail path')
+                rows = json.loads(asset.read_text(encoding='utf-8'))
+                start = reference['start']
+                if start != expected_start or not isinstance(rows, list) or start + len(rows) > len(brand['modeller']):
+                    raise ValueError('Invalid model detail range')
+                for index, row in enumerate(rows):
+                    if not isinstance(row, dict): raise ValueError('Invalid model details')
+                    brand['modeller'][start + index].update(row)
+                expected_start += len(rows)
+            if expected_start != len(brand['modeller']): raise ValueError('Incomplete model details')
+    return data
+
+
 def toyota_candidates(page):
     """Read Toyota Denmark's structured modelMap, not navigation/customer text."""
     text = page if '"modelMap"' in page else html.unescape(page)
@@ -124,7 +171,7 @@ def main():
         save_json(args.output, data)
         print(f"Saved {len(data['brands'][0]['models'])} unreviewed candidates to {args.output}")
     else:
-        catalog = json.loads(args.catalog.read_text(encoding='utf-8'))
+        catalog = load_catalog(args.catalog)
         candidates = json.loads(args.input.read_text(encoding='utf-8'))
         updated, additions = merge_reviewed(catalog, candidates)
         if args.write:

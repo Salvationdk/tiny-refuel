@@ -15,9 +15,9 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 if __package__:
-    from .vehicle_catalog import CATALOG, save_json
+    from .vehicle_catalog import CATALOG, save_json, load_catalog
 else:
-    from vehicle_catalog import CATALOG, save_json
+    from vehicle_catalog import CATALOG, save_json, load_catalog
 
 SOURCE = 'https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange'
 # Shared public download credentials published by Motorstyrelsen, not a user account.
@@ -426,7 +426,7 @@ def main():
     if args.command == 'download':
         print(download_latest(args.output))
     elif args.command == 'deduplicate':
-        base = json.loads(args.input.read_text(encoding='utf-8-sig'))
+        base = load_catalog(args.input)
         catalog, report = deduplicate_catalog(base)
         save_json(args.output, catalog)
         save_json(args.report, report)
@@ -442,7 +442,7 @@ def main():
     else:
         if args.output.resolve() in {args.input.resolve(), args.base.resolve()}:
             parser.error('Write a separate candidate file; review it before replacing the shipped catalog')
-        base = json.loads(args.base.read_text(encoding='utf-8'))
+        base = load_catalog(args.base)
         with input_xml(args.input) as stream:
             catalog, report = build_catalog(stream, base, args.source_date, args.source_file or args.input.name, limit=args.limit, include_profiles=args.include_technical_profiles)
         save_json(args.output, catalog)
