@@ -17,6 +17,7 @@ Intended schedule: every 6 hours (providers switch prices ~00:00).
 import html
 from collections import deque
 import json
+import http.client
 import math
 import os
 import re
@@ -100,23 +101,31 @@ def get_text(url, headers=None, timeout=45):
 
 
 def load_clever_locations():
-    """Fetch Clever's large public location feed, retrying malformed JSON without cache."""
-    headers = {"User-Agent": UA, "Accept": "application/json"}
-    raw = get_text(CLEVER_LOCATIONS_URL, headers=headers, timeout=45)
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        # Clever's nationwide feed can be several megabytes. A truncated or
-        # stale edge response should not make the source fail without one retry.
-        retry_headers = {**headers, "Cache-Control": "no-cache", "Pragma": "no-cache"}
-        retry_raw = get_text(CLEVER_LOCATIONS_URL, headers=retry_headers, timeout=45)
+    """Retry invalid/incomplete Clever feeds once at a distinct, uncached URL."""
+    headers = {"User-Agent": UA, "Accept": "application/json", "Accept-Encoding": "identity"}
+    for attempt in range(2):
+        url = CLEVER_LOCATIONS_URL
+        request_headers = headers
+        if attempt:
+            # Some edge caches ignore request no-cache headers. A unique query
+            # makes the retry a different cache key without changing the source.
+            parts = urllib.parse.urlsplit(url)
+            query = urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
+            query.append(("_tiny_refuel_retry", str(time.time_ns())))
+            url = urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(query)))
+            request_headers = {**headers, "Cache-Control": "no-cache", "Pragma": "no-cache"}
         try:
-            return json.loads(retry_raw)
-        except json.JSONDecodeError as exc:
-            raise ValueError(
-                f"Clever returned invalid JSON on cache-free retry at character "
-                f"{exc.pos} of {len(retry_raw)}: {exc.msg}"
-            ) from exc
+            raw = get_text(url, headers=request_headers, timeout=90 if attempt else 45)
+            return json.loads(raw)
+        except (json.JSONDecodeError, http.client.IncompleteRead) as exc:
+            if not attempt:
+                continue
+            if isinstance(exc, json.JSONDecodeError):
+                raise ValueError(
+                    f"Clever returned invalid JSON on cache-free retry at character "
+                    f"{exc.pos} of {len(raw)}: {exc.msg}"
+                ) from exc
+            raise ValueError("Clever returned an incomplete JSON response on cache-free retry") from exc
 
 
 def to_float(value):

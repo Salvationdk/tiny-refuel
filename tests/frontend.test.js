@@ -807,3 +807,17 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   assert.equal(scrape.checked, true); assert.equal(count.placeholder, 'Alle');
 }
 console.log('PASS: compact display, independent row limits, retained vehicle selection and numeric editor settings');
+
+// Error help must describe the actual failure instead of calling every error HTTP 500.
+{
+  const panel = new Card();
+  panel._data = { errors: [{ source: 'clever.dk', error: "Clever returned invalid JSON on cache-free retry at character 9278163 of 9278163: Expecting ',' delimiter" }] };
+  const jsonHelp = panel._dataErrorsHtml();
+  assert.ok(jsonHelp.includes('ufuldstændigt eller ugyldigt JSON-svar'));
+  assert.ok(!jsonHelp.includes('HTTP 500 betyder'));
+  assert.ok(jsonHelp.includes('gemte data kan stadig vises'));
+  panel._data.errors = [{ source: 'clever.dk', error: 'HTTP Error 500' }];
+  const httpHelp = panel._dataErrorsHtml();
+  assert.ok(httpHelp.includes('HTTP 500 betyder'));
+  assert.ok(!httpHelp.includes('ufuldstændigt eller ugyldigt JSON-svar'));
+}

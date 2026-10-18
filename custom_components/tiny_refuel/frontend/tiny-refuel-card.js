@@ -1642,9 +1642,14 @@
     _dataErrorsHtml() {
       var groups = this._errorGroups(), html = "";
       if (this._data && this._data.refreshing) html += '<div class="trf-em">Tiny Refuel henter nye data…</div>';
+      var hasHttp500 = groups.some(function (error) { return /(?:HTTP(?: Error)?|status(?: code)?)[ :]*500\b/i.test(String(error.message || "")); });
+      var hasJsonError = groups.some(function (error) { return /json|delimiter/i.test(String(error.message || "")); });
+      var explanation = (hasHttp500 ? '<p>HTTP 500 betyder, at serveren ikke kunne behandle forespørgslen.</p>' : '') +
+        (hasJsonError ? '<p>Datakilden leverede et ufuldstændigt eller ugyldigt JSON-svar. Det kan skyldes et afbrudt svar eller en fejl hos datakilden.</p>' : '') +
+        '<p>Datakilden står ved fejlen; gemte data kan stadig vises.</p>';
       if (groups.length) html += '<details class="trf-data-counts" data-card-panel="errors"><summary>' + groups.length + ' fejl i seneste hentning</summary>' +
         groups.map(function (error) { return '<div>' + esc(error.source) + ': ' + esc(error.message) + '</div>'; }).join('') +
-        '<p>HTTP 500 betyder, at serveren ikke kunne behandle forespørgslen. Datakilden står ved fejlen; gemte data kan stadig vises.</p>' +
+        explanation +
         '<a class="trf-ev-button" href="' + esc(this._issueUrl()) + '" target="_blank" rel="noopener noreferrer">Rapportér på GitHub</a>' +
         '<div class="trf-em">Åbner et udkast med fejlkategorier og HTTP-koder. Gennemse og indsend selv; GitHub kan bede dig logge ind.</div></details>';
       return html;
