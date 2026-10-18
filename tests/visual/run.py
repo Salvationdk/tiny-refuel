@@ -4,7 +4,6 @@ Run from any directory with Python 3.14 and requirements.txt installed.
 No real account, source scraper, location or Home Assistant installation is used.
 """
 import json
-import os
 from pathlib import Path
 import secrets
 import shutil
@@ -40,6 +39,14 @@ FIXTURE = {
 
 
 def prepare(folder):
+    storage = folder / ".storage"
+    storage.mkdir()
+    # Core configuration is supplied below. Skip optional onboarding discovery
+    # (weather/radio/translation) so screenshots never need those services.
+    (storage / "onboarding").write_text(json.dumps({
+        "version": 1, "minor_version": 1, "key": "onboarding",
+        "data": {"done": ["core_config", "analytics", "integration"]},
+    }))
     custom = folder / "custom_components"
     custom.mkdir()
     shutil.copytree(ROOT / "custom_components/tiny_refuel", custom / "tiny_refuel")
@@ -105,9 +112,13 @@ def onboard():
     tokens = response.json()
     tokens.update({"hassUrl": BASE, "clientId": BASE + "/", "expires": time.time()*1000 + tokens["expires_in"]*1000})
     session.headers["Authorization"] = "Bearer " + tokens["access_token"]
-    api(session, "/api/onboarding/core_config", {})
-    api(session, "/api/onboarding/analytics", {})
-    api(session, "/api/onboarding/integration", {"client_id": BASE + "/", "redirect_uri": BASE + "/"})
+    for _ in range(90):
+        response = session.get(BASE + "/api/config", timeout=10)
+        if response.ok and "visual_fixture" in response.json().get("components", []):
+            break
+        time.sleep(1)
+    else:
+        raise RuntimeError("Home Assistant test fixture did not finish setup")
     flow = api(session, "/api/config/config_entries/flow", {"handler": "tiny_refuel", "show_advanced_options": False})
     result = api(session, "/api/config/config_entries/flow/" + flow["flow_id"], {"scan_hours": 6})
     assert result["type"] == "create_entry", result
@@ -132,7 +143,11 @@ def browsers(tokens):
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(BASE + "/lovelace/test")
         card = page.locator("tiny-refuel-card").first
-        expect(card.locator(".trf-row").first).to_be_visible(timeout=90000)
+        try:
+            expect(card.locator(".trf-row").first).to_be_visible(timeout=90000)
+        except Exception:
+            page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
+            raise
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
         # Retain the real HA object and card for deterministic scenario changes.
         card.evaluate("el => {window.visualCard = el; window.visualHass = el._hass;}")
@@ -182,6 +197,13 @@ def browsers(tokens):
                 info = card.locator('details[data-card-panel]').filter(has_text="Information og datagrundlag").first
                 info.locator("summary").click()
                 shot(prefix + "-information")
+                # A failed supplier must remain visible alongside retained data.
+                page.evaluate("data => {window.visualCard._data = data; window.visualCard._render();}", {
+                    **FIXTURE, "errors": [{"source": "clever.dk", "error": "HTTP Error 500"}],
+                })
+                expect(card).to_contain_text("clever.dk")
+                shot(prefix + "-source-error")
+                page.evaluate("data => {window.visualCard._data = data; window.visualCard._render();}", FIXTURE)
 
                 # Render the production editor using real HA state/theme; echo its config
                 # events exactly as Lovelace does. This avoids relying on HA menu wording.
@@ -217,6 +239,11 @@ def browsers(tokens):
                 shot(prefix + "-editor-details", editor)
                 page.locator("#visual-editor-host").evaluate("el => el.remove()")
                 assert card.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), prefix + " horizontal overflow"
+        page.set_viewport_size({"width": 1280, "height": 1000})
+        page.goto(BASE + "/config/integrations/integration/tiny_refuel")
+        expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)
+        page.screenshot(path=str(OUT / "integration-settings.png"), full_page=True, animations="disabled")
+        results.append("integration-settings")
         assert not errors, errors
         browser.close()
     return results
@@ -236,6 +263,9 @@ def main():
                 (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
                     "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium"}, indent=2))
                 print(f"PASS: {len(screenshots)} screenshots; real Home Assistant, desktop/mobile, light/dark")
+            except Exception:
+                print((OUT / "home-assistant.log").read_text()[-16000:])
+                raise
             finally:
                 process.terminate()
                 try:

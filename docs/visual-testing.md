@@ -1,0 +1,58 @@
+# Visuel test i Home Assistant
+
+GitHub Actions-workflowet **Visual Home Assistant** starter en midlertidig Home
+Assistant 2026.10-installation og Chromium. Det installerer Tiny Refuel gennem
+integrationen, opretter et Lovelace-dashboard og bruger det indbyggede
+`katalog.json`. Ingen privat Home Assistant-adgang eller API-nøgler er nødvendige.
+
+Priser, ladesteder og GPS-position er faste, fiktive testdata. Kun indsamlingen af
+eksterne data erstattes i testmiljøet. Testen kontrollerer derfor visning og
+betjening, ikke om leverandørernes hjemmesider kan hentes.
+
+## Billeder og kontroller
+
+Der tages billeder ved desktopbredde og 390 px mobilbredde, i lyst og mørkt tema:
+
+- Brændstofkort og kompakt kort med billigste pris.
+- Ladeoversigt og popup med ladesteder.
+- Plug-in-hybrid med flere køretøjer.
+- Information og datagrundlag.
+- Editorens oversigt, udbydere, køretøj og ekstra køretøjsfelter.
+
+Browseren klikker også på **Vis 10 mere** / **Vis færre** og kontrollerer antallet
+af rækker. I editoren skiftes mærke og model; gamle model- og tankværdier skal
+forsvinde, og valg af en ny katalogmodel skal udfylde kapaciteten. Kataloget skal
+indlæses, og browserfejl får testen til at fejle.
+
+Kortet vises i det rigtige Lovelace-dashboard. Editorbillederne viser den rigtige
+editor med Home Assistants `hass`-objekt og tema; testværktøjet monterer den direkte
+på siden og sender konfigurationsændringer tilbage som Lovelace. Home Assistants
+egne menuer til at åbne og gemme korteditoren testes ikke dermed.
+
+## Hent eller gentag
+
+1. Åbn repositoryets **Actions → Visual Home Assistant**.
+2. Vælg en afsluttet kørsel og hent **Artifacts → tiny-refuel-visual**.
+3. ZIP-filen indeholder PNG-billeder, `report.json` ved en bestået test og en
+   Home Assistant-log til fejlsøgning.
+
+Workflowet kører automatisk ved relevante ændringer i en PR og på de angivne
+branches. Efter workflowet er på standardbranchen, kan **Run workflow** bruges.
+Indtil da kan en tidligere kørsel gentages med **Re-run all jobs**. Der bruges
+GitHub Actions-minutter; genkørsel kræver ingen ChatGPT-samtale.
+
+## Kør lokalt
+
+Brug et separat Python 3.14-miljø på Linux med adgang til netværkskort og lokal
+port 8123. Start ikke testen oven i en eksisterende Home Assistant på den port.
+
+```sh
+pip install -r tests/visual/requirements.txt
+python -m playwright install --with-deps chromium
+python tests/visual/run.py
+```
+
+Resultater gemmes i `visual-results/`, som ikke trackes af git. Midlertidig
+Home Assistant-konfiguration og testlogin slettes, når kørslen slutter. Traces
+og loginoplysninger gemmes ikke i downloadpakken. Billeder er materiale til
+visuel gennemgang, ikke automatisk pixel-sammenligning med godkendte referencebilleder.

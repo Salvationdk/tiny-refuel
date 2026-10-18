@@ -192,6 +192,8 @@ Teknisk integrationsversion: **0.2.2**. Kortets footer viser integrationsversion
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
 
+Workflowet **Visual Home Assistant** starter desuden en midlertidig Home Assistant og Chromium med faste testdata. Det gemmer screenshots af kort og editor i mobil-/desktopbredde og lyst/mørkt tema samt en rapport. Se [visuel test og download af screenshots](docs/visual-testing.md).
+
 ```bash
 python -m unittest discover -s tests -v
 node tests/frontend.test.js
@@ -202,7 +204,7 @@ Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigat
 
 ### Vedligeholdelse af køretøjskataloget
 
-Kataloget indeholder også ældre benzin- og dieselmodeller samt større køretøjer og varevogne. Modelnavne og tekniske specifikationer behandles hver for sig. De 175 nye navne i 0.2.2 har kildelinks, men ingen gættede tank-, batteri- eller drivmiddelværdier. Eksisterende poster og egne kataloger bevares.
+Det indbyggede katalog indeholder 895 modeller fra 89 mærker. Kun modeller med tank- eller batteristørrelse er med. Modelværdier kan dække flere årgange og varianter; kontrollér kapaciteten for dit konkrete køretøj. Egne kataloger kan supplere de indbyggede data.
 
 Et udviklerværktøj kan hente modelnavne fra Toyota Danmarks officielle, strukturerede modeloversigt. Det skriver en kandidatliste til gennemgang og ændrer ikke integrationens katalog automatisk. Det kører ikke ved almindelig pris-scraping. Flere producentadaptere kan tilføjes senere; den første dækker Toyota, ikke alle mærker.
 
