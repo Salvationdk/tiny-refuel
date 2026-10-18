@@ -135,9 +135,10 @@ def browsers(tokens):
         # HA 2026.10 asks the test owner to confirm the localhost HTTP binding.
         # Resolve that real setup dialog before taking pictures or clicking cards.
         pending = page.locator("dialog-http-pending-config")
-        expect(pending).to_be_visible(timeout=30000)
-        pending.locator('ha-button[slot="primaryAction"]').click()
-        expect(pending).not_to_be_visible(timeout=15000)
+        confirm = pending.locator('ha-button[slot="primaryAction"]')
+        expect(confirm).to_be_visible(timeout=30000)
+        confirm.click()
+        expect(confirm).not_to_be_visible(timeout=15000)
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
         # Retain the real HA object and card for deterministic scenario changes.
         card.evaluate("el => {window.visualCard = el; window.visualHass = el._hass;}")
