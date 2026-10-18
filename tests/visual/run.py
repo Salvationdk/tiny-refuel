@@ -63,6 +63,7 @@ def prepare(folder):
         "homeassistant": {"name": "Tiny Refuel visuel test", "latitude": 55.67,
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
         "http": {"server_host": "127.0.0.1"}, "frontend": {},
+        "recorder": {"purge_keep_days": 1, "commit_interval": 1},
         "lovelace": {"mode": "yaml", "resources": [{"url": "/tiny_refuel/static/tiny-refuel-card.js?v=0.2.2", "type": "module"}]},
     }))
     (folder / "ui-lovelace.yaml").write_text(yaml.safe_dump({
@@ -110,7 +111,7 @@ def onboard():
     session.headers["Authorization"] = "Bearer " + tokens["access_token"]
     for _ in range(90):
         response = session.get(BASE + "/api/config", timeout=10)
-        if response.ok and "frontend" in response.json().get("components", []):
+        if response.ok and {"frontend", "recorder"}.issubset(response.json().get("components", [])):
             break
         time.sleep(1)
     else:
