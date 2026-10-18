@@ -162,6 +162,14 @@ def browsers(tokens):
         page.expose_function("visualReportRejection", lambda message: rejections.append(message))
         page.on("pageerror", lambda error: errors.append({"message": str(error), "stack": error.stack}))
         page.goto(BASE + "/lovelace/test")
+        # HA 2026.10 asks the test owner to confirm the localhost HTTP binding.
+        # Resolve that real setup dialog before taking pictures or clicking cards.
+        pending = page.locator("dialog-http-pending-config")
+        confirm = pending.locator('ha-button[slot="primaryAction"]')
+        expect(confirm).to_be_visible(timeout=30000)
+        confirm.click()
+        expect(confirm).not_to_be_visible(timeout=15000)
+        page.reload()
         card = page.locator("tiny-refuel-card").first
         try:
             page.wait_for_function("customElements.get('tiny-refuel-card') !== undefined", timeout=30000)
@@ -173,13 +181,6 @@ def browsers(tokens):
             print(diagnostics, flush=True)
             page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
             raise
-        # HA 2026.10 asks the test owner to confirm the localhost HTTP binding.
-        # Resolve that real setup dialog before taking pictures or clicking cards.
-        pending = page.locator("dialog-http-pending-config")
-        confirm = pending.locator('ha-button[slot="primaryAction"]')
-        expect(confirm).to_be_visible(timeout=30000)
-        confirm.click()
-        expect(confirm).not_to_be_visible(timeout=15000)
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
         # Retain the real HA object and card for deterministic scenario changes.
         card.evaluate("el => {window.visualCard = el; window.visualHass = el._hass;}")
@@ -196,7 +197,7 @@ def browsers(tokens):
             results.append(name)
 
         for width, label in [(1280, "desktop"), (390, "mobile")]:
-            page.set_viewport_size({"width": width, "height": 1000})
+            page.set_viewport_size({"width": width, "height": 2400})
             for dark in [False, True]:
                 theme = "dark" if dark else "light"
                 # Set actual HA theme, inherited by the card/editor.
