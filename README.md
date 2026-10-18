@@ -1,6 +1,6 @@
 # Tiny Refuel v0.2.2
 
-Benzin, diesel og opladning til biler i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, bilkatalog og scraping i én HACS-integration.
+Benzin, diesel og opladning til køretøjer i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
 
 ## Installation
 
@@ -27,9 +27,9 @@ Brug knappen til at åbne Tiny Refuel direkte i HACS:
 3. Vælg opdateringsinterval. Standard er hver 6. time.
 4. Genindlæs browseren med **Ctrl+F5**.
 5. Tilføj **Tiny Refuel** fra dashboardets kortvælger.
-6. Vælg din positionsenhed, biler og Waze eller Google Maps i den visuelle editor.
+6. Vælg din positionsenhed, køretøjer og Waze eller Google Maps i den visuelle editor.
 
-Kort, editor, selskabslogoer, bilkatalog og scraper følger med integrationen. Kortets JavaScript indlæses automatisk.
+Kort, editor, selskabslogoer, køretøjskatalog og scraper følger med integrationen. Kortets JavaScript indlæses automatisk.
 
 Kortet kan også tilføjes med YAML:
 
@@ -47,7 +47,7 @@ Under hentning viser kortet den aktuelle udbyder og, når stationer eller adress
 
 Kortet bruger samme listevisning, uanset om skærmen står eller ligger. Hvert kort beholder logo, priser, adresse og afstand. Farver, kundefordele, filtre, navigation og knappen **Vis 10 mere** bevares. I UI-editoren kan hele kortets YAML vises og kopieres.
 
-Hent-knappen kan skjules under punktet **Hent data** i UI-editoren. Her kan du også begrænse en manuel hentning til den valgte bils drivmiddel. En benzinbil henter benzin, en dieselbil diesel, en elbil el og en plug-in-hybrid både benzin og el. Slås begrænsningen fra, hentes alle typer. Automatisk intervalhentning henter fortsat alle typer, så nye biler også får data. Data for fravalgte typer bevares mellem hentninger. Nogle brændstofkilder leverer benzin- og dieselpriser samlet, så de kan stadig blive hentet sammen.
+Hent-knappen kan skjules under punktet **Hent data** i UI-editoren. Her kan du også begrænse en manuel hentning til det valgte køretøjs drivmiddel. Et benzindrevet køretøj henter benzin, et dieseldrevet køretøj diesel, et elkøretøj el og en plug-in-hybrid både benzin og el. Slås begrænsningen fra, hentes alle typer. Automatisk intervalhentning henter fortsat alle typer, så nye køretøjer også får data. Data for fravalgte typer bevares mellem hentninger. Nogle brændstofkilder leverer benzin- og dieselpriser samlet, så de kan stadig blive hentet sammen.
 
 Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, medlemsordninger, rabatter og bilvask hentes fra relevante officielle sider hos hver udbyder, højst én gang om ugen. Kortet samler korte beskrivelser fra flere sider, når det er relevant, og viser den officielle kilde og hentetid. Kundeanmeldelser, citater og kommentarer sorteres fra, og cachede tekster genhentes, når filtreringen ændres. Hvis en side ikke kan læses, beholdes seneste gemte oplysninger.
 
@@ -63,11 +63,11 @@ Skærmbilleder fra v0.2.1. Priser og datastatus er eksempler fra testtidspunktet
 
 ### Benzin, diesel og plug-in-hybrid
 
-Den valgte bil bestemmer de viste energityper. En plug-in-hybrid viser både benzin og opladning. Bilknapperne viser mærkelogo og model, når et logo findes, med tekst som fallback.
+Det valgte køretøj bestemmer de viste energityper. En plug-in-hybrid viser både benzin og opladning. Køretøjsknapperne viser mærkelogo og model, når et logo findes, med tekst som fallback.
 
 | Diesel og officielle kundefordele | Plug-in-hybrid: benzinoversigt |
 |---|---|
-| ![Dieselpriser og Circle K's officielle oplysninger om rabat og bilvask](docs/screenshots/diesel-benefits.png) | ![Plug-in-hybrid med benzinpriser og bilknapper](docs/screenshots/plugin-hybrid.png) |
+| ![Dieselpriser og Circle K's officielle oplysninger om rabat og bilvask](docs/screenshots/diesel-benefits.png) | ![Plug-in-hybrid med benzinpriser og køretøjsknapper](docs/screenshots/plugin-hybrid.png) |
 
 ### Opladning og ladesteder
 
@@ -87,23 +87,23 @@ Den sammenklappelige informationsbjælke samler kildeoversigt, manglende koordin
 
 ### Visuel editor
 
-Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af visningen uden en oprettet bil.
+Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af visningen uden et oprettet køretøj.
 
 ![Visuel editor med tooltip og kortets forhåndsvisning](docs/screenshots/editor-overview.png)
 
-| Udbydere med logoer | Sammenklappelige biler |
+| Udbydere med logoer | Sammenklappelige køretøjer |
 |---|---|
-| ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Bilsektion med fire sammenklappede biler og mærkelogoer](docs/screenshots/editor-vehicles.png) |
+| ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Køretøjssektion med fire sammenklappede køretøjer og mærkelogoer](docs/screenshots/editor-vehicles.png) |
 
-En bil kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 27.242 modelrækker og 98.768 variantposter fordelt på 1.809 registermærkebetegnelser. Det omfatter også motorcykler, knallerter, lastbiler, traktorer og motorredskaber fra udtrækket. Mærkebetegnelserne omfatter historiske mærker og opbyggere og er ikke 1.809 verificerede fabrikanter. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst. Modeller uden verificeret årgang/variant kræver valg af drivmiddel og manuel kontrol af tank og batteri. Kataloget garanterer ikke alle motorvarianter eller årgange.
+Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Kataloget rummer 27.242 modelrækker og 98.768 variantposter fordelt på 1.809 registermærkebetegnelser. Det omfatter også motorcykler, knallerter, lastbiler, traktorer og motorredskaber fra udtrækket. Mærkebetegnelserne omfatter historiske mærker og opbyggere og er ikke 1.809 verificerede fabrikanter. Modellogoer findes kun for udvalgte modeller; øvrige modeller bruger tekst. Modeller uden verificeret årgang/variant kræver valg af drivmiddel og manuel kontrol af tank og batteri. Kataloget garanterer ikke alle motorvarianter eller årgange.
 
-Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og bilknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype vælges manuelt og bruges ikke til at filtrere kataloget. Modelårsforslag gælder modellen samlet og bekræfter ikke en bestemt motorvariant. Se [logodokumentationen](docs/vehicle-logos.md).
+Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype vælges manuelt og bruges ikke til at filtrere kataloget. Modelårsforslag gælder modellen samlet og bekræfter ikke en bestemt motorvariant. Se [logodokumentationen](docs/vehicle-logos.md).
 
-![Udvidet bilopsætning for en dieselbil](docs/screenshots/editor-vehicle-details.png)
+![Udvidet bilopsætning for et dieseldrevet køretøj](docs/screenshots/editor-vehicle-details.png)
 
 ## Funktioner
 
-- Benzin, diesel og EL efter valgt bil.
+- Benzin, diesel og EL efter valgt køretøj.
 - Hybrid uden stik viser benzin; plug-in-hybrid viser benzin og opladning.
 - Adresser og nærmeste sted med afstand i luftlinje.
 - Navigation gennem Waze eller Google Maps ved tryk på selskabets logo.
@@ -128,7 +128,7 @@ Fejloversigten viser også fejl ved hentning af officielle kundefordele og ved k
 
 HTTP 500 betyder en intern fejl hos den server, der besvarer kaldet. Udbyderfejl og fejl fra Home Assistants data-API vises med hver sin kilde. Offentlige GET-kald forsøges én gang igen efter en kort pause ved HTTP 500, 502, 503 eller 504. En vedvarende fejl vises stadig; genforsøget gælder ikke 403, 404 eller 429.
 
-**Rapportér på GitHub** åbner et issueudkast med Tiny Refuel-version, kendte kildebetegnelser, fejlkategorier og HTTP-koder. Rå fejltekster, adresser, positioner, biler og Home Assistant-konfiguration indsættes ikke i udkastet. Brugeren gennemser og indsender selv; GitHub beder om login, hvis nødvendigt. Integrationens kode registrerer ikke, om brugeren allerede er logget ind på GitHub.
+**Rapportér på GitHub** åbner et issueudkast med Tiny Refuel-version, kendte kildebetegnelser, fejlkategorier og HTTP-koder. Rå fejltekster, adresser, positioner, køretøjer og Home Assistant-konfiguration indsættes ikke i udkastet. Brugeren gennemser og indsender selv; GitHub beder om login, hvis nødvendigt. Integrationens kode registrerer ikke, om brugeren allerede er logget ind på GitHub.
 
 ## Datakilder
 
@@ -170,7 +170,7 @@ Genererede prisdata, ny historik og koordinatcacher gemmes privat under:
 
 Disse data overlever kodeopdateringer. Scraping ændrer ikke HACS' kodefiler. Data til kortet leveres gennem en Home Assistant-API, der kræver login.
 
-Bilkatalog og standardlogoer ligger under integrationens `frontend/`. Direkte ændringer dér kan blive overskrevet af en HACS-opdatering. Eget bilkatalog kan vælges med en brugerdefineret URL i korteditoren.
+Køretøjskatalog og standardlogoer ligger under integrationens `frontend/`. Direkte ændringer dér kan blive overskrevet af en HACS-opdatering. Eget køretøjskatalog kan vælges med en brugerdefineret URL i korteditoren.
 
 Efter en opdatering gennem HACS: genstart Home Assistant, og genindlæs browseren.
 
@@ -200,9 +200,9 @@ node tests/frontend.test.js
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
 
 
-### Vedligeholdelse af bilkataloget
+### Vedligeholdelse af køretøjskataloget
 
-Kataloget indeholder også ældre benzin- og dieselmodeller samt større biler og varevogne. Modelnavne og tekniske specifikationer behandles hver for sig. De 175 nye navne i 0.2.2 har kildelinks, men ingen gættede tank-, batteri- eller drivmiddelværdier. Eksisterende poster og egne kataloger bevares.
+Kataloget indeholder også ældre benzin- og dieselmodeller samt større køretøjer og varevogne. Modelnavne og tekniske specifikationer behandles hver for sig. De 175 nye navne i 0.2.2 har kildelinks, men ingen gættede tank-, batteri- eller drivmiddelværdier. Eksisterende poster og egne kataloger bevares.
 
 Et udviklerværktøj kan hente modelnavne fra Toyota Danmarks officielle, strukturerede modeloversigt. Det skriver en kandidatliste til gennemgang og ændrer ikke integrationens katalog automatisk. Det kører ikke ved almindelig pris-scraping. Flere producentadaptere kan tilføjes senere; den første dækker Toyota, ikke alle mærker.
 
@@ -217,7 +217,7 @@ Uden --write viser importen kun, hvilke navne der ville blive tilføjet. Kendte 
 
 ### Dansk registerkatalog og lokal modelsøgning
 
-Biloprettelsen bruger det medfølgende katalog: vælg fabrikant, søg model og vælg selv drivmiddel samt eventuelt årgang/variant. Der hentes ikke modeldata fra eksterne sider under oprettelsen. Ændres årgang/variant, ryddes modelstandarderne for drivmiddel, tank og batteri, så de kan bekræftes for den konkrete variant. Højst 60 modelforslag vises ad gangen; skriv mere for at indsnævre. Egne modeller og egne JSON-kataloger kan stadig bruges.
+Køretøjsoprettelsen bruger det medfølgende katalog: vælg fabrikant, søg model og vælg selv drivmiddel samt eventuelt årgang/variant. Der hentes ikke modeldata fra eksterne sider under oprettelsen. Ændres årgang/variant, ryddes modelstandarderne for drivmiddel, tank og batteri, så de kan bekræftes for den konkrete variant. Højst 60 modelforslag vises ad gangen; skriv mere for at indsnævre. Egne modeller og egne JSON-kataloger kan stadig bruges.
 
 Motorstyrelsens gratis statistikudtræk er hovedkilden til den nye importfunktion. Den læser personbiler/busser, varebiler og lastbiler (DMR-art 1–4) samt genkendte navngivne motorkøretøjstyper, bl.a. motorcykler, knallerter og traktorer, fra en hentet XML- eller ZIP-fil. Ukendte typer medtages ikke automatisk. Mærker, modeller og variantnavne samles uden gentagelser. Rå tekniske kombinationer gemmes separat som `dmr_profiles`; de bruges endnu ikke som bekræftede specifikationer i kortet. Eksisterende modelværdier og logoer bevares. Ukendte mærker har tekstfallback. Nummerplader, stelnumre og køretøjs-ID'er eksporteres ikke til kataloget. Årgang og tank-/batteristørrelse udledes ikke af første registrering eller modelnavnet.
 
@@ -255,7 +255,7 @@ antal_stationer: 3
 vis_bilvaelger: false
 ```
 
-Behold `biler` fra din eksisterende opsætning. Ved ét køretøj er bilvælgeren
+Behold `biler` fra din eksisterende opsætning. Ved ét køretøj er køretøjsvælgeren
 skjult som standard i kompakt visning; ved flere køretøjer bevares den altid.
 `vis_bilvaelger: true` viser også vælgeren ved ét køretøj.
 
@@ -272,3 +272,5 @@ og beregninger kan åbnes i **Information og datagrundlag**. Positionsteksten,
 billigste-oversigten og prisændringer fylder mindre eller skjules i kompakt
 visning. **Hent data** er skjult som standard i kompakt visning, men kan
 aktiveres med `vis_scrape_knap: true`. En igangværende hentnings status vises stadig.
+
+Teksterne bruger **køretøj**, fordi kataloget også omfatter motorcykler, knallerter, lastbiler og traktorer. YAML-nøglerne `biler`, `vis_bilvaelger` og `scrape_valgt_bil` bevares af hensyn til eksisterende opsætninger.

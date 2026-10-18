@@ -48,7 +48,7 @@ for (const tag of editor.innerHTML.match(/<input\b[^>]*>/g) || []) {
 }
 editor.setConfig({ kaeder: { circle_k: false } });
 assert.match(editor.innerHTML, /data-key="kæde:circle_k"><img/);
-assert.ok(editor.innerHTML.includes('Ingen bil tilføjet endnu'));
+assert.ok(editor.innerHTML.includes('Intet køretøj tilføjet endnu'));
 assert.ok(editor.innerHTML.includes('manuel hentning tager alle typer'));
 editor._katalog = { brands: [], logos: { Volkswagen: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>' }, logo_pngs: { Hongqi: 'iVBORw0KGgoAAA==' } };
 editor.setConfig({ biler: [{ navn: 'Testbil', mærke: 'Volkswagen', model: 'up!' }] });

@@ -642,7 +642,7 @@
       if (Array.isArray(cfg.biler) && cfg.biler.length) {
         return cfg.biler.map(function (b, i) {
           return {
-            navn: (b && b.navn) || (b && [b.mærke, b.model].filter(Boolean).join(" ")) || ("Bil " + (i + 1)),
+            navn: (b && b.navn) || (b && [b.mærke, b.model].filter(Boolean).join(" ")) || ("Køretøj " + (i + 1)),
             mærke: b ? b.mærke : null,
             model: b ? b.model : null,
             brændstof: b ? b.brændstof : null,
@@ -1206,7 +1206,7 @@
 
       var legends = [];
       if (visBenzin) legends.push('<b>95</b> = Blyfri 95 (E10) · <b>100</b> = 100-oktan · <b>Premium 95</b> = benzin med additiver · <b>92</b> = Blyfri 92');
-      if (visDiesel) legends.push('<b>Diesel</b> = standard diesel · <b>Extra</b> = opgraderet diesel · <b>HVO100</b> = alternativt dieselbrændstof · <b>AdBlue</b> = væske til dieselbilens udstødningsrensning');
+      if (visDiesel) legends.push('<b>Diesel</b> = standard diesel · <b>Extra</b> = opgraderet diesel · <b>HVO100</b> = alternativt dieselbrændstof · <b>AdBlue</b> = væske til dieselkøretøjets udstødningsrensning');
       if (visEl) legends.push('<b>EL</b> = opladning i kr/kWh · <b>Se pris</b> = ingen verificeret stationspris; tjek udbyderens app eller kort · <b>*</b> = offentlig selskabstakst, lokal pris kan afvige · <b>fra</b> = udbyderens startpris · <b>km</b> = afstand i luftlinje');
       var legendHtml = legends.length ? '<div class="trf-legend"><b>Energityper:</b> ' + legends.join(' · ') + '</div>' : '';
       if (visBenzin || visDiesel) legendHtml += '<div class="trf-legend"><b>Listepris</b> = kædens vejledende brændstofpris. En listepris er ikke knyttet til en bestemt station; pumpeprisen kan afvige.</div>';
@@ -1816,7 +1816,7 @@
           : [];
         if (t.hasAttribute && t.hasAttribute("data-bil-add")) {
           self._openCar = biler.length;
-          biler.push({ navn: "Bil " + (biler.length + 1) });
+          biler.push({ navn: "Køretøj " + (biler.length + 1) });
         } else {
           var idx = parseInt(t.getAttribute("data-bil-del"), 10);
           if (isFinite(idx)) biler.splice(idx, 1);
@@ -1884,7 +1884,7 @@
                   delete biler[bi].vis;
                 }
                 var nm = biler[bi].navn || "";
-                if (!nm || /^Bil \d+$/.test(nm)) {
+                if (!nm || /^(?:Bil|Køretøj) \d+$/.test(nm)) {
                   biler[bi].navn = biler[bi].mærke + " " + md;
                 }
               }
@@ -2129,7 +2129,7 @@
         if (node) node.checked = car.vis && car.vis[fuel] !== undefined ? !!car.vis[fuel] : self._bool("vis_" + fuel, fuel !== "diesel");
       });
       var title = this.querySelector('[data-car-card="' + index + '"] .trfe-car-title');
-      if (title) title.textContent = car.navn || [car.mærke, car.model].filter(Boolean).join(" ") || "Bil " + (index + 1);
+      if (title) title.textContent = car.navn || [car.mærke, car.model].filter(Boolean).join(" ") || "Køretøj " + (index + 1);
       var hint = this.querySelector('[data-car-card="' + index + '"] .trfe-summary-meta');
       if (hint) hint.textContent = { benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[car.brændstof] || car.brændstof || "Vælg drivmiddel";
       var modelNote = this.querySelector('[data-model-note="' + index + '"]');
@@ -2173,8 +2173,8 @@
       }
       var html = '<div class="trfe"><style>' + ECSS + "</style>";
       html += '<h4>Visning <span class="trfe-tip" tabindex="0" title="Vælg hvilke energityper og oplysninger kortet skal vise." aria-label="Hjælp: Vælg hvilke energityper og oplysninger kortet skal vise.">i</span></h4>';
-      html += cb("kompakt", "Kompakt kort", this._bool("kompakt", false), "Mindre afstande, færre oversigter og som standard tre rækker pr. prisliste. Bilvælgeren skjules som standard ved ét køretøj. Hent data-knappen skjules som standard i kompakt visning.");
-      html += cb("vis_bilvaelger", "Vis bilvælger ved ét køretøj", this._bool("vis_bilvaelger", !c.kompakt), "Ved flere køretøjer vises bilvælgeren altid.");
+      html += cb("kompakt", "Kompakt kort", this._bool("kompakt", false), "Mindre afstande, færre oversigter og som standard tre rækker pr. prisliste. Køretøjsvælgeren skjules som standard ved ét køretøj. Hent data-knappen skjules som standard i kompakt visning.");
+      html += cb("vis_bilvaelger", "Vis køretøjsvælger ved ét køretøj", this._bool("vis_bilvaelger", !c.kompakt), "Ved flere køretøjer vises køretøjsvælgeren altid.");
       html += '<div class="trfe-hint">Antal rækker pr. prisliste (0 = alle, tom = automatisk)</div><input type="number" data-key="antal_stationer" min="0" max="50" step="1" value="' + esc(c.antal_stationer === undefined ? '' : c.antal_stationer) + '" placeholder="' + (c.kompakt ? '3' : 'Alle') + '">';
       html += '<div class="trfe-hint">Brændstof viser en række pr. selskab; el viser grupper af ladevalg. Kompakt visning starter med tre rækker, normal visning med alle. Vis 10 mere åbner flere rækker.</div>';
       html += cb("vis_benzin", "Benzin (95/100-oktan)", this._bool("vis_benzin", true), "Vis benzinpriser fra de valgte selskaber.");
@@ -2192,7 +2192,7 @@
         html += cb("kæde:" + b.key, b.brand, on, "Vis eller skjul " + b.brand + " på dette kort.", b.img);
       }
       html += "</div></div></details>";
-      html += "<h4>Biler <span class=\"trfe-tip\" tabindex=\"0\" title=\"Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Biler styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
+      html += "<h4>Køretøjer <span class=\"trfe-tip\" tabindex=\"0\" title=\"Køretøjer styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Køretøjer styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
       this._loadKatalog();
       var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [];
       var trackers = [];
@@ -2212,13 +2212,13 @@
           gE = this._bool("vis_el", true), gA = this._bool("vis_andet", true);
       var fuels = [["benzin", "Benzin"], ["diesel", "Diesel"], ["el", "El"], ["hybrid", "Hybrid (uden stik)"], ["plug_in_hybrid", "Plug-in-hybrid"]];
       if (!biler.length) {
-        html += '<div class="trfe-empty-car"><strong>Ingen bil tilføjet endnu</strong>' +
-          'Kortet viser de energityper, du har slået til ovenfor. Uden en bil filtreres priserne ikke efter drivmiddel, og manuel hentning tager alle typer. ' +
+        html += '<div class="trfe-empty-car"><strong>Intet køretøj tilføjet endnu</strong>' +
+          'Kortet viser de energityper, du har slået til ovenfor. Uden et køretøj filtreres priserne ikke efter drivmiddel, og manuel hentning tager alle typer. ' +
           'Fuld tank bruger tankstørrelses-helperen, som som standard er 50 L.</div>';
       }
       for (var bi2 = 0; bi2 < biler.length; bi2++) {
         var bb = biler[bi2] || {};
-        var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Bil " + (bi2 + 1)));
+        var carTitle = bb.navn || ((bb.mærke || bb.model) ? [bb.mærke, bb.model].filter(Boolean).join(" ") : ("Køretøj " + (bi2 + 1)));
         var carHint = bb.brændstof ? ({ benzin: "Benzin", diesel: "Diesel", el: "El", hybrid: "Hybrid", plug_in_hybrid: "Plug-in-hybrid" }[bb.brændstof] || bb.brændstof) : "Vælg drivmiddel";
         var carLogoHtml = vehicleMakeHtml(this._katalog, bb, "trfe-car-logo") +
           '<span data-model-logo="' + bi2 + '">' + vehicleLogoHtml(this._katalog, bb, "trfe-model-logo", true) + '</span>';
@@ -2257,11 +2257,11 @@
         }
         html += "</div>";
         html += '<div class="trfe-hint">Navn</div><input type="text" data-key="bil:' + bi2 + ':navn" value="' +
-          esc(bb.navn || "") + '" placeholder="Bil 1">';
+          esc(bb.navn || "") + '" placeholder="Køretøj 1">';
         html += '<div class="trfe-hint">Tank (L — fra katalog, ret ved behov)</div><input type="number" data-key="bil:' + bi2 +
           ':tank_liters" min="0.1" max="2000" step="0.1" value="' +
           esc(bb.tank_liters !== undefined && bb.tank_liters !== null ? bb.tank_liters : "") + '" placeholder="Auto">';
-        html += '<div class="trfe-hint">Batteri (kWh — kun elbil, fra katalog)</div><input type="number" data-key="bil:' + bi2 +
+        html += '<div class="trfe-hint">Batteri (kWh — fra katalog, ret ved behov)</div><input type="number" data-key="bil:' + bi2 +
           ':batteri_kwh" min="10" max="200" step="1" value="' +
           esc(bb.batteri_kwh !== undefined && bb.batteri_kwh !== null ? bb.batteri_kwh : "") + '" placeholder="Auto">';
         html += '<div class="trfe-hint">Telefon (GPS-kilde)</div><input type="text" list="trf-trackers" data-key="bil:' +
@@ -2280,14 +2280,14 @@
           return '<label><input type="checkbox" data-key="bil:' + bi2 + ":vis_" + k + '"' +
             (on ? " checked" : "") + "><span>" + esc(label) + "</span></label>";
         }
-        html += '<div class="trfe-hint">Vis for denne bil</div>';
+        html += '<div class="trfe-hint">Vis for dette køretøj</div>';
         html += cbv("benzin", "Benzin", gB) + cbv("diesel", "Diesel", gD) +
           cbv("el", "El", gE) + cbv("andet", "Andet", gA);
-        html += '<div class="trfe-hint"><a href="#" data-bil-del="' + bi2 + '">Fjern bilen</a></div>';
+        html += '<div class="trfe-hint"><a href="#" data-bil-del="' + bi2 + '">Fjern køretøjet</a></div>';
         html += "</div></details>";
       }
-      html += '<div class="trfe-hint"><a href="#" data-bil-add>' + (biler.length ? "Tilføj endnu en bil" : "＋ Tilføj bil") + '</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
-      html += "<h4>Bilkatalog (mærker/modeller)</h4>";
+      html += '<div class="trfe-hint"><a href="#" data-bil-add>' + (biler.length ? "Tilføj endnu et køretøj" : "＋ Tilføj køretøj") + '</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
+      html += "<h4>Køretøjskatalog (mærker/modeller)</h4>";
       html += '<div class="trfe-hint">Katalogkilde (tom = indbygget: ' +
         this._katalogBrands().length + ' mærker · ' + this._katalogBrands().reduce(function (total, brand) { return total + (brand.modeller || []).length; }, 0) + ' modeller)</div><input type="text" data-key="katalog_url" value="' +
         esc(c.katalog_url || "") + '" placeholder="/tiny_refuel/static/bilkatalog.json">';
@@ -2296,7 +2296,7 @@
       html += '<div class="trfe-hint">Kopiér hele konfigurationen til Udseende → Rediger i YAML.</div>';
       html += '<button type="button" data-yaml-copy>Kopiér YAML</button>';
       html += '<textarea data-card-yaml readonly spellcheck="false" rows="14" aria-label="Hele kortets YAML"></textarea></details>';
-      html += "<h4>Fælles tankstørrelse (bruges hvis bilen ikke har egen)</h4>";
+      html += "<h4>Fælles tankstørrelse (bruges hvis køretøjet ikke har egen)</h4>";
       var tl = (c.tank_liters !== undefined && c.tank_liters !== null) ? c.tank_liters : "";
       html += '<div class="trfe-row"><input type="number" data-key="tank_liters" min="0.1" max="2000" step="0.1" value="' +
         esc(tl) + '" placeholder="Auto"></div>';
@@ -2312,8 +2312,8 @@
       html += '<div class="trfe-hint">Åbner navigation til den nærmeste station ved tryk på logo.</div>';
       html += '<h4>Hent data</h4>';
       html += cb("vis_scrape_knap", "Vis knappen på kortet", this._bool("vis_scrape_knap", !c.kompakt));
-      html += cb("scrape_valgt_bil", "Begræns hentning til den valgte bil", this._bool("scrape_valgt_bil", true));
-      html += '<div class="trfe-hint">Manuel hentning følger bilens drivmiddel: benzinbil henter benzin, dieselbil diesel, elbil el og plug-in-hybrid benzin samt el. Slå valget fra for at hente alle typer. Automatisk intervalhentning henter altid alle typer, så biler du tilføjer senere også får data.</div>';
+      html += cb("scrape_valgt_bil", "Begræns hentning til det valgte køretøj", this._bool("scrape_valgt_bil", true));
+      html += '<div class="trfe-hint">Manuel hentning følger køretøjets drivmiddel: benzin henter benzinpriser, diesel dieselpriser, el ladepriser og plug-in-hybrid benzin samt el. Slå valget fra for at hente alle typer. Automatisk intervalhentning henter altid alle typer, så køretøjer du tilføjer senere også får data.</div>';
       html += '<details data-editor-section="advanced"><summary>Avanceret</summary>';
       html += '<div class="trfe-hint">Positions-enhed</div><input type="text" data-key="location_entity" value="' +
         esc(c.location_entity || "") + '" placeholder="device_tracker.din_telefon">';
