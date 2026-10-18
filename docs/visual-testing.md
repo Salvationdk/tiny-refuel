@@ -13,10 +13,11 @@ betjening, ikke om leverandørernes hjemmesider kan hentes.
 
 Der tages billeder ved desktopbredde og 390 px mobilbredde, i lyst og mørkt tema:
 
-- Brændstofkort og kompakt kort med billigste pris.
+- Benzin, diesel og kompakt kort med billigste pris.
 - Ladeoversigt og popup med ladesteder.
 - Plug-in-hybrid med flere køretøjer.
 - Information og datagrundlag.
+- Kildefejl med tidligere gemte data samt integrationens side i Home Assistant.
 - Editorens oversigt, udbydere, køretøj og ekstra køretøjsfelter.
 
 Browseren klikker også på **Vis 10 mere** / **Vis færre** og kontrollerer antallet
@@ -33,8 +34,9 @@ egne menuer til at åbne og gemme korteditoren testes ikke dermed.
 
 1. Åbn repositoryets **Actions → Visual Home Assistant**.
 2. Vælg en afsluttet kørsel og hent **Artifacts → tiny-refuel-visual**.
-3. ZIP-filen indeholder PNG-billeder, `report.json` ved en bestået test og en
-   Home Assistant-log til fejlsøgning.
+3. ZIP-filen indeholder PNG-billeder, `report.json` med teststatus og en
+   Home Assistant-log til fejlsøgning. Ved en bestået test kan `index.html` åbnes
+   som samlet billedoversigt.
 
 Workflowet kører automatisk ved relevante ændringer i en PR og på de angivne
 branches. Efter workflowet er på standardbranchen, kan **Run workflow** bruges.
@@ -47,8 +49,11 @@ Brug et separat Python 3.14-miljø på Linux med adgang til netværkskort og lok
 port 8123. Start ikke testen oven i en eksisterende Home Assistant på den port.
 
 ```sh
+python3.14 -m venv .venv
+. .venv/bin/activate
 pip install -r tests/visual/requirements.txt
 python -m playwright install --with-deps chromium
+sudo apt-get install -y ffmpeg libturbojpeg
 python tests/visual/run.py
 ```
 
