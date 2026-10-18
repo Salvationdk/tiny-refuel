@@ -159,6 +159,7 @@ def browsers(tokens):
                 # Set actual HA theme, inherited by the card/editor.
                 page.evaluate("dark => document.querySelector('home-assistant').dispatchEvent(new CustomEvent('settheme', {detail:{theme:'default',dark},bubbles:true,composed:true}))", dark)
                 page.emulate_media(color_scheme=theme)
+                page.wait_for_function("dark => document.querySelector('home-assistant').hass.themes.darkMode === dark", arg=dark)
                 page.wait_for_timeout(300)
                 prefix = label + "-" + theme
                 set_config(CONFIG)
@@ -206,7 +207,7 @@ def browsers(tokens):
                     let host = document.createElement('div'); host.id='visual-editor-host';
                     host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);color:var(--primary-text-color);font-family:Roboto,Arial,sans-serif';
                     let editor=document.createElement('tiny-refuel-card-editor');
-                    editor.hass=window.visualHass; editor.setConfig(config);
+                    editor.hass=window.visualCard._hass; editor.setConfig(config);
                     editor.addEventListener('config-changed', e=>editor.setConfig(e.detail.config));
                     host.append(editor); document.body.append(host); window.visualEditor=editor;
                 }""", CONFIG)
