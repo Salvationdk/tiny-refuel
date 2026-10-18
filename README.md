@@ -59,47 +59,35 @@ Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manu
 
 ## Skærmbilleder
 
-Skærmbilleder fra v0.2.1. Priser og datastatus er eksempler fra testtidspunktet. Position er ikke valgt i disse eksempler; afstande kræver en positionsenhed.
+Skærmbilleder fra v0.2.2 i Home Assistant 2026.10. Priser, ladesteder og position er fiktive testdata. Browsertesten dækker mobil/desktop og lyst/mørkt tema; hele billedsættet kan hentes fra [Visual Home Assistant](https://github.com/Salvationdk/tiny-refuel/actions/workflows/visual.yml). Se [testvejledningen](docs/visual-testing.md).
 
-### Benzin, diesel og plug-in-hybrid
-
-Det valgte køretøj bestemmer de viste energityper. En plug-in-hybrid viser både benzin og opladning. Køretøjsknapperne viser mærkelogo og model, når et logo findes, med tekst som fallback.
-
-| Diesel og officielle kundefordele | Plug-in-hybrid: benzinoversigt |
+| Brændstofkort | Kompakt på mobil |
 |---|---|
-| ![Dieselpriser og Circle K's officielle oplysninger om rabat og bilvask](docs/screenshots/diesel-benefits.png) | ![Plug-in-hybrid med benzinpriser og køretøjsknapper](docs/screenshots/plugin-hybrid.png) |
+| ![Benzinpriser i mørkt tema](docs/screenshots/0.2.2/desktop-dark-fuel.png) | ![Kompakt kort med billigste pris og Vis 10 mere](docs/screenshots/0.2.2/mobile-light-compact.png) |
 
-### Opladning og ladesteder
-
-Lokale priser, generelle selskabstakster og startpriser markeres forskelligt. **Se pris** betyder, at en verificeret stationspris ikke er tilgængelig i udtrækket. Dialogen **Ladesteder** viser selskabets ladevalg og giver mulighed for at vise flere.
-
-| Ladeoversigt | Ladesteder pr. selskab |
+| Opladning på mobil | Ladesteder |
 |---|---|
-| ![Opladning med priser, selskabstakster og Se pris](docs/screenshots/charging.png) | ![Q8's ladesteder med mulighed for at vise flere](docs/screenshots/charging-locations.png) |
+| ![Ladeoversigt i mørkt tema på mobil](docs/screenshots/0.2.2/mobile-dark-charging.png) | ![Popup med ladesteder](docs/screenshots/0.2.2/desktop-dark-charging-locations.png) |
 
-### Information og datagrundlag
-
-Den sammenklappelige informationsbjælke samler kildeoversigt, manglende koordinater, beregninger og forklaring af priser og energityper. Footer viser integrationens version.
-
-| Benzin og beregninger | Brændstof og opladning samlet |
+| Plug-in-hybrid og flere køretøjer | Information og datagrundlag |
 |---|---|
-| ![Udvidet Information og datagrundlag med footer v0.2.1](docs/screenshots/information.png) | ![Samlet datastatus for brændstof og opladning samt hybridberegning](docs/screenshots/information-all-fuels.png) |
+| ![Plug-in-hybrid med benzin og opladning](docs/screenshots/0.2.2/desktop-light-hybrid.png) | ![Informationspanel med beregninger og kildeoplysninger](docs/screenshots/0.2.2/desktop-light-information.png) |
 
-### Visuel editor
-
-Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af visningen uden et oprettet køretøj.
-
-![Visuel editor med tooltip og kortets forhåndsvisning](docs/screenshots/editor-overview.png)
-
-| Udbydere med logoer | Sammenklappelige køretøjer |
+| Editor: udbydere | Editor: køretøj på mobil |
 |---|---|
-| ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Køretøjssektion med fire sammenklappede køretøjer og mærkelogoer](docs/screenshots/editor-vehicles.png) |
+| ![Valg af stationer og udbydere](docs/screenshots/0.2.2/desktop-light-editor-providers.png) | ![Mærke, model, drivmiddel og kapaciteter på mobil](docs/screenshots/0.2.2/mobile-dark-editor-vehicle.png) |
+
+| Kildefejl med gemte data | Integrationen i Home Assistant |
+|---|---|
+| ![Fejl fra Clever med fortsat visning af gemte priser](docs/screenshots/0.2.2/desktop-dark-source-error.png) | ![Tiny Refuel under Enheder og tjenester](docs/screenshots/0.2.2/integration-settings.png) |
+
+Editorbillederne viser produktets editor monteret direkte med Home Assistants tilstand og tema. Home Assistants egne menuer til at åbne og gemme editoren indgår ikke i denne test.
 
 Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 895 modeller fordelt på 89 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
 
 Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype vælges manuelt og bruges ikke til at filtrere kataloget. Modelværdier bekræfter ikke alle årgange eller motorvarianter. Se [logodokumentationen](docs/vehicle-logos.md).
 
-![Udvidet køretøjsopsætning for et dieseldrevet køretøj](docs/screenshots/editor-vehicle-details.png)
+![Valgfri årgang, variant og kapaciteter](docs/screenshots/0.2.2/desktop-light-editor-details.png)
 
 ## Funktioner
 

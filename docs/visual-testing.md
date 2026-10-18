@@ -30,6 +30,10 @@ editor med Home Assistants `hass`-objekt og tema; testværktøjet monterer den d
 på siden og sender konfigurationsændringer tilbage som Lovelace. Home Assistants
 egne menuer til at åbne og gemme korteditoren testes ikke dermed.
 
+Kort- og editorbilleder beskæres til komponenten. Home Assistants faste
+værktøjslinje og midlertidige toastbeskeder skjules kun under selve billedtagningen,
+så de ikke dækker indholdet. Integrationssiden fotograferes som en hel side.
+
 ## Hent eller gentag
 
 1. Åbn repositoryets **Actions → Visual Home Assistant**.
@@ -61,3 +65,7 @@ Resultater gemmes i `visual-results/`, som ikke trackes af git. Midlertidig
 Home Assistant-konfiguration og testlogin slettes, når kørslen slutter. Traces
 og loginoplysninger gemmes ikke i downloadpakken. Billeder er materiale til
 visuel gennemgang, ikke automatisk pixel-sammenligning med godkendte referencebilleder.
+
+## Gennemført kørsel
+
+[GitHub-kørsel 39167301022](https://github.com/Salvationdk/tiny-refuel/actions/runs/39167301022) bestod med 49 screenshots og ingen browserfejl. Der er gennemgået billeder af kort, kompakt visning, ladepopup, kildefejl, information, editor og integrationsside. Testdata er fiktive.
