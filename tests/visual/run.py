@@ -4,6 +4,7 @@ Run from any directory with Python 3.14 and requirements.txt installed.
 No real account, source scraper, location or Home Assistant installation is used.
 """
 import json
+import os
 from pathlib import Path
 import secrets
 import shutil
@@ -245,7 +246,8 @@ def main():
         prepare(folder)
         with (OUT / "home-assistant.log").open("w") as log:
             # Keep the checkout out of Python's custom_components namespace.
-            process = subprocess.Popen([sys.executable, "-m", "homeassistant", "--config", str(folder)], cwd=folder, stdout=log, stderr=subprocess.STDOUT)
+            environment = {**os.environ, "VIRTUAL_ENV": sys.prefix}
+            process = subprocess.Popen([sys.executable, "-m", "homeassistant", "--config", str(folder)], cwd=folder, env=environment, stdout=log, stderr=subprocess.STDOUT)
             try:
                 tokens = onboard()
                 screenshots = browsers(tokens)
