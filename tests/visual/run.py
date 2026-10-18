@@ -110,7 +110,7 @@ def onboard():
             break
         time.sleep(1)
     else:
-        raise RuntimeError("Tiny Refuel config entry/API failed to load")
+        raise RuntimeError(f"Tiny Refuel config entry/API failed to load: {response.status_code} {response.text[:2000]}")
     api(session, "/api/states/device_tracker.visual", {"state": "home", "attributes": {"friendly_name": "Testposition", "latitude": 55.67, "longitude": 12.56}})
     return tokens
 
@@ -244,7 +244,8 @@ def main():
         folder = Path(temp)
         prepare(folder)
         with (OUT / "home-assistant.log").open("w") as log:
-            process = subprocess.Popen([sys.executable, "-m", "homeassistant", "--config", str(folder)], stdout=log, stderr=subprocess.STDOUT)
+            # Keep the checkout out of Python's custom_components namespace.
+            process = subprocess.Popen([sys.executable, "-m", "homeassistant", "--config", str(folder)], cwd=folder, stdout=log, stderr=subprocess.STDOUT)
             try:
                 tokens = onboard()
                 screenshots = browsers(tokens)
