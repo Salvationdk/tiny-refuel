@@ -1,4 +1,6 @@
 homeassistant==2026.10.0
 home-assistant-frontend==20260930.2
+pymicro-vad==1.0.1
+pyspeex-noise==1.0.2
 playwright==1.55.0
 requests==2.34.2

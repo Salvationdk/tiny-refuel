@@ -24,6 +24,7 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -r tests/visual/requirements.txt
       - run: .venv/bin/python -m playwright install --with-deps chromium
+      - run: sudo apt-get install -y ffmpeg libturbojpeg0
       - run: .venv/bin/python tests/visual/run.py
       - uses: actions/upload-artifact@v4
         if: always()
