@@ -1,0 +1,29 @@
+name: Visual Home Assistant
+on:
+  pull_request:
+    paths: ['custom_components/**', 'tests/visual/**', '.github/workflows/visual.yml']
+  push:
+    branches: [main, fix/hacs-validation-and-persistent-popups]
+    paths: ['custom_components/**', 'tests/visual/**', '.github/workflows/visual.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - run: pip install -r tests/visual/requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/visual/run.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tiny-refuel-visual
+          path: visual-results/
+          retention-days: 14
+          if-no-files-found: error
