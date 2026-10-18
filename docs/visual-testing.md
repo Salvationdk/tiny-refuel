@@ -45,7 +45,7 @@ så de ikke dækker indholdet. Integrationssiden fotograferes som en hel side.
 Workflowet kører automatisk ved relevante ændringer i en PR og på de angivne
 branches. Efter workflowet er på standardbranchen, kan **Run workflow** bruges.
 Indtil da kan en tidligere kørsel gentages med **Re-run all jobs**. Der bruges
-GitHub Actions-minutter; genkørsel kræver ingen ChatGPT-samtale.
+GitHub Actions-minutter; kørslen kan gentages direkte på GitHub.
 
 ## Kør lokalt
 

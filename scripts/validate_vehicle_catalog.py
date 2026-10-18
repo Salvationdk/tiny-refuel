@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate one standalone Tiny Refuel catalog; no network or LLM required."""
+"""Validate one standalone Tiny Refuel catalog; no network required."""
 import argparse
 import json
 import math

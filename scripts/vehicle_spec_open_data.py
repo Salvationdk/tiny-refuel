@@ -1,6 +1,6 @@
 """Download a versioned OpenEV Data export and match exact catalog identities.
 
-No LLM calls, API keys or automatic catalog writes. Dataset values are candidates,
+No API keys or automatic catalog writes. Dataset values are candidates,
 not manufacturer-verified facts. Preserve sources, license, markets and variants.
 """
 from datetime import datetime, timezone

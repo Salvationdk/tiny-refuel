@@ -1373,7 +1373,12 @@ def _preserve_unselected_fuels(fresh, previous, selected):
         has_preserved_price = any(old.get(field) is not None for field in preserved_fields
                                   if field in ("p95", "p100", "diesel"))
         if has_preserved_price:
-            rows.append(dict(old))
+            retained = dict(old)
+            # Do not resurrect prices for a selected fuel omitted by the source.
+            for field in ("p95", "p100", "h95", "h100", "prev95", "diesel"):
+                if field not in preserved_fields:
+                    retained.pop(field, None)
+            rows.append(retained)
     return rows
 
 
@@ -1534,7 +1539,8 @@ def _collect(progress_callback=None, fuel_types=None):
             ev.append({"brand": s["brand"], "name": s["name"],
                        "address": s["address"], "lat": s.get("lat"),
                        "lon": s.get("lon"), "kwh": s["kwh"],
-                       "lu": s.get("kwh_lu") or s.get("lu")})
+                       "lu": s.get("kwh_lu") or s.get("lu"),
+                       "source": s.get("source"), "stale": bool(s.get("stale"))})
     for e in ok_ev:
         ev.append({"brand": "OK", "name": e["kind"] + "lader",
                    "address": "", "lat": None, "lon": None,
@@ -1555,6 +1561,10 @@ def _collect(progress_callback=None, fuel_types=None):
                    "kwh": None, "plugs": c.get("plugs"),
                    "app_only": True, "lu": None})
     ev.extend(ev_locations)
+    if "el" not in selected:
+        # An unrelated fuel refresh must leave the complete EV snapshot intact.
+        ev = [dict(row) for row in prev.get("ev", [])
+              if isinstance(row, dict) and row.get("brand") != "Tesla"]
 
     def mean(vals):
         vals = [v for v in vals if v is not None]

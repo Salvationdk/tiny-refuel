@@ -1,6 +1,6 @@
 # Lokal gennemgang af indsamlede køretøjsforslag
 
-Kør uden LLM eller netværk:
+Kør lokalt uden netværk:
 
 ```sh
 python scripts/review_vehicle_specs.py --input resultater/all-candidates.json --output review-results

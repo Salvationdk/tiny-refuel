@@ -123,11 +123,11 @@ stable.hass = { states: { 'device_tracker.telefon': {} }, themes: { darkMode: fa
 const trackerRenderCount = editorRenders;
 stable.hass = { states: { 'device_tracker.telefon': { state: 'away' } }, themes: { darkMode: true } };
 assert.equal(editorRenders, trackerRenderCount, 'GPS and theme updates must not rebuild editor fields');
-assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'invert(1)');
-assert.equal(stable.style.values['--trf-vehicle-logo-blend'], 'screen');
-assert.equal(stable.style.values['--trf-white-logo-filter'], 'none');
+assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'brightness(0) invert(1)');
+assert.equal(stable.style.values['--trf-vehicle-logo-blend'], 'normal');
+assert.equal(stable.style.values['--trf-white-logo-filter'], 'brightness(0) invert(1)');
 stable.hass = { states: { 'device_tracker.telefon': {} }, themes: { darkMode: false } };
-assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'none');
+assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'brightness(0)');
 
 // A late catalog render preserves open sections and an uncommitted text draft.
 const focusedEditor = new StableEditor();
@@ -903,3 +903,21 @@ console.log('PASS: vehicle changes, verified variant years and collapse actions'
   assert.match(form.innerHTML, /data-key="bil:0:batteri_kwh" min="0.01" step="any"/);
 }
 console.log('PASS: diesel, small tanks, small batteries, hybrid metrics and catalog validation');
+
+// Optional year metadata must not silently change fuel or tank calculations.
+{
+  const f = new StableEditor(); f.dispatchEvent = () => {};
+  f._katalog = packagedCatalog;
+  f.setConfig({biler:[{mærke:'Volkswagen',model:'up!',brændstof:'benzin',tank_liters:35}]});
+  f.events.change({target:{dataset:{key:'bil:0:aargang'},value:'2018'}});
+  assert.equal(f._config.biler[0].tank_liters,35);
+  assert.equal(f._config.biler[0].brændstof,'benzin');
+  const c = new Card(); c.setConfig(f._config);
+  assert.equal(c._tankLiters(),35);
+  assert.equal(c._effVis().el,false);
+  c._data={stations:[{brand:'Q8',name:'Q8 station',address:'Testvej 42',p95:15,lat:null,lon:null}]};
+  c._render();
+  assert.ok(c.innerHTML.includes('q=Q8%20Testvej%2042'));
+  c.setConfig({...f._config,navigation:'google'});
+  assert.ok(c.innerHTML.includes('destination=Q8%20Testvej%2042'));
+}

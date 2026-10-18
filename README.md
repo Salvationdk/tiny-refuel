@@ -283,7 +283,7 @@ Teksterne bruger **køretøj**, fordi kataloget også omfatter motorcykler, knal
 
 ### Manglende tank, drivmiddel eller batteri
 
-[Scrapervejledning](docs/vehicle-spec-scraper.md): `scripts/scrape_vehicle_specs.py` laver en mangelliste fra det ufiltrerede originalkatalog og henter kandidater fra en medfølgende producentkildeliste, JSON-LD og to åbne datasæt. Lokal kørsel kræver ingen LLM eller API-nøgler. Forslag gemmes med kilde, år/variant og krav om gennemgang. Scriptet ændrer ikke kataloget automatisk. `scripts/build_supported_catalog.py` kan bagefter bygge det medfølgende udvalg fra et gennemgået fuldt katalog.
+[Scrapervejledning](docs/vehicle-spec-scraper.md): `scripts/scrape_vehicle_specs.py` laver en mangelliste fra det ufiltrerede originalkatalog og henter kandidater fra en medfølgende producentkildeliste, JSON-LD og to åbne datasæt. Lokal kørsel kræver ingen API-nøgler. Forslag gemmes med kilde, år/variant og krav om gennemgang. Scriptet ændrer ikke kataloget automatisk. `scripts/build_supported_catalog.py` kan bagefter bygge det medfølgende udvalg fra et gennemgået fuldt katalog.
 
 Kompakt visning viser også billigste brændstofpris blandt alle valgte selskaber, inklusive rækker skjult af visningsgrænsen. Vis færre gendanner grænsen efter Vis 10 mere i begge oversigter og i ladepopup'en. En laveste oplyst elpris kan være en generel takst og er ikke en garanti for den lokale pris på et ladested.
 

@@ -378,7 +378,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--catalog', required=True, help='Unfiltered full JSON catalog')
     parser.add_argument('--engine-data', action='store_true', help='Download the open engine dataset (~85 MB) for tank and fuel candidates')
-    parser.add_argument('--open-ev', action='store_true', help='Download and match the open OpenEV Data release, without LLM/API keys')
+    parser.add_argument('--open-ev', action='store_true', help='Download and match the open OpenEV Data release, without API keys')
     parser.add_argument('--offline', action='store_true', help='Use only cached manufacturer pages and datasets; no network requests')
     parser.add_argument('--aliases', help='JSON list of explicitly reviewed source-to-catalog name mappings')
     parser.add_argument('--official-batch', action='store_true', help='Use bundled reviewed manufacturer sources; no manual source list required')

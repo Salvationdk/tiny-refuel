@@ -323,9 +323,9 @@
     if (!owner.style || !owner.style.setProperty) return;
     var dark = hass && hass.themes && hass.themes.darkMode;
     if (dark === undefined) dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    owner.style.setProperty("--trf-vehicle-logo-filter", dark ? "invert(1)" : "none");
-    owner.style.setProperty("--trf-vehicle-logo-blend", dark ? "screen" : "multiply");
-    owner.style.setProperty("--trf-white-logo-filter", dark ? "none" : "invert(1)");
+    owner.style.setProperty("--trf-vehicle-logo-filter", dark ? "brightness(0) invert(1)" : "brightness(0)");
+    owner.style.setProperty("--trf-vehicle-logo-blend", "normal");
+    owner.style.setProperty("--trf-white-logo-filter", dark ? "brightness(0) invert(1)" : "brightness(0)");
   }
 
   function vehicleLogoFailure(owner) {
@@ -1093,8 +1093,8 @@
               (row.stAgeRaw ? " · prisinfo: " + row.stAgeRaw : "") + this._altTitle(row.alt, visBenzin, visDiesel);
           } else {
             kmCell = '<span class="trf-km">–</span>';
-            link = this._navHref(null, row.b.brand);
-            title = row.b.brand;
+            link = this._navHref(null, [row.b.brand, row.stAddr || row.stName].filter(Boolean).join(" "));
+            title = [row.b.brand, row.stAddr || row.stName].filter(Boolean).join(" · ");
           }
           var logo = '<div class="trf-logo"><a class="trf-navlink" data-waze="' + esc(row.b.brand) +
             '" href="' + link + '" rel="noopener" title="' + esc(title) + '"><img src="/tiny_refuel/static/logos/' +
@@ -1929,7 +1929,7 @@
             var year = String(t.value || "").trim();
             if (year && !/^\d{4}$/.test(year)) { t.value = biler[bi].aargang || ""; return; }
             if (year !== String(biler[bi].aargang || "")) {
-              ["tank_liters", "batteri_kwh", "brændstof", "vis"].forEach(function (key) { delete biler[bi][key]; });
+              var previousVariant = biler[bi].variant;
               var modelEntry = self._katalogFind(biler[bi].mærke, biler[bi].model);
               var choices = self._variantsForYear(modelEntry, year);
               // A year may choose a variant only when every variant has year data
@@ -1937,6 +1937,9 @@
               var completeYears = modelEntry && modelEntry.variants && modelEntry.variants.length && modelEntry.variants.every(function (v) { return Array.isArray(v.model_years) && v.model_years.length; });
               if (year && completeYears && choices.length === 1) biler[bi].variant = choices[0].name;
               else if (year && completeYears && !choices.some(function (v) { return catalogKey(v.name) === catalogKey(biler[bi].variant); })) delete biler[bi].variant;
+              if (previousVariant !== biler[bi].variant) {
+                ["tank_liters", "batteri_kwh", "brændstof", "vis"].forEach(function (key) { delete biler[bi][key]; });
+              }
             }
             if (year) biler[bi].aargang = year;
             else delete biler[bi].aargang;

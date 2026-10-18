@@ -1,6 +1,6 @@
 # Lokal indsamling af køretøjsdata
 
-Python 3.10+ er nok. Ingen ekstra Python-pakker, LLM, ChatGPT, API-nøgler eller betalte tjenester bruges af scriptet. Kørsel på din computer sender ikke forespørgsler til ChatGPT og bruger derfor ikke din ChatGPT-kvote.
+Python 3.10+ er nok. Ingen ekstra Python-pakker, API-nøgler eller betalte tjenester bruges af scriptet.
 
 ## Kom i gang med den selvstændige ZIP
 
@@ -50,7 +50,7 @@ Filer i `resultater/`:
 
 Gennemførte sidehentninger og datasæt genbruges. Scriptet kontrollerer datasætversionen og downloader ikke hele filen igen, når den er uændret. Motorsættet fylder cirka 85 MB udpakket; OpenEV cirka 3,2 MB. Den selvstændige ZIP indeholder den allerede hentede datacache med kilde- og licensoplysninger. En afbrudt stor download kan skulle begynde forfra, men den erstatter ikke den tidligere gode cache. Producentresultater gemmes efter hver kilde.
 
-Afslutning af ChatGPT stopper ikke et script, som kører på din egen computer. Lad terminalvinduet være åbent, indtil det er færdigt. Kør den samme kommando igen efter en fejl. Se fejlbeskeden og source-status.json, hvis en kilde ikke kunne hentes.
+Scriptet kører lokalt på din egen computer. Lad terminalvinduet være åbent, indtil det er færdigt. Kør den samme kommando igen efter en fejl. Se fejlbeskeden og source-status.json, hvis en kilde ikke kunne hentes.
 
 Datasættene kan genbehandles helt uden internet:
 
