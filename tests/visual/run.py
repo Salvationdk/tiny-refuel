@@ -126,6 +126,9 @@ def onboard():
     else:
         raise RuntimeError(f"Tiny Refuel config entry/API failed to load: {response.status_code} {response.text[:2000]}")
     api(session, "/api/states/device_tracker.visual", {"state": "home", "attributes": {"friendly_name": "Testposition", "latitude": 55.67, "longitude": 12.56}})
+    asset = session.get(BASE + "/tiny_refuel/static/tiny-refuel-card.js", timeout=20)
+    asset.raise_for_status()
+    assert asset.content == (ROOT / "custom_components/tiny_refuel/frontend/tiny-refuel-card.js").read_bytes(), "HA served a different card module"
     return tokens
 
 
@@ -139,6 +142,8 @@ def browsers(tokens):
         page = context.new_page()
         errors = []
         rejections = []
+        failed_requests = []
+        page.on("response", lambda response: failed_requests.append({"status": response.status, "url": response.url}) if response.status >= 400 else None)
         websocket_errors = []
         def watch_socket(socket):
             commands = {}
@@ -156,13 +161,13 @@ def browsers(tokens):
         page.expose_function("visualReportRejection", lambda message: rejections.append(message))
         page.on("pageerror", lambda error: errors.append({"message": str(error), "stack": error.stack}))
         page.goto(BASE + "/lovelace/test")
-        page.wait_for_function("customElements.get('tiny-refuel-card') !== undefined", timeout=60000)
         card = page.locator("tiny-refuel-card").first
         try:
+            page.wait_for_function("customElements.get('tiny-refuel-card') !== undefined", timeout=30000)
             expect(card.locator(".trf-row").first).to_be_visible(timeout=90000)
         except Exception:
             diagnostics = {"errors": errors, "rejections": rejections, "websocket_errors": websocket_errors,
-                           "card_errors": page.locator("hui-error-card").all_text_contents()}
+                           "card_errors": page.locator("hui-error-card").all_text_contents(), "failed_requests": failed_requests}
             (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
             print(diagnostics, flush=True)
             page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
