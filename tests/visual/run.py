@@ -63,7 +63,7 @@ def prepare(folder):
         "homeassistant": {"name": "Tiny Refuel visuel test", "latitude": 55.67,
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
         "http": {"server_host": "127.0.0.1"}, "frontend": {},
-        "lovelace": {"mode": "yaml"},
+        "lovelace": {"mode": "yaml", "resources": [{"url": "/tiny_refuel/static/tiny-refuel-card.js?v=0.2.2", "type": "module"}]},
     }))
     (folder / "ui-lovelace.yaml").write_text(yaml.safe_dump({
         "title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}],
@@ -156,10 +156,15 @@ def browsers(tokens):
         page.expose_function("visualReportRejection", lambda message: rejections.append(message))
         page.on("pageerror", lambda error: errors.append({"message": str(error), "stack": error.stack}))
         page.goto(BASE + "/lovelace/test")
+        page.wait_for_function("customElements.get('tiny-refuel-card') !== undefined", timeout=60000)
         card = page.locator("tiny-refuel-card").first
         try:
             expect(card.locator(".trf-row").first).to_be_visible(timeout=90000)
         except Exception:
+            diagnostics = {"errors": errors, "rejections": rejections, "websocket_errors": websocket_errors,
+                           "card_errors": page.locator("hui-error-card").all_text_contents()}
+            (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
+            print(diagnostics, flush=True)
             page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
             raise
         # HA 2026.10 asks the test owner to confirm the localhost HTTP binding.
