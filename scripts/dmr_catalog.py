@@ -25,10 +25,10 @@ FTP_HOST = '5.44.137.84'
 FTP_USER = 'dmr-ftp-user'
 FTP_PASSWORD = 'dmrpassword'
 # Code/name pairs verified against the full 2026-10-07 extract inspection.
-KINDS = {'1', '2', '3', '4', '7', '8', '12', '16', '17', '91'}
+KINDS = {'1', '2', '3', '4', '7', '8', '16', '17', '91'}
 KIND_NAMES = {'personbil', 'bus', 'varebil', 'lastbil', 'stor personbil',
               'motorcykel', 'knallert', 'stor knallert', 'lille knallert',
-              'traktor', 'motorredskab', 'motorkøretøj', 'atv', 'motordrevet blokvogn'}
+              'traktor', 'motorkøretøj', 'atv', 'motordrevet blokvogn'}
 # Retain raw values and field names until their units and structure are verified.
 TECHNICAL_FIELDS = {
     'KoeretoejOplysningModelAar', 'KoeretoejOplysningEUVariant',
@@ -46,6 +46,8 @@ FIELDS = TECHNICAL_FIELDS | {
 
 def powered_kind(row):
     names = {name.casefold() for name in row.get('KoeretoejArtNavn', ())}
+    if '12' in row.get('KoeretoejArtNummer', set()) or 'motorredskab' in names:
+        return False
     # A trailer can have an auxiliary engine; a fuel field alone is insufficient.
     if any(word in name for name in names for word in
            ('påhæng', 'paahaeng', 'sættevogn', 'saettevogn', 'campingvogn', 'sidevogn')):
@@ -325,16 +327,19 @@ def build_catalog(stream, base, source_date, source_file, limit=None, include_pr
             if len(variant) > 200 or variant.casefold() in {'uoplyst', 'ukendt', '-'}:
                 continue
             bucket = variants.setdefault(entry_key, {})
-            bucket.setdefault(variant, set()).update(row.get('DrivkraftTypeNavn', set()))
+            item = bucket.setdefault(variant, {'fuel_types': set(), 'model_years': set()})
+            item['fuel_types'].update(row.get('DrivkraftTypeNavn', set()))
+            item['model_years'].update(row.get('KoeretoejOplysningModelAar', set()))
     if not records or not included:
         raise ValueError('No usable DMR records; catalog not replaced')
     for (key, model_key), values in variants.items():
         entry = indexes[key][model_key]
         existing = {variant['name']: variant for variant in entry.get('variants', [])}
-        for name, fuels in values.items():
+        for name, details in values.items():
             previous = existing.get(name, {})
             existing[name] = {**previous, 'name': name,
-                              'fuel_types': sorted(set(previous.get('fuel_types', [])) | fuels)}
+                              'fuel_types': sorted(set(previous.get('fuel_types', [])) | details['fuel_types']),
+                              'model_years': sorted(set(previous.get('model_years', [])) | details['model_years'])}
         entry['variants'] = sorted(existing.values(), key=lambda row: row['name'].casefold())
     for (key, model_key), values in profiles.items():
         entry = indexes[key][model_key]

@@ -578,10 +578,10 @@ function queueCoverage() {
   onlyElectric.setConfig({ vis_benzin: false, vis_diesel: false, vis_el: true });
   assert.ok(onlyElectric.innerHTML.includes('1 unikke adresser klar til opslag'));
 }
-// A model-name-only addition must never carry over the preceding car's fuel/specs.
+// A model-name-only custom catalog must never carry over the preceding vehicle's specs.
 {
   const form = new StableEditor();
-  form._katalog = packagedCatalog;
+  form._katalog = { brands: [{ mærke: 'Toyota', modeller: [{ model: 'Prius' }, { model: 'Aygo', requires_fuel_selection: true, specification_note: 'Vælg drivmiddel og kontrollér tank/batteri' }] }] };
   form.dispatchEvent = () => {};
   form.setConfig({ biler: [{ mærke: 'Toyota', model: 'Prius', brændstof: 'hybrid', tank_liters: 45, batteri_kwh: 8, vis: { benzin: true } }] });
   form.events.change({ target: { dataset: { key: 'bil:0:model' }, value: 'Aygo' } });
@@ -595,7 +595,7 @@ function queueCoverage() {
   assert.ok(form.innerHTML.includes('Aygo · vælg drivmiddel'));
   assert.ok(form.innerHTML.includes('Vælg drivmiddel og kontrollér tank/batteri'));
   assert.ok(!form.innerHTML.includes('Aygo · null'));
-  assert.ok(form.innerHTML.includes(packagedCatalog.brands.length + ' mærker · ' + packagedCatalog.brands.reduce((n, b) => n + b.modeller.length, 0) + ' modeller'));
+  assert.ok(form.innerHTML.includes('1 mærker · 2 modeller'));
   form.events.change({ target: { dataset: { key: 'bil:0:brændstof' }, value: 'benzin' } });
   assert.equal(form._config.biler[0].brændstof, 'benzin');
   assert.equal(form._config.biler[0].vis.benzin, true);
@@ -682,7 +682,7 @@ for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
   form._katalog = packagedCatalog;
   form.dispatchEvent = () => {};
   form.setConfig({ biler: [{ mærke: 'Honda', model: 'CB 500', brændstof: 'benzin', tank_liters: 17 }] });
-  assert.ok(form._makeSuggestions('').total > 1800);
+  assert.equal(form._makeSuggestions('').total, 54);
   assert.ok((form._makeSuggestions('').html.match(/<option/g) || []).length <= 60);
   assert.ok(form.innerHTML.includes('bil:0:koeretoejstype'));
   assert.ok(form.innerHTML.includes('bil:0:aargang'));
@@ -706,7 +706,7 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   const form = new (registry.get('tiny-refuel-card-editor'))();
   form._katalog = packagedCatalog;
   assert.equal(form._katalogModels('CITROEN'), form._katalogModels('Citroën'));
-  assert.equal(form._katalogModels('CF MOTO'), form._katalogModels('CFMOTO'));
+  assert.equal(form._katalogModels('CF MOTO').length, 0, 'removed brands remain available only by manual input');
   assert.ok(form._makeSuggestions('CITROEN').html.includes('value="Citroën"'));
   assert.ok(!form._makeSuggestions('CITROEN').html.includes('value="CITROEN"'));
   assert.ok(!packagedCatalog.brands.some(b => b.mærke.toLowerCase() === 'selvbyg'));
@@ -737,7 +737,7 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   assert.ok(panel.innerHTML.includes('class="trf trf-compact"'));
   assert.ok(!panel.innerHTML.includes('data-car="0"'));
   assert.ok(!panel.innerHTML.includes('data-scrape'));
-  assert.ok(!panel.innerHTML.includes('<div class="trf-best">'));
+  assert.ok(panel.innerHTML.includes('<div class="trf-best">'));
   assert.ok(panel.innerHTML.includes('Information og datagrundlag'));
   assert.ok(panel.innerHTML.includes('Tiny Refuel v0.2.2'));
   assert.ok(panel.innerHTML.indexOf('title="Selskab 5') < panel.innerHTML.indexOf('title="Selskab 4'), 'compact fuel rows show nearer stations first');
@@ -746,6 +746,11 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   assert.equal(rowCount(), 6);
   panel.setConfig({ ...config, kompakt: true });
   assert.equal(rowCount(), 6, 'equivalent config echoes retain expanded rows');
+  assert.ok(panel.innerHTML.includes('data-fewer-stations="fuel"'));
+  panel.events.click({ preventDefault() {}, target: { closest: selector => selector === '[data-fewer-stations]' ? { getAttribute: () => 'fuel' } : null } });
+  assert.equal(rowCount(), 3);
+  assert.ok(!panel.innerHTML.includes('data-fewer-stations="fuel"'));
+  assert.ok(panel.innerHTML.includes('Billigst 95: 15,00'), 'cheapest includes a hidden, more distant row');
   panel.setConfig({ ...config, kompakt: true, antal_stationer: 2, vis_bilvaelger: true, vis_scrape_knap: true });
   assert.equal(rowCount(), 2);
   assert.ok(panel.innerHTML.includes('data-car="0"'));
@@ -821,3 +826,74 @@ console.log('PASS: compact display, independent row limits, retained vehicle sel
   assert.ok(httpHelp.includes('HTTP 500 betyder'));
   assert.ok(!httpHelp.includes('ufuldstændigt eller ugyldigt JSON-svar'));
 }
+
+// Committed identity changes clear dependent values; equivalent edits and custom names survive.
+{
+  const catalog = { brands: [
+    { mærke: 'Alpha', modeller: [{ model: 'One', tank_l: 45, brændstof: 'benzin' }, { model: 'Two', batteri_kwh: 50, brændstof: 'el' }] },
+    { mærke: 'Beta', modeller: [{ model: 'Three' }] },
+  ] };
+  function form(car) { const f = new StableEditor(); f._katalog = catalog; f.dispatchEvent = () => {}; f.setConfig({ biler: [car] }); return f; }
+  const change = (f, field, value) => f.events.change({ target: { dataset: { key: 'bil:0:' + field }, value } });
+  const original = { mærke: 'Alpha', model: 'One', navn: 'Alpha One', aargang: '2020', variant: 'Sport', tank_liters: 48, batteri_kwh: 2, brændstof: 'benzin', vis: { benzin: true }, koeretoejstype: 'personbil', gps: 'person.test' };
+  let f = form(original);
+  change(f, 'mærke', ' alpha ');
+  assert.equal(f._config.biler[0].tank_liters, 48);
+  assert.equal(f._config.biler[0].aargang, '2020');
+  change(f, 'model', 'one');
+  assert.equal(f._config.biler[0].tank_liters, 48);
+  change(f, 'mærke', 'Beta');
+  for (const field of ['model', 'navn', 'aargang', 'variant', 'tank_liters', 'batteri_kwh', 'brændstof', 'vis']) assert.equal(f._config.biler[0][field], undefined, field);
+  assert.equal(f._config.biler[0].gps, 'person.test');
+  assert.equal(f._config.biler[0].koeretoejstype, 'personbil');
+  f = form({ ...original, navn: 'Familiens køretøj' });
+  change(f, 'model', 'Two');
+  assert.equal(f._config.biler[0].navn, 'Familiens køretøj');
+  assert.equal(f._config.biler[0].batteri_kwh, 50);
+  assert.equal(f._config.biler[0].tank_liters, undefined);
+  change(f, 'model', '');
+  assert.equal(f._config.biler[0].batteri_kwh, undefined);
+  assert.equal(f._config.biler[0].model, undefined);
+  assert.ok(!f.innerHTML.includes('<option value="motorredskab"'));
+}
+
+// Only complete per-variant year mappings permit automatic selection.
+{
+  const f = new StableEditor(); f.dispatchEvent = () => {};
+  const model = { model: 'One', variants: [{ name: 'Old', model_years: ['2019'] }, { name: 'New', model_years: ['2020', '2021'] }, { name: 'Other', model_years: ['2021'] }] };
+  f._katalog = { brands: [{ mærke: 'Alpha', modeller: [model] }] };
+  const year = value => f.events.change({ target: { dataset: { key: 'bil:0:aargang' }, value } });
+  f.setConfig({ biler: [{ mærke: 'Alpha', model: 'One', variant: 'Old', tank_liters: 40 }] });
+  year('2020');
+  assert.equal(f._config.biler[0].variant, 'New');
+  assert.equal(f._config.biler[0].tank_liters, undefined);
+  assert.ok(!f._variantOptions('Alpha', 'One', '', '2020').includes('Old'));
+  year('202');
+  assert.equal(f._config.biler[0].aargang, '2020');
+  year('2021');
+  assert.equal(f._config.biler[0].variant, 'New', 'a still valid selected variant survives multiple matches');
+  year('2022');
+  assert.equal(f._config.biler[0].variant, undefined);
+  model.variants.push({ name: 'Unmapped' });
+  year('2019');
+  assert.equal(f._config.biler[0].variant, undefined, 'incomplete mappings must not guess');
+  assert.ok(f._variantYearNote(f._config.biler[0]).includes('manuelt'));
+}
+
+// Both station sections and the detailed EV popup can collapse after expansion.
+{
+  const panel = new Card(); panel._maybeLoad = () => {};
+  panel._data = { stations: [], ev: Array.from({ length: 15 }, (_, i) => ({ brand: 'OK', address: 'Vej ' + i, lat: 55 + i / 1000, lon: 12, kind: 'AC', kwh: 3 })) };
+  panel.setConfig({ kompakt: true, vis_benzin: false, vis_diesel: false, vis_el: true });
+  panel._extraStationRows = { ev: 10 };
+  panel.events.click({ preventDefault() {}, target: { closest: selector => selector === '[data-fewer-stations]' ? { getAttribute: () => 'ev' } : null } });
+  assert.equal(panel._extraStationRows.ev, 0);
+  panel._openEvBrand = 'OK'; panel._evPopupLimit = 20;
+  const expanded = panel._evPopupHtml({ lat: 55, lon: 12 });
+  assert.ok(expanded.includes('data-fewer-ev'));
+  assert.equal((expanded.match(/class="trf-evrow"/g) || []).length, 15);
+  panel.events.click({ preventDefault() {}, target: { closest: selector => selector === '[data-fewer-ev]' ? {} : null } });
+  assert.ok(panel._evPopupHtml({ lat: 55, lon: 12 }).includes('Vis 10 mere'));
+  assert.equal((panel._evPopupHtml({ lat: 55, lon: 12 }).match(/class="trf-evrow"/g) || []).length, 10);
+}
+console.log('PASS: vehicle changes, verified variant years and collapse actions');

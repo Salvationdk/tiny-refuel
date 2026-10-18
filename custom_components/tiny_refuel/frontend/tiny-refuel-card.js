@@ -453,12 +453,25 @@
           }
           return;
         }
+        var fewerStations = ev.target && ev.target.closest ? ev.target.closest("[data-fewer-stations]") : null;
+        if (fewerStations) {
+          ev.preventDefault();
+          var foldSection = fewerStations.getAttribute("data-fewer-stations");
+          if (foldSection === "fuel" || foldSection === "ev") {
+            self._extraStationRows = self._extraStationRows || {};
+            self._extraStationRows[foldSection] = 0;
+            self._render();
+          }
+          return;
+        }
         var moreEv = ev.target && ev.target.closest ? ev.target.closest("[data-more-ev]") : null;
         if (moreEv) {
           self._evPopupLimit = (self._evPopupLimit || 10) + 10;
           self._render();
           return;
         }
+        var fewerEv = ev.target && ev.target.closest ? ev.target.closest("[data-fewer-ev]") : null;
+        if (fewerEv) { ev.preventDefault(); self._evPopupLimit = 10; self._render(); return; }
         var scrape = ev.target && ev.target.closest ? ev.target.closest("[data-scrape]") : null;
         if (scrape) {
           ev.preventDefault();
@@ -520,8 +533,12 @@
     }
 
     _stationRowActions(section, visible, total) {
-      if (visible >= total) return '';
-      return '<div class="trf-list-actions"><button type="button" class="trf-ev-button" data-more-stations="' + section + '">Vis 10 mere</button><span class="trf-em">Viser ' + visible + ' af ' + total + ' rækker</span></div>';
+      var expanded = this._extraStationRows && this._extraStationRows[section] > 0;
+      if (visible >= total && !expanded) return '';
+      return '<div class="trf-list-actions">' +
+        (visible < total ? '<button type="button" class="trf-ev-button" data-more-stations="' + section + '">Vis 10 mere</button>' : '') +
+        (expanded ? '<button type="button" class="trf-ev-button" data-fewer-stations="' + section + '">Vis færre</button>' : '') +
+        '<span class="trf-em">Viser ' + visible + ' af ' + total + ' rækker</span></div>';
     }
 
     static getStubConfig() {
@@ -992,24 +1009,21 @@
         var min100 = p100s.length ? Math.min.apply(null, p100s) : null;
 
         var bestHtml = "";
-        if (visAndet && !compact && min95 !== null) {
-          bestHtml = '<div class="trf-best"><span><b class="trf-b95">▎Billigst 95:</b>';
-          for (var k = 0; k < rows.length; k++) {
-            if (rows[k].v95 === min95) {
-              bestHtml += '<img src="/tiny_refuel/static/logos/' + rows[k].b.img + '" alt="" class="trf-inline">';
-            }
-          }
-          bestHtml += "</span>";
-          if (min100 !== null) {
-            bestHtml += '<span><b class="trf-b100">▎Billigst 100:</b>';
-            for (var k2 = 0; k2 < rows.length; k2++) {
-              if (rows[k2].b.has100 && rows[k2].v100 === min100) {
-                bestHtml += '<img src="/tiny_refuel/static/logos/' + rows[k2].b.img + '" alt="" class="trf-inline">';
-              }
-            }
-            bestHtml += "</span>";
-          }
-          bestHtml += "</div>";
+        if (visAndet) {
+          var bestParts = [];
+          var fuels = [];
+          if (visBenzin) fuels.push({ field: 'v95', label: '95' }, { field: 'v100', label: '100' });
+          if (visDiesel) fuels.push({ field: 'diesel', label: 'Diesel' });
+          fuels.forEach(function (fuel) {
+            var pricedRows = rows.filter(function (row) { return (fuel.field !== 'v100' || row.b.has100) && typeof row[fuel.field] === 'number' && isFinite(row[fuel.field]) && row[fuel.field] > 0; });
+            if (!pricedRows.length) return;
+            var minimum = Math.min.apply(null, pricedRows.map(function (row) { return row[fuel.field]; }));
+            var cheapest = pricedRows.filter(function (row) { return row[fuel.field] === minimum; });
+            var names = cheapest.map(function (row) { return row.b.brand; });
+            var content = compact ? esc(names.slice(0, 2).join(', ')) + (names.length > 2 ? ' +' + (names.length - 2) : '') : cheapest.map(function (row) { return '<img src="/tiny_refuel/static/logos/' + row.b.img + '" alt="' + esc(row.b.brand) + '" class="trf-inline">'; }).join('');
+            bestParts.push('<span title="' + esc(names.join(', ')) + '"><b>Billigst ' + fuel.label + ': ' + this._fmt(minimum) + '</b> · ' + content + '</span>');
+          }, this);
+          if (bestParts.length) bestHtml = '<div class="trf-best">' + bestParts.join('') + '</div>';
         }
 
         if (visAndet && !compact && loc) {
@@ -1470,6 +1484,7 @@
       }
       html += '</div><div class="trf-ev-actions">';
       if (rows.length > limit) html += '<button type="button" class="trf-ev-button" data-more-ev>Vis 10 mere</button>';
+      if (limit > 10) html += '<button type="button" class="trf-ev-button" data-fewer-ev>Vis færre</button>';
       html += '<span class="trf-em">Viser ' + Math.min(limit, rows.length) + ' af ' + rows.length + ' ladevalg. Et sted kan have både AC og DC.</span></div></dialog>';
       return html;
     }
@@ -1658,6 +1673,15 @@
     _evHtml(loc) {
       var self = this, entries = this._evEntries();
       var html = '<div class="trf-brand">El (kr/kWh)</div>';
+      if (this._effVis().andet) {
+        var knownPrices = entries.filter(function (ev) { return typeof ev.kwh === 'number' && isFinite(ev.kwh) && ev.kwh > 0; });
+        if (knownPrices.length) {
+          var lowest = Math.min.apply(null, knownPrices.map(function (ev) { return ev.kwh; }));
+          var names = Array.from(new Set(knownPrices.filter(function (ev) { return ev.kwh === lowest; }).map(function (ev) { return ev.brand; })));
+          html += '<div class="trf-best"><span title="Kun oplyste priser. Generelle takster og fra-priser er ikke bekræftede stationspriser.">Laveste oplyste elpris: <b>' + this._fmt(lowest) + ' kr/kWh</b> · ' + esc(names.join(', ')) + '</span></div>';
+        }
+      }
+
       var stations = entries.filter(function (ev) { return self._evHasLocation(ev); }).map(function (ev) {
         var coords = self._evCoords(ev);
         return { ev: ev, km: loc && coords ? self._haversineKm(loc.lat, loc.lon, coords.lat, coords.lon) : null };
@@ -1778,7 +1802,7 @@
         }
         if (match[2] === "variant") {
           var variants = self.querySelector('[data-variant-options="' + index + '"]');
-          if (variants) variants.innerHTML = self._variantOptions(car.mærke, car.model, target.value);
+          if (variants) variants.innerHTML = self._variantOptions(car.mærke, car.model, target.value, car.aargang);
           return;
         }
         var suggestions = self._modelSuggestions(car.mærke, target.value);
@@ -1816,7 +1840,7 @@
           : [];
         if (t.hasAttribute && t.hasAttribute("data-bil-add")) {
           self._openCar = biler.length;
-          biler.push({ navn: "Køretøj " + (biler.length + 1) });
+          biler.push({});
         } else {
           var idx = parseInt(t.getAttribute("data-bil-del"), 10);
           if (isFinite(idx)) biler.splice(idx, 1);
@@ -1846,6 +1870,12 @@
           var biler = Array.isArray(cfg.biler) ? cfg.biler.map(function (b) { return Object.assign({}, b); }) : [];
           while (biler.length <= bi) biler.push({});
           var needRender = false;
+          var previousCar = biler[bi];
+          var previousLabel = [previousCar.mærke, previousCar.model].filter(Boolean).join(" ");
+          var autoName = !previousCar.navn || /^(?:Bil|Køretøj) \d+$/.test(previousCar.navn) || catalogKey(previousCar.navn) === catalogKey(previousLabel);
+          function clearSelection() {
+            ["variant", "aargang", "tank_liters", "batteri_kwh", "brændstof", "vis"].forEach(function (key) { delete biler[bi][key]; });
+          }
           if (field === "tank_liters" || field === "batteri_kwh") {
             var bv = parseFloat(t.value);
             if (isFinite(bv) && bv > 0) biler[bi][field] = bv;
@@ -1855,49 +1885,47 @@
             var foundMake = catalogIndex(self._katalog);
             var canonical = foundMake && foundMake.makes.get(catalogKey(mk));
             if (canonical) mk = canonical.mærke;
+            if (catalogKey(mk) !== catalogKey(biler[bi].mærke)) {
+              delete biler[bi].model;
+              clearSelection();
+              if (autoName) delete biler[bi].navn;
+              needRender = true;
+            }
             if (mk) biler[bi].mærke = mk;
             else delete biler[bi].mærke;
-            delete biler[bi].model;
-            delete biler[bi].variant;
-            delete biler[bi].aargang;
-            delete biler[bi].tank_liters;
-            delete biler[bi].batteri_kwh;
-            delete biler[bi].brændstof;
-            delete biler[bi].vis;
-            needRender = true;
+            t.value = mk;
           } else if (field === "model") {
-            var md = String(t.value || "");
-            if (md) {
-              if (biler[bi].model !== md) { delete biler[bi].variant; delete biler[bi].aargang; delete biler[bi].tank_liters; delete biler[bi].batteri_kwh; delete biler[bi].brændstof; delete biler[bi].vis; }
-              biler[bi].model = md;
-              var entry = self._katalogFind(biler[bi].mærke, md);
+            var md = String(t.value || "").trim();
+            var entry = md ? self._katalogFind(biler[bi].mærke, md) : null;
+            if (entry) md = entry.model;
+            var oldEntry = self._katalogFind(biler[bi].mærke, biler[bi].model);
+            var modelChanged = entry && oldEntry ? entry !== oldEntry : catalogKey(md) !== catalogKey(biler[bi].model);
+            if (modelChanged) {
+              clearSelection();
+              if (autoName) delete biler[bi].navn;
               if (entry) {
                 if (entry.tank_l != null) biler[bi].tank_liters = entry.tank_l;
-                else delete biler[bi].tank_liters;
                 if (entry.batteri_kwh != null) biler[bi].batteri_kwh = entry.batteri_kwh;
-                else delete biler[bi].batteri_kwh;
                 if (entry.brændstof) {
                   biler[bi].brændstof = entry.brændstof;
                   biler[bi].vis = visForFuel(entry.brændstof);
-                } else if (entry.requires_fuel_selection) {
-                  delete biler[bi].brændstof;
-                  delete biler[bi].vis;
-                }
-                var nm = biler[bi].navn || "";
-                if (!nm || /^(?:Bil|Køretøj) \d+$/.test(nm)) {
-                  biler[bi].navn = biler[bi].mærke + " " + md;
                 }
               }
-            } else {
-              delete biler[bi].model;
             }
+            if (md) biler[bi].model = md;
+            else delete biler[bi].model;
           } else if (field === "aargang") {
             var year = String(t.value || "").trim();
+            if (year && !/^\d{4}$/.test(year)) { t.value = biler[bi].aargang || ""; return; }
             if (year !== (biler[bi].aargang || "")) {
-              delete biler[bi].tank_liters;
-              delete biler[bi].batteri_kwh;
-              delete biler[bi].brændstof;
-              delete biler[bi].vis;
+              ["tank_liters", "batteri_kwh", "brændstof", "vis"].forEach(function (key) { delete biler[bi][key]; });
+              var modelEntry = self._katalogFind(biler[bi].mærke, biler[bi].model);
+              var choices = self._variantsForYear(modelEntry, year);
+              // A year may choose a variant only when every variant has year data
+              // and exactly one is eligible. Never infer this from a model-wide list.
+              var completeYears = modelEntry && modelEntry.variants && modelEntry.variants.length && modelEntry.variants.every(function (v) { return Array.isArray(v.model_years) && v.model_years.length; });
+              if (year && completeYears && choices.length === 1) biler[bi].variant = choices[0].name;
+              else if (year && completeYears && !choices.some(function (v) { return catalogKey(v.name) === catalogKey(biler[bi].variant); })) delete biler[bi].variant;
             }
             if (year) biler[bi].aargang = year;
             else delete biler[bi].aargang;
@@ -2066,13 +2094,29 @@
       };
     }
 
-    _variantOptions(make, model, query) {
-      var entry = this._katalogFind(make, model);
+    _variantsForYear(entry, year) {
       return ((entry && entry.variants) || []).filter(function (variant) {
+        return !year || !Array.isArray(variant.model_years) || !variant.model_years.length || variant.model_years.map(String).indexOf(String(year)) !== -1;
+      });
+    }
+
+    _variantOptions(make, model, query, year) {
+      var entry = this._katalogFind(make, model);
+      return this._variantsForYear(entry, year).filter(function (variant) {
         return String(variant.name || "").toLowerCase().indexOf(String(query || "").toLowerCase()) !== -1;
       }).slice(0, 100).map(function (variant) {
         return '<option value="' + esc(variant.name) + '">' + esc((variant.fuel_types || []).join(" / ")) + '</option>';
       }).join("");
+    }
+
+    _variantYearNote(car) {
+      var entry = this._katalogFind(car.mærke, car.model);
+      var variants = entry && entry.variants || [];
+      if (car.aargang && variants.length && variants.every(function (v) { return Array.isArray(v.model_years) && v.model_years.length; })) {
+        var choices = this._variantsForYear(entry, car.aargang);
+        return choices.length ? choices.length + ' varianter passer til modelåret. Kontrollér drivmiddel og kapacitet.' : 'Ingen varianter har bekræftet dette modelår. Kontrollér årstallet eller indtast varianten manuelt.';
+      }
+      return 'Kataloget mangler en sikker kobling mellem årgang og variant. Vælg varianten manuelt; årstallet vælger ikke motor eller kapacitet.';
     }
 
     _katalogFind(maerke, model) {
@@ -2105,11 +2149,13 @@
         if (self._katalogFind(car.mærke, car.model) !== entry) return;
         var variants = self.querySelector('[data-variant-options="' + index + '"]');
         var input = self.querySelector('[data-key="bil:' + index + ':variant"]');
-        if (variants) variants.innerHTML = self._variantOptions(car.mærke, car.model, input ? input.value : car.variant);
+        if (variants) variants.innerHTML = self._variantOptions(car.mærke, car.model, input ? input.value : car.variant, car.aargang);
         var years = self.querySelector('[data-year-options="' + index + '"]');
         if (years) years.innerHTML = self._yearOptions(car.mærke, car.model);
         var note = self.querySelector('[data-model-note="' + index + '"]');
         if (note) note.textContent = vehicleModelNote(entry, car.variant);
+        var yearNote = self.querySelector('[data-variant-year-note="' + index + '"]');
+        if (yearNote) yearNote.textContent = self._variantYearNote(car);
       });
     }
 
@@ -2119,7 +2165,7 @@
       var self = this;
       ["model", "variant", "aargang", "navn", "tank_liters", "batteri_kwh"].forEach(function (field) {
         var node = self.querySelector('[data-key="bil:' + index + ':' + field + '"]');
-        if (node) node.value = car[field] == null ? "" : String(car[field]);
+        if (node && node.value !== (car[field] == null ? "" : String(car[field]))) node.value = car[field] == null ? "" : String(car[field]);
       });
       this.querySelectorAll('[data-key="bil:' + index + ':brændstof"]').forEach(function (node) {
         node.checked = node.value === car.brændstof;
@@ -2135,8 +2181,10 @@
       var modelNote = this.querySelector('[data-model-note="' + index + '"]');
       var selectedModel = this._katalogFind(car.mærke, car.model);
       if (modelNote) modelNote.textContent = vehicleModelNote(selectedModel, car.variant);
+      var yearNote = this.querySelector('[data-variant-year-note="' + index + '"]');
+      if (yearNote) yearNote.textContent = this._variantYearNote(car);
       var variantOptions = this.querySelector('[data-variant-options="' + index + '"]');
-      if (variantOptions) variantOptions.innerHTML = this._variantOptions(car.mærke, car.model);
+      if (variantOptions) variantOptions.innerHTML = this._variantOptions(car.mærke, car.model, "", car.aargang);
       var years = this.querySelector('[data-year-options="' + index + '"]');
       if (years) years.innerHTML = this._yearOptions(car.mærke, car.model);
       var logo = this.querySelector('[data-model-logo="' + index + '"]');
@@ -2225,7 +2273,7 @@
         html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
           esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
         html += '<div class="trfe-hint">Køretøjstype (valgfrit, vælges manuelt)</div><select data-key="bil:' + bi2 + ':koeretoejstype">';
-        [["", "Ikke valgt"], ["personbil", "Personbil"], ["varebil", "Varevogn"], ["lastbil", "Lastbil"], ["bus", "Bus"], ["motorcykel", "Motorcykel"], ["knallert", "Knallert"], ["traktor", "Traktor"], ["motorredskab", "Motorredskab"], ["andet", "Andet motorkøretøj"]].forEach(function (type) {
+        [["", "Ikke valgt"], ["personbil", "Personbil"], ["varebil", "Varevogn"], ["lastbil", "Lastbil"], ["bus", "Bus"], ["motorcykel", "Motorcykel"], ["knallert", "Knallert"], ["traktor", "Traktor"], ["andet", "Andet motorkøretøj"]].forEach(function (type) {
           html += '<option value="' + type[0] + '"' + ((bb.koeretoejstype || "") === type[0] ? " selected" : "") + '>' + type[1] + '</option>';
         });
         html += '</select><div class="trfe-hint">Mærke (søg — eller skriv dit eget)</div>' +
@@ -2241,11 +2289,11 @@
         html += '<div class="trfe-hint" data-model-count="' + bi2 + '">' + esc(suggestions.message) + '</div>';
         html += '<div class="trfe-hint">Variant (valgfrit — eller skriv selv)</div>' +
           '<input type="text" data-key="bil:' + bi2 + ':variant" list="trf-variants-' + bi2 + '" value="' + esc(bb.variant || '') + '" placeholder="fx 2018 · 1.6 TDI">' +
-          '<datalist id="trf-variants-' + bi2 + '" data-variant-options="' + bi2 + '">' + this._variantOptions(bb.mærke, bb.model) + '</datalist>';
+          '<datalist id="trf-variants-' + bi2 + '" data-variant-options="' + bi2 + '">' + this._variantOptions(bb.mærke, bb.model, "", bb.aargang) + '</datalist>';
         html += '<div class="trfe-hint">Modelår (valgfrit — kontrollér din variant)</div>' +
           '<input type="text" inputmode="numeric" data-key="bil:' + bi2 + ':aargang" list="trf-years-' + bi2 + '" value="' + esc(bb.aargang || '') + '" placeholder="fx 2020">' +
           '<datalist id="trf-years-' + bi2 + '" data-year-options="' + bi2 + '">' + this._yearOptions(bb.mærke, bb.model) + '</datalist>' +
-          '<div class="trfe-hint">Årgangsforslag gælder modellen samlet og bekræfter ikke den valgte variant. Køretøjstype begrænser ikke katalogsøgningen.</div>';
+          '<div class="trfe-hint" data-variant-year-note="' + bi2 + '">' + esc(this._variantYearNote(bb)) + '</div>';
         var selectedModel = this._katalogFind(bb.mærke, bb.model);
         html += '<div class="trfe-hint" data-model-note="' + bi2 + '">' +
           esc(vehicleModelNote(selectedModel, bb.variant)) + '</div>';

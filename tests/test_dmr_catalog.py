@@ -49,7 +49,7 @@ class DmrCatalogTests(unittest.TestCase):
         vw = next(b for b in result['brands'] if b['mærke'] == 'Volkswagen')
         golf = next(m for m in vw['modeller'] if m['model'] == 'Golf')
         self.assertEqual(golf['tank_l'], 50)
-        self.assertEqual(golf['variants'], [{'name': '1.6 TDI', 'fuel_types': ['Diesel']}])
+        self.assertEqual(golf['variants'], [{'name': '1.6 TDI', 'fuel_types': ['Diesel'], 'model_years': []}])
         self.assertEqual(result['logos'], original['logos'])
         self.assertEqual(len(original['brands']), 1)
         self.assertNotIn('PRIVATE', json.dumps(result))
@@ -103,9 +103,9 @@ class DmrCatalogTests(unittest.TestCase):
             self.assertNotIn('PRIVATE', json.dumps(inspection))
 
     def test_full_extract_kind_codes_include_all_observed_powered_types(self):
-        for code in ('1', '2', '3', '4', '7', '8', '12', '16', '17', '91'):
+        for code in ('1', '2', '3', '4', '7', '8', '16', '17', '91'):
             self.assertTrue(dmr.powered_kind({'KoeretoejArtNummer': {code}}))
-        for code in ('5', '6', '9', '10', '11', '96', '999'):
+        for code in ('5', '6', '9', '10', '11', '96', '999', '12'):
             self.assertFalse(dmr.powered_kind({'KoeretoejArtNummer': {code},
                                               'DrivkraftTypeNavn': {'Diesel'}}))
 
@@ -160,7 +160,7 @@ class DmrCatalogTests(unittest.TestCase):
         self.assertNotIn('dmr_profiles', model)
         self.assertEqual(model['model_years'], ['2021'])
         self.assertEqual(model['fuel_types'], ['Diesel'])
-        self.assertEqual(model['variants'], [{'name': '1.6 TDI', 'fuel_types': ['Diesel']}])
+        self.assertEqual(model['variants'], [{'name': '1.6 TDI', 'fuel_types': ['Diesel'], 'model_years': ['2021']}])
         self.assertFalse(report['technical_profiles_included'])
 
     def test_download_uses_latest_archive_and_keeps_old_file_on_interrupted_download(self):

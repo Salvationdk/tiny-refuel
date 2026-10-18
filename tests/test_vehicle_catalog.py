@@ -51,14 +51,14 @@ class VehicleCatalogTests(unittest.TestCase):
 
     def test_checked_additions_are_present_without_duplicate_names_or_invented_specs(self):
         catalog = module.load_catalog(ROOT / 'custom_components/tiny_refuel/frontend/bilkatalog.json')
-        self.assertEqual(len(catalog['brands']), 1809)
-        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 27242)
+        self.assertEqual(len(catalog['brands']), 54)
+        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 470)
         new = []
         for brand in catalog['brands']:
             names = [row['model'].casefold() for row in brand['modeller']]
             self.assertEqual(len(names), len(set(names)))
             new.extend(row for row in brand['modeller'] if row.get('requires_fuel_selection'))
-        self.assertGreaterEqual(len(new), 175)
+        self.assertTrue(all(any(isinstance(row.get(k), (int, float)) and row[k] > 0 for k in ('tank_l', 'batteri_kwh')) for brand in catalog['brands'] for row in brand['modeller']))
         self.assertTrue(all(row['source_url'].startswith('https://') for row in new))
         for row in new:
             for field in ('brændstof', 'tank_l', 'batteri_kwh'):

@@ -1,0 +1,9 @@
+[
+  {
+    "make": "Erstat med mærke fra missing.json",
+    "model": "Erstat med model fra missing.json",
+    "year": 2020,
+    "variant": "Erstat med variant fra kildesiden, eller fjern dette felt",
+    "url": "https://example.invalid/erstat-med-rigtig-specifikationsside"
+  }
+]
