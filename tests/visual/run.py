@@ -44,38 +44,20 @@ def prepare(folder):
     # Core configuration is supplied below. Skip optional onboarding discovery
     # (weather/radio/translation) so screenshots never need those services.
     (storage / "onboarding").write_text(json.dumps({
-        "version": 1, "minor_version": 1, "key": "onboarding",
+        "version": 4, "minor_version": 1, "key": "onboarding",
         "data": {"done": ["core_config", "analytics", "integration"]},
     }))
     custom = folder / "custom_components"
     custom.mkdir()
     shutil.copytree(ROOT / "custom_components/tiny_refuel", custom / "tiny_refuel")
-    fixture = custom / "visual_fixture"
-    fixture.mkdir()
-    (fixture / "manifest.json").write_text(json.dumps({
-        "domain": "visual_fixture", "name": "Visual fixture (test only)", "version": "1.0.0",
-        "dependencies": ["tiny_refuel"], "codeowners": [], "requirements": [],
-    }))
-    # Test-only dependency injection. Production source collectors remain untouched.
-    (fixture / "__init__.py").write_text('''from homeassistant.core import callback
-from custom_components.tiny_refuel.manager import RefuelManager
-import json
-from pathlib import Path
-async def async_setup(hass, config):
-    data = json.loads((Path(__file__).parent / "data.json").read_text())
-    @callback
-    def refresh(self, fuel_types=None):
-        self.data = data.copy()
-        self._notify()
-    RefuelManager.start_refresh = refresh
-    hass.states.async_set("device_tracker.visual", "home", {"friendly_name": "Testposition", "latitude": 55.67, "longitude": 12.56})
-    return True
-''')
-    (fixture / "data.json").write_text(json.dumps(FIXTURE))
+    # Inject fixed source data only into the disposable copy, never the repository.
+    manager = custom / "tiny_refuel/manager.py"
+    manager.write_text(manager.read_text() + '\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads((Path(__file__).parent / "visual-data.json").read_text())\n    self._notify()\n\nRefuelManager.start_refresh = _visual_refresh\n')
+    (custom / "tiny_refuel/visual-data.json").write_text(json.dumps(FIXTURE))
     (folder / "configuration.yaml").write_text(yaml.safe_dump({
         "homeassistant": {"name": "Tiny Refuel visuel test", "latitude": 55.67,
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
-        "http": {"server_host": "127.0.0.1"}, "frontend": {}, "visual_fixture": {},
+        "http": {"server_host": "127.0.0.1"}, "frontend": {},
         "lovelace": {"mode": "yaml"},
     }))
     (folder / "ui-lovelace.yaml").write_text(yaml.safe_dump({
@@ -114,11 +96,11 @@ def onboard():
     session.headers["Authorization"] = "Bearer " + tokens["access_token"]
     for _ in range(90):
         response = session.get(BASE + "/api/config", timeout=10)
-        if response.ok and "visual_fixture" in response.json().get("components", []):
+        if response.ok and "frontend" in response.json().get("components", []):
             break
         time.sleep(1)
     else:
-        raise RuntimeError("Home Assistant test fixture did not finish setup")
+        raise RuntimeError(f"Home Assistant frontend did not finish setup: {response.status_code} {response.text[:2000]}")
     flow = api(session, "/api/config/config_entries/flow", {"handler": "tiny_refuel", "show_advanced_options": False})
     result = api(session, "/api/config/config_entries/flow/" + flow["flow_id"], {"scan_hours": 6})
     assert result["type"] == "create_entry", result
@@ -129,6 +111,7 @@ def onboard():
         time.sleep(1)
     else:
         raise RuntimeError("Tiny Refuel config entry/API failed to load")
+    api(session, "/api/states/device_tracker.visual", {"state": "home", "attributes": {"friendly_name": "Testposition", "latitude": 55.67, "longitude": 12.56}})
     return tokens
 
 
@@ -182,6 +165,10 @@ def browsers(tokens):
                 expect(card.locator(".trf-row")).to_have_count(9)
                 card.locator('[data-fewer-stations="fuel"]').click()
                 expect(card.locator(".trf-row")).to_have_count(3)
+                diesel = {**CAR, "navn": "Dieselvarevogn", "brændstof": "diesel", "tank_liters": 70, "koeretoejstype": "varevogn"}
+                set_config({**CONFIG, "vis_benzin": False, "vis_diesel": True, "biler": [diesel]})
+                expect(card).to_contain_text("Billigst diesel")
+                shot(prefix + "-diesel")
                 electric = {**CAR, "navn": "Elbil", "mærke": "Aiways", "model": "U5", "brændstof": "el", "batteri_kwh": 63}
                 set_config({**CONFIG, "biler": [electric], "vis_benzin": False, "vis_el": True})
                 expect(card.locator(".trf-evrow").first).to_be_visible()
@@ -202,6 +189,7 @@ def browsers(tokens):
                     **FIXTURE, "errors": [{"source": "clever.dk", "error": "HTTP Error 500"}],
                 })
                 expect(card).to_contain_text("clever.dk")
+                card.locator('[data-card-panel="errors"] > summary').click()
                 shot(prefix + "-source-error")
                 page.evaluate("data => {window.visualCard._data = data; window.visualCard._render();}", FIXTURE)
 
@@ -262,8 +250,11 @@ def main():
                 screenshots = browsers(tokens)
                 (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
                     "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium"}, indent=2))
+                gallery = ''.join(f'<figure><a href="{name}.png"><img src="{name}.png" loading="lazy"></a><figcaption>{name}</figcaption></figure>' for name in screenshots)
+                (OUT / "index.html").write_text('<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tiny Refuel screenshots</title><style>body{font:16px system-ui;margin:24px;background:#eee;color:#222}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0;padding:12px;background:white;border-radius:12px}img{max-width:100%;max-height:600px;object-fit:contain;object-position:top}figcaption{margin-top:8px}</style><h1>Tiny Refuel · Home Assistant 2026.10</h1><p>Fiktive priser og position. Klik på et billede for fuld størrelse.</p><main>' + gallery + '</main></html>')
                 print(f"PASS: {len(screenshots)} screenshots; real Home Assistant, desktop/mobile, light/dark")
             except Exception:
+                (OUT / "report.json").write_text(json.dumps({"status": "failed", "home_assistant": "2026.10.0"}))
                 print((OUT / "home-assistant.log").read_text()[-16000:])
                 raise
             finally:

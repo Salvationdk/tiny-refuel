@@ -3,11 +3,14 @@ on:
   pull_request:
     paths: ['custom_components/**', 'tests/visual/**', '.github/workflows/visual.yml']
   push:
-    branches: [main, fix/hacs-validation-and-persistent-popups]
+    branches: [main]
     paths: ['custom_components/**', 'tests/visual/**', '.github/workflows/visual.yml']
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: visual-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   screenshots:
     runs-on: ubuntu-latest
