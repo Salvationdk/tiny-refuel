@@ -53,8 +53,8 @@ def prepare(folder):
     shutil.copytree(ROOT / "custom_components/tiny_refuel", custom / "tiny_refuel")
     # Inject fixed source data only into the disposable copy, never the repository.
     manager = custom / "tiny_refuel/manager.py"
-    manager.write_text(manager.read_text() + '\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads((Path(__file__).parent / "visual-data.json").read_text())\n    self._notify()\n\nRefuelManager.start_refresh = _visual_refresh\n')
-    (custom / "tiny_refuel/visual-data.json").write_text(json.dumps(FIXTURE))
+    payload = json.dumps(json.dumps(FIXTURE))
+    manager.write_text(manager.read_text() + '\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads(' + payload + ')\n    self._notify()\n\nRefuelManager.start_refresh = _visual_refresh\n')
     (folder / "configuration.yaml").write_text(yaml.safe_dump({
         "homeassistant": {"name": "Tiny Refuel visuel test", "latitude": 55.67,
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
@@ -122,9 +122,12 @@ def browsers(tokens):
         browser = p.chromium.launch(args=["--no-sandbox"])
         context = browser.new_context(locale="da-DK", timezone_id="Europe/Copenhagen", reduced_motion="reduce")
         context.add_init_script("localStorage.setItem('hassTokens', " + json.dumps(json.dumps(tokens)) + ");localStorage.setItem('selectedLanguage','\"da\"');")
+        context.add_init_script("window.addEventListener('unhandledrejection',e=>{let r=e.reason;window.visualReportRejection(typeof r==='object'?JSON.stringify(r,Object.getOwnPropertyNames(r)):String(r)).catch(()=>{});});")
         page = context.new_page()
         errors = []
-        page.on("pageerror", lambda error: errors.append(str(error)))
+        rejections = []
+        page.expose_function("visualReportRejection", lambda message: rejections.append(message))
+        page.on("pageerror", lambda error: errors.append({"message": str(error), "stack": error.stack}))
         page.goto(BASE + "/lovelace/test")
         card = page.locator("tiny-refuel-card").first
         try:
@@ -241,7 +244,9 @@ def browsers(tokens):
         expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)
         page.screenshot(path=str(OUT / "integration-settings.png"), full_page=True, animations="disabled")
         results.append("integration-settings")
-        assert not errors, errors
+        diagnostics = {"errors": errors, "rejections": rejections}
+        (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
+        assert not errors, diagnostics
         browser.close()
     return results
 
