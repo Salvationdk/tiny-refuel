@@ -376,7 +376,6 @@ assert.ok(!frontendSource.includes('@media (orientation:'));
 assert.ok(!frontendSource.includes('grid-template-columns: repeat(5, minmax(0, 1fr))'));
 assert.ok(frontendSource.includes('.trf-fuel-grid, .trf-ev-grid { display: contents; }'));
 assert.ok(frontendSource.includes('fuelHtmlRows.join'));
-assert.ok(frontendSource.includes('evHtmlRows.join'));
 assert.ok(!frontendSource.includes('grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important'));
 
 // Fuel source health and geocoding backlog remain visible from the data file.
@@ -712,3 +711,99 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   assert.ok(!form._makeSuggestions('CITROEN').html.includes('value="CITROEN"'));
   assert.ok(!packagedCatalog.brands.some(b => b.mærke.toLowerCase() === 'selvbyg'));
 }
+
+// Compact cards bound visible rows while preserving the normal view and all data.
+{
+  const panel = new Card();
+  panel._katalog = packagedCatalog;
+  panel._maybeLoad = () => {};
+  panel._location = () => ({ lat: 55, lon: 12 });
+  panel._data = { version: '0.2.2', stations: [], ev: [] };
+  const rows = Array.from({ length: 6 }, (_, i) => ({
+    b: { brand: 'Selskab ' + i, key: 'test' + i, img: 'logo-ok.svg', has100: true },
+    v95: 15 + i, v100: 17 + i, diesel: null, km: 6 - i, ll: '55,12',
+    stName: 'Station ' + i, stAddr: 'Vej ' + i, chg: '',
+  }));
+  panel._buildRows = () => rows.slice();
+  const config = { vis_el: false, biler: [{ mærke: 'Volkswagen', model: 'up!', brændstof: 'benzin', tank_liters: 35 }] };
+  const rowCount = () => (panel.innerHTML.match(/class="trf-row"/g) || []).length;
+  panel.setConfig(config);
+  assert.equal(rowCount(), 6);
+  assert.ok(panel.innerHTML.includes('data-car="0"'));
+  assert.ok(panel.innerHTML.includes('data-scrape'));
+  panel.setConfig({ ...config, kompakt: true });
+  assert.equal(rowCount(), 3);
+  assert.equal(panel.getCardSize(), 3);
+  assert.ok(panel.innerHTML.includes('class="trf trf-compact"'));
+  assert.ok(!panel.innerHTML.includes('data-car="0"'));
+  assert.ok(!panel.innerHTML.includes('data-scrape'));
+  assert.ok(!panel.innerHTML.includes('<div class="trf-best">'));
+  assert.ok(panel.innerHTML.includes('Information og datagrundlag'));
+  assert.ok(panel.innerHTML.includes('Tiny Refuel v0.2.2'));
+  assert.ok(panel.innerHTML.indexOf('title="Selskab 5') < panel.innerHTML.indexOf('title="Selskab 4'), 'compact fuel rows show nearer stations first');
+  assert.ok(panel.innerHTML.includes('data-more-stations="fuel"'));
+  panel.events.click({ preventDefault() {}, target: { closest: selector => selector === '[data-more-stations]' ? { getAttribute: () => 'fuel' } : null } });
+  assert.equal(rowCount(), 6);
+  panel.setConfig({ ...config, kompakt: true });
+  assert.equal(rowCount(), 6, 'equivalent config echoes retain expanded rows');
+  panel.setConfig({ ...config, kompakt: true, antal_stationer: 2, vis_bilvaelger: true, vis_scrape_knap: true });
+  assert.equal(rowCount(), 2);
+  assert.ok(panel.innerHTML.includes('data-car="0"'));
+  assert.ok(panel.innerHTML.includes('data-scrape'));
+  panel.setConfig({ ...config, kompakt: true, antal_stationer: 0 });
+  assert.equal(rowCount(), 6);
+  for (const value of [null, -1, 1.5, 51, true, 'invalid']) {
+    panel.setConfig({ ...config, kompakt: true, antal_stationer: value });
+    assert.equal(rowCount(), 3);
+  }
+  panel.setConfig({ ...config, kompakt: true, vis_bilvaelger: false, biler: [...config.biler, { navn: 'Bil 2' }] });
+  assert.ok(panel.innerHTML.includes('data-car="1"'), 'multiple cars always retain a usable selector');
+  panel.setConfig({ ...config, antal_stationer: 2 });
+  assert.equal(rowCount(), 2);
+  assert.equal(rows.length, 6, 'display limits never remove station data');
+}
+
+// Charging overview groups are limited independently; the detailed popup remains usable.
+{
+  const panel = new Card();
+  panel._config = { kompakt: true, antal_stationer: 1, vis_el: true };
+  panel._data = { ev: [
+    { brand: 'OK', address: 'A 1', lat: 55, lon: 12, kind: 'AC', kwh: 3 },
+    { brand: 'OK', address: 'B 2', lat: 55.1, lon: 12, kind: 'DC', kwh: 4 },
+    { brand: 'Q8', address: 'C 3', lat: 55.2, lon: 12, kind: 'DC', kwh: 5 },
+  ] };
+  const html = panel._evHtml({ lat: 55, lon: 12 });
+  assert.equal((html.match(/class="trf-evrow"/g) || []).length, 1);
+  assert.ok(html.includes('data-more-stations="ev"'));
+  panel._openEvBrand = 'OK';
+  assert.equal((panel._evPopupHtml({ lat: 55, lon: 12 }).match(/class="trf-evrow"/g) || []).length, 2);
+  assert.equal(panel._data.ev.length, 3);
+}
+
+// Editor count input emits a numeric value, rejects invalid input, and supports automatic defaults.
+{
+  const form = new StableEditor();
+  form.setConfig({ kompakt: true, biler: [] });
+  form.dispatchEvent = () => {};
+  assert.ok(form.innerHTML.includes('data-key="kompakt" checked'));
+  assert.ok(form.innerHTML.includes('data-key="antal_stationer"'));
+  const input = { dataset: { key: 'antal_stationer' }, value: '5' };
+  form.events.change({ target: input });
+  assert.equal(form._config.antal_stationer, 5);
+  input.value = '1.5'; form.events.change({ target: input });
+  assert.equal(form._config.antal_stationer, 5);
+  assert.equal(input.value, '5');
+  input.value = '0'; form.events.change({ target: input });
+  assert.equal(form._config.antal_stationer, 0);
+  input.value = ''; form.events.change({ target: input });
+  assert.ok(!('antal_stationer' in form._config));
+  const selector = { checked: true }, scrape = { checked: true }, count = {};
+  form.querySelector = key => key === '[data-key="vis_bilvaelger"]' ? selector : key === '[data-key="vis_scrape_knap"]' ? scrape : key === '[data-key="antal_stationer"]' ? count : null;
+  form.events.change({ target: { dataset: { key: 'kompakt' }, checked: true } });
+  assert.equal(selector.checked, false); assert.equal(scrape.checked, false); assert.equal(count.placeholder, '3');
+  form.events.change({ target: { dataset: { key: 'vis_bilvaelger' }, checked: true } });
+  form.events.change({ target: { dataset: { key: 'kompakt' }, checked: false } });
+  assert.equal(form._config.vis_bilvaelger, true, 'explicit choices survive compact-mode changes');
+  assert.equal(scrape.checked, true); assert.equal(count.placeholder, 'Alle');
+}
+console.log('PASS: compact display, independent row limits, retained vehicle selection and numeric editor settings');

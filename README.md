@@ -241,3 +241,34 @@ Byg et katalog med unikke modelrækker, bevarede varianter og rapport over samme
 Grundkataloget fylder cirka 3,11 MB inklusive logoer. Årgangslister, variantnavne, drivmidler og kildemetadata til modellen hentes fra `catalog-details/`, når modellen vælges i editoren. Samme detaljefil deles mellem editorer; en fejl stopper ikke manuel indtastning. Detaljesvar ændrer ikke gemt konfiguration eller igangværende indtastning. Gentagne kildelinks og hjælpetekster gemmes én gang som fælles standardværdier.
 
 Kataloget distribueres som `bilkatalog.json` med en liste af mindre filer under `catalog-parts/`. Kortet samler dem uden tab med højst fire samtidige hentninger. Alle dele skal være tilgængelige, før kataloget vises. Egne almindelige JSON-kataloger understøttes fortsat. Nye kataloger kan pakkes med `python scripts/package_vehicle_catalog.py INPUT.json custom_components/tiny_refuel/frontend/bilkatalog.json`.
+
+
+### Kompakt kort
+
+Slå **Kompakt kort** til i den visuelle editor for et mindre kort med færre
+oversigter. Standardvisningen er uændret, indtil valget aktiveres.
+
+```yaml
+type: custom:tiny-refuel-card
+kompakt: true
+antal_stationer: 3
+vis_bilvaelger: false
+```
+
+Behold `biler` fra din eksisterende opsætning. Ved ét køretøj er bilvælgeren
+skjult som standard i kompakt visning; ved flere køretøjer bevares den altid.
+`vis_bilvaelger: true` viser også vælgeren ved ét køretøj.
+
+`antal_stationer` begrænser rækkerne i hver prisliste. Brændstof viser én række
+pr. selskab; eloversigten viser grupper af ladevalg. Derfor er antallet ikke
+et samlet antal fysiske stationer. Gyldige værdier er 0–50; 0 viser alle,
+og et tomt felt bruger standarden (3 i kompakt visning, alle i normal visning).
+**Vis 10 mere** udvider kun den pågældende liste. Den særskilte ladeoversigt
+beholder sine filtre og sit eget antal. Kompakte brændstofrækker vises med
+nærmeste kendte afstand først, når position er tilgængelig.
+
+Navigation, adresser, prisadvarsler, fejl og datastatus bevares. Information
+og beregninger kan åbnes i **Information og datagrundlag**. Positionsteksten,
+billigste-oversigten og prisændringer fylder mindre eller skjules i kompakt
+visning. **Hent data** er skjult som standard i kompakt visning, men kan
+aktiveres med `vis_scrape_knap: true`. En igangværende hentnings status vises stadig.

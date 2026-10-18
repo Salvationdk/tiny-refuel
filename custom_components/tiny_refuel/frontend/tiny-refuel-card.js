@@ -4,6 +4,11 @@
 
   var CSS = `
   .trf { container-type: inline-size; container-name: tiny-refuel; font-family: var(--paper-font-body1_-_font-family, inherit); padding: 14px 16px; color: var(--primary-text-color); }
+  .trf.trf-compact { padding: 8px 10px; }
+  .trf-compact .trf-title { font-size: 13px; }
+  .trf-compact .trf-row, .trf-compact .trf-evrow { padding-top: 6px; padding-bottom: 6px; }
+  .trf-compact .trf-chg { display: none; }
+  .trf-list-actions { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
   .trf-titlebar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
   .trf-title { font-weight: 600; font-size: 15px; text-transform: uppercase; letter-spacing: .6px; text-shadow: 0 0 12px rgba(0,229,255,.35); }
   .trf-rule { height: 2px; border-radius: 2px; margin: 6px 0 4px; background: linear-gradient(90deg, var(--primary-color, #00e5ff), var(--accent-color, #b967ff)); opacity: .55; box-shadow: 0 0 8px rgba(0,229,255,.35); }
@@ -437,6 +442,17 @@
           self._render();
           return;
         }
+        var moreStations = ev.target && ev.target.closest ? ev.target.closest("[data-more-stations]") : null;
+        if (moreStations) {
+          ev.preventDefault();
+          var section = moreStations.getAttribute("data-more-stations");
+          if (section === "fuel" || section === "ev") {
+            self._extraStationRows = self._extraStationRows || {};
+            self._extraStationRows[section] = (self._extraStationRows[section] || 0) + 10;
+            self._render();
+          }
+          return;
+        }
         var moreEv = ev.target && ev.target.closest ? ev.target.closest("[data-more-ev]") : null;
         if (moreEv) {
           self._evPopupLimit = (self._evPopupLimit || 10) + 10;
@@ -488,11 +504,25 @@
     }
 
     setConfig(config) {
-      this._config = config || {};
+      var previous = this._config || {}, next = config || {};
+      if (previous.kompakt !== next.kompakt || previous.antal_stationer !== next.antal_stationer) this._extraStationRows = {};
+      this._config = next;
       this._render();
     }
 
-    getCardSize() { return 6; }
+    getCardSize() { return this._config && this._config.kompakt ? 3 : 6; }
+
+    _stationRowLimit(section, total) {
+      var configured = this._config && this._config.antal_stationer;
+      var valid = configured !== null && configured !== '' && typeof configured !== 'boolean' && Number.isInteger(Number(configured)) && Number(configured) >= 0 && Number(configured) <= 50;
+      var limit = valid && configured !== undefined ? Number(configured) : (this._config && this._config.kompakt ? 3 : 0);
+      return limit === 0 ? total : Math.min(total, limit + (this._extraStationRows && this._extraStationRows[section] || 0));
+    }
+
+    _stationRowActions(section, visible, total) {
+      if (visible >= total) return '';
+      return '<div class="trf-list-actions"><button type="button" class="trf-ev-button" data-more-stations="' + section + '">Vis 10 mere</button><span class="trf-em">Viser ' + visible + ' af ' + total + ' rækker</span></div>';
+    }
 
     static getStubConfig() {
       return { vis_benzin: true, vis_el: true, vis_andet: true };
@@ -922,6 +952,7 @@
       var previousList = this.querySelector && this.querySelector(".trf-ev-list");
       var popupScroll = previousList ? previousList.scrollTop : 0;
       var cfg = this._config;
+      var compact = !!cfg.kompakt;
       var loc = this._location();
       var _v = this._effVis();
       var visBenzin = _v.benzin;
@@ -939,6 +970,9 @@
       var infoMetrics = "";
       var body = "";
       var rows = this._buildRows(loc);
+      if (compact && loc) rows.sort(function (a, b) {
+        return (a.liste || a.km === null ? Infinity : a.km) - (b.liste || b.km === null ? Infinity : b.km);
+      });
       var hasData = !!this._data;
       if (!visBenzin && !visDiesel) rows = [];
 
@@ -958,7 +992,7 @@
         var min100 = p100s.length ? Math.min.apply(null, p100s) : null;
 
         var bestHtml = "";
-        if (visAndet && min95 !== null) {
+        if (visAndet && !compact && min95 !== null) {
           bestHtml = '<div class="trf-best"><span><b class="trf-b95">▎Billigst 95:</b>';
           for (var k = 0; k < rows.length; k++) {
             if (rows[k].v95 === min95) {
@@ -978,7 +1012,7 @@
           bestHtml += "</div>";
         }
 
-        if (visAndet && loc) {
+        if (visAndet && !compact && loc) {
           var nearBest = null;
           for (var nb = 0; nb < rows.length; nb++) {
             if (rows[nb].liste || rows[nb].km === null) continue;
@@ -998,7 +1032,8 @@
         body += bestHtml;
         var fuelHtmlRows = [];
 
-        for (var r = 0; r < rows.length; r++) {
+        var fuelVisible = this._stationRowLimit("fuel", rows.length);
+        for (var r = 0; r < fuelVisible; r++) {
           var row = rows[r];
           var g95 = visBenzin && min95 !== null && row.v95 !== null && row.v95 === min95;
           var g100 = visBenzin && row.b.has100 && min100 !== null && row.v100 !== null && row.v100 === min100;
@@ -1063,11 +1098,11 @@
           fuelHtmlRows.push('<div class="' + cls + '" data-price-cols="' + priceColumnCount + '" style="--trf-price-cols:' + priceColumnCount + ';grid-template-columns: ' + grid + '" title="' + esc(title) + '">' +
             logo + cells + kmCell + sub + "</div>");
         }
-        body += head + '<div class="trf-fuel-grid">' + fuelHtmlRows.join("") + '</div>';
+        body += head + '<div class="trf-fuel-grid">' + fuelHtmlRows.join("") + '</div>' + this._stationRowActions("fuel", fuelVisible, rows.length);
       }
 
       if (hasData) {
-        if (visEl && !visBenzin && !visDiesel) body += this._nearestEvHtml(loc);
+        if (visEl && !visBenzin && !visDiesel && !compact) body += this._nearestEvHtml(loc);
         if (visEl) {
           body += this._evHtml(loc);
         }
@@ -1154,7 +1189,7 @@
       }
       var cars = this._cars();
       var carHtml = "";
-      if (Array.isArray(cfg.biler) && cfg.biler.length) {
+      if (Array.isArray(cfg.biler) && cfg.biler.length && (cars.length > 1 || cfgGet(cfg, "vis_bilvaelger", !compact))) {
         var sel = this._carIdx();
         carHtml = '<div class="trf-cars">';
         for (var ci = 0; ci < cars.length; ci++) {
@@ -1187,15 +1222,17 @@
       var scrapeStatus = this._data && this._data.refreshing && this._data.progress
         ? this._progressText(this._data.progress) : (this._scrapeMessage || "");
       var integrationVersion = this._data && this._data.version;
+      var scrapeButton = cfgGet(cfg, "vis_scrape_knap", !compact) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '';
+      var dataTools = scrapeButton || scrapeStatus ? '<div class="trf-data-tools">' + scrapeButton + '<span role="status">' + esc(scrapeStatus) + '</span></div>' : '';
       this.innerHTML =
         "<style>" + CSS + "</style>" +
-        '<div class="trf">' +
+        '<div class="trf' + (compact ? ' trf-compact' : '') + '">' +
         '<div class="trf-titlebar"><div class="trf-title">' + cardTitle + '</div>' +
         '<button class="trf-refresh' + (this._locRefreshing ? " trf-spin" : "") + '" data-refresh title="Hent frisk GPS-position fra telefonen">⟳</button></div>' +
         '<div class="trf-rule"></div>' +
-        '<div class="trf-data-tools">' + (cfgGet(this._config, "vis_scrape_knap", true) ? '<button type="button" class="trf-ev-button" data-scrape' + (this._scraping ? ' disabled' : '') + '>Hent data</button>' : '') + '<span role="status">' + esc(scrapeStatus) + '</span></div>' + this._dataErrorsHtml() +
+        dataTools + this._dataErrorsHtml() +
         carHtml +
-        (visAndet
+        (visAndet && !compact
           ? '<div class="trf-pos">Position: ' + (this._locRefreshing ? "opdaterer…" : esc(this._posAge() || "ukendt")) + "</div>"
           : "") +
         body +
@@ -1650,7 +1687,8 @@
           '<div class="trf-pcol"><span class="trf-tariff-note">Generelle takster</span></div><span class="trf-km">–</span>' +
           self._evTariffsHtml(items) + '<div class="trf-station">' + self._evPopupButton(brand) + self._evBenefits(items[0], 'button') + '</div>' + self._evBenefits(items[0], 'box') + '</div>');
       });
-      html += '<div class="trf-ev-grid">' + evHtmlRows.join("") + '</div>';
+      var evVisible = this._stationRowLimit("ev", evHtmlRows.length);
+      html += '<div class="trf-ev-grid">' + evHtmlRows.slice(0, evVisible).join("") + '</div>' + this._stationRowActions("ev", evVisible, evHtmlRows.length);
       if (!stations.length && !tariffs.size) html += '<div class="trf-em">Ingen ladesteder eller el-priser for de valgte selskaber.</div>';
       var absent = BRANDS.filter(function (b) {
         return b.electricOnly && showBrand(self._config, b.key) && !entries.some(function (ev) { return self._evBrandKey(ev.brand) === b.key; });
@@ -1893,6 +1931,12 @@
           self._updateYaml();
           self.dispatchEvent(new CustomEvent("config-changed", { detail: { config: cfg }, bubbles: true, composed: true }));
           return;
+        } else if (key === "antal_stationer") {
+          var countValue = String(t.value == null ? "" : t.value).trim();
+          var stationCount = Number(countValue);
+          if (!countValue) delete cfg.antal_stationer;
+          else if (Number.isInteger(stationCount) && stationCount >= 0 && stationCount <= 50) cfg.antal_stationer = stationCount;
+          else { t.value = cfg.antal_stationer === undefined ? "" : String(cfg.antal_stationer); return; }
         } else if (key === "scrape_entity" || key === "location_entity" || key === "notify_service" || key === "katalog_url" || key === "navigation") {
           var s = String(t.value || "").trim();
           if (s) cfg[key] = s;
@@ -1913,6 +1957,14 @@
           if (countNode) countNode.textContent = count + " af " + BRANDS.length + " valgt";
         } else {
           cfg[key] = !!t.checked;
+          if (key === "kompakt") {
+            ["vis_bilvaelger", "vis_scrape_knap"].forEach(function (field) {
+              var node = self.querySelector('[data-key="' + field + '"]');
+              if (node && cfg[field] === undefined) node.checked = !cfg.kompakt;
+            });
+            var countInput = self.querySelector('[data-key="antal_stationer"]');
+            if (countInput) countInput.placeholder = cfg.kompakt ? "3" : "Alle";
+          }
         }
         self._config = cfg;
         self._updateYaml();
@@ -2116,6 +2168,10 @@
       }
       var html = '<div class="trfe"><style>' + ECSS + "</style>";
       html += '<h4>Visning <span class="trfe-tip" tabindex="0" title="Vælg hvilke energityper og oplysninger kortet skal vise." aria-label="Hjælp: Vælg hvilke energityper og oplysninger kortet skal vise.">i</span></h4>';
+      html += cb("kompakt", "Kompakt kort", this._bool("kompakt", false), "Mindre afstande, færre oversigter og som standard tre rækker pr. prisliste. Bilvælgeren skjules som standard ved ét køretøj. Hent data-knappen skjules som standard i kompakt visning.");
+      html += cb("vis_bilvaelger", "Vis bilvælger ved ét køretøj", this._bool("vis_bilvaelger", !c.kompakt), "Ved flere køretøjer vises bilvælgeren altid.");
+      html += '<div class="trfe-hint">Antal rækker pr. prisliste (0 = alle, tom = automatisk)</div><input type="number" data-key="antal_stationer" min="0" max="50" step="1" value="' + esc(c.antal_stationer === undefined ? '' : c.antal_stationer) + '" placeholder="' + (c.kompakt ? '3' : 'Alle') + '">';
+      html += '<div class="trfe-hint">Brændstof viser en række pr. selskab; el viser grupper af ladevalg. Kompakt visning starter med tre rækker, normal visning med alle. Vis 10 mere åbner flere rækker.</div>';
       html += cb("vis_benzin", "Benzin (95/100-oktan)", this._bool("vis_benzin", true), "Vis benzinpriser fra de valgte selskaber.");
       html += cb("vis_diesel", "Diesel", this._bool("vis_diesel", false), "Vis dieselpriser fra de valgte selskaber.");
       html += cb("vis_el", "El (kr/kWh)", this._bool("vis_el", true), "Vis ladepriser og ladesteder.");
@@ -2250,7 +2306,7 @@
         (nv === "google" ? " checked" : "") + "><span>Google Maps</span></label>";
       html += '<div class="trfe-hint">Åbner navigation til den nærmeste station ved tryk på logo.</div>';
       html += '<h4>Hent data</h4>';
-      html += cb("vis_scrape_knap", "Vis knappen på kortet", this._bool("vis_scrape_knap", true));
+      html += cb("vis_scrape_knap", "Vis knappen på kortet", this._bool("vis_scrape_knap", !c.kompakt));
       html += cb("scrape_valgt_bil", "Begræns hentning til den valgte bil", this._bool("scrape_valgt_bil", true));
       html += '<div class="trfe-hint">Manuel hentning følger bilens drivmiddel: benzinbil henter benzin, dieselbil diesel, elbil el og plug-in-hybrid benzin samt el. Slå valget fra for at hente alle typer. Automatisk intervalhentning henter altid alle typer, så biler du tilføjer senere også får data.</div>';
       html += '<details data-editor-section="advanced"><summary>Avanceret</summary>';
