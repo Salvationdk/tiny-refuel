@@ -63,24 +63,8 @@ assert.ok(!editor.innerHTML.includes('alt="Mitsubishi logo"'), 'brands without a
 assert.ok(editor.innerHTML.includes('title="Vis benzinpriser fra de valgte selskaber."'));
 // Exercise every packaged logo through the editor, including real PNG files.
 const catalogRoot = 'custom_components/tiny_refuel/frontend/';
-const catalogManifest = JSON.parse(fs.readFileSync(catalogRoot + 'bilkatalog.json', 'utf8'));
-function readPackagedCatalog() {
-  const catalog = JSON.parse(catalogManifest.catalog_parts.map(part => fs.readFileSync(catalogRoot + part, 'utf8')).join(''));
-  const defaults = catalog.model_defaults || {};
-  delete catalog.model_defaults; delete catalog.catalog_schema;
-  for (const brand of catalog.brands) {
-    for (const model of brand.modeller) {
-      if (!model._no_defaults) for (const [key, value] of Object.entries(defaults)) if (model[key] === undefined) model[key] = value;
-      delete model._no_defaults;
-    }
-    for (const part of brand.detail_files || []) {
-      const details = JSON.parse(fs.readFileSync(catalogRoot + part.file, 'utf8'));
-      details.forEach((row, index) => Object.assign(brand.modeller[part.start + index], row));
-    }
-    delete brand.detail_files;
-  }
-  return catalog;
-}
+const catalogManifest = JSON.parse(fs.readFileSync(catalogRoot + 'katalog.json', 'utf8'));
+function readPackagedCatalog() { return JSON.parse(JSON.stringify(catalogManifest)); }
 const packagedCatalog = readPackagedCatalog();
 editor._katalog = packagedCatalog;
 for (const brand of packagedCatalog.brands) {
@@ -407,7 +391,7 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   const localContext = { ...context, window: localWindow, customElements: localWindow.customElements,
     fetch: url => {
       requests.push(url);
-      if (url === '/tiny_refuel/static/bilkatalog.json') return Promise.resolve({ ok: true, json: () => Promise.resolve(catalogManifest) });
+      if (url === '/tiny_refuel/static/katalog.json') return Promise.resolve({ ok: true, json: () => Promise.resolve(catalogManifest) });
       if (url.startsWith('/tiny_refuel/static/catalog-parts/')) return Promise.resolve({ ok: true, text: () => Promise.resolve(fs.readFileSync(catalogRoot + url.replace('/tiny_refuel/static/', ''), 'utf8')) });
       return new Promise(resolve => { pending[url] = resolve; });
     },
@@ -420,38 +404,21 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   second.setConfig({ biler: [{ mærke: 'Citroën', model: 'C3' }] });
   form.setConfig({ biler: [] });
   await new Promise(setImmediate);
-  assert.equal(requests.length, 1 + catalogManifest.catalog_parts.length);
+  assert.equal(requests.length, 1, 'bundled catalog is one shared JSON request');
   assert.equal(first._katalog.brands.length, packagedCatalog.brands.length);
   assert.equal(JSON.stringify(first._katalog.logos), JSON.stringify(packagedCatalog.logos));
   assert.ok(!first._katalog.brands.some(b => b.modeller.some(m => m.variants)), 'initial catalog must not contain variant lists');
   assert.equal(second._katalog, first._katalog);
   assert.equal(form._katalog, first._katalog);
+  const legacy = new Editor();
+  legacy.setConfig({ katalog_url: '/tiny_refuel/static/bilkatalog.json', biler: [] });
+  await new Promise(setImmediate);
+  assert.equal(legacy._katalog, first._katalog, 'old built-in URL resolves to the single standard catalog');
+  assert.ok(!requests.some(url => url === '/tiny_refuel/static/bilkatalog.json'));
   form.setConfig({ biler: [{ mærke: 'Volkswagen', model: 'up!' }] });
   const entry = form._katalogFind('Volkswagen', 'up!');
   assert.ok(entry && !entry.variants);
-  const detailUrl = requests.find(url => url.includes('/catalog-details/'));
-  assert.ok(detailUrl, 'selecting a model starts its details request');
-  assert.equal(requests.filter(url => url === detailUrl).length, 1);
-  let renders = 0, changes = 0;
-  const variantInput = { value: 'min ufærdige variant', selectionStart: 4 };
-  const options = {}, years = {}, note = {};
-  form.querySelector = selector => selector === '[data-key="bil:0:variant"]' ? variantInput : selector === '[data-variant-options="0"]' ? options : selector === '[data-year-options="0"]' ? years : selector === '[data-model-note="0"]' ? note : null;
-  const render = form._render;
-  form._render = () => { renders++; };
-  form.dispatchEvent = () => { changes++; };
-  const beforeDetails = JSON.stringify(form._config);
-  const detailRows = JSON.parse(fs.readFileSync(catalogRoot + detailUrl.replace('/tiny_refuel/static/', ''), 'utf8'));
-  pending[detailUrl]({ ok: true, json: () => Promise.resolve(detailRows) });
-  await new Promise(setImmediate);
-  assert.ok(entry.variants.length > 0);
-  assert.equal(form._config.biler[0].model, 'up!');
-  assert.equal(JSON.stringify(form._config), beforeDetails);
-  assert.equal(variantInput.value, 'min ufærdige variant');
-  assert.equal(variantInput.selectionStart, 4);
-  assert.equal(renders, 0); assert.equal(changes, 0);
-  form._render = render;
-  form.querySelector = () => null;
-
+  assert.ok(!requests.some(url => url.includes('/catalog-details/') || url.includes('/catalog-parts/')));
   form.setConfig({ katalog_url: '/local/old.json' });
   form.setConfig({ katalog_url: '/local/new.json' });
   const newer = { brands: [{ mærke: 'Nyt mærke', modeller: [] }] };
@@ -495,6 +462,15 @@ assert.ok(!/tesla/i.test(frontendSource), 'Tesla should be removed from the card
   assert.equal(form._katalogFailed, true);
   assert.equal(form._katalog, null, 'an incomplete catalog must never be displayed');
   assert.ok(!requests.some(url => url.includes('outside.txt')));
+  for (const [i, broken] of [{ brands: null }, { brands: [{ mærke: 'Test', modeller: [{ model: 'X', tank_l: false }] }] }].entries()) {
+    const url = '/local/invalid-' + i + '.json';
+    form.setConfig({ katalog_url: url, biler: [{}] });
+    pending[url]({ ok: true, json: () => Promise.resolve(broken) });
+    await new Promise(setImmediate);
+    assert.equal(form._katalogFailed, true);
+    assert.ok(form.innerHTML.includes('Kataloget kunne ikke indlæses'));
+    assert.ok(form.innerHTML.includes('bil:0:mærke'));
+  }
   console.log('PASS: stable editor, shared vehicle catalogs, logo fallbacks and theme switching');
 })().catch(error => { console.error(error); process.exitCode = 1; });
 
@@ -682,7 +658,7 @@ for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
   form._katalog = packagedCatalog;
   form.dispatchEvent = () => {};
   form.setConfig({ biler: [{ mærke: 'Honda', model: 'CB 500', brændstof: 'benzin', tank_liters: 17 }] });
-  assert.equal(form._makeSuggestions('').total, 54);
+  assert.equal(form._makeSuggestions('').total, 89);
   assert.ok((form._makeSuggestions('').html.match(/<option/g) || []).length <= 60);
   assert.ok(form.innerHTML.includes('bil:0:koeretoejstype'));
   assert.ok(form.innerHTML.includes('bil:0:aargang'));
@@ -897,3 +873,33 @@ console.log('PASS: compact display, independent row limits, retained vehicle sel
   assert.equal((panel._evPopupHtml({ lat: 55, lon: 12 }).match(/class="trf-evrow"/g) || []).length, 10);
 }
 console.log('PASS: vehicle changes, verified variant years and collapse actions');
+
+// Capacity calculations must use the actual values for small and large vehicles.
+{
+  const panel = new Card(); panel._maybeLoad = () => {};
+  panel._data = { stations: [], ev: [
+    { brand: 'OK', address: 'A', kwh: 3 }, { brand: 'Q8', address: 'B', kwh: 5 },
+  ] };
+  const row = (brand, value) => ({ b: { brand, key: 'ok', img: 'logo-ok.svg', has100: false }, v95: value, v100: null, diesel: value, km: 1, ll: '55,12', stName: 'Station', stAddr: 'Vej' });
+  panel._buildRows = () => [row('A', 10), row('B', 12)];
+  panel.setConfig({ biler: [{ brændstof: 'diesel', tank_liters: 500 }] });
+  assert.equal(panel._tankLiters(), 500);
+  assert.ok(panel.innerHTML.includes('Fuld tank (500 L) Diesel:'));
+  assert.ok(panel.innerHTML.includes('5000 kr'));
+  panel.setConfig({ biler: [{ brændstof: 'benzin', tank_liters: 2.5 }] });
+  assert.equal(panel._tankLiters(), 2.5);
+  panel.setConfig({ biler: [{ brændstof: 'el', batteri_kwh: 1.2 }] });
+  assert.ok(panel.innerHTML.includes('Fuld opladning (1,2 kWh'));
+  panel.setConfig({ biler: [{ brændstof: 'plug_in_hybrid', tank_liters: 40, batteri_kwh: 8 }] });
+  assert.ok(panel.innerHTML.includes('Fuld tank (40 L) 95:'));
+  assert.ok(panel.innerHTML.includes('Fuld opladning (8 kWh'));
+  panel._buildRows = () => [row('A', null), row('B', 12)];
+  panel.setConfig({ biler: [{ brændstof: 'diesel', tank_liters: 500 }] });
+  assert.ok(!panel.innerHTML.includes('Fuld tank (500 L) Diesel:'), 'null is not a zero price');
+  const form = new StableEditor(); form.dispatchEvent = () => {};
+  form.setConfig({ biler: [{ mærke: 'Egen', model: 'X', aargang: 2020, tank_liters: 35 }] });
+  form.events.change({ target: { dataset: { key: 'bil:0:aargang' }, value: '2020' } });
+  assert.equal(form._config.biler[0].tank_liters, 35, 'numeric year echoes preserve manual capacity');
+  assert.match(form.innerHTML, /data-key="bil:0:batteri_kwh" min="0.01" step="any"/);
+}
+console.log('PASS: diesel, small tanks, small batteries, hybrid metrics and catalog validation');

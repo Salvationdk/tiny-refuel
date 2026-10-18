@@ -4,15 +4,12 @@ from copy import deepcopy
 import json
 import math
 import unicodedata
-import tempfile
 from pathlib import Path
 
 if __package__:
     from .vehicle_catalog import load_catalog
-    from .package_vehicle_catalog import package
 else:
     from vehicle_catalog import load_catalog
-    from package_vehicle_catalog import package
 
 
 def positive(value):
@@ -62,8 +59,6 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     result = supported_catalog(load_catalog(args.input))
-    with tempfile.TemporaryDirectory() as directory:
-        plain = Path(directory) / 'supported-catalog-source.json'
-        plain.write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
-        package(plain, args.output)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
     print(json.dumps(result['capacity_filter'], ensure_ascii=False))

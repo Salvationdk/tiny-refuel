@@ -8,4 +8,4 @@ Nye værdier mærkes `source_dataset_default_not_manufacturer_verified`, og hjæ
 
 Den første fil giver 895 modeller fra 89 mærker (425 flere modeller end det tidligere udvalg med 470) og fylder cirka 2,56 MB inklusive logoer. 429 manglende kapacitetsfelter er tilføjet; fire ligger på allerede medfølgende modeller. Den leverede fil indeholder også datasætternes licenstekster. Ved ny distribution skal de medfølge igen; kildehenvisningerne og licens-URL'erne genereres af værktøjet.
 
-Installation: placér JSON-filen som `/config/www/tiny-refuel-koeretoejer.json`, og sæt kortets `katalog_url` til `/local/tiny-refuel-koeretoejer.json`. Genindlæs browseren efter ændringen. Det kræver ingen ændring i configuration.yaml.
+Integrationen leverer nu filen som frontend/katalog.json, og den bruges automatisk med tom katalog_url. Der skal ikke installeres en ekstra fil i www. Vil du bygge din egen, så kopiér standardfilen, ret den, validér med scripts/validate_vehicle_catalog.py, og læg den i /config/www/katalog.json. Angiv derefter katalog_url: /local/katalog.json. Genindlæs browseren efter ændringen. Det kræver ingen ændring i configuration.yaml.

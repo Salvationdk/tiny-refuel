@@ -36,7 +36,7 @@ jobs:
           --input "$RUNNER_TEMP/dmr.zip"
           --source-file "$SOURCE_NAME"
           --source-date "$SOURCE_DATE"
-          --output catalog-candidate/bilkatalog.json
+          --output catalog-candidate/kildekatalog.json
           --report catalog-candidate/import-report.json
       - uses: actions/upload-artifact@v4
         with:

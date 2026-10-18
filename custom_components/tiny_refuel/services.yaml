@@ -1,6 +1,6 @@
 refresh:
   name: Hent data
-  description: Starter en fælles opdatering. Kortets knap kan sende de drivmidler, der passer til den valgte bil. Gentagne kald deler den igangværende hentning.
+  description: Starter en fælles opdatering. Kortets knap kan sende de drivmidler, der passer til det valgte køretøj. Gentagne kald deler den igangværende hentning.
   fields:
     fuel_types:
       name: Drivmidler

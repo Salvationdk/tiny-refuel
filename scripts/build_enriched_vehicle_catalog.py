@@ -67,20 +67,22 @@ def enrich_catalog(original, candidates):
         'added_capacity_fields': added_fields, 'models_blocked_by_scope_conflict': len(blocked),
         'policy': 'Existing capacities preserved; unique observed values only; never assume coverage of all variants. Dataset defaults explicitly labelled.'}
     # Runtime catalog: identities, capacities, logos and short provenance only.
-    licenses = {}
+    licenses = deepcopy(data.get('data_sources', {}))
     for row in candidates:
         dataset = row.get('dataset', {})
         if dataset.get('repository'):
-            licenses[dataset['repository']] = {'license': dataset.get('license'), 'license_url': dataset.get('license_url')}
+            licenses.setdefault(dataset['repository'], {}).update({'license': dataset.get('license'), 'license_url': dataset.get('license_url')})
     for brand in result['brands']:
         compact_models = []
         for model in brand['modeller']:
             fields = ('model', 'source_names', 'brændstof', 'tank_l', 'batteri_kwh', 'battery_basis',
                       'requires_fuel_selection', 'specification_note', 'source_url', 'capacity_status')
             compact_model = {k: deepcopy(model[k]) for k in fields if k in model}
+            compact_model['requires_fuel_selection'] = not bool(compact_model.get('brændstof'))
             urls = sorted({r['url'] for r in model.get('capacity_sources', []) if r.get('url')})
             if urls:
                 compact_model['capacity_source_urls'] = urls
+                compact_model['source_url'] = urls[0]
             compact_models.append(compact_model)
         brand['modeller'] = compact_models
     result['data_sources'] = licenses

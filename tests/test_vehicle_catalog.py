@@ -50,9 +50,9 @@ class VehicleCatalogTests(unittest.TestCase):
         self.assertEqual(repeated, [])
 
     def test_checked_additions_are_present_without_duplicate_names_or_invented_specs(self):
-        catalog = module.load_catalog(ROOT / 'custom_components/tiny_refuel/frontend/bilkatalog.json')
-        self.assertEqual(len(catalog['brands']), 54)
-        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 470)
+        catalog = module.load_catalog(ROOT / 'custom_components/tiny_refuel/frontend/katalog.json')
+        self.assertEqual(len(catalog['brands']), 89)
+        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 895)
         new = []
         for brand in catalog['brands']:
             names = [row['model'].casefold() for row in brand['modeller']]
@@ -61,6 +61,7 @@ class VehicleCatalogTests(unittest.TestCase):
         self.assertTrue(all(any(isinstance(row.get(k), (int, float)) and row[k] > 0 for k in ('tank_l', 'batteri_kwh')) for brand in catalog['brands'] for row in brand['modeller']))
         self.assertTrue(all(row['source_url'].startswith('https://') for row in new))
         for row in new:
-            for field in ('brændstof', 'tank_l', 'batteri_kwh'):
-                if row.get(field) is not None:
-                    self.assertEqual(row[field], row['preserved_specification'][field])
+            if row.get('capacity_status'):
+                self.assertEqual(row['capacity_status'], 'source_dataset_default_not_manufacturer_verified')
+                self.assertTrue(row.get('capacity_source_urls'))
+                self.assertIn('Kontrollér', row['specification_note'])

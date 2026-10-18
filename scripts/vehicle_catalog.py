@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 import urllib.request
 
-CATALOG = Path(__file__).resolve().parents[1] / 'custom_components/tiny_refuel/frontend/bilkatalog.json'
+CATALOG = Path(__file__).resolve().parents[1] / 'custom_components/tiny_refuel/frontend/katalog.json'
 TOYOTA_URL = 'https://www.toyota.dk/nye-biler'
 
 

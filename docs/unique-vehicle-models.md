@@ -108,16 +108,4 @@ Modelaliaser sikrer opslag i eksisterende konfigurationer. Resultatet er
 27.242 modelrækker og 98.768 variantposter. Rapporten ligger i
 scripts/data/model-label-cleanup-report.json.
 
-Pakningen gemmer fælles standardfelter én gang og leverer et lille modelindeks
-med logoer. Detailfiler under catalog-details er indholdshash-navngivne JSON-filer
-med afgrænsede grupper af modeller fra samme mærke. Kun den valgte models gruppe
-hentes. Grundindekset bruger fortsat catalog-parts og deles mellem kort/editorer.
-Modeldetaljer udfylder datalister og hjælpetekst uden at genopbygge formularen,
-ændre inputfelter eller udsende config-changed. Gamle svar kan ikke opdatere en
-editor, der har valgt et andet katalog. Ved fejl bevares modelvalget og manuel
-indtastning; hjælpeteksten forklarer fejlen.
-
-scripts.vehicle_catalog.load_catalog rekonstruerer det fulde katalog inklusive
-alle bevarede felter; details=False læser kun grundindekset. Pakning og fuld
-rekonstruktion sammenlignes direkte, inklusive samtlige logoer og varianter.
-Årgangslister giver fortsat ingen bekræftet sammenhæng til en bestemt variant.
+Det aktuelle driftskatalog er nu én almindelig `frontend/katalog.json` med 895 modeller fra 89 mærker. Variantinventarer og tekniske profiler er udeladt. Historiske import-/oprydningstal ovenfor beskriver kildekataloget, ikke det indbyggede udvalg. `scripts/validate_vehicle_catalog.py` validerer egne enkeltfiler. `package_vehicle_catalog.py` og læseren til catalog-parts/catalog-details bevares alene for ældre kildepakker; de bruges ikke af standardkataloget.

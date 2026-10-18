@@ -95,11 +95,11 @@ Editoren har tooltips, en samlet udbydervælger med logoer og en forklaring af v
 |---|---|
 | ![Udbydere i et kompakt gitter med logoer og afkrydsning](docs/screenshots/editor-providers.png) | ![Køretøjssektion med fire sammenklappede køretøjer og mærkelogoer](docs/screenshots/editor-vehicles.png) |
 
-Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 470 modeller og 22.604 variantposter fordelt på 54 mærker. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årstallet filtrerer varianter med kendte modelår og vælger kun automatisk, når alle varianter har årgangsdata og præcis én passer. Ellers vælges varianten manuelt.
+Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 895 modeller fordelt på 89 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
 
-Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype vælges manuelt og bruges ikke til at filtrere kataloget. Modelårsforslag gælder modellen samlet og bekræfter ikke en bestemt motorvariant. Se [logodokumentationen](docs/vehicle-logos.md).
+Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype vælges manuelt og bruges ikke til at filtrere kataloget. Modelværdier bekræfter ikke alle årgange eller motorvarianter. Se [logodokumentationen](docs/vehicle-logos.md).
 
-![Udvidet bilopsætning for et dieseldrevet køretøj](docs/screenshots/editor-vehicle-details.png)
+![Udvidet køretøjsopsætning for et dieseldrevet køretøj](docs/screenshots/editor-vehicle-details.png)
 
 ## Funktioner
 
@@ -221,7 +221,7 @@ Køretøjsoprettelsen bruger det medfølgende katalog: vælg fabrikant, søg mod
 
 Motorstyrelsens gratis statistikudtræk er hovedkilden til den nye importfunktion. Den læser personbiler/busser, varebiler og lastbiler (DMR-art 1–4) samt genkendte navngivne motorkøretøjstyper, bl.a. motorcykler, knallerter og traktorer, fra en hentet XML- eller ZIP-fil. Ukendte typer medtages ikke automatisk. Mærker, modeller og variantnavne samles uden gentagelser. Rå tekniske kombinationer gemmes separat som `dmr_profiles`; de bruges endnu ikke som bekræftede specifikationer i kortet. Eksisterende modelværdier og logoer bevares. Ukendte mærker har tekstfallback. Nummerplader, stelnumre og køretøjs-ID'er eksporteres ikke til kataloget. Årgang og tank-/batteristørrelse udledes ikke af første registrering eller modelnavnet.
 
-**Status:** Udtrækket fra 2026-10-07 er importeret og renset. Det medfølgende udvalg er derefter begrænset til 470 modeller med kendt tank-/batteristørrelse; 26.772 modelrækker uden kapacitet er udeladt. Originalens importtal bevares som historik; de aktuelle tal står i `capacity_filter`. Rå tekniske profiler ligger uden for kortet. Kataloget indlæses én gang pr. URL i browserens aktuelle session og deles mellem kort og editor. Modelværdier kræver fortsat kontrol for det konkrete køretøj.
+**Status:** Integrationen leverer én selvstændig `custom_components/tiny_refuel/frontend/katalog.json` med 895 modeller fra 89 mærker. Den indeholder kapaciteter, kendte drivmidler, logoer og korte kildeoplysninger. 425 nye modeller er tilføjet ud fra entydige indsamlede kapaciteter; eksisterende værdier er bevaret. Nye værdier er mærket som kildedatasætstandarder, der skal kontrolleres for det konkrete køretøj. Lange variantinventarer, rå DMR-profiler og importforslag distribueres ikke i driftskataloget. Kort og editor deler én hentning pr. URL i browserens session.
 
 Kilde og gratis adgang: [Motorstyrelsen – statistikudtræk](https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange). Udtrækket er stort og behandles uden for Home Assistant.
 
@@ -234,13 +234,29 @@ python scripts/dmr_catalog.py download --output /tmp/dmr.zip
 python scripts/dmr_catalog.py build --input /tmp/dmr.zip --source-date YYYY-MM-DD --output /tmp/bilkatalog-candidate.json --report /tmp/dmr-import-report.json
 ```
 
-Brug datoen i det officielle filnavn som source-date. Gennemgå status, dubletter og nye mærker, og læg derefter det godkendte katalog i integrationens frontend/bilkatalog.json før udgivelse. Kildefilen er ikke en del af integrationen.
+Brug datoen i det officielle filnavn som source-date. Gennemgå status, dubletter og nye mærker, og byg derefter en kompakt enkeltfil og validér den, før den lægges i integrationens frontend/katalog.json før udgivelse. Kildefilen er ikke en del af integrationen.
 
 Byg et katalog med unikke modelrækker, bevarede varianter og rapport over sammenlægninger: se [vejledningen til modelimport](docs/unique-vehicle-models.md). Prøver kan køres med `build --limit 100000`; eksisterende JSON-kataloger kan kontrolleres med `deduplicate`.
 
-Grundkataloget indeholder det kapacitetsfiltrerede udvalg og de bevarede 261 SVG- og 20 PNG-logoer. Årgangslister, variantnavne, drivmidler og kildemetadata til modellen hentes fra `catalog-details/`, når modellen vælges i editoren. Samme detaljefil deles mellem editorer; en fejl stopper ikke manuel indtastning. Detaljesvar ændrer ikke gemt konfiguration eller igangværende indtastning. Gentagne kildelinks og hjælpetekster gemmes én gang som fælles standardværdier.
+Standardkataloget er cirka 2,56 MB inklusive 261 SVG- og 20 PNG-logoer. Der bruges ingen `catalog-parts/` eller `catalog-details/` i integrationen. Eksisterende kort, som peger på det gamle indbyggede `bilkatalog.json`, vælger automatisk det nye standardkatalog.
 
-Kataloget distribueres som `bilkatalog.json` med en liste af mindre filer under `catalog-parts/`. Kortet samler dem uden tab med højst fire samtidige hentninger. Alle dele skal være tilgængelige, før kataloget vises. Egne almindelige JSON-kataloger understøttes fortsat. Nye kataloger kan pakkes med `python scripts/package_vehicle_catalog.py INPUT.json custom_components/tiny_refuel/frontend/bilkatalog.json`.
+### Byg og brug dit eget katalog
+
+Standardkataloget virker uden ekstra filer eller konfiguration. Til eget katalog kan du kopiere det indbyggede `katalog.json`, tilføje eller rette modeller og bevare kilde-/licensoplysninger. Det direkte format er:
+
+```json
+{"brands":[{"mærke":"Eget mærke","modeller":[{"model":"Egen model","brændstof":"el","batteri_kwh":4.5}]}]}
+```
+
+I kataloget hedder tankfeltet **tank_l**. Editorens gemte køretøj bruger fortsat **tank_liters**. Batteriet hedder **batteri_kwh** begge steder. Drivmiddel skrives som `benzin`, `diesel`, `el`, `hybrid` eller `plug_in_hybrid`; udelad feltet, hvis det skal vælges manuelt. Kapaciteter skal være positive tal. Logooplysningerne er valgfrie, men behold dem fra standardfilen, hvis mærkelogoerne skal følge med.
+
+```sh
+python scripts/validate_vehicle_catalog.py --input mit-katalog.json --output katalog.json
+```
+
+Læg din egen fil i `/config/www/katalog.json`, og angiv `/local/katalog.json` i editorens **Eget katalog** eller som `katalog_url`. Tomt felt bruger det indbyggede katalog. Genindlæs browseren efter filændringer. HACS-opdateringer erstatter standardkataloget, men ikke din egen fil under www. Brug ikke all-candidates.json direkte som katalog.
+
+Til et fuldt kildekatalog med indsamlede forslag kan `python -m scripts.build_enriched_vehicle_catalog --catalog FULL.json --candidates all-candidates.json --output katalog.json` bygge et kompakt, kildebaseret forslag. Se [byggevejledningen](docs/vehicle-runtime-catalog.md). `build_supported_catalog.py` kan filtrere et almindeligt JSON-katalog til modeller med kendt kapacitet og skriver nu også en enkelt fil. Den gamle pakker bevares alene som udviklerværktøj til gamle data.
 
 
 ### Kompakt kort
@@ -280,3 +296,5 @@ Teksterne bruger **køretøj**, fordi kataloget også omfatter motorcykler, knal
 [Scrapervejledning](docs/vehicle-spec-scraper.md): `scripts/scrape_vehicle_specs.py` laver en mangelliste fra det ufiltrerede originalkatalog og henter kandidater fra en medfølgende producentkildeliste, JSON-LD og to åbne datasæt. Lokal kørsel kræver ingen LLM eller API-nøgler. Forslag gemmes med kilde, år/variant og krav om gennemgang. Scriptet ændrer ikke kataloget automatisk. `scripts/build_supported_catalog.py` kan bagefter bygge det medfølgende udvalg fra et gennemgået fuldt katalog.
 
 Kompakt visning viser også billigste brændstofpris blandt alle valgte selskaber, inklusive rækker skjult af visningsgrænsen. Vis færre gendanner grænsen efter Vis 10 mere i begge oversigter og i ladepopup'en. En laveste oplyst elpris kan være en generel takst og er ikke en garanti for den lokale pris på et ladested.
+
+Tank- og batteriberegninger bruger den angivne positive kapacitet uden de tidligere grænser for personbiler. Fuld tank virker med benzin og diesel; plug-in-hybrid kan vise både tank og batteri. Uden køretøjskapacitet bruges fælles tankstørrelse, en eventuel tank-helper eller 50 liter som sidste fallback. Udbyderpriser og fuld opladning er vejledende og medregner ikke ladetab.

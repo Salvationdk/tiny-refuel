@@ -201,12 +201,27 @@
 
   function vehicleCatalogUrl(config) {
     var url = config && config.katalog_url && String(config.katalog_url).trim();
-    return url && ["/local/fuelprices/bilkatalog.json", "/local/tiny-gas/data/bilkatalog.json", "/local/tiny-refuel/data/bilkatalog.json"].indexOf(url) === -1 ? url : "/tiny_refuel/static/bilkatalog.json";
+    return url && ["/tiny_refuel/static/bilkatalog.json", "/local/fuelprices/bilkatalog.json", "/local/tiny-gas/data/bilkatalog.json", "/local/tiny-refuel/data/bilkatalog.json"].indexOf(url.split("?")[0]) === -1 ? url : "/tiny_refuel/static/katalog.json";
   }
 
   var VEHICLE_MODEL_REFERENCES = new WeakMap();
   var VEHICLE_DETAIL_REQUESTS = {};
+  function validateVehicleCatalog(catalog) {
+    if (!catalog || !Array.isArray(catalog.brands)) throw new Error("Expected brands in Tiny Refuel catalog");
+    catalog.brands.forEach(function (brand) {
+      if (!brand || typeof brand.mærke !== "string" || !brand.mærke.trim() || !Array.isArray(brand.modeller)) throw new Error("Invalid catalog make");
+      brand.modeller.forEach(function (model) {
+        if (!model || typeof model.model !== "string" || !model.model.trim()) throw new Error("Invalid catalog model");
+        ["tank_l", "batteri_kwh"].forEach(function (field) {
+          var value = model[field];
+          if (value !== undefined && value !== null && (typeof value !== "number" || !isFinite(value) || value <= 0)) throw new Error("Invalid catalog capacity");
+        });
+      });
+    });
+  }
+
   function prepareVehicleCatalog(catalog, url) {
+    validateVehicleCatalog(catalog);
     if (catalog.catalog_schema !== 2) return catalog;
     var defaults = catalog.model_defaults || {};
     delete catalog.catalog_schema;
@@ -300,6 +315,7 @@
       if (owner._katalogUrlUsed !== url) return;
       owner._katalogLoading = false;
       owner._katalogFailed = true;
+      if (typeof owner._render === "function") owner._render();
     });
   }
 
@@ -640,12 +656,12 @@
       var car = this._car();
       var cfgL = parseFloat(car && car.tank_liters !== undefined && car.tank_liters !== null && car.tank_liters !== ""
         ? car.tank_liters : (this._config && this._config.tank_liters));
-      if (isFinite(cfgL) && cfgL > 0) return Math.min(200, Math.max(5, cfgL));
+      if (isFinite(cfgL) && cfgL > 0) return cfgL;
       var tankEnt = (car && car.tank_entity) || (this._config && this._config.tank_entity) || "input_number.tankstorrelse";
       var st = this._state(tankEnt);
       var v = st ? parseFloat(st.state) : NaN;
-      if (!isFinite(v)) v = 50;
-      return Math.min(200, Math.max(5, v));
+      if (!isFinite(v) || v <= 0) v = 50;
+      return v;
     }
 
     _notifyService() {
@@ -940,23 +956,16 @@
     }
 
     _effVis() {
-      var cfg = this._config || {};
-      var car = null;
-      try { car = this._car(); } catch (e) { car = null; }
-      if (car && car.vis && typeof car.vis === "object") {
-        return {
-          benzin: car.vis.benzin !== false,
-          diesel: car.vis.diesel === true,
-          el: car.brændstof !== "hybrid" && car.vis.el !== false,
-          andet: car.vis.andet !== false,
-        };
+      var cfg = this._config || {}, car = null;
+      try { car = this._car(); } catch (e) {}
+      var knownFuel = car && ["benzin", "diesel", "el", "hybrid", "plug_in_hybrid"].indexOf(car.brændstof) !== -1;
+      var defaults = knownFuel ? visForFuel(car.brændstof) : { benzin: true, diesel: false, el: true, andet: true };
+      var own = car && car.vis && typeof car.vis === "object" ? car.vis : {};
+      function visible(key) {
+        return own[key] !== undefined ? !!own[key] : cfgGet(cfg, "vis_" + key, defaults[key]);
       }
-      return {
-        benzin: cfgGet(cfg, "vis_benzin", true),
-        diesel: cfgGet(cfg, "vis_diesel", false),
-        el: (!car || car.brændstof !== "hybrid") && cfgGet(cfg, "vis_el", true),
-        andet: cfgGet(cfg, "vis_andet", true),
-      };
+      return { benzin: visible("benzin"), diesel: visible("diesel"),
+        el: (!car || car.brændstof !== "hybrid") && visible("el"), andet: visible("andet") };
     }
 
     _render() {
@@ -1129,12 +1138,13 @@
             _carFuel = _cc && _cc.brændstof;
             _carBatt = _cc ? parseFloat(_cc.batteri_kwh) : NaN;
           } catch (e) {}
-          if (_carFuel !== "el" && visBenzin) {
+          if (_carFuel !== "el" && (visBenzin || visDiesel)) {
+            var tankFuelField = visBenzin ? "v95" : "diesel", tankFuelLabel = visBenzin ? "95" : "Diesel";
             var tankL = this._tankLiters();
           var priced = [];
           for (var m = 0; m < rows.length; m++) {
-            if (!rows[m].liste && isFinite(rows[m].v95)) {
-              priced.push({ brand: rows[m].b.brand, v: rows[m].v95 });
+            if (!rows[m].liste && typeof rows[m][tankFuelField] === "number" && isFinite(rows[m][tankFuelField]) && rows[m][tankFuelField] > 0) {
+              priced.push({ brand: rows[m].b.brand, v: rows[m][tankFuelField] });
             }
           }
           if (priced.length >= 2) {
@@ -1144,11 +1154,12 @@
               if (priced[n2].v > dear.v) dear = priced[n2];
             }
             infoMetrics += '<div class="trf-tank">Fuld tank (' + String(tankL).replace(".", ",") + ' L' +
-              (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + ') 95: <b>' +
+              (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + ') ' + tankFuelLabel + ': <b>' +
               esc(cheap.brand) + " " + Math.round(cheap.v * tankL) + " kr</b> → " + esc(dear.brand) + " " +
               Math.round(dear.v * tankL) + " kr · spar <b>" + Math.round((dear.v - cheap.v) * tankL) + " kr</b></div>";
           }
-          } else if (_carFuel === "el" && visEl && isFinite(_carBatt) && _carBatt > 0 && this._data && Array.isArray(this._data.ev)) {
+          }
+          if ((_carFuel === "el" || _carFuel === "plug_in_hybrid") && visEl && isFinite(_carBatt) && _carBatt > 0 && this._data && Array.isArray(this._data.ev)) {
             var kwhs = [];
             for (var me = 0; me < this._data.ev.length; me++) {
               var _ev = this._data.ev[me];
@@ -1156,7 +1167,7 @@
             }
             if (kwhs.length >= 2) {
               var kmin = Math.min.apply(null, kwhs), kmax = Math.max.apply(null, kwhs);
-              var bkwh = Math.min(200, Math.max(10, _carBatt));
+              var bkwh = _carBatt;
               infoMetrics += '<div class="trf-tank">Fuld opladning (' + String(bkwh).replace(".", ",") + ' kWh' +
                 (this._cars().length > 1 && this._car().navn ? " · " + esc(this._car().navn) : "") + '): <b>' +
                 Math.round(kmin * bkwh) + " kr</b> → " + Math.round(kmax * bkwh) +
@@ -1917,7 +1928,7 @@
           } else if (field === "aargang") {
             var year = String(t.value || "").trim();
             if (year && !/^\d{4}$/.test(year)) { t.value = biler[bi].aargang || ""; return; }
-            if (year !== (biler[bi].aargang || "")) {
+            if (year !== String(biler[bi].aargang || "")) {
               ["tank_liters", "batteri_kwh", "brændstof", "vis"].forEach(function (key) { delete biler[bi][key]; });
               var modelEntry = self._katalogFind(biler[bi].mærke, biler[bi].model);
               var choices = self._variantsForYear(modelEntry, year);
@@ -2116,6 +2127,7 @@
         var choices = this._variantsForYear(entry, car.aargang);
         return choices.length ? choices.length + ' varianter passer til modelåret. Kontrollér drivmiddel og kapacitet.' : 'Ingen varianter har bekræftet dette modelår. Kontrollér årstallet eller indtast varianten manuelt.';
       }
+      if (!variants.length) return 'Årgang og variant er valgfrie manuelle oplysninger. Kataloget indeholder kapaciteter på modelniveau.';
       return 'Kataloget mangler en sikker kobling mellem årgang og variant. Vælg varianten manuelt; årstallet vælger ikke motor eller kapacitet.';
     }
 
@@ -2262,7 +2274,7 @@
       if (!biler.length) {
         html += '<div class="trfe-empty-car"><strong>Intet køretøj tilføjet endnu</strong>' +
           'Kortet viser de energityper, du har slået til ovenfor. Uden et køretøj filtreres priserne ikke efter drivmiddel, og manuel hentning tager alle typer. ' +
-          'Fuld tank bruger tankstørrelses-helperen, som som standard er 50 L.</div>';
+          'Fuld tank bruger den fælles tankstørrelse eller 50 L, hvis ingen størrelse er angivet.</div>';
       }
       for (var bi2 = 0; bi2 < biler.length; bi2++) {
         var bb = biler[bi2] || {};
@@ -2287,18 +2299,18 @@
           '<input type="text" list="' + dlmId + '" data-key="bil:' + bi2 + ':model" value="' +
           esc(bb.model || "") + '" placeholder="fx up!" ' + (bb.mærke ? "" : 'disabled title="Vælg mærke først"') + ">" + dlm;
         html += '<div class="trfe-hint" data-model-count="' + bi2 + '">' + esc(suggestions.message) + '</div>';
-        html += '<div class="trfe-hint">Variant (valgfrit — eller skriv selv)</div>' +
-          '<input type="text" data-key="bil:' + bi2 + ':variant" list="trf-variants-' + bi2 + '" value="' + esc(bb.variant || '') + '" placeholder="fx 2018 · 1.6 TDI">' +
+        html += '<details data-editor-section="vehicle-extra-' + bi2 + '"' + (bb.variant || bb.aargang ? ' open' : '') + '><summary>Årgang og variant (valgfrit)</summary><div class="trfe-hint">Variant</div>' +
+          '<input type="text" data-key="bil:' + bi2 + ':variant" list="trf-variants-' + bi2 + '" value="' + esc(bb.variant || '') + '" placeholder="fx 1.6 TDI">' +
           '<datalist id="trf-variants-' + bi2 + '" data-variant-options="' + bi2 + '">' + this._variantOptions(bb.mærke, bb.model, "", bb.aargang) + '</datalist>';
         html += '<div class="trfe-hint">Modelår (valgfrit — kontrollér din variant)</div>' +
           '<input type="text" inputmode="numeric" data-key="bil:' + bi2 + ':aargang" list="trf-years-' + bi2 + '" value="' + esc(bb.aargang || '') + '" placeholder="fx 2020">' +
           '<datalist id="trf-years-' + bi2 + '" data-year-options="' + bi2 + '">' + this._yearOptions(bb.mærke, bb.model) + '</datalist>' +
-          '<div class="trfe-hint" data-variant-year-note="' + bi2 + '">' + esc(this._variantYearNote(bb)) + '</div>';
+          '<div class="trfe-hint" data-variant-year-note="' + bi2 + '">' + esc(this._variantYearNote(bb)) + '</div></details>';
         var selectedModel = this._katalogFind(bb.mærke, bb.model);
         html += '<div class="trfe-hint" data-model-note="' + bi2 + '">' +
           esc(vehicleModelNote(selectedModel, bb.variant)) + '</div>';
         var bfuel = bb.brændstof || "";
-        html += '<div class="trfe-hint">Drivmiddel (sætter fornuftig visning)</div><div class="trfe-row">';
+        html += '<div class="trfe-hint">Drivmiddel (vælger hvilke priser der vises)</div><div class="trfe-row">';
         for (var fi = 0; fi < fuels.length; fi++) {
           html += '<label><input type="radio" name="trf-fuel-' + bi2 + '" data-key="bil:' + bi2 + ':brændstof" value="' +
             fuels[fi][0] + '"' + (bfuel === fuels[fi][0] ? " checked" : "") + "><span>" + fuels[fi][1] + "</span></label>";
@@ -2307,10 +2319,10 @@
         html += '<div class="trfe-hint">Navn</div><input type="text" data-key="bil:' + bi2 + ':navn" value="' +
           esc(bb.navn || "") + '" placeholder="Køretøj 1">';
         html += '<div class="trfe-hint">Tank (L — fra katalog, ret ved behov)</div><input type="number" data-key="bil:' + bi2 +
-          ':tank_liters" min="0.1" max="2000" step="0.1" value="' +
+          ':tank_liters" min="0.01" step="any" value="' +
           esc(bb.tank_liters !== undefined && bb.tank_liters !== null ? bb.tank_liters : "") + '" placeholder="Auto">';
         html += '<div class="trfe-hint">Batteri (kWh — fra katalog, ret ved behov)</div><input type="number" data-key="bil:' + bi2 +
-          ':batteri_kwh" min="10" max="200" step="1" value="' +
+          ':batteri_kwh" min="0.01" step="any" value="' +
           esc(bb.batteri_kwh !== undefined && bb.batteri_kwh !== null ? bb.batteri_kwh : "") + '" placeholder="Auto">';
         html += '<div class="trfe-hint">Telefon (GPS-kilde)</div><input type="text" list="trf-trackers" data-key="bil:' +
           bi2 + ':location_entity" value="' + esc(bb.location_entity || "") +
@@ -2336,21 +2348,20 @@
       }
       html += '<div class="trfe-hint"><a href="#" data-bil-add>' + (biler.length ? "Tilføj endnu et køretøj" : "＋ Tilføj køretøj") + '</a> · tankstørrelser er vejledende — kontroller mod instruktionsbogen</div>' + dl;
       html += "<h4>Køretøjskatalog (mærker/modeller)</h4>";
-      html += '<div class="trfe-hint">Katalogkilde (tom = indbygget: ' +
-        this._katalogBrands().length + ' mærker · ' + this._katalogBrands().reduce(function (total, brand) { return total + (brand.modeller || []).length; }, 0) + ' modeller)</div><input type="text" data-key="katalog_url" value="' +
-        esc(c.katalog_url || "") + '" placeholder="/tiny_refuel/static/bilkatalog.json">';
-      html += '<div class="trfe-hint">Peg på en anden JSON i samme format {brands:[{mærke, modeller:[{model, brændstof, tank_l, batteri_kwh}]}]} for at udvide — fx din egen fil under www/. Indlæses hver gang editoren åbnes.</div>';
+      if (this._katalogFailed) html += '<div class="trfe-hint" role="alert">Kataloget kunne ikke indlæses. Kontrollér URL og katalogformat. Du kan stadig indtaste køretøjet manuelt.</div>';
+      html += '<div class="trfe-hint">Indlæst katalog: ' +
+        this._katalogBrands().length + ' mærker · ' + this._katalogBrands().reduce(function (total, brand) { return total + (brand.modeller || []).length; }, 0) + ' modeller</div><div class="trfe-hint">Eget katalog (valgfrit)</div><input type="text" data-key="katalog_url" value="' +
+        esc(c.katalog_url || "") + '" placeholder="/tiny_refuel/static/katalog.json">';
+      html += '<div class="trfe-hint">Tomt felt bruger integrationens katalog.json. Eget katalog kan ligge under /local/katalog.json (config/www). Kort og editor deler hentningen; genindlæs browseren efter filændringer.</div>';
       html += '<details class="trfe-yaml" data-editor-section="yaml"><summary>Vis hele kortets YAML</summary>';
       html += '<div class="trfe-hint">Kopiér hele konfigurationen til Udseende → Rediger i YAML.</div>';
       html += '<button type="button" data-yaml-copy>Kopiér YAML</button>';
       html += '<textarea data-card-yaml readonly spellcheck="false" rows="14" aria-label="Hele kortets YAML"></textarea></details>';
       html += "<h4>Fælles tankstørrelse (bruges hvis køretøjet ikke har egen)</h4>";
       var tl = (c.tank_liters !== undefined && c.tank_liters !== null) ? c.tank_liters : "";
-      html += '<div class="trfe-row"><input type="number" data-key="tank_liters" min="0.1" max="2000" step="0.1" value="' +
+      html += '<div class="trfe-row"><input type="number" data-key="tank_liters" min="0.01" step="any" value="' +
         esc(tl) + '" placeholder="Auto"></div>';
-      html += '<div class="trfe-hint">Tom = bruger Tankstørrelse-helperen (' +
-        "pt. " + esc(String((this._hass && this._hass.states["input_number.tankstorrelse"] || {}).state || "?")) +
-        " L). Bruges til fuld-tank-beregningen.</div>";
+      html += '<div class="trfe-hint">Tomt felt bruger en angivet tank_entity eller input_number.tankstorrelse, hvis den findes; ellers 50 L. Køretøjets egen tankstørrelse har førsteprioritet.</div>';
       html += "<h4>Navigation (tryk på logo)</h4>";
       var nv = c.navigation || "waze";
       html += '<label><input type="radio" name="trf-nav" data-key="navigation" value="waze"' +

@@ -1,7 +1,7 @@
 # Vehicle logos
 
 Vehicle make logos are used in the card's vehicle buttons and the visual editor.
-The card also supports model wordmarks through `model_logos` in `bilkatalog.json`.
+The card also supports model wordmarks through `model_logos` in `katalog.json`.
 The vehicle name stays visible if a logo is missing or an image fails to load.
 
 ## Current coverage

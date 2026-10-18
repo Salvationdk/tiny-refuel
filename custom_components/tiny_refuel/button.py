@@ -10,7 +10,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class RefuelRefreshButton(ButtonEntity):
     _attr_has_entity_name = True
-    _attr_name = "Scrape alle data"
+    _attr_name = "Hent alle data"
     _attr_icon = "mdi:refresh"
     _attr_unique_id = DOMAIN + "_refresh"
     _attr_device_info = DeviceInfo(identifiers={(DOMAIN, DOMAIN)}, name="Tiny Refuel", manufacturer="Tiny Refuel", model="Benzin, diesel og opladning", sw_version=VERSION)
