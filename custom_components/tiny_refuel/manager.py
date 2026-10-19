@@ -7,7 +7,7 @@ from typing import Callable
 
 from . import scraper
 from .const import CARD_VERSION, VERSION
-from .entity_data import nearest_row
+from .entity_data import nearest_row, price_rows
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -113,8 +113,13 @@ class RefuelManager:
             await asyncio.shield(self.task)
         self.listeners.clear()
 
+    def current_price_rows(self, field, brand=None):
+        return [] if self.last_error else price_rows(self.data, field, brand)
+
     def nearest(self, field, origin):
         """Share an expensive distance scan across a vehicle's related entities."""
+        if self.last_error:
+            return None, None
         if getattr(self, "_nearest_data", None) is not self.data:
             self._nearest_data = self.data
             self._nearest_results = {}

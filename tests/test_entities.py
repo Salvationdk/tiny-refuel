@@ -37,6 +37,14 @@ class EntityTests(unittest.TestCase):
         self.manager.data['stations']=[]
         self.assertIsNone(sensor.RefuelSensor(self.manager,"lowest_p95").native_value)
 
+    def test_complete_collection_failure_does_not_publish_cached_prices_as_current(self):
+        self.assertEqual(sensor.RefuelSensor(self.manager,'lowest_p95').native_value,15)
+        self.manager.last_error='Collection failed'
+        self.assertIsNone(sensor.RefuelSensor(self.manager,'lowest_p95').native_value)
+        self.assertIsNone(sensor.RefuelPriceSensor(self.manager,'p95','Q8').native_value)
+        self.assertIsNone(sensor.RefuelVehicleSensor(self.manager,self.vehicle,'p95','price').native_value)
+        self.assertEqual(self.manager.data['stations'][0]['p95'],15)
+
     def test_vehicle_updates_with_position_and_capacity_is_never_assumed(self):
         values=lambda metric:sensor.RefuelVehicleSensor(self.manager,self.vehicle,"p95",metric).native_value
         self.assertEqual(values('station'),'Near')

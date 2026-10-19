@@ -23,7 +23,7 @@
   .trf-model-mark { display: inline-flex; align-items: center; }
   .trf-model-logo-text { font-size: 11px; font-weight: 700; color: var(--primary-text-color); }
   .trf-car-logo, .trf-model-logo { filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); background: transparent; }
-  .trf-logo-color { filter: none; mix-blend-mode: normal; }
+  .trf-logo-color { filter: var(--trf-color-logo-filter, none); mix-blend-mode: normal; }
   .trf-logo-white { filter: var(--trf-white-logo-filter, invert(1)); }
   .trf-car.trf-on { background: linear-gradient(90deg, rgba(0,229,255,.28), rgba(185,103,255,.28)); border-color: var(--primary-color, #00e5ff); font-weight: 700; box-shadow: 0 0 14px rgba(0,229,255,.5); text-shadow: 0 0 8px rgba(0,229,255,.8); }
   .trf-refresh { border: 1px solid rgba(0,229,255,.4); background: rgba(0,229,255,.06); color: var(--primary-text-color); border-radius: 50%; width: 34px; height: 34px; font-size: 17px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,229,255,.25); }
@@ -43,6 +43,7 @@
   .trf-head .trf-km { text-align: right; }
   .trf-row, .trf-evrow { border-radius: 10px; margin: 3px 6px; border: 1px solid rgba(0,229,255,.28); background: rgba(0,229,255,.06); box-shadow: 0 0 10px rgba(0,229,255,.08); }
   .trf-logo { height: 22px; display: flex; align-items: center; }
+  .trf-logo img[src$="/logo-clever.svg"], .trf-logo img[src$="/logo-ionity.svg"] { filter: var(--trf-low-contrast-logo-filter, none); }
   .trf-logo img { height: 22px; max-width: 96px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(255,255,255,.08)); }
   .trf-navlink { display: inline-flex; }
   .trf-navlink img { cursor: pointer; transition: opacity .15s; }
@@ -119,7 +120,8 @@
   @media (max-width: 480px) {
     .trf-head, .trf-row, .trf-evrow { gap: 5px; padding: 3px 6px; }
     .trf-logo { height: 22px; }
-    .trf-logo img { height: 22px; max-width: 80px; }
+    .trf-logo img[src$="/logo-clever.svg"], .trf-logo img[src$="/logo-ionity.svg"] { filter: var(--trf-low-contrast-logo-filter, none); }
+  .trf-logo img { height: 22px; max-width: 80px; }
     .trf-price { font-size: 13px; }
     .trf-km { font-size: 11px; }
   }
@@ -157,7 +159,8 @@
   .trfe .trf-make-mark { display: inline-flex; align-items: center; min-height: 28px; }
   .trfe .trfe-car-logo { width: 28px; height: 28px; flex: 0 0 28px; object-fit: contain; background: transparent; filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); }
   .trfe .trfe-model-logo { width: 46px; height: 24px; object-fit: contain; background: transparent; filter: var(--trf-vehicle-logo-filter, none); mix-blend-mode: var(--trf-vehicle-logo-blend, multiply); }
-  .trfe .trf-logo-color { filter: none; mix-blend-mode: normal; }
+  .trfe .trf-logo-color { filter: var(--trf-color-logo-filter, none); mix-blend-mode: normal; }
+  .trfe .trfe-brand-logo[src$="/logo-clever.svg"], .trfe .trfe-brand-logo[src$="/logo-ionity.svg"] { filter: var(--trf-low-contrast-logo-filter, none); }
   .trfe .trf-logo-white { filter: var(--trf-white-logo-filter, invert(1)); }
   .trfe .trfe-car-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
   .trfe .trfe-brand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 6px; margin-top: 8px; }
@@ -325,6 +328,8 @@
     if (dark === undefined) dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     owner.style.setProperty("--trf-vehicle-logo-filter", dark ? "brightness(0) invert(1)" : "brightness(0)");
     owner.style.setProperty("--trf-vehicle-logo-blend", "normal");
+    owner.style.setProperty("--trf-color-logo-filter", dark ? "brightness(0) invert(1)" : "none");
+    owner.style.setProperty("--trf-low-contrast-logo-filter", dark ? "brightness(0) invert(1)" : "none");
     owner.style.setProperty("--trf-white-logo-filter", dark ? "brightness(0) invert(1)" : "brightness(0)");
   }
 

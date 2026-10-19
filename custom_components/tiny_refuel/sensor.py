@@ -6,7 +6,7 @@ from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers import entity_registry as er
 from homeassistant.core import callback
 from .const import DOMAIN, VERSION
-from .entity_data import (BRANDS, FUELS, FUEL_FIELDS, positive, price_rows,
+from .entity_data import (BRANDS, FUELS, FUEL_FIELDS, positive,
                           station_attributes, vehicle_origin, error_count)
 
 BASE = {
@@ -93,7 +93,7 @@ class RefuelSensor(SensorEntity):
             geo = data.get("geocoding", {})
             return geo.get("queued", 0) + geo.get("not_found", 0) if geo else data.get("geocode_pending", 0)
         method, field = self.key.split("_", 1)
-        rows = price_rows(data, field)
+        rows = self.manager.current_price_rows(field)
         if not rows:
             return None
         values = [r[field] for r in rows]
@@ -104,9 +104,9 @@ class RefuelSensor(SensorEntity):
         data = self.manager.data
         if self.key.startswith(("lowest_", "average_")):
             field = self.key.split("_", 1)[1]
-            rows = price_rows(data, field)
+            rows = self.manager.current_price_rows(field)
             row = min(rows, key=lambda r: r[field]) if rows and self.key.startswith("lowest_") else None
-            return {**station_attributes(row, data), "antal_priser": len(rows)}
+            return {**station_attributes(row, data), "antal_priser": len(rows), "seneste_fejl": self.manager.last_error}
         return {"opdaterer": self.manager.refreshing, "fejl": error_count(self.manager),
                 "seneste_fejl": self.manager.last_error, "version": VERSION,
                 "brændstofkilder": data.get("fuel_sources", {}), "ladekilder": data.get("ev_sources", {}),
@@ -125,15 +125,15 @@ class RefuelPriceSensor(RefuelSensor):
 
     @property
     def native_value(self):
-        rows = price_rows(self.manager.data, self.key.split("_", 1)[1], self.brand)
+        rows = self.manager.current_price_rows(self.key.split("_", 1)[1], self.brand)
         return min(r[self.key.split("_", 1)[1]] for r in rows) if rows else None
 
     @property
     def extra_state_attributes(self):
         field = self.key.split("_", 1)[1]
-        rows = price_rows(self.manager.data, field, self.brand)
+        rows = self.manager.current_price_rows(field, self.brand)
         row = min(rows, key=lambda r: r[field]) if rows else None
-        return {**station_attributes(row, self.manager.data), "antal_priser": len(rows)}
+        return {**station_attributes(row, self.manager.data), "antal_priser": len(rows), "seneste_fejl": self.manager.last_error}
 
 
 class RefuelVehicleSensor(RefuelSensor):
@@ -181,7 +181,7 @@ class RefuelVehicleSensor(RefuelSensor):
     def extra_state_attributes(self):
         row, distance = self._nearest()
         return {**station_attributes(row, self.manager.data), "koeretoej_id": self.vehicle["id"],
-                "position_entity": self.vehicle.get("location_entity"), "afstand_km": round(distance, 2) if distance is not None else None,
+                "position_entity": self.vehicle.get("location_entity"), "seneste_fejl": self.manager.last_error, "afstand_km": round(distance, 2) if distance is not None else None,
                 "beregning": "Luftlinje. Fuld kapacitet uden ladetab, rabatter eller ekstra gebyrer."}
 
 
@@ -237,7 +237,7 @@ class RefuelTariffSensor(RefuelSensor):
     @property
     def native_value(self):
         row = self._standard()
-        return row["kwh"] if row and not row.get("stale") else None
+        return row["kwh"] if row and not row.get("stale") and not self.manager.last_error else None
 
     @property
     def extra_state_attributes(self):

@@ -204,6 +204,7 @@ def browsers(tokens):
             raise
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
         # Native Lovelace entry, save, reload and reopen; no manually added resource.
+        page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/lovelace/test?edit=1")
         options = page.locator("hui-card-options").first
         expect(options).to_be_visible(timeout=30000)
@@ -217,7 +218,7 @@ def browsers(tokens):
         tank = native_editor.locator('[data-key="bil:0:tank_liters"]')
         tank.fill("36")
         tank.dispatch_event("change")
-        page.screenshot(path=str(OUT / "native-editor-save.png"), full_page=True, animations="disabled")
+        page.screenshot(path=str(OUT / "native-editor-save.png"), animations="disabled")
         results.append("native-editor-save")
         dialog.locator('ha-button[slot="primaryAction"]').click()
         expect(native_editor).not_to_be_visible(timeout=15000)
@@ -276,6 +277,9 @@ def browsers(tokens):
                 electric = {**CAR, "navn": "Elbil", "mærke": "Aiways", "model": "U5", "brændstof": "el", "batteri_kwh": 63}
                 set_config({**CONFIG, "biler": [electric], "vis_benzin": False, "vis_el": True})
                 expect(card.locator(".trf-evrow").first).to_be_visible()
+                if dark:
+                    for logo in [card.locator(".trf-car-logo").first, card.locator('.trf-logo img[alt="Clever"]').first, card.locator('.trf-logo img[alt="Ionity"]').first]:
+                        assert "brightness(0) invert(1)" in logo.evaluate("el => getComputedStyle(el).filter"), "dark logo lacks a readable white rendering"
                 shot(prefix + "-charging")
                 card.locator('[data-open-ev]').first.click()
                 expect(card.locator("dialog[open]")).to_be_visible()

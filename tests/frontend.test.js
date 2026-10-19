@@ -125,9 +125,13 @@ stable.hass = { states: { 'device_tracker.telefon': { state: 'away' } }, themes:
 assert.equal(editorRenders, trackerRenderCount, 'GPS and theme updates must not rebuild editor fields');
 assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'brightness(0) invert(1)');
 assert.equal(stable.style.values['--trf-vehicle-logo-blend'], 'normal');
+assert.equal(stable.style.values['--trf-color-logo-filter'], 'brightness(0) invert(1)');
+assert.equal(stable.style.values['--trf-low-contrast-logo-filter'], 'brightness(0) invert(1)');
 assert.equal(stable.style.values['--trf-white-logo-filter'], 'brightness(0) invert(1)');
 stable.hass = { states: { 'device_tracker.telefon': {} }, themes: { darkMode: false } };
 assert.equal(stable.style.values['--trf-vehicle-logo-filter'], 'brightness(0)');
+assert.equal(stable.style.values['--trf-color-logo-filter'], 'none');
+assert.equal(stable.style.values['--trf-low-contrast-logo-filter'], 'none');
 
 // A late catalog render preserves open sections and an uncommitted text draft.
 const focusedEditor = new StableEditor();
