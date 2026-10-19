@@ -63,7 +63,8 @@
       "no_vehicles": "No shared vehicles configured."
     },
     "error": {
-      "required_name": "Enter a name."
+      "required_name": "Enter a name.",
+      "invalid_capacity": "Enter a finite positive capacity."
     }
   }
 }

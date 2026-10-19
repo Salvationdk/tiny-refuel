@@ -28,4 +28,9 @@ class RefuelBinarySensor(BinarySensorEntity):
 
     @property
     def is_on(self):
-        return self.manager.refreshing if self.key == "refreshing" else bool(error_count(self.manager))
+        if self.key == "refreshing":
+            return self.manager.refreshing
+        return bool(error_count(self.manager)) or any(
+            isinstance(status, dict) and status.get("status") in ("stale", "error")
+            for kind in ("fuel_sources", "ev_sources")
+            for status in self.manager.data.get(kind, {}).values())

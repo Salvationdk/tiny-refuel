@@ -63,7 +63,8 @@
       "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer."
     },
     "error": {
-      "required_name": "Angiv et navn."
+      "required_name": "Angiv et navn.",
+      "invalid_capacity": "Angiv en endelig, positiv kapacitet."
     }
   }
 }

@@ -70,8 +70,12 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             vehicle = {key: value.strip() if isinstance(value, str) else value for key, value in user_input.items()
                        if value is not None and value != ""}
+            invalid = {key: "invalid_capacity" for key in ("tank_liters", "batteri_kwh")
+                       if key in vehicle and not positive(vehicle[key])}
+            if invalid:
+                return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(old, selector), errors=invalid)
             if not vehicle.get("navn"):
-                return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(old, selector), errors={"navn": "required_name"})
+                return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(user_input, selector), errors={"navn": "required_name"})
             vehicle["id"] = vehicle_id or uuid4().hex
             fuel = vehicle["brændstof"]
             vehicle["vis"] = {"benzin": fuel in ("benzin", "hybrid", "plug_in_hybrid"),
@@ -92,14 +96,9 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             optional("model"): str,
             vol.Required("brændstof", default=vehicle.get("brændstof", "benzin")): vol.In({
                 "benzin": "Benzin", "diesel": "Diesel", "el": "El", "hybrid": "Hybrid uden stik", "plug_in_hybrid": "Plug-in-hybrid"}),
-            optional("tank_liters"): vol.All(vol.Coerce(float), vol.Range(min=0.01), _finite_capacity),
-            optional("batteri_kwh"): vol.All(vol.Coerce(float), vol.Range(min=0.01), _finite_capacity),
+            optional("tank_liters"): vol.All(vol.Coerce(float), vol.Range(min=0.01)),
+            optional("batteri_kwh"): vol.All(vol.Coerce(float), vol.Range(min=0.01)),
             optional("location_entity"): selector.EntitySelector(selector.EntitySelectorConfig(domain=["device_tracker", "person", "zone"])),
             optional("notify_service"): str,
         })
 
-
-def _finite_capacity(value):
-    if not positive(value):
-        raise vol.Invalid("Capacity must be a finite positive number")
-    return value

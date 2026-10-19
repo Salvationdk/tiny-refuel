@@ -2041,6 +2041,14 @@
     set hass(hass) {
       this._hass = hass;
       vehicleLogoTheme(this, hass);
+      if (!this._sharedVehiclesRequested && typeof hass.callApi === "function") {
+        this._sharedVehiclesRequested = true;
+        var self = this;
+        hass.callApi("GET", "tiny_refuel/data").then(function (data) {
+          self._sharedVehicles = data && Array.isArray(data.vehicles) ? data.vehicles : [];
+          if (self._config) self._render();
+        }).catch(function () { self._sharedVehiclesRequested = false; });
+      }
       if (!this._config) return;
       var keys = [];
       for (var ek in hass.states) {
@@ -2258,6 +2266,9 @@
       }
       html += "</div></div></details>";
       html += cb("brug_faelles_koeretoejer", "Brug integrationens køretøjer, når kortet ikke har egne", c.brug_faelles_koeretoejer !== false, "Fælles køretøjer oprettes under Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer. De bruges også af køretøjssensorerne.");
+      if ((!Array.isArray(c.biler) || !c.biler.length) && c.brug_faelles_koeretoejer !== false && this._sharedVehicles && this._sharedVehicles.length) {
+        html += '<div class="trfe-hint">Kortet bruger fælles køretøjer: ' + this._sharedVehicles.map(function (car) { return esc(car.navn || [car.mærke, car.model].filter(Boolean).join(" ")); }).join(", ") + '. Rediger dem under integrationens Konfigurer-menu.</div>';
+      }
       html += "<h4>Køretøjer <span class=\"trfe-tip\" tabindex=\"0\" title=\"Køretøjer styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Køretøjer styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
       this._loadKatalog();
       var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [];
