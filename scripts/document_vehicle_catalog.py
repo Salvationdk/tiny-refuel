@@ -144,7 +144,7 @@ def check_pages(catalog, output, limit=100, offline=False):
                 source['status'] = 'structured_specs_found_review_scope'
                 source['extracted_candidates'] = found
                 extracted.extend(found)
-        except (OSError, ValueError) as exc:
+        except (OSError, ValueError, AssertionError) as exc:
             source.update(status='fetch_error', error=str(exc), checked_at=datetime.now(timezone.utc).isoformat())
         save(output / 'page-checks.json', data['sources'])
     save(output / 'page-checks.json', data['sources'])

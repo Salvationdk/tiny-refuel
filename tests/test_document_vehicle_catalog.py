@@ -62,3 +62,33 @@ def test_online_extract_and_resume_without_new_request(tmp_path):
         assert next(iter(documented['source_review_data']['sources'].values()))['primary_source_verified'] is False
     finally:
         module.PoliteFetcher = original
+
+
+def test_bad_html_does_not_stop_next_page_and_resume(tmp_path):
+    import scripts.document_vehicle_catalog as module
+    import json
+    class FakeFetcher:
+        def __init__(self, *args, **kwargs): pass
+        def get(self, url):
+            return '<![@*m>' if url.endswith('/bad') else '<title>Good page</title>'
+    original = module.PoliteFetcher
+    original_title = module.Title
+    class Python310Title(original_title):
+        def feed(self, page):
+            if page.startswith('<![@'): raise AssertionError('expected name token')
+            return super().feed(page)
+    module.Title = Python310Title
+    module.PoliteFetcher = FakeFetcher
+    try:
+        catalog = {'brands': [{'mærke': 'MAN', 'modeller': [{'model': 'e-TGE'}]}]}
+        rows = [{'make': 'MAN', 'model': 'e-TGE', 'specifications': {'tank_l': 75},
+                 'source_url': 'https://example.org/' + name} for name in ('bad', 'good')]
+        documented = attach(catalog, rows)
+        module.check_pages(documented, tmp_path)
+        statuses = {s['url']: s['status'] for s in documented['source_review_data']['sources'].values()}
+        assert statuses['https://example.org/bad'] == 'fetch_error'
+        assert statuses['https://example.org/good'] == 'page_fetched_no_matching_structured_specs'
+        assert len(json.loads((tmp_path / 'page-checks.json').read_text())) == 2
+    finally:
+        module.PoliteFetcher = original
+        module.Title = original_title
