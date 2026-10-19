@@ -76,8 +76,8 @@ def enrich_catalog(original, candidates):
     for brand in result['brands']:
         compact_models = []
         for model in brand['modeller']:
-            fields = ('model', 'source_names', 'vehicle_types', 'vehicle_type', 'koeretoejstype', 'brændstof', 'tank_l', 'batteri_kwh', 'battery_basis',
-                      'requires_fuel_selection', 'specification_note', 'source_url', 'capacity_status', 'capacity_source_urls', 'capacity_scope', 'capacity_checked_at', 'model_years')
+            fields = ('model', 'source_names', 'vehicle_types', 'dmr_vehicle_types', 'vehicle_type', 'koeretoejstype', 'brændstof', 'tank_l', 'batteri_kwh', 'battery_basis',
+                      'requires_fuel_selection', 'requires_capacity_selection', 'specification_note', 'source_url', 'capacity_status', 'capacity_source_urls', 'capacity_scope', 'capacity_checked_at', 'model_years')
             compact_model = {k: deepcopy(model[k]) for k in fields if k in model}
             compact_model['requires_fuel_selection'] = not bool(compact_model.get('brændstof'))
             urls = sorted({r['url'] for r in model.get('capacity_sources', []) if r.get('url')})

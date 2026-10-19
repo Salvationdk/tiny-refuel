@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fix/hacs-validation-and-persistent-popups
+      - fix/vehicle-type-filter
     paths:
       - .github/workflows/vehicle-catalog.yml
       - scripts/dmr_catalog.py
@@ -38,7 +39,14 @@ jobs:
           --source-date "$SOURCE_DATE"
           --output catalog-candidate/kildekatalog.json
           --report catalog-candidate/import-report.json
+      - name: Inventory unique models per category and missing data
+        run: >-
+          python -m scripts.catalog_inventory
+          --input catalog-candidate/kildekatalog.json
+          --output catalog-candidate/inventory
+          --require-types
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: danish-vehicle-catalog-candidate
           path: catalog-candidate/

@@ -48,3 +48,20 @@ class CompactCatalogTests(unittest.TestCase):
             self.assertTrue(stats['original_preserved'])
             self.assertLess(stats['output_bytes'], stats['input_bytes'])
             self.assertNotIn('dmr_profiles', output.read_text())
+
+    def test_category_survives_removal_of_raw_profiles(self):
+        source = {'brands': [{'mærke': 'Mixed', 'modeller': [
+            {'model': 'One', 'vehicle_types': ['varebil'], 'dmr_profiles': [
+                {'KoeretoejArtNummer': ['4'], 'KoeretoejArtNavn': ['Lastbil'], 'registration': 'never-export'},
+                {'KoeretoejArtNummer': ['1']} ]},
+            {'model': 'Moped', 'dmr_profiles': [{'KoeretoejArtNummer': ['16', '17']}]},
+            {'model': 'Unknown', 'dmr_profiles': [{'KoeretoejArtNummer': ['999']}]},
+        ]}]}
+        output = StringIO()
+        compact_stream(StringIO(json.dumps(source)), output)
+        models = json.loads(output.getvalue())['brands'][0]['modeller']
+        self.assertEqual(models[0]['vehicle_types'], ['lastbil', 'personbil', 'varebil'])
+        self.assertEqual(models[1]['vehicle_types'], ['knallert'])
+        self.assertNotIn('vehicle_types', models[2])
+        self.assertNotIn('never-export', output.getvalue())
+        self.assertNotIn('dmr_profiles', output.getvalue())

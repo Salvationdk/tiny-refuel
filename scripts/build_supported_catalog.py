@@ -1,4 +1,4 @@
-"""Build the bundled catalog from models with a known capacity, excluding motor tools."""
+"""Build the bundled catalog from models with a known capacity, including typed DMR models awaiting capacity data."""
 import argparse
 from copy import deepcopy
 import json
@@ -19,7 +19,7 @@ def positive(value):
 def supported_catalog(data):
     result = deepcopy(data)
     original_models = sum(len(b['modeller']) for b in data['brands'])
-    removed_missing = removed_tools = 0
+    removed_missing = removed_tools = waiting_capacity = 0
     kept = []
     for brand in result['brands']:
         models = []
@@ -31,8 +31,15 @@ def supported_catalog(data):
                 removed_tools += 1
                 continue
             if not any(positive(model.get(field)) for field in ('tank_l', 'batteri_kwh')):
-                removed_missing += 1
-                continue
+                supported_types = {'personbil', 'varebil', 'varevogn', 'lastbil', 'bus', 'stor personbil', 'motorcykel', 'knallert', 'stor knallert', 'lille knallert', 'traktor', 'andet'}
+                has_type = any(str(t).strip().casefold() in supported_types for t in types)
+                invalid_capacity = any(model.get(field) is not None for field in ('tank_l', 'batteri_kwh'))
+                if not has_type or invalid_capacity:
+                    removed_missing += 1
+                    continue
+                waiting_capacity += 1
+                model['requires_capacity_selection'] = True
+                model['specification_note'] = 'Registermodel med kendt køretøjstype. Tank- og batterikapacitet mangler; indtast værdien for dit konkrete køretøj.'
             models.append(model)
         if models:
             brand['modeller'] = models
@@ -48,8 +55,8 @@ def supported_catalog(data):
         register_makes=len(kept), covered=covered, pending=len(kept) - covered,
         pending_combined=pending_combined, pending_single_names=len(kept) - covered - pending_combined)
     result['capacity_filter'] = {'original_models': original_models, 'models': sum(len(b['modeller']) for b in kept),
-        'makes': len(kept), 'excluded_missing_capacity': removed_missing, 'excluded_motor_tools': removed_tools,
-        'note': 'Only models with a positive catalog tank_l or batteri_kwh. Values remain model-level and require checking for the exact year/variant.'}
+        'makes': len(kept), 'excluded_missing_capacity': removed_missing, 'excluded_motor_tools': removed_tools, 'models_requiring_capacity': waiting_capacity,
+        'note': 'Models with positive capacities or an explicit supported vehicle type. Missing capacity requires manual selection; never infer it from engine displacement, fuel consumption or model name.'}
     return result
 
 
