@@ -335,6 +335,22 @@ def browsers(tokens):
                 extra = editor.locator('[data-editor-section="vehicle-extra-0"]')
                 extra.locator("summary").click()
                 shot(prefix + "-editor-details", editor)
+                type_select = editor.locator('[data-key="bil:0:koeretoejstype"]')
+                type_select.select_option("varebil")
+                expect(editor.locator('[data-key="bil:0:model"]')).to_have_value("")
+                expect(editor.locator('[data-key="bil:0:tank_liters"]')).to_have_value("")
+                model_values = editor.locator('[data-model-options="0"] option').evaluate_all("els => els.map(el => el.value)")
+                assert "Jumper" in model_values and "C3" not in model_values
+                shot(prefix + "-editor-vehicle-type", editor)
+                type_select.select_option("lastbil")
+                expect(editor.locator('[data-key="bil:0:mærke"]')).to_have_value("")
+                expect(editor.locator('[data-make-options="0"] option')).to_have_count(0)
+                type_select.select_option("personbil")
+                make = editor.locator('[data-key="bil:0:mærke"]')
+                make.fill("Volkswagen")
+                make.dispatch_event("change")
+                model_values = editor.locator('[data-model-options="0"] option').evaluate_all("els => els.map(el => el.value)")
+                assert "up!" in model_values and "Caddy Cargo" not in model_values
                 page.locator("#visual-editor-host").evaluate("el => el.remove()")
                 assert card.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), prefix + " horizontal overflow"
         page.set_viewport_size({"width": 1280, "height": 1000})
