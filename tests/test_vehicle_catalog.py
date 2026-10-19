@@ -51,8 +51,8 @@ class VehicleCatalogTests(unittest.TestCase):
 
     def test_checked_additions_are_present_without_duplicate_names_or_invented_specs(self):
         catalog = module.load_catalog(ROOT / 'custom_components/tiny_refuel/frontend/katalog.json')
-        self.assertEqual(len(catalog['brands']), 89)
-        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 895)
+        self.assertEqual(len(catalog['brands']), 97)
+        self.assertEqual(sum(len(row['modeller']) for row in catalog['brands']), 913)
         new = []
         for brand in catalog['brands']:
             names = [row['model'].casefold() for row in brand['modeller']]

@@ -70,3 +70,9 @@ visuel gennemgang, ikke automatisk pixel-sammenligning med godkendte referencebi
 [GitHub-kørsel 39225146042](https://github.com/Salvationdk/tiny-refuel/actions/runs/39225146042) består med 51 screenshots, ingen browserfejl og ingen uhåndterede afviste promises. Testen kontrollerer automatisk modulindlæsning uden manuel ressource, oprettelse af fælles køretøj via integrationens optionsflow samt ændring, gemning og genåbning gennem Home Assistants egen Lovelace-editor. Den kontrollerer også, at Aiways-, Clever- og IONITY-logoerne gengives hvide i mørkt tema.
 
 README-billederne er hentet fra denne kørsel. Kort, mobil editor, native gemmedialog og integrations-/sensoroversigt er visuelt gennemgået. Priser og positioner er fiktive. Automatiske Python-tests består med 106 tests på både Home Assistant 2025.11.2 og 2026.10.0.
+
+### Par af lyse og mørke screenshots
+
+Hver visning i screenshotgalleriet gemmes i både Home Assistants lyse standardtema og mørke standardtema. Det gælder kort, mobilvisninger, editor, den native Lovelace-editor med Gem-knap, integrationsopsætning og entitetslisten. Filnavne indeholder `-light-` og `-dark-`. Workflowet fejler, hvis en visning mangler sit temapar; rapporten angiver antal par. Et eventuelt `startup-failure.png` er kun fejldiagnostik og indgår ikke i galleriet.
+
+Katalogtesten vælger desuden lastbil, bus, motorcykel, knallert, traktor og andet og kontrollerer den dokumenterede kapacitet fra det medfølgende katalog.

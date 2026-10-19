@@ -83,9 +83,9 @@ Skærmbilleder fra v0.2.2 i Home Assistant 2026.10. Priser, ladesteder og positi
 
 Editorbillederne viser produktets editor monteret direkte med Home Assistants tilstand og tema. Den udvidede browsertest kontrollerer desuden åbning, gemning og genåbning gennem Home Assistants egen korteditor uden manuel tilføjelse af JavaScript-ressourcen.
 
-Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 895 modeller fordelt på 89 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
+Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 913 modeller fordelt på 97 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
 
-Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype filtrerer både mærke- og modelforslag efter modellens `vehicle_types`. Mærker med flere typer viser kun de relevante modeller. Kataloget indeholder primært personbiler og varebiler; typer uden dokumenterede modeller giver ingen katalogforslag. Eget mærke og model kan stadig indtastes manuelt. Kategorierne beskriver modelfamilier, ikke registreringsklassen for den enkelte bil. Modelværdier bekræfter ikke alle årgange eller motorvarianter. Se [logodokumentationen](docs/vehicle-logos.md).
+Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype filtrerer både mærke- og modelforslag efter modellens `vehicle_types`. Mærker med flere typer viser kun de relevante modeller. Kataloget indeholder også lastbiler, busser, motorcykler, knallerter, traktorer og andre motorkøretøjer. Typer uden dokumenterede modeller i et eget katalog giver ingen katalogforslag. Eget mærke og model kan stadig indtastes manuelt. Kategorierne beskriver modelfamilier, ikke registreringsklassen for den enkelte bil. Modelværdier bekræfter ikke alle årgange eller motorvarianter. Se [logodokumentationen](docs/vehicle-logos.md).
 
 ![Valgfri årgang, variant og kapaciteter](docs/screenshots/0.2.2/desktop-light-editor-details.png)
 
@@ -219,7 +219,7 @@ Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigat
 
 ### Vedligeholdelse af køretøjskataloget
 
-Det indbyggede katalog indeholder 895 modeller fra 89 mærker. Kun modeller med tank- eller batteristørrelse er med. Modelværdier kan dække flere årgange og varianter; kontrollér kapaciteten for dit konkrete køretøj. Egne kataloger kan supplere de indbyggede data.
+Det indbyggede katalog indeholder 913 modeller fra 97 mærker. Kun modeller med tank- eller batteristørrelse er med. Modelværdier kan dække flere årgange og varianter; kontrollér kapaciteten for dit konkrete køretøj. Egne kataloger kan supplere de indbyggede data.
 
 Et udviklerværktøj kan hente modelnavne fra Toyota Danmarks officielle, strukturerede modeloversigt. Det skriver en kandidatliste til gennemgang og ændrer ikke integrationens katalog automatisk. Det kører ikke ved almindelig pris-scraping. Flere producentadaptere kan tilføjes senere; den første dækker Toyota, ikke alle mærker.
 
@@ -232,13 +232,21 @@ python scripts/vehicle_catalog.py merge --input /tmp/toyota-models.json
 
 Uden --write viser importen kun, hvilke navne der ville blive tilføjet. Kendte poster, logoer, tankstørrelser og brugerdata overskrives ikke. De gennemgåede tilføjelser ligger i scripts/data/vehicle-model-additions-2026-10.json.
 
+De 18 producentdokumenterede tilføjelser og deres kildehenvisninger findes i [kildelisten](scripts/data/vehicle-model-additions-2026-10-types.json). De omfatter tre lastbiler, tre busser, tre motorcykler, tre knallerter, tre traktorer og tre terrænmodeller under “andet”. Batterital er mærket som brugbare eller som nominel/oplyst energi med ukendt brugbar kapacitet. Registrering og dansk 30/45-godkendelse udledes ikke af modelkategorien. Kubota bruger tekstfallback, da mærket ikke har et indlejret logo.
+
+Tilføjelserne kan lægges ind i et eget katalog uden at overskrive eksisterende modeller:
+
+```bash
+python -m scripts.add_reviewed_vehicle_models --catalog mit-katalog.json --output mit-katalog-udvidet.json
+```
+
 ### Dansk registerkatalog og lokal modelsøgning
 
 Køretøjsoprettelsen bruger det medfølgende katalog: vælg fabrikant, søg model og vælg selv drivmiddel samt eventuelt årgang/variant. Der hentes ikke modeldata fra eksterne sider under oprettelsen. Ændres årgang/variant, ryddes modelstandarderne for drivmiddel, tank og batteri, så de kan bekræftes for den konkrete variant. Højst 60 modelforslag vises ad gangen; skriv mere for at indsnævre. Egne modeller og egne JSON-kataloger kan stadig bruges.
 
 Motorstyrelsens gratis statistikudtræk er hovedkilden til den nye importfunktion. Den læser personbiler/busser, varebiler og lastbiler (DMR-art 1–4) samt genkendte navngivne motorkøretøjstyper, bl.a. motorcykler, knallerter og traktorer, fra en hentet XML- eller ZIP-fil. Ukendte typer medtages ikke automatisk. Mærker, modeller og variantnavne samles uden gentagelser. Rå tekniske kombinationer gemmes separat som `dmr_profiles`; de bruges endnu ikke som bekræftede specifikationer i kortet. Eksisterende modelværdier og logoer bevares. Ukendte mærker har tekstfallback. Nummerplader, stelnumre og køretøjs-ID'er eksporteres ikke til kataloget. Årgang og tank-/batteristørrelse udledes ikke af første registrering eller modelnavnet.
 
-**Status:** Integrationen leverer én selvstændig `custom_components/tiny_refuel/frontend/katalog.json` med 895 modeller fra 89 mærker. Den indeholder kapaciteter, kendte drivmidler, logoer og korte kildeoplysninger. 425 nye modeller er tilføjet ud fra entydige indsamlede kapaciteter; eksisterende værdier er bevaret. Nye værdier er mærket som kildedatasætstandarder, der skal kontrolleres for det konkrete køretøj. Lange variantinventarer, rå DMR-profiler og importforslag distribueres ikke i driftskataloget. Kort og editor deler én hentning pr. URL i browserens session.
+**Status:** Integrationen leverer én selvstændig `custom_components/tiny_refuel/frontend/katalog.json` med 913 modeller fra 97 mærker. Den indeholder kapaciteter, kendte drivmidler, logoer og korte kildeoplysninger. 425 nye modeller er tilføjet ud fra entydige indsamlede kapaciteter; eksisterende værdier er bevaret. Kildedatasætstandarder er mærket som sådanne. Yderligere 18 modeller og konfigurationer er dokumenteret med producentkilder, kontroltidspunkt og præcis afgrænsning af årgang, marked eller batteripakker. Lange variantinventarer, rå DMR-profiler og importforslag distribueres ikke i driftskataloget. Kort og editor deler én hentning pr. URL i browserens session.
 
 Kilde og gratis adgang: [Motorstyrelsen – statistikudtræk](https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange). Udtrækket er stort og behandles uden for Home Assistant.
 

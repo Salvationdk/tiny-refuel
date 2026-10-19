@@ -25,4 +25,26 @@ class VehicleTypesTests(unittest.TestCase):
                 types = model.pop('vehicle_types')
                 rebuilt = apply_vehicle_types({'brands': [{'mærke': brand['mærke'], 'modeller': [model]}]})
                 self.assertEqual(rebuilt['brands'][0]['modeller'][0]['vehicle_types'], types)
-                self.assertTrue(set(types) <= {'personbil', 'varebil', 'andet'})
+                self.assertTrue(set(types) <= {'personbil', 'varebil', 'andet', 'lastbil', 'bus', 'motorcykel', 'knallert', 'traktor'})
+
+    def test_manufacturer_additions_are_scoped_idempotent_and_retain_provenance(self):
+        from collections import Counter
+        from scripts.add_reviewed_vehicle_models import ADDITIONS, add_reviewed_models
+        additions = json.loads(ADDITIONS.read_text())['models']
+        self.assertEqual(Counter(r['vehicle_types'][0] for r in additions),
+                         dict.fromkeys(['lastbil', 'bus', 'motorcykel', 'knallert', 'traktor', 'andet'], 3))
+        original = {'brands': [{'mærke': 'Honda', 'modeller': [{'model': 'CB500 Hornet', 'tank_l': 18}]}]}
+        result = add_reviewed_models(original)
+        self.assertEqual(add_reviewed_models(result), result)
+        self.assertEqual(original['brands'][0]['modeller'][0]['tank_l'], 18)
+        self.assertEqual(next(b for b in result['brands'] if b['mærke'] == 'Honda')['modeller'][0]['tank_l'], 18)
+        rebuilt = enrich_catalog(add_reviewed_models({'brands': []}), [])
+        models = [m for b in rebuilt['brands'] for m in b['modeller']]
+        self.assertEqual(len(models), 18)
+        for model in models:
+            self.assertTrue(model['capacity_scope'])
+            self.assertEqual(model['capacity_checked_at'], '2026-10-19')
+            self.assertTrue(model['source_url'].startswith('https://'))
+            self.assertEqual(model['capacity_source_urls'], [model['source_url']])
+            self.assertIn('Kontrollér', model['specification_note'])
+        self.assertEqual(next(m for m in models if m['model'] == 'CB500 Hornet')['model_years'], [2024])

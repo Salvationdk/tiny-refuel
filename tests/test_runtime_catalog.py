@@ -10,7 +10,7 @@ class RuntimeCatalogTests(unittest.TestCase):
     def test_one_embedded_catalog_with_no_runtime_parts_or_variants(self):
         folder = ROOT / 'custom_components/tiny_refuel/frontend'
         data = json.loads((folder / 'katalog.json').read_text())
-        self.assertEqual(validate_catalog(data), {'makes': 89, 'models': 895, 'models_with_capacity': 895})
+        self.assertEqual(validate_catalog(data), {'makes': 97, 'models': 913, 'models_with_capacity': 913})
         self.assertFalse((folder / 'bilkatalog.json').exists())
         self.assertNotIn('catalog_parts', data)
         self.assertTrue(all('variants' not in model for brand in data['brands'] for model in brand['modeller']))

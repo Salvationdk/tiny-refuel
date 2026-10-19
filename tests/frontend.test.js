@@ -662,7 +662,7 @@ for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
   form._katalog = packagedCatalog;
   form.dispatchEvent = () => {};
   form.setConfig({ biler: [{ mærke: 'Honda', model: 'CB 500', brændstof: 'benzin', tank_liters: 17 }] });
-  assert.equal(form._makeSuggestions('').total, 89);
+  assert.equal(form._makeSuggestions('').total, 97);
   assert.ok((form._makeSuggestions('').html.match(/<option/g) || []).length <= 60);
   assert.ok(form.innerHTML.includes('bil:0:koeretoejstype'));
   assert.ok(form.innerHTML.includes('bil:0:aargang'));
@@ -947,7 +947,7 @@ console.log('PASS: diesel, small tanks, small batteries, hybrid metrics and cata
 // Categories filter model families, never a whole manufacturer by assumption.
 {
   const f = new StableEditor(); f.dispatchEvent = () => {}; f._katalog = packagedCatalog;
-  assert.equal(f._makeSuggestions('', 'lastbil').total, 0);
+  assert.equal(f._makeSuggestions('', 'lastbil').total, 3);
   assert.ok(f._makeSuggestions('Volkswagen', 'varebil').html.includes('Volkswagen'));
   assert.ok(!f._makeSuggestions('BMW', 'varebil').html.includes('BMW'));
   assert.ok(f._modelSuggestions('Volkswagen', '', 'varebil').html.includes('Caddy Cargo'));

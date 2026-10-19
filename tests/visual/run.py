@@ -203,6 +203,23 @@ def browsers(tokens):
             page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
             raise
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
+        def set_theme(dark):
+            # Change HA's real default theme as well as the browser preference.
+            page.evaluate("dark => document.querySelector('home-assistant').dispatchEvent(new CustomEvent('settheme', {detail:{theme:'default',dark},bubbles:true,composed:true}))", dark)
+            page.emulate_media(color_scheme="dark" if dark else "light")
+            page.wait_for_function("dark => document.querySelector('home-assistant').hass.themes.darkMode === dark", arg=dark)
+            page.wait_for_timeout(300)
+
+        def paired_page_shots(name, full_page=False):
+            for dark in [False, True]:
+                set_theme(dark)
+                theme = "dark" if dark else "light"
+                filename = "desktop-" + theme + "-" + name
+                page.screenshot(path=str(OUT / (filename + ".png")), full_page=full_page, animations="disabled")
+                results.append(filename)
+            set_theme(False)
+
+        set_theme(False)
         # Native Lovelace entry, save, reload and reopen; no manually added resource.
         page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/lovelace/test?edit=1")
@@ -218,8 +235,7 @@ def browsers(tokens):
         tank = native_editor.locator('[data-key="bil:0:tank_liters"]')
         tank.fill("36")
         tank.dispatch_event("change")
-        page.screenshot(path=str(OUT / "native-editor-save.png"), animations="disabled")
-        results.append("native-editor-save")
+        paired_page_shots("native-editor-save")
         dialog.locator('ha-button[slot="primaryAction"]').click()
         expect(native_editor).not_to_be_visible(timeout=15000)
         page.goto(BASE + "/lovelace/test?edit=1")
@@ -253,11 +269,7 @@ def browsers(tokens):
             page.set_viewport_size({"width": width, "height": 2400})
             for dark in [False, True]:
                 theme = "dark" if dark else "light"
-                # Set actual HA theme, inherited by the card/editor.
-                page.evaluate("dark => document.querySelector('home-assistant').dispatchEvent(new CustomEvent('settheme', {detail:{theme:'default',dark},bubbles:true,composed:true}))", dark)
-                page.emulate_media(color_scheme=theme)
-                page.wait_for_function("dark => document.querySelector('home-assistant').hass.themes.darkMode === dark", arg=dark)
-                page.wait_for_timeout(300)
+                set_theme(dark)
                 prefix = label + "-" + theme
                 set_config(CONFIG)
                 expect(card).to_contain_text("Billigst")
@@ -314,7 +326,7 @@ def browsers(tokens):
                     host.append(editor); document.body.append(host); window.visualEditor=editor;
                 }""", CONFIG)
                 editor = page.locator("tiny-refuel-card-editor")
-                expect(editor).to_contain_text("895", timeout=30000)
+                expect(editor).to_contain_text("913", timeout=30000)
                 shot(prefix + "-editor-overview", editor)
                 editor.locator('[data-editor-section="providers"] > summary').click()
                 shot(prefix + "-editor-providers", editor)
@@ -344,7 +356,25 @@ def browsers(tokens):
                 shot(prefix + "-editor-vehicle-type", editor)
                 type_select.select_option("lastbil")
                 expect(editor.locator('[data-key="bil:0:mærke"]')).to_have_value("")
-                expect(editor.locator('[data-make-options="0"] option')).to_have_count(0)
+                expect(editor.locator('[data-make-options="0"] option')).to_have_count(3)
+                assert 'Citroën' not in editor.locator('[data-make-options="0"] option').evaluate_all('els => els.map(el => el.value)')
+                for category, brand, name, field, capacity in [
+                    ("lastbil", "Volvo", "FH Electric (540 kWh-konfiguration)", "batteri_kwh", "460"),
+                    ("bus", "Mercedes", "eCitaro G NMC3 (7 batteripakker)", "batteri_kwh", "686"),
+                    ("motorcykel", "Honda", "CB500 Hornet", "tank_liters", "17.1"),
+                    ("knallert", "Piaggio", "Zip 50 i-get Special Edition", "tank_liters", "6.6"),
+                    ("traktor", "John Deere", "6M 150 (205 L-konfiguration)", "tank_liters", "205"),
+                    ("andet", "Polaris", "Ranger 1000 (2025, terrænmodel)", "tank_liters", "43"),
+                ]:
+                    type_select.select_option(category)
+                    make = editor.locator('[data-key="bil:0:mærke"]')
+                    make.fill(brand)
+                    make.dispatch_event("change")
+                    model = editor.locator('[data-key="bil:0:model"]')
+                    model.fill(name)
+                    model.dispatch_event("change")
+                    expect(editor.locator('[data-key="bil:0:' + field + '"]')).to_have_value(capacity)
+                shot(prefix + "-editor-expanded-catalog", editor)
                 type_select.select_option("personbil")
                 make = editor.locator('[data-key="bil:0:mærke"]')
                 make.fill("Volkswagen")
@@ -356,17 +386,23 @@ def browsers(tokens):
         page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/config/integrations/integration/tiny_refuel")
         expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)
-        page.screenshot(path=str(OUT / "integration-settings.png"), full_page=True, animations="disabled")
-        results.append("integration-settings")
+        paired_page_shots("integration-settings", full_page=True)
         page.goto(BASE + "/config/entities?config_entry=" + tokens["testEntryId"])
         expect(page.locator("ha-data-table")).to_be_visible(timeout=30000)
-        page.screenshot(path=str(OUT / "integration-entities.png"), full_page=True, animations="disabled")
-        results.append("integration-entities")
+        paired_page_shots("integration-entities", full_page=True)
         diagnostics = {"errors": errors, "rejections": rejections, "websocket_errors": websocket_errors}
         (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
         assert not errors, diagnostics
+        # Every successful gallery screenshot must have its opposite-theme twin.
+        assert len(results) == len(set(results)), "Duplicate screenshot names"
+        names = set(results)
+        for name in results:
+            assert "-light-" in name or "-dark-" in name, "Missing theme: " + name
+            twin = name.replace("-light-", "-dark-") if "-light-" in name else name.replace("-dark-", "-light-")
+            assert twin in names, "Missing theme pair: " + twin
+            assert (OUT / (twin + ".png")).is_file(), "Missing screenshot: " + twin
         browser.close()
-    return results
+    return sorted(results, key=lambda name: name.replace("-light-", "-theme-").replace("-dark-", "-theme-"))
 
 
 def main():
@@ -383,7 +419,7 @@ def main():
                 tokens = onboard()
                 screenshots = browsers(tokens)
                 (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
-                    "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True}, indent=2))
+                    "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True, "themes": ["light", "dark"], "theme_pairs": len(screenshots) // 2}, indent=2))
                 gallery = ''.join(f'<figure><a href="{name}.png"><img src="{name}.png" loading="lazy"></a><figcaption>{name}</figcaption></figure>' for name in screenshots)
                 (OUT / "index.html").write_text('<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tiny Refuel screenshots</title><style>body{font:16px system-ui;margin:24px;background:#eee;color:#222}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0;padding:12px;background:white;border-radius:12px}img{max-width:100%;max-height:600px;object-fit:contain;object-position:top}figcaption{margin-top:8px}</style><h1>Tiny Refuel · Home Assistant 2026.10</h1><p>Fiktive priser og position. Klik på et billede for fuld størrelse.</p><main>' + gallery + '</main></html>')
                 print(f"PASS: {len(screenshots)} screenshots; real Home Assistant, desktop/mobile, light/dark")
