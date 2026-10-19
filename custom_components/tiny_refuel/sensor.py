@@ -7,7 +7,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.core import callback
 from .const import DOMAIN, VERSION
 from .entity_data import (BRANDS, FUELS, FUEL_FIELDS, positive, price_rows,
-                          station_attributes, nearest_row, vehicle_origin, error_count)
+                          station_attributes, vehicle_origin, error_count)
 
 BASE = {
     "locations": ("Ladesteder", "mdi:ev-station", None),
@@ -158,7 +158,7 @@ class RefuelVehicleSensor(RefuelSensor):
         self.async_write_ha_state()
 
     def _nearest(self):
-        return nearest_row(self.manager.data, self.field, vehicle_origin(self.manager.hass, self.vehicle))
+        return self.manager.nearest(self.field, vehicle_origin(self.manager.hass, self.vehicle))
 
     @property
     def native_value(self):

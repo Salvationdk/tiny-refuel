@@ -101,4 +101,3 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             optional("location_entity"): selector.EntitySelector(selector.EntitySelectorConfig(domain=["device_tracker", "person", "zone"])),
             optional("notify_service"): str,
         })
-

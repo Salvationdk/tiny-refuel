@@ -143,6 +143,13 @@ def onboard():
         time.sleep(1)
     else:
         raise RuntimeError("Shared vehicle options did not reload")
+    for _ in range(60):
+        states = session.get(BASE + "/api/states", timeout=10).json()
+        if any("Fælles testbil" in row.get("attributes", {}).get("friendly_name", "") and row.get("state") not in ("unknown", "unavailable") for row in states):
+            break
+        time.sleep(1)
+    else:
+        raise RuntimeError("No shared vehicle entity produced a usable state")
     tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
@@ -210,7 +217,7 @@ def browsers(tokens):
         tank = native_editor.locator('[data-key="bil:0:tank_liters"]')
         tank.fill("36")
         tank.dispatch_event("change")
-        dialog.screenshot(path=str(OUT / "native-editor-save.png"), animations="disabled")
+        page.screenshot(path=str(OUT / "native-editor-save.png"), full_page=True, animations="disabled")
         results.append("native-editor-save")
         dialog.locator('ha-button[slot="primaryAction"]').click()
         expect(native_editor).not_to_be_visible(timeout=15000)
@@ -331,6 +338,10 @@ def browsers(tokens):
         expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)
         page.screenshot(path=str(OUT / "integration-settings.png"), full_page=True, animations="disabled")
         results.append("integration-settings")
+        page.goto(BASE + "/config/entities?config_entry=" + tokens["testEntryId"])
+        expect(page.locator("ha-data-table")).to_be_visible(timeout=30000)
+        page.screenshot(path=str(OUT / "integration-entities.png"), full_page=True, animations="disabled")
+        results.append("integration-entities")
         diagnostics = {"errors": errors, "rejections": rejections, "websocket_errors": websocket_errors}
         (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
         assert not errors, diagnostics

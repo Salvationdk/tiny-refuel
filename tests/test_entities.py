@@ -50,6 +50,12 @@ class EntityTests(unittest.TestCase):
         self.hass.states['person.driver'].state='unavailable'
         self.assertIsNone(values('station'))
 
+    def test_vehicle_prices_follow_new_data_snapshots(self):
+        entity=sensor.RefuelVehicleSensor(self.manager,self.vehicle,'p95','price')
+        self.assertEqual(entity.native_value,15)
+        self.manager.data={**self.manager.data,'stations':[{**self.manager.data['stations'][0],'p95':18}]}
+        self.assertEqual(entity.native_value,18)
+
     def test_closest_ev_without_price_is_navigable_but_not_costed(self):
         self.manager.data['ev'].append({'brand':'Clever','name':'Closest','address':'C','lat':55.6,'lon':12.5,'app_only':True})
         self.manager.data['ev'][1]['lat']=55.7
