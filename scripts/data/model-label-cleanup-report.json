@@ -1,0 +1,721 @@
+{
+  "renames": [
+    {
+      "make": "Addax",
+      "from": "Addax MT15n",
+      "to": "MT15n"
+    },
+    {
+      "make": "Alfa Romeo",
+      "from": "Alfa Romeo junior",
+      "to": "JUNIOR"
+    },
+    {
+      "make": "ARBOS",
+      "from": "ARBOS 2035",
+      "to": "2035"
+    },
+    {
+      "make": "Audi",
+      "from": "Audi A6 Avant Quattro",
+      "to": "A6 AVANT QUATTRO"
+    },
+    {
+      "make": "Audi",
+      "from": "AUDI A8L",
+      "to": "A8L"
+    },
+    {
+      "make": "BAOTIAN",
+      "from": "BAOTIAN BT49QT",
+      "to": "BT49QT"
+    },
+    {
+      "make": "BAOTIAN",
+      "from": "BAOTIAN BT49QT-9",
+      "to": "BT49QT-9"
+    },
+    {
+      "make": "Cupra",
+      "from": "CUPRA Born",
+      "to": "Born"
+    },
+    {
+      "make": "Cupra",
+      "from": "CUPRA LEON E-HYBRID",
+      "to": "LEON E-HYBRID"
+    },
+    {
+      "make": "DEEPAL",
+      "from": "DEEPAL S05",
+      "to": "S05"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 208 VARIO",
+      "to": "208 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 209 Vario",
+      "to": "209 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 210 Vario",
+      "to": "210 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 211 VARIO",
+      "to": "211 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 311 VARIO",
+      "to": "311 Vario"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 312 VARIO",
+      "to": "312 Vario"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 313 Vario",
+      "to": "313 Vario"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 512 VARIO",
+      "to": "512 Vario"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 514 VARIO",
+      "to": "514 Vario"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 516 VARIO",
+      "to": "516 Vario"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 716 Vario",
+      "to": "716 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 718 Vario",
+      "to": "718 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 720 Vario",
+      "to": "720 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 722 Vario",
+      "to": "722 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 724 Vario",
+      "to": "724 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 822 VARIO",
+      "to": "822 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 824 Vario",
+      "to": "824 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 826 VARIO",
+      "to": "826 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 828 VARIO",
+      "to": "828 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 924 Vario",
+      "to": "924 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 927 VARIO",
+      "to": "927 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 930 VARIO",
+      "to": "930 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 933 VARIO",
+      "to": "933 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 936 Vario",
+      "to": "936 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "Fendt 939 VARIO",
+      "to": "939 VARIO"
+    },
+    {
+      "make": "FENDT",
+      "from": "FENDT 942 VARIO",
+      "to": "942 VARIO"
+    },
+    {
+      "make": "FERRARI",
+      "from": "Ferrari Roma",
+      "to": "Roma"
+    },
+    {
+      "make": "Fiat",
+      "from": "Fiat Knaus",
+      "to": "KNAUS"
+    },
+    {
+      "make": "Ford",
+      "from": "FORD MUSTANG",
+      "to": "Mustang"
+    },
+    {
+      "make": "Honda",
+      "from": "HONDA E",
+      "to": "e"
+    },
+    {
+      "make": "Honda",
+      "from": "HONDA S 2000",
+      "to": "S 2000"
+    },
+    {
+      "make": "HUSQVARNA",
+      "from": "Husqvarna 701",
+      "to": "701"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar E-PACE",
+      "to": "E-Pace"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar F-PACE",
+      "to": "F-Pace"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar F-TYPE",
+      "to": "F-TYPE"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar I-PACE",
+      "to": "I-Pace"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar XE",
+      "to": "XE"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar XF",
+      "to": "XF"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar XF Sportbrake",
+      "to": "XF Sportbrake"
+    },
+    {
+      "make": "Jaguar",
+      "from": "Jaguar XJ",
+      "to": "XJ"
+    },
+    {
+      "make": "KRAMER",
+      "from": "Kramer KL43.8",
+      "to": "KL43.8"
+    },
+    {
+      "make": "KRAMER",
+      "from": "Kramer KT559",
+      "to": "KT559"
+    },
+    {
+      "make": "KTM",
+      "from": "KTM 390 Enduro R",
+      "to": "390 ENDURO R"
+    },
+    {
+      "make": "KTM",
+      "from": "KTM 450 EXC-F",
+      "to": "450 Exc-F"
+    },
+    {
+      "make": "KTM",
+      "from": "KTM 690 Smc",
+      "to": "690 SMC"
+    },
+    {
+      "make": "KTM",
+      "from": "KTM E-XC",
+      "to": "E-XC"
+    },
+    {
+      "make": "KTM",
+      "from": "KTM FREERIDE E-XC",
+      "to": "Freeride E-XC"
+    },
+    {
+      "make": "KTM",
+      "from": "KTM RC 125",
+      "to": "RC 125"
+    },
+    {
+      "make": "KYMCO",
+      "from": "Kymco Agility 16",
+      "to": "AGILITY 16"
+    },
+    {
+      "make": "LINHAI",
+      "from": "Linhai M210",
+      "to": "M210"
+    },
+    {
+      "make": "Lynk & Co",
+      "from": "Lynk & Co 01",
+      "to": "01"
+    },
+    {
+      "make": "Lynk & Co",
+      "from": "Lynk & Co 02",
+      "to": "02"
+    },
+    {
+      "make": "Maxus",
+      "from": "MAXUS e-DELIVER 3",
+      "to": "e-DELIVER 3"
+    },
+    {
+      "make": "Mazda",
+      "from": "MAZDA 6E",
+      "to": "6e"
+    },
+    {
+      "make": "Mazda",
+      "from": "Mazda CX-30",
+      "to": "CX-30"
+    },
+    {
+      "make": "Mazda",
+      "from": "Mazda CX-9",
+      "to": "CX-9"
+    },
+    {
+      "make": "Mazda",
+      "from": "Mazda MX-30",
+      "to": "MX-30"
+    },
+    {
+      "make": "Mazda",
+      "from": "Mazda MX-5",
+      "to": "MX-5"
+    },
+    {
+      "make": "MG",
+      "from": "MG 4",
+      "to": "4"
+    },
+    {
+      "make": "MG",
+      "from": "MG EHS Plug-in Hybrid",
+      "to": "EHS Plug-in Hybrid"
+    },
+    {
+      "make": "MG",
+      "from": "MG marvel r electric",
+      "to": "Marvel R Electric"
+    },
+    {
+      "make": "MG",
+      "from": "MG ZS EV",
+      "to": "ZS EV"
+    },
+    {
+      "make": "Mini",
+      "from": "Mini Cooper",
+      "to": "Cooper"
+    },
+    {
+      "make": "Mini",
+      "from": "Mini One",
+      "to": "ONE"
+    },
+    {
+      "make": "Mitsubishi",
+      "from": "Mitsubishi Eclipse Cross",
+      "to": "Eclipse Cross"
+    },
+    {
+      "make": "Polestar",
+      "from": "Polestar 1",
+      "to": "1"
+    },
+    {
+      "make": "Polestar",
+      "from": "Polestar 2",
+      "to": "2"
+    },
+    {
+      "make": "Polestar",
+      "from": "Polestar 3",
+      "to": "3"
+    },
+    {
+      "make": "Polestar",
+      "from": "Polestar 4",
+      "to": "4"
+    },
+    {
+      "make": "Porsche",
+      "from": "PORSCHE GT3",
+      "to": "GT3"
+    },
+    {
+      "make": "Porsche",
+      "from": "PORSCHE GT3 RS",
+      "to": "GT3 RS"
+    },
+    {
+      "make": "Porsche",
+      "from": "PORSCHE TURBO",
+      "to": "TURBO"
+    },
+    {
+      "make": "Porsche",
+      "from": "PORSCHE TURBO S",
+      "to": "Turbo S"
+    },
+    {
+      "make": "Renault",
+      "from": "Renault 4",
+      "to": "4"
+    },
+    {
+      "make": "Renault",
+      "from": "Renault 5",
+      "to": "5"
+    },
+    {
+      "make": "Saab",
+      "from": "Saab 9-3",
+      "to": "9-3"
+    },
+    {
+      "make": "SAME",
+      "from": "Same Explorer 110",
+      "to": "Explorer 110"
+    },
+    {
+      "make": "SCANIA",
+      "from": "Scania Interlink",
+      "to": "Interlink"
+    },
+    {
+      "make": "SCANIA",
+      "from": "Scania Touring HD",
+      "to": "Touring HD"
+    },
+    {
+      "make": "Seat",
+      "from": "SEAT CUPRA FORMENTOR",
+      "to": "CUPRA Formentor"
+    },
+    {
+      "make": "SKYWORTH",
+      "from": "Skyworth K",
+      "to": "K"
+    },
+    {
+      "make": "Toyota",
+      "from": "Toyota C-HR",
+      "to": "C-HR"
+    },
+    {
+      "make": "Toyota",
+      "from": "Toyota C-HR+",
+      "to": "C-HR+"
+    },
+    {
+      "make": "Toyota",
+      "from": "TOYOTA LAND CRUISER 150",
+      "to": "Land Cruiser 150"
+    },
+    {
+      "make": "Toyota",
+      "from": "Toyota Supra",
+      "to": "Supra"
+    },
+    {
+      "make": "VESPA",
+      "from": "vespa 150",
+      "to": "150"
+    },
+    {
+      "make": "VESPA",
+      "from": "Vespa 50",
+      "to": "50"
+    },
+    {
+      "make": "VESPA",
+      "from": "Vespa Electrica",
+      "to": "Electrica"
+    },
+    {
+      "make": "VITRA",
+      "from": "Vitra C3.55",
+      "to": "C3.55"
+    }
+  ],
+  "excluded": [
+    {
+      "reason": "placeholder_model",
+      "make": "Audi",
+      "entry": {
+        "model": ".",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Benzin"
+        ],
+        "model_years": [
+          "1996"
+        ],
+        "variants": [
+          {
+            "name": "2,6 v6",
+            "fuel_types": [
+              "Benzin"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "Land Rover",
+      "entry": {
+        "model": "-*",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Diesel"
+        ],
+        "model_years": []
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "MOTOWELL",
+      "entry": {
+        "model": "--",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Benzin"
+        ],
+        "model_years": [],
+        "variants": [
+          {
+            "name": "00",
+            "fuel_types": [
+              "Benzin"
+            ]
+          },
+          {
+            "name": "01",
+            "fuel_types": [
+              "Benzin"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "Porsche",
+      "entry": {
+        "model": ",",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [],
+        "model_years": []
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "SKYTEAM",
+      "entry": {
+        "model": "--",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Benzin"
+        ],
+        "model_years": [],
+        "variants": [
+          {
+            "name": "12",
+            "fuel_types": [
+              "Benzin"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "SMC",
+      "entry": {
+        "model": "---",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Benzin"
+        ],
+        "model_years": [],
+        "variants": [
+          {
+            "name": "TL 700",
+            "fuel_types": [
+              "Benzin"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "Volkswagen",
+      "entry": {
+        "model": "*",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Diesel"
+        ],
+        "model_years": [
+          "2013"
+        ],
+        "variants": [
+          {
+            "name": "1,6 TDI",
+            "fuel_types": [
+              "Diesel"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "reason": "placeholder_model",
+      "make": "Volvo",
+      "entry": {
+        "model": "--",
+        "brændstof": null,
+        "tank_l": null,
+        "requires_fuel_selection": true,
+        "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+        "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+        "fuel_types": [
+          "Diesel"
+        ],
+        "model_years": []
+      }
+    }
+  ],
+  "counts": {
+    "original_models": 27349,
+    "cleaned_models": 27242,
+    "original_variants": 98887,
+    "cleaned_variants": 98768
+  },
+  "conflicts": [
+    {
+      "context": "Honda/e",
+      "field": "source_url",
+      "retained": "https://global.honda/en/pressroom/products/auto/",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Honda/e",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Toyota/C-HR+",
+      "field": "source_url",
+      "retained": "https://www.toyota.dk/nye-biler",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Toyota/C-HR+",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Toyota/Supra",
+      "field": "source_url",
+      "retained": "https://newsroom.toyota.eu/historic/",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Toyota/Supra",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    }
+  ]
+}

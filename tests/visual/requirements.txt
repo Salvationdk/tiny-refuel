@@ -1,0 +1,15 @@
+homeassistant==2026.10.0
+home-assistant-frontend==20260930.2
+pymicro-vad==1.0.1
+pyspeex-noise==1.0.2
+playwright==1.55.0
+requests==2.34.2
+# HA service descriptions import these base-platform dependencies.
+PyTurboJPEG==1.8.3
+av==19.0.0
+gazetteer-matcher==1.1.0
+ha-ffmpeg==3.2.2
+hassil==3.12.1
+home-assistant-intents==2026.10.6
+mutagen==1.48.1
+numpy==2.3.2

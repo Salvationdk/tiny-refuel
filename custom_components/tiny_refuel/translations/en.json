@@ -13,5 +13,58 @@
     "abort": {
       "already_configured": "Tiny Refuel is already configured."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tiny Refuel",
+        "menu_options": {
+          "settings": "Update interval",
+          "vehicle": "Add shared vehicle",
+          "edit_vehicle": "Edit shared vehicle",
+          "remove_vehicle": "Remove shared vehicle"
+        }
+      },
+      "settings": {
+        "title": "Update interval",
+        "data": {
+          "scan_hours": "Hours between collections"
+        }
+      },
+      "vehicle": {
+        "title": "Shared vehicle",
+        "description": "Shared vehicles are used by vehicle sensors and cards without their own vehicles. Enter capacities verified for your vehicle.",
+        "data": {
+          "navn": "Name",
+          "mærke": "Make",
+          "model": "Model",
+          "brændstof": "Fuel",
+          "tank_liters": "Tank (L)",
+          "batteri_kwh": "Battery (kWh)",
+          "location_entity": "Position entity",
+          "notify_service": "Notification service"
+        }
+      },
+      "edit_vehicle": {
+        "title": "Edit shared vehicle",
+        "data": {
+          "vehicle_id": "Vehicle"
+        }
+      },
+      "remove_vehicle": {
+        "title": "Remove shared vehicle",
+        "description": "Removes the shared vehicle and its sensor entities. Vehicles stored in individual cards are preserved.",
+        "data": {
+          "vehicle_id": "Vehicle"
+        }
+      }
+    },
+    "abort": {
+      "no_vehicles": "No shared vehicles configured."
+    },
+    "error": {
+      "required_name": "Enter a name.",
+      "invalid_capacity": "Enter a finite positive capacity."
+    }
   }
 }

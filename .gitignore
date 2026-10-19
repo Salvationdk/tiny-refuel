@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .venv/
 .env
+visual-results/
 .storage/
 priser-og-ladesteder.json
 adresse-cache.json

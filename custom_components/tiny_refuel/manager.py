@@ -7,13 +7,15 @@ from typing import Callable
 
 from . import scraper
 from .const import CARD_VERSION, VERSION
+from .entity_data import nearest_row, price_rows
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class RefuelManager:
-    def __init__(self, hass, data_dir: Path, collector=None):
+    def __init__(self, hass, data_dir: Path, collector=None, vehicles=None):
         self.hass = hass
+        self.vehicles = list(vehicles or [])
         self.data_dir = data_dir
         self.collector = collector or scraper.collect
         # Injected collectors are commonly small test doubles with the historic
@@ -95,7 +97,7 @@ class RefuelManager:
                 self._notify()
 
     def snapshot(self):
-        return {**self.data, "version": VERSION, "refreshing": self.refreshing,
+        return {**self.data, "vehicles": self.vehicles, "version": VERSION, "refreshing": self.refreshing,
                 "last_error": self.last_error, "last_attempt": self.last_attempt,
                 "progress": self.progress}
 
@@ -110,6 +112,23 @@ class RefuelManager:
         if self.task is not None and not self.task.done():
             await asyncio.shield(self.task)
         self.listeners.clear()
+
+    def current_price_rows(self, field, brand=None):
+        return [] if self.last_error else price_rows(self.data, field, brand)
+
+    def nearest(self, field, origin):
+        """Share an expensive distance scan across a vehicle's related entities."""
+        if self.last_error:
+            return None, None
+        if getattr(self, "_nearest_data", None) is not self.data:
+            self._nearest_data = self.data
+            self._nearest_results = {}
+        key = (field, origin)
+        if key not in self._nearest_results:
+            if len(self._nearest_results) >= 64:
+                self._nearest_results.clear()
+            self._nearest_results[key] = nearest_row(self.data, field, origin)
+        return self._nearest_results[key]
 
     def counts(self):
         sites, priced = set(), set()

@@ -1,0 +1,367 @@
+{
+  "counts": {
+    "original_makes": 1829,
+    "cleaned_makes": 1809,
+    "original_models": 27425,
+    "cleaned_models": 27349,
+    "original_variants": 98937,
+    "cleaned_variants": 98887,
+    "renames": [
+      {
+        "from": "A. J. S.",
+        "to": "AJS"
+      },
+      {
+        "from": "CF MOTO",
+        "to": "CFMOTO"
+      },
+      {
+        "from": "CITROEN",
+        "to": "Citroën"
+      },
+      {
+        "from": "CITYEL",
+        "to": "CITY-EL"
+      },
+      {
+        "from": "E MAX",
+        "to": "E-MAX"
+      },
+      {
+        "from": "EMAX",
+        "to": "E-MAX"
+      },
+      {
+        "from": "EZ-GO",
+        "to": "E-Z-GO"
+      },
+      {
+        "from": "HER CHEE",
+        "to": "HERCHEE"
+      },
+      {
+        "from": "HURLIMANN",
+        "to": "HÜRLIMANN"
+      },
+      {
+        "from": "I.H.",
+        "to": "IH"
+      },
+      {
+        "from": "J C B",
+        "to": "JCB"
+      },
+      {
+        "from": "JON WAY",
+        "to": "JONWAY"
+      },
+      {
+        "from": "KASSBOHRER",
+        "to": "KÄSSBOHRER"
+      },
+      {
+        "from": "Mercedes–Benz/Warmiaki",
+        "to": "Mercedes-Benz/Warmiaki"
+      },
+      {
+        "from": "MULTI CAR",
+        "to": "MULTICAR"
+      },
+      {
+        "from": "MULTI TRACK",
+        "to": "MULTITRACK"
+      },
+      {
+        "from": "ROLLS ROYCE",
+        "to": "ROLLS-ROYCE"
+      },
+      {
+        "from": "TAYLOR DUNN",
+        "to": "TAYLOR-DUNN"
+      },
+      {
+        "from": "ZHONG-NENG",
+        "to": "ZHONGNENG"
+      }
+    ],
+    "quarantined_entries": 1,
+    "conflict_count": 32,
+    "requires_review": true
+  },
+  "conflicts": [
+    {
+      "context": "Citroën/2CV",
+      "field": "source_url",
+      "retained": "https://www.citroen.dk/citroen-universet/historie.html",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/2CV",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C-Crosser",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C-Crosser",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C-Zero",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C-Zero",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C2",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C2",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C3 Picasso",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C3 Picasso",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C4 Picasso",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C4 Picasso",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C5",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C5",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C6",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C6",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/C8",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/C8",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/Grand C4 Picasso",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/Grand C4 Picasso",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/Nemo",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/Nemo",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/Saxo",
+      "field": "source_url",
+      "retained": "https://www.citroen.dk/citroen-universet/historie.html",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/Saxo",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/Xantia",
+      "field": "source_url",
+      "retained": "https://www.citroen.dk/citroen-universet/historie.html",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/Xantia",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/XM",
+      "field": "source_url",
+      "retained": "https://www.citroen.dk/citroen-universet/historie.html",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/XM",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/Xsara",
+      "field": "source_url",
+      "retained": "https://www.citroen.dk/citroen-universet/historie.html",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/Xsara",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    },
+    {
+      "context": "Citroën/Xsara Picasso",
+      "field": "source_url",
+      "retained": "https://service.citroen.com/ddb/index.html?lang=nl_nl",
+      "alternative": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange"
+    },
+    {
+      "context": "Citroën/Xsara Picasso",
+      "field": "specification_note",
+      "retained": "Vælg drivmiddel og kontrollér tank/batteri for din årgang og variant.",
+      "alternative": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri."
+    }
+  ],
+  "excluded": [
+    {
+      "reason": "self_build_excluded_by_user",
+      "entry": {
+        "mærke": "Selvbyg",
+        "modeller": [
+          {
+            "model": "F355",
+            "brændstof": null,
+            "tank_l": null,
+            "requires_fuel_selection": true,
+            "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+            "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+            "fuel_types": [
+              "Benzin"
+            ],
+            "model_years": [],
+            "variants": [
+              {
+                "name": "F355",
+                "fuel_types": [
+                  "Benzin"
+                ]
+              }
+            ]
+          },
+          {
+            "model": "selden",
+            "brændstof": null,
+            "tank_l": null,
+            "requires_fuel_selection": true,
+            "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+            "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+            "fuel_types": [
+              "Benzin"
+            ],
+            "model_years": []
+          },
+          {
+            "model": "Supercycle",
+            "brændstof": null,
+            "tank_l": null,
+            "requires_fuel_selection": true,
+            "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+            "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+            "fuel_types": [
+              "Benzin"
+            ],
+            "model_years": [],
+            "variants": [
+              {
+                "name": "2025BR",
+                "fuel_types": [
+                  "Benzin"
+                ]
+              }
+            ]
+          },
+          {
+            "model": "T4B",
+            "brændstof": null,
+            "tank_l": null,
+            "requires_fuel_selection": true,
+            "source_url": "https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange",
+            "specification_note": "Registermodel: vælg drivmiddel, årgang/variant og kontrollér tank/batteri.",
+            "fuel_types": [
+              "Benzin"
+            ],
+            "model_years": [],
+            "variants": [
+              {
+                "name": "113 Gambler",
+                "fuel_types": [
+                  "Benzin"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

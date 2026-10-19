@@ -8,11 +8,14 @@ from homeassistant.components.http import HomeAssistantView, StaticPathConfig
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers import config_validation as cv
 
 from .const import CARD_URL, CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS, DOMAIN, STATIC_URL
 from .manager import RefuelManager
 
-PLATFORMS = [Platform.SENSOR, Platform.BUTTON]
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.BUTTON]
 
 
 class RefuelDataView(HomeAssistantView):
@@ -43,7 +46,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry) -> bool:
     state = hass.data.setdefault(DOMAIN, {})
-    manager = RefuelManager(hass, Path(hass.config.path(".storage", DOMAIN)))
+    manager = RefuelManager(hass, Path(hass.config.path(".storage", DOMAIN)),
+                            vehicles=getattr(entry, "options", {}).get("vehicles", []))
     await manager.async_load()
     state["manager"] = manager
     entry.runtime_data = manager
@@ -58,9 +62,15 @@ async def async_setup_entry(hass: HomeAssistant, entry) -> bool:
         manager.start_refresh()
 
     entry.async_on_unload(async_track_time_interval(
-        hass, scheduled_refresh, timedelta(hours=entry.data.get(CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS))))
+        hass, scheduled_refresh, timedelta(hours=getattr(entry, "options", {}).get(CONF_SCAN_HOURS, entry.data.get(CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS)))))
+    if hasattr(entry, "add_update_listener"):
+        entry.async_on_unload(entry.add_update_listener(async_update_options))
     manager.start_refresh()
     return True
+
+
+async def async_update_options(hass, entry):
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry) -> bool:
@@ -70,3 +80,4 @@ async def async_unload_entry(hass: HomeAssistant, entry) -> bool:
     await entry.runtime_data.async_close()
     hass.data[DOMAIN].pop("manager", None)
     return True
+

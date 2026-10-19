@@ -1,0 +1,3 @@
+
+# Raw JSON fragments may end inside a string; boundary spaces are data.
+custom_components/tiny_refuel/frontend/catalog-parts/*.txt -whitespace
