@@ -108,13 +108,17 @@ Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG
 
 AC og DC på samme sted tælles én gang pr. selskab. Generelle selskabstakster tæller ikke som lokale priser. Medlemsrabat trækkes ikke automatisk fra priserne.
 
+| Home Assistants egen korteditor | Brændstof-, el- og køretøjsentiteter |
+|---|---|
+| ![Native Lovelace-editor med Gem-knap og kortets forhåndsvisning](docs/screenshots/0.2.2/native-editor-save.png) | ![Tiny Refuels entiteter med brændstofpriser og valgfrie selskabssensorer](docs/screenshots/0.2.2/integration-entities.png) |
+
 ## Sensorer og fælles køretøjer
 
 De tre eksisterende sensorers identitet bevares. Integrationens nye entiteter kan bruges i almindelige Home Assistant-kort, historik og automationer:
 
 | Entiteter | Datagrundlag |
 |---|---|
-| Billigste og gennemsnitlige lokale 95-, 100-, diesel- og kWh-pris | Aktuelle lokale priser i hele udtrækket. Listepriser, generelle selskabstakster og fejlramte gemte rækker udelades. Uden brugbare priser bliver værdien ukendt. |
+| Billigste og gennemsnitlige lokale 95-, 100-, diesel- og kWh-pris | Aktuelle lokale priser i hele udtrækket. Listepriser, generelle selskabstakster og fejlramte gemte rækker udelades. Uden brugbare priser bliver værdien ukendt. Det gælder også, hvis hele hentningen fejler; tidligere data bevares til fejlsøgning. |
 | Antal brændstofstationer, ladesteder og steder med lokal elpris | Stationer og ladesteder i installationens data |
 | Seneste hentning, antal fejl og adresser uden koordinater | Hentningens status, inklusive fejl fra kundefordele |
 | Hentning i gang og datakildefejl | Binære sensorer til status og automationer |
