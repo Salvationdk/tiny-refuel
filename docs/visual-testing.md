@@ -27,8 +27,7 @@ indlæses, og browserfejl får testen til at fejle.
 
 Kortet vises i det rigtige Lovelace-dashboard. Editorbillederne viser den rigtige
 editor med Home Assistants `hass`-objekt og tema; testværktøjet monterer den direkte
-på siden og sender konfigurationsændringer tilbage som Lovelace. Home Assistants
-egne menuer til at åbne og gemme korteditoren testes ikke dermed.
+på siden og sender konfigurationsændringer tilbage som Lovelace. Der køres også en separat test gennem Home Assistants egne redigeringsknapper: en tankstørrelse ændres, gemmes og kontrolleres efter genindlæsning og genåbning. Dashboardet bruger lagringstilstand, og ingen JavaScript-ressource registreres manuelt. Integrationens optionsflow opretter et fælles køretøj og kontrollerer genindlæsning af integrationen.
 
 Kort- og editorbilleder beskæres til komponenten. Home Assistants faste
 værktøjslinje og midlertidige toastbeskeder skjules kun under selve billedtagningen,
@@ -68,4 +67,4 @@ visuel gennemgang, ikke automatisk pixel-sammenligning med godkendte referencebi
 
 ## Gennemført kørsel
 
-[GitHub-kørsel 39167301022](https://github.com/Salvationdk/tiny-refuel/actions/runs/39167301022) bestod med 49 screenshots og ingen browserfejl. Der er gennemgået billeder af kort, kompakt visning, ladepopup, kildefejl, information, editor og integrationsside. Testdata er fiktive.
+[GitHub-kørsel 39167301022](https://github.com/Salvationdk/tiny-refuel/actions/runs/39167301022) bestod med 49 screenshots og ingen browserfejl. Der er gennemgået billeder af kort, kompakt visning, ladepopup, kildefejl, information, editor og integrationsside. Testdata er fiktive. Denne kørsel dokumenterer det tidligere billedsæt; den udvidede test med native editor og fælles køretøjer har sin egen rapport i den nyeste kørsel.

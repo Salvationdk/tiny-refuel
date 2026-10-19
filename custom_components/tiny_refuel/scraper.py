@@ -1382,6 +1382,26 @@ def _preserve_unselected_fuels(fresh, previous, selected):
     return rows
 
 
+def merge_tariff_cache(rows, previous, errors, fetched_at, previous_updated=None):
+    """Keep national tariffs independently of location feeds on source failures."""
+    keys = {"q8": ("q8_el",), "ok": ("ok_el", "ok"), "circle k": ("circlek_el",),
+            "e.on": ("eon_el",), "ionity": ("ionity_el",)}
+    def general(row):
+        return not row.get("address") and not row.get("location_id") and row.get("lat") is None and row.get("lon") is None
+    result = [dict(row) for row in rows]
+    for row in result:
+        if general(row):
+            row.setdefault("source_updated", fetched_at)
+    for brand, error_keys in keys.items():
+        failed = any(isinstance(error, dict) and any(key in error for key in error_keys) for error in errors)
+        if not failed or any(str(row.get("brand", "")).casefold() == brand and general(row) for row in result):
+            continue
+        for row in previous:
+            if isinstance(row, dict) and str(row.get("brand", "")).casefold() == brand and general(row):
+                result.append(dict(row, stale=True, source_updated=row.get("source_updated") or previous_updated))
+    return result
+
+
 def _fuel_source_statuses(source_ok, stations, previous, errors, checked_at):
     """Keep a compact health record for each fuel data source."""
     previous = previous if isinstance(previous, dict) else {}
@@ -1544,11 +1564,11 @@ def _collect(progress_callback=None, fuel_types=None):
     for e in ok_ev:
         ev.append({"brand": "OK", "name": e["kind"] + "lader",
                    "address": "", "lat": None, "lon": None,
-                   "kwh": e["kwh"], "lu": None})
+                   "kwh": e["kwh"], "source": e.get("source"), "lu": None})
     for e in q8_ev:
         ev.append({"brand": "Q8", "name": "Q8 " + e["kind"],
                    "address": "", "lat": None, "lon": None,
-                   "kwh": e["kwh"], "lu": None})
+                   "kwh": e["kwh"], "source": e.get("source"), "lu": None})
     for e in circlek_ev + eon_tariffs + ionity_tariffs:
         ev.append({"brand": e["brand"], "name": e["name"],
                    "address": "", "lat": None, "lon": None,
@@ -1565,6 +1585,10 @@ def _collect(progress_callback=None, fuel_types=None):
         # An unrelated fuel refresh must leave the complete EV snapshot intact.
         ev = [dict(row) for row in prev.get("ev", [])
               if isinstance(row, dict) and row.get("brand") != "Tesla"]
+
+    if "el" in selected:
+        ev = merge_tariff_cache(ev, prev.get("ev", []), errors,
+                                time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), prev.get("updated"))
 
     def mean(vals):
         vals = [v for v in vals if v is not None]

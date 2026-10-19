@@ -12,8 +12,9 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class RefuelManager:
-    def __init__(self, hass, data_dir: Path, collector=None):
+    def __init__(self, hass, data_dir: Path, collector=None, vehicles=None):
         self.hass = hass
+        self.vehicles = list(vehicles or [])
         self.data_dir = data_dir
         self.collector = collector or scraper.collect
         # Injected collectors are commonly small test doubles with the historic
@@ -95,7 +96,7 @@ class RefuelManager:
                 self._notify()
 
     def snapshot(self):
-        return {**self.data, "version": VERSION, "refreshing": self.refreshing,
+        return {**self.data, "vehicles": self.vehicles, "version": VERSION, "refreshing": self.refreshing,
                 "last_error": self.last_error, "last_attempt": self.last_attempt,
                 "progress": self.progress}
 

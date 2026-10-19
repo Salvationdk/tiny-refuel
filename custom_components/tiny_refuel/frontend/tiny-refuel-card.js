@@ -660,8 +660,7 @@
       var tankEnt = (car && car.tank_entity) || (this._config && this._config.tank_entity) || "input_number.tankstorrelse";
       var st = this._state(tankEnt);
       var v = st ? parseFloat(st.state) : NaN;
-      if (!isFinite(v) || v <= 0) v = 50;
-      return v;
+      return isFinite(v) && v > 0 ? v : null;
     }
 
     _notifyService() {
@@ -672,8 +671,10 @@
 
     _cars() {
       var cfg = this._config || {};
-      if (Array.isArray(cfg.biler) && cfg.biler.length) {
-        return cfg.biler.map(function (b, i) {
+      var configuredCars = Array.isArray(cfg.biler) && cfg.biler.length ? cfg.biler :
+        (cfg.brug_faelles_koeretoejer !== false && this._data && Array.isArray(this._data.vehicles) ? this._data.vehicles : []);
+      if (configuredCars.length) {
+        return configuredCars.map(function (b, i) {
           return {
             navn: (b && b.navn) || (b && [b.mærke, b.model].filter(Boolean).join(" ")) || ("Køretøj " + (i + 1)),
             mærke: b ? b.mærke : null,
@@ -970,7 +971,7 @@
 
     _render() {
       if (!this._config) return;
-      if (Array.isArray(this._config.biler) && this._config.biler.length) loadVehicleCatalog(this);
+      if (this._cars().some(function (car) { return !!car.mærke; })) loadVehicleCatalog(this);
       var openPanels = {};
       this.querySelectorAll("details[data-card-panel]").forEach(function (node) {
         openPanels[node.getAttribute("data-card-panel")] = node.open;
@@ -1147,7 +1148,7 @@
               priced.push({ brand: rows[m].b.brand, v: rows[m][tankFuelField] });
             }
           }
-          if (priced.length >= 2) {
+          if (priced.length >= 2 && tankL !== null) {
             var cheap = priced[0], dear = priced[0];
             for (var n2 = 1; n2 < priced.length; n2++) {
               if (priced[n2].v < cheap.v) cheap = priced[n2];
@@ -1331,26 +1332,26 @@
         else if (isFinite(power) && power > 22 && power < 100) category = 'hurtig';
         else if (kind === 'dc' || (isFinite(power) && power >= 100)) category = 'lyn';
         var okItem = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) === 0);
-        return okItem ? { kwh: okItem.kwh, label: 'indicative' } : null;
+        return okItem ? { kwh: okItem.kwh, stale: !!okItem.stale, label: 'indicative' } : null;
       }
       if (brand === 'q8') {
         category = kind === 'ac' || kind === 'normal' || (isFinite(power) && power > 0 && power <= 22)
           ? 'normal' : 'lyn';
         var q8Item = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) >= 0);
-        return q8Item ? { kwh: q8Item.kwh, label: 'indicative' } : null;
+        return q8Item ? { kwh: q8Item.kwh, stale: !!q8Item.stale, label: 'indicative' } : null;
       }
       if (brand === 'e.on') {
         category = kind === 'ac' || kind.indexOf('ac') >= 0 ? 'ac' : 'dc';
         var eonItem = entries.find((row) => String(row.name || '').toLowerCase().indexOf(category) === 0);
-        return eonItem ? { kwh: eonItem.kwh, label: 'from' } : null;
+        return eonItem ? { kwh: eonItem.kwh, stale: !!eonItem.stale, label: 'from' } : null;
       }
       if (brand === 'circle k' && kind === 'dc' && isFinite(power) && power >= 100) {
         var ckItem = entries.find((row) => /lynlader/i.test(String(row.name || '')));
-        return ckItem ? { kwh: ckItem.kwh, label: 'list' } : null;
+        return ckItem ? { kwh: ckItem.kwh, stale: !!ckItem.stale, label: 'list' } : null;
       }
       if (brand === 'ionity') {
         var ionityItem = entries.find((row) => /direkte betaling/i.test(String(row.name || '')));
-        return ionityItem ? { kwh: ionityItem.kwh, label: 'from' } : null;
+        return ionityItem ? { kwh: ionityItem.kwh, stale: !!ionityItem.stale, label: 'from' } : null;
       }
       return null;
     }
@@ -1425,6 +1426,7 @@
         ? (publicTariff.label === 'from' ? 'fra ' : '') + this._fmt(publicTariff.kwh) + (publicTariff.label === 'indicative' || publicTariff.label === 'list' ? '*' : '')
         : 'Se pris');
       var info = [ev.name || ev.brand, ev.address];
+      if (publicTariff && publicTariff.stale) info.push('gemt selskabstakst: seneste hentning fejlede');
       if (publicTariff) info.push(publicTariff.label === 'from'
         ? 'offentlig fra-pris; stationsprisen kan være højere'
         : 'offentlig selskabstakst; den lokale pris kan afvige');
@@ -1509,7 +1511,7 @@
         seen.add(key);
         return true;
       }).map(function (ev) {
-        return '<span class="trf-tariff-line">' + esc(ev.name) + ' <b>' + esc(self._fmt(ev.kwh)) + '</b> kr/kWh</span>';
+        return '<span class="trf-tariff-line">' + esc(ev.name) + ' <b>' + esc(self._fmt(ev.kwh)) + '</b> kr/kWh' + (ev.stale ? ' · gemt takst (hentning fejlede)' : '') + '</span>';
       }).join('');
       var detail = items.find(function (ev) { return ev.tariff_note; });
       var dated = items.find(function (ev) { return ev.lu; });
@@ -2255,6 +2257,7 @@
         html += cb("kæde:" + b.key, b.brand, on, "Vis eller skjul " + b.brand + " på dette kort.", b.img);
       }
       html += "</div></div></details>";
+      html += cb("brug_faelles_koeretoejer", "Brug integrationens køretøjer, når kortet ikke har egne", c.brug_faelles_koeretoejer !== false, "Fælles køretøjer oprettes under Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer. De bruges også af køretøjssensorerne.");
       html += "<h4>Køretøjer <span class=\"trfe-tip\" tabindex=\"0\" title=\"Køretøjer styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\" aria-label=\"Hjælp: Køretøjer styrer valgt drivmiddel, tank- eller batteristørrelse og eventuel position.\">i</span></h4>";
       this._loadKatalog();
       var biler = Array.isArray(c.biler) && c.biler.length ? c.biler : [];
@@ -2277,7 +2280,7 @@
       if (!biler.length) {
         html += '<div class="trfe-empty-car"><strong>Intet køretøj tilføjet endnu</strong>' +
           'Kortet viser de energityper, du har slået til ovenfor. Uden et køretøj filtreres priserne ikke efter drivmiddel, og manuel hentning tager alle typer. ' +
-          'Fuld tank bruger den fælles tankstørrelse eller 50 L, hvis ingen størrelse er angivet.</div>';
+          'Fuld tank kræver en angivet tankstørrelse eller en gyldig tanksensor.</div>';
       }
       for (var bi2 = 0; bi2 < biler.length; bi2++) {
         var bb = biler[bi2] || {};
@@ -2364,7 +2367,7 @@
       var tl = (c.tank_liters !== undefined && c.tank_liters !== null) ? c.tank_liters : "";
       html += '<div class="trfe-row"><input type="number" data-key="tank_liters" min="0.01" step="any" value="' +
         esc(tl) + '" placeholder="Auto"></div>';
-      html += '<div class="trfe-hint">Tomt felt bruger en angivet tank_entity eller input_number.tankstorrelse, hvis den findes; ellers 50 L. Køretøjets egen tankstørrelse har førsteprioritet.</div>';
+      html += '<div class="trfe-hint">Tomt felt bruger en angivet tank_entity eller input_number.tankstorrelse, hvis den findes. Uden en kendt størrelse vises ingen fuld-tank-beregning. Køretøjets egen tankstørrelse har førsteprioritet.</div>';
       html += "<h4>Navigation (tryk på logo)</h4>";
       var nv = c.navigation || "waze";
       html += '<label><input type="radio" name="trf-nav" data-key="navigation" value="waze"' +

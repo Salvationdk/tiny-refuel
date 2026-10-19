@@ -81,7 +81,7 @@ Skærmbilleder fra v0.2.2 i Home Assistant 2026.10. Priser, ladesteder og positi
 |---|---|
 | ![Fejl fra Clever med fortsat visning af gemte priser](docs/screenshots/0.2.2/desktop-dark-source-error.png) | ![Tiny Refuel under Enheder og tjenester](docs/screenshots/0.2.2/integration-settings.png) |
 
-Editorbillederne viser produktets editor monteret direkte med Home Assistants tilstand og tema. Home Assistants egne menuer til at åbne og gemme editoren indgår ikke i denne test.
+Editorbillederne viser produktets editor monteret direkte med Home Assistants tilstand og tema. Den udvidede browsertest kontrollerer desuden åbning, gemning og genåbning gennem Home Assistants egen korteditor uden manuel tilføjelse af JavaScript-ressourcen.
 
 Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 895 modeller fordelt på 89 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
 
@@ -103,10 +103,33 @@ Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG
 - Antal unikke ladesteder, selskaber og steder med konkret lokal elpris.
 - Én opdateringshandling for alle kilder.
 - Gentagne klik deler den igangværende hentning.
-- Tre status-sensorer: antal ladesteder, antal steder med lokal elpris og seneste hentning.
-- En fælles opdateringsknap og handlingen `tiny_refuel.refresh`.
+- Sensorer for lokale priser på 95, 100, diesel og el, stationstal, hentetid, fejl og koordinatstatus.
+- Knapper til alle data, benzin, diesel eller el samt handlingen `tiny_refuel.refresh`.
 
 AC og DC på samme sted tælles én gang pr. selskab. Generelle selskabstakster tæller ikke som lokale priser. Medlemsrabat trækkes ikke automatisk fra priserne.
+
+## Sensorer og fælles køretøjer
+
+De tre eksisterende sensorers identitet bevares. Integrationens nye entiteter kan bruges i almindelige Home Assistant-kort, historik og automationer:
+
+| Entiteter | Datagrundlag |
+|---|---|
+| Billigste og gennemsnitlige lokale 95-, 100-, diesel- og kWh-pris | Aktuelle lokale priser i hele udtrækket. Listepriser, generelle selskabstakster og fejlramte gemte rækker udelades. Uden brugbare priser bliver værdien ukendt. |
+| Antal brændstofstationer, ladesteder og steder med lokal elpris | Stationer og ladesteder i installationens data |
+| Seneste hentning, antal fejl og adresser uden koordinater | Hentningens status, inklusive fejl fra kundefordele |
+| Hentning i gang og datakildefejl | Binære sensorer til status og automationer |
+| Valgfrie sensorer pr. selskab | Billigste lokale priser, generelle standardladetakster og kildestatus. Aktivér dem under integrationens entiteter efter behov. |
+| Fire henteknapper | Alle data, benzin, diesel eller el. Samtidige kald deler den igangværende hentning. |
+
+De generelle standardladetakster vises særskilt fra lokale priser. Standard er OK/Q8 Normal, E.ON AC, Circle K Lyn og IONITY direkte betaling. Taksterne kan være fra-priser og kan afvige fra den lokale pris. Sensorens attributter viser de øvrige offentliggjorte takster. Ved kildefejl bevares taksterne som gemte oplysninger; den aktuelle numeriske værdi er ukendt.
+
+Opret fælles køretøjer under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Tilføj fælles køretøj**. Angiv navn, drivmiddel, kontrolleret tank-/batteristørrelse og en positionsenhed. Mærke, model og notifikationsservice er valgfrie. Samme menu kan ændre intervallet og redigere eller fjerne køretøjer.
+
+Hvert fælles køretøj får sensorer for nærmeste relevante station, afstand i luftlinje, lokal pris på stedet og beregnet fuld tank/opladning. Et benzinkøretøj får 95 og 100; diesel får diesel; el får opladning; plug-in-hybrid får benzin og opladning. Hvis nærmeste ladested mangler lokal pris, kan station og afstand stadig vises, mens pris og opladningsbeløb er ukendte. Der antages ingen tankstørrelse. Beregninger bruger hele kapaciteten og medregner ikke ladetab, rabatter, abonnementer eller ekstra gebyrer.
+
+Kort uden egne `biler` bruger automatisk integrationens fælles køretøjer. Det kan fravælges i editoren med **Brug integrationens køretøjer, når kortet ikke har egne** (`brug_faelles_koeretoejer: false`). Eksisterende køretøjer i kortets YAML har prioritet og flyttes ikke automatisk. Køretøjssensorerne følger de fælles køretøjer og ændres ikke, når en bruger vælger et andet køretøj eller andre filtre i et enkelt kort. Globale prissensorer følger heller ikke kortets selskabsfiltre.
+
+Køretøjernes sensoridentiteter bevares ved navneændringer. Ved fjernelse af et fælles køretøj slettes dets sensorentiteter. Den valgte positionsenhed bruges lokalt i Home Assistant til sensorerne; den sendes ikke til prisudbyderne.
 
 ## Fejl og rapportering
 
@@ -174,11 +197,11 @@ HACS-afinstallation eller fjernelse af integrationen sletter ikke automatisk de 
 
 Minimum Home Assistant: **2025.11.2**.
 
-Automatiske tests bestået med Home Assistant **2026.10.0**.
+Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**.
 
 Teknisk integrationsversion: **0.2.2**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.2` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
-GitHub Actions kører integrations- og frontendtests samt HACS-validering. Workflowet er sat til Home Assistant **2026.10.0**.
+GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2** og **2026.10.0**.
 
 Workflowet **Visual Home Assistant** starter desuden en midlertidig Home Assistant og Chromium med faste testdata. Det gemmer screenshots af kort og editor i mobil-/desktopbredde og lyst/mørkt tema samt en rapport. Se [visuel test og download af screenshots](docs/visual-testing.md).
 

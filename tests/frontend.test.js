@@ -921,3 +921,21 @@ console.log('PASS: diesel, small tanks, small batteries, hybrid metrics and cata
   c.setConfig({...f._config,navigation:'google'});
   assert.ok(c.innerHTML.includes('destination=Q8%20Testvej%2042'));
 }
+
+// Shared vehicles are a fallback; dashboard-owned vehicles retain priority.
+{
+  const c = new Card();
+  c._data = {vehicles:[{navn:'Fælles',mærke:'Volkswagen',model:'up!',brændstof:'benzin',tank_liters:35,vis:{benzin:true,diesel:false,el:false,andet:true}}],stations:[],ev:[]};
+  c.setConfig({});
+  assert.equal(c._car().navn,'Fælles');
+  assert.equal(c._tankLiters(),35);
+  c.setConfig({biler:[{navn:'Lokal',brændstof:'diesel',tank_liters:40}]});
+  assert.equal(c._car().navn,'Lokal');
+  c.setConfig({brug_faelles_koeretoejer:false});
+  assert.equal(c._car().navn,null);
+  assert.equal(c._tankLiters(),null);
+  c.setConfig({biler:[{brændstof:'benzin'}]});
+  assert.ok(!c.innerHTML.includes('Fuld tank (50'));
+  const tariffs=c._evTariffsHtml([{name:'Normal',kwh:3,stale:true}]);
+  assert.ok(tariffs.includes('gemt takst'));
+}

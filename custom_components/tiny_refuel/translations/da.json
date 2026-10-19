@@ -13,5 +13,57 @@
     "abort": {
       "already_configured": "Tiny Refuel er allerede konfigureret."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tiny Refuel",
+        "menu_options": {
+          "settings": "Opdateringsinterval",
+          "vehicle": "Tilføj fælles køretøj",
+          "edit_vehicle": "Rediger fælles køretøj",
+          "remove_vehicle": "Fjern fælles køretøj"
+        }
+      },
+      "settings": {
+        "title": "Opdateringsinterval",
+        "data": {
+          "scan_hours": "Timer mellem hentninger"
+        }
+      },
+      "vehicle": {
+        "title": "Fælles køretøj",
+        "description": "Fælles køretøjer bruges af køretøjssensorerne og kort uden egne køretøjer. Angiv kapaciteter, der er kontrolleret for dit køretøj.",
+        "data": {
+          "navn": "Navn",
+          "mærke": "Mærke",
+          "model": "Model",
+          "brændstof": "Drivmiddel",
+          "tank_liters": "Tank (L)",
+          "batteri_kwh": "Batteri (kWh)",
+          "location_entity": "Positionsenhed",
+          "notify_service": "Notifikationsservice"
+        }
+      },
+      "edit_vehicle": {
+        "title": "Rediger fælles køretøj",
+        "data": {
+          "vehicle_id": "Køretøj"
+        }
+      },
+      "remove_vehicle": {
+        "title": "Fjern fælles køretøj",
+        "description": "Fjerner det fælles køretøj og dets sensorer. Køretøjer gemt i de enkelte kort bevares.",
+        "data": {
+          "vehicle_id": "Køretøj"
+        }
+      }
+    },
+    "abort": {
+      "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer."
+    },
+    "error": {
+      "required_name": "Angiv et navn."
+    }
   }
 }

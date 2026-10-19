@@ -64,11 +64,10 @@ def prepare(folder):
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
         "http": {"server_host": "127.0.0.1"}, "frontend": {},
         "recorder": {"purge_keep_days": 1, "commit_interval": 1},
-        "lovelace": {"mode": "yaml", "resources": [{"url": "/tiny_refuel/static/tiny-refuel-card.js?v=0.2.2", "type": "module"}]},
+        "lovelace": {"mode": "storage"},
     }))
-    (folder / "ui-lovelace.yaml").write_text(yaml.safe_dump({
-        "title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}],
-    }, allow_unicode=True))
+    (storage / "lovelace").write_text(json.dumps({"version": 1, "minor_version": 1, "key": "lovelace",
+        "data": {"config": {"title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}]}}}, ensure_ascii=False))
 
 
 def api(session, path, data):
@@ -130,6 +129,21 @@ def onboard():
     asset = session.get(BASE + "/tiny_refuel/static/tiny-refuel-card.js", timeout=20)
     asset.raise_for_status()
     assert asset.content == (ROOT / "custom_components/tiny_refuel/frontend/tiny-refuel-card.js").read_bytes(), "HA served a different card module"
+    # Exercise the actual integration options API and reload with shared vehicles.
+    options = api(session, "/api/config/config_entries/options/flow", {"handler": result["result"]["entry_id"]})
+    options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {"next_step_id": "vehicle"})
+    options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {
+        "navn": "Fælles testbil", "mærke": "Volkswagen", "model": "up!", "brændstof": "benzin",
+        "tank_liters": 35, "location_entity": "device_tracker.visual"})
+    assert options["type"] == "create_entry", options
+    for _ in range(60):
+        data = session.get(BASE + "/api/tiny_refuel/data", timeout=10)
+        if data.ok and data.json().get("vehicles"):
+            break
+        time.sleep(1)
+    else:
+        raise RuntimeError("Shared vehicle options did not reload")
+    tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
 
@@ -182,6 +196,37 @@ def browsers(tokens):
             page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
             raise
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
+        # Native Lovelace entry, save, reload and reopen; no manually added resource.
+        page.goto(BASE + "/lovelace/test?edit=1")
+        options = page.locator("hui-card-options").first
+        expect(options).to_be_visible(timeout=30000)
+        options.locator("ha-button").first.click()
+        dialog = page.locator("hui-dialog-edit-card")
+        native_editor = dialog.locator("tiny-refuel-card-editor")
+        expect(native_editor).to_be_visible(timeout=30000)
+        vehicle = native_editor.locator('[data-car-card="0"]')
+        if not vehicle.evaluate("el => el.open"):
+            vehicle.locator("summary").first.click()
+        tank = native_editor.locator('[data-key="bil:0:tank_liters"]')
+        tank.fill("36")
+        tank.dispatch_event("change")
+        dialog.screenshot(path=str(OUT / "native-editor-save.png"), animations="disabled")
+        results.append("native-editor-save")
+        dialog.locator('ha-button[slot="primaryAction"]').click()
+        expect(native_editor).not_to_be_visible(timeout=15000)
+        page.goto(BASE + "/lovelace/test?edit=1")
+        page.locator("hui-card-options").first.locator("ha-button").first.click()
+        expect(native_editor).to_be_visible(timeout=30000)
+        vehicle = native_editor.locator('[data-car-card="0"]')
+        if not vehicle.evaluate("el => el.open"):
+            vehicle.locator("summary").first.click()
+        expect(native_editor.locator('[data-key="bil:0:tank_liters"]')).to_have_value("36")
+        native_editor.locator('[data-key="bil:0:tank_liters"]').fill("35")
+        native_editor.locator('[data-key="bil:0:tank_liters"]').dispatch_event("change")
+        dialog.locator('ha-button[slot="primaryAction"]').click()
+        expect(native_editor).not_to_be_visible(timeout=15000)
+        page.goto(BASE + "/lovelace/test")
+        expect(card.locator(".trf")).to_be_visible(timeout=30000)
         # Retain the real HA object and card for deterministic scenario changes.
         card.evaluate("el => {window.visualCard = el; window.visualHass = el._hass;}")
 
@@ -239,6 +284,8 @@ def browsers(tokens):
                 # A failed supplier must remain visible alongside retained data.
                 page.evaluate("data => {window.visualCard._data = data; window.visualCard._render();}", {
                     **FIXTURE, "errors": [{"source": "clever.dk", "error": "HTTP Error 500"}],
+                    "ev": [{**row, "stale": True} if row["brand"] == "Clever" else row for row in FIXTURE["ev"]],
+                    "ev_sources": {**FIXTURE["ev_sources"], "clever": {"status": "stale", "last_success": FIXTURE["updated"]}},
                 })
                 expect(card).to_contain_text("clever.dk")
                 card.locator('[data-card-panel="errors"] > summary').click()
@@ -305,7 +352,7 @@ def main():
                 tokens = onboard()
                 screenshots = browsers(tokens)
                 (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
-                    "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium"}, indent=2))
+                    "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True}, indent=2))
                 gallery = ''.join(f'<figure><a href="{name}.png"><img src="{name}.png" loading="lazy"></a><figcaption>{name}</figcaption></figure>' for name in screenshots)
                 (OUT / "index.html").write_text('<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tiny Refuel screenshots</title><style>body{font:16px system-ui;margin:24px;background:#eee;color:#222}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0;padding:12px;background:white;border-radius:12px}img{max-width:100%;max-height:600px;object-fit:contain;object-position:top}figcaption{margin-top:8px}</style><h1>Tiny Refuel · Home Assistant 2026.10</h1><p>Fiktive priser og position. Klik på et billede for fuld størrelse.</p><main>' + gallery + '</main></html>')
                 print(f"PASS: {len(screenshots)} screenshots; real Home Assistant, desktop/mobile, light/dark")
