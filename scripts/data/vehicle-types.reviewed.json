@@ -1,0 +1,1314 @@
+{
+  "note": "Reviewed model-family categories for this exact catalog snapshot. Not a registration or variant classification. New models require explicit review; no brand-level or default classification.",
+  "brands": {
+    "AC": {
+      "personbil": [
+        "ACE",
+        "Aceca"
+      ]
+    },
+    "ACURA": {
+      "personbil": [
+        "INTEGRA",
+        "LEGEND"
+      ]
+    },
+    "Aiways": {
+      "personbil": [
+        "U6"
+      ]
+    },
+    "Alfa Romeo": {
+      "personbil": [
+        "145",
+        "146",
+        "147",
+        "155",
+        "156",
+        "156 SPORTWAGON",
+        "159",
+        "159 SPORTWAGON",
+        "164",
+        "166",
+        "33",
+        "75",
+        "8C",
+        "ALFASUD",
+        "Giulia",
+        "GIULIA QUADRIFOGLIO",
+        "Giulietta",
+        "GTV",
+        "JUNIOR",
+        "MiTo",
+        "Spider",
+        "Stelvio",
+        "Stelvio Quadrifoglio",
+        "Tonale Plug-in Hybrid"
+      ]
+    },
+    "ALPINE": {
+      "personbil": [
+        "A110",
+        "A290",
+        "A390"
+      ]
+    },
+    "ARIEL": {
+      "personbil": [
+        "Atom"
+      ]
+    },
+    "ASTON MARTIN": {
+      "personbil": [
+        "DBS",
+        "DBS Volante",
+        "RAPIDE",
+        "VANTAGE",
+        "Vantage GT8"
+      ]
+    },
+    "Audi": {
+      "personbil": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A5 Avant",
+        "A6",
+        "A7",
+        "CABRIOLET",
+        "e-tron",
+        "e-tron GT",
+        "Q2",
+        "Q3",
+        "Q4 e-tron",
+        "Q5",
+        "Q6 e-tron",
+        "Q7 e-hybrid",
+        "Q8 e-tron",
+        "QUATTRO",
+        "RS 4 Avant",
+        "RS5 Avant",
+        "RS6",
+        "S5 Avant",
+        "S7",
+        "SQ2",
+        "V8"
+      ]
+    },
+    "BENTLEY": {
+      "personbil": [
+        "ARNAGE",
+        "AZURE",
+        "Bentayga Speed",
+        "CONTINENTAL",
+        "Continental Flying Spur",
+        "MULSANNE"
+      ]
+    },
+    "BMW": {
+      "personbil": [
+        "1-serie",
+        "2-serie Gran Coupé",
+        "2002",
+        "3-serie",
+        "4-serie",
+        "5-serie",
+        "7-serie",
+        "i3",
+        "i4",
+        "i5",
+        "i7",
+        "iX",
+        "iX1",
+        "iX2",
+        "iX3",
+        "M2",
+        "M3 Cs",
+        "M8",
+        "X1",
+        "X1 plug-in hybrid",
+        "X3",
+        "X3 M",
+        "X5 plug-in hybrid",
+        "XM",
+        "Z3"
+      ]
+    },
+    "BUICK": {
+      "personbil": [
+        "CENTURY",
+        "LUCERNE"
+      ]
+    },
+    "BYD": {
+      "personbil": [
+        "Atto 3",
+        "Dolphin",
+        "Dolphin Surf",
+        "HAN",
+        "Seal",
+        "Seal U",
+        "Seal U DM-i",
+        "Sealion 7",
+        "Tang"
+      ]
+    },
+    "CADILLAC": {
+      "personbil": [
+        "ALLANTE",
+        "DTS",
+        "Lyriq",
+        "SEVILLE",
+        "STS",
+        "xt5"
+      ]
+    },
+    "CHEVROLET": {
+      "varebil": [
+        "AVALANCHE",
+        "COLORADO",
+        "SSR"
+      ],
+      "personbil": [
+        "BLAZER",
+        "Bolt EV",
+        "CAPTIVA",
+        "CAVALIER",
+        "CHEVELLE",
+        "EPICA",
+        "EVANDA",
+        "HHR",
+        "MONTE CARLO",
+        "ORLANDO",
+        "TACUMA",
+        "UPLANDER",
+        "Volt"
+      ]
+    },
+    "Chrysler": {
+      "personbil": [
+        "300",
+        "300C",
+        "ASPEN",
+        "CONCORDE",
+        "CROSSFIRE",
+        "GRAND VOYAGER",
+        "PT Cruiser",
+        "SARATOGA",
+        "Town & Country",
+        "Voyager"
+      ]
+    },
+    "Citroën": {
+      "personbil,varebil": [
+        "Berlingo",
+        "ë-Berlingo"
+      ],
+      "varebil": [
+        "Berlingo Van",
+        "Jumper",
+        "Jumpy",
+        "ë-Berlingo Van",
+        "ë-Jumpy"
+      ],
+      "personbil": [
+        "C1",
+        "C3",
+        "C3 Aircross",
+        "C4",
+        "C4 X",
+        "C5 Aircross",
+        "C5 X",
+        "e-C3",
+        "SpaceTourer",
+        "ë-C3 Aircross",
+        "ë-C4",
+        "ë-C4 X",
+        "ë-SpaceTourer"
+      ]
+    },
+    "Cupra": {
+      "personbil": [
+        "Ateca",
+        "Born",
+        "Formentor",
+        "Leon",
+        "Raval",
+        "Tavascan",
+        "Terramar"
+      ]
+    },
+    "Dacia": {
+      "personbil": [
+        "1310",
+        "Bigster",
+        "Duster",
+        "Jogger",
+        "Lodgy",
+        "Logan",
+        "Logan MCV",
+        "Sandero",
+        "Spring"
+      ],
+      "personbil,varebil": [
+        "dokker"
+      ]
+    },
+    "DAEWOO": {
+      "personbil": [
+        "Espero",
+        "LACETTI",
+        "LEGANZA",
+        "MATIZ",
+        "NUBIRA",
+        "TACUMA"
+      ]
+    },
+    "DAIHATSU": {
+      "personbil": [
+        "APPLAUSE",
+        "COPEN",
+        "CUORE",
+        "MATERIA",
+        "MOVE",
+        "ROCKY",
+        "SIRION",
+        "TREVIS"
+      ]
+    },
+    "Dodge": {
+      "personbil": [
+        "AVENGER",
+        "Caliber",
+        "DART",
+        "Journey",
+        "NEON",
+        "NITRO",
+        "Stratus",
+        "VIPER"
+      ]
+    },
+    "DS Automobiles": {
+      "personbil": [
+        "DS 3",
+        "DS 3 E-Tense",
+        "DS 4",
+        "DS 7"
+      ]
+    },
+    "FERRARI": {
+      "personbil": [
+        "296 GTB",
+        "296 GTS",
+        "Amalfi",
+        "F430",
+        "PORTOFINO",
+        "PUROSANGUE",
+        "Roma",
+        "SF90",
+        "TESTAROSSA"
+      ]
+    },
+    "Fiat": {
+      "personbil": [
+        "124",
+        "500",
+        "500 Hybrid",
+        "500e",
+        "500L",
+        "500L Living",
+        "600 Hybrid",
+        "600e",
+        "ARGENTA",
+        "BRAVA",
+        "BRAVO",
+        "Grande Panda",
+        "IDEA",
+        "Linea",
+        "MAREA",
+        "MULTIPLA",
+        "Panda",
+        "Punto",
+        "REGATA",
+        "sedici",
+        "SEICENTO",
+        "STILO",
+        "TEMPRA",
+        "Tipo",
+        "Ulysse",
+        "UNO"
+      ],
+      "personbil,varebil": [
+        "Doblò",
+        "E-Doblò"
+      ],
+      "varebil": [
+        "Ducato",
+        "E-Scudo",
+        "Fullback",
+        "Scudo"
+      ],
+      "andet": [
+        "Topolino"
+      ]
+    },
+    "Ford": {
+      "personbil": [
+        "B-Max",
+        "C-Max",
+        "Capri",
+        "E-Tourneo Custom",
+        "EXCURSION",
+        "Explorer",
+        "Fiesta",
+        "Flex",
+        "Focus",
+        "FOCUS CC",
+        "FREESTAR",
+        "Galaxy",
+        "GRAND C-MAX",
+        "GT",
+        "Ka+",
+        "Kuga",
+        "Kuga plug-in hybrid",
+        "Mondeo",
+        "Mustang",
+        "Mustang Mach-E",
+        "ORION",
+        "Puma",
+        "Puma Gen-E",
+        "S-Max",
+        "SCORPIO",
+        "SIERRA",
+        "Tourneo Connect",
+        "Tourneo Custom",
+        "WINDSTAR"
+      ],
+      "varebil": [
+        "E-Transit",
+        "E-Transit Courier",
+        "E-Transit Custom",
+        "Ranger",
+        "Transit",
+        "Transit Connect",
+        "Transit Courier",
+        "Transit Custom"
+      ]
+    },
+    "GMC": {
+      "varebil": [
+        "canyon"
+      ],
+      "personbil": [
+        "TYPHOON"
+      ]
+    },
+    "Honda": {
+      "personbil": [
+        "Accord",
+        "Civic",
+        "CR-V",
+        "CR-Z",
+        "e:Ny1",
+        "HR-V",
+        "Insight",
+        "Jazz",
+        "NSX",
+        "ODYSSEY",
+        "Prelude",
+        "Stream",
+        "ZR-V"
+      ],
+      "varebil": [
+        "RIDGELINE"
+      ]
+    },
+    "Hongqi": {
+      "personbil": [
+        "E-HS9",
+        "EH7",
+        "EHS7"
+      ]
+    },
+    "Hyundai": {
+      "personbil": [
+        "ATOS",
+        "Bayon",
+        "Getz",
+        "i10",
+        "i20",
+        "i30",
+        "i40",
+        "Inster",
+        "Ioniq",
+        "Ioniq 5",
+        "Ioniq 6",
+        "Ioniq 9",
+        "Kona",
+        "Kona Electric",
+        "Kona Hybrid",
+        "LANTRA",
+        "MATRIX",
+        "Santa Fe",
+        "SCOUPE",
+        "TERRACAN",
+        "TRAJET",
+        "Tucson",
+        "Tucson Plug-in Hybrid",
+        "VELOSTER"
+      ]
+    },
+    "INEOS": {
+      "personbil,varebil": [
+        "Grenadier"
+      ]
+    },
+    "INFINITI": {
+      "personbil": [
+        "FX"
+      ]
+    },
+    "Isuzu": {
+      "varebil": [
+        "D-Max"
+      ],
+      "personbil": [
+        "TROOPER"
+      ]
+    },
+    "Jaecoo": {
+      "personbil": [
+        "7",
+        "7 benzin"
+      ]
+    },
+    "Jaguar": {
+      "personbil": [
+        "E-Pace",
+        "F-Pace",
+        "I-Pace",
+        "S-TYPE",
+        "X-TYPE",
+        "XFR",
+        "XKR"
+      ]
+    },
+    "Jeep": {
+      "personbil": [
+        "Avenger",
+        "Avenger e-Hybrid",
+        "Avenger Electric",
+        "COMMANDER",
+        "Compass",
+        "PATRIOT",
+        "Renegade",
+        "WAGONEER",
+        "Wrangler 4xe"
+      ],
+      "varebil": [
+        "GLADIATOR"
+      ]
+    },
+    "KGM": {
+      "personbil": [
+        "Korando",
+        "Rexton",
+        "Tivoli",
+        "Torres",
+        "Torres EVX"
+      ],
+      "varebil": [
+        "Musso"
+      ]
+    },
+    "Kia": {
+      "personbil": [
+        "Carens",
+        "CEE'D SW",
+        "Ceed",
+        "EV3",
+        "EV4",
+        "EV5",
+        "EV6",
+        "EV6 GT",
+        "EV9",
+        "Forte Koup",
+        "Niro",
+        "Niro EV",
+        "Niro Plug-in Hybrid",
+        "Optima",
+        "Picanto",
+        "Rio",
+        "SHUMA",
+        "Sorento",
+        "Sportage",
+        "Stinger",
+        "Stonic",
+        "XCeed"
+      ]
+    },
+    "KTM": {
+      "personbil": [
+        "X-BOW"
+      ]
+    },
+    "LADA": {
+      "personbil": [
+        "NIVA",
+        "SAMARA"
+      ]
+    },
+    "LAMBORGHINI": {
+      "personbil": [
+        "Huracan",
+        "Reventon",
+        "URRACO",
+        "URUS"
+      ]
+    },
+    "LANCIA": {
+      "personbil": [
+        "DEDRA",
+        "KAPPA",
+        "LYBRA",
+        "MUSA",
+        "PHEDRA",
+        "PRISMA",
+        "Trevi",
+        "ZETA"
+      ]
+    },
+    "Land Rover": {
+      "personbil": [
+        "Defender",
+        "Discovery Sport",
+        "Range Rover Evoque",
+        "Range Rover Sport PHEV"
+      ]
+    },
+    "Leapmotor": {
+      "personbil": [
+        "C10",
+        "T03"
+      ]
+    },
+    "Lexus": {
+      "personbil": [
+        "LBX",
+        "LX",
+        "NX Plug-in Hybrid",
+        "RX Plug-in Hybrid",
+        "RZ",
+        "RZ 450e",
+        "UX",
+        "UX 300e"
+      ]
+    },
+    "LINCOLN": {
+      "varebil": [
+        "MARK LT"
+      ]
+    },
+    "Lotus": {
+      "personbil": [
+        "Eletre",
+        "Emeya",
+        "Emira",
+        "ESPRIT",
+        "EUROPA",
+        "EVORA",
+        "EXIGE"
+      ]
+    },
+    "Lynk & Co": {
+      "personbil": [
+        "01",
+        "02"
+      ]
+    },
+    "Maserati": {
+      "personbil": [
+        "Grancabrio",
+        "GranCabrio Folgore",
+        "Grecale",
+        "Grecale Folgore",
+        "Grecale Trofeo",
+        "Levante",
+        "MC20",
+        "MERAK",
+        "SPYDER"
+      ]
+    },
+    "Maxus": {
+      "varebil": [
+        "eDeliver 3",
+        "eDeliver 5",
+        "eDeliver 7",
+        "eDeliver 9",
+        "T90 EV"
+      ],
+      "personbil": [
+        "Euniq 5"
+      ]
+    },
+    "Mazda": {
+      "personbil": [
+        "626",
+        "CX-3",
+        "CX-30",
+        "CX-5",
+        "CX-60",
+        "CX-60 Plug-in Hybrid",
+        "CX-7",
+        "CX-80",
+        "Mazda2",
+        "Mazda3",
+        "Mazda6",
+        "MX-3",
+        "MX-30",
+        "MX-5",
+        "MX-6"
+      ],
+      "varebil": [
+        "BT-50"
+      ]
+    },
+    "McLaren": {
+      "personbil": [
+        "675LT",
+        "765LT"
+      ]
+    },
+    "Mercedes": {
+      "personbil": [
+        "A-klasse",
+        "B-klasse",
+        "C-klasse",
+        "CLA",
+        "E-klasse",
+        "EQA",
+        "EQB",
+        "EQC",
+        "EQE",
+        "EQS",
+        "EQV",
+        "GLA",
+        "GLB",
+        "GLC",
+        "GLC plug-in hybrid",
+        "GLE plug-in hybrid",
+        "V-Klasse"
+      ],
+      "personbil,varebil": [
+        "Citan",
+        "eCitan"
+      ],
+      "varebil": [
+        "eSprinter",
+        "eVito",
+        "Sprinter",
+        "Vito",
+        "X-Klasse"
+      ]
+    },
+    "Mercedes-AMG": {
+      "personbil": [
+        "GLE"
+      ]
+    },
+    "MERCURY": {
+      "personbil": [
+        "SABLE"
+      ]
+    },
+    "MG": {
+      "personbil": [
+        "Cyberster",
+        "HS",
+        "Marvel R",
+        "MG3",
+        "MG4",
+        "ZR",
+        "ZS",
+        "ZS EV",
+        "ZT"
+      ]
+    },
+    "Mini": {
+      "personbil": [
+        "Aceman",
+        "Clubman",
+        "Cooper",
+        "Cooper SE",
+        "Countryman",
+        "ROADSTER"
+      ]
+    },
+    "Mitsubishi": {
+      "personbil": [
+        "ASX",
+        "CARISMA",
+        "Colt",
+        "Eclipse Cross",
+        "GRANDIS",
+        "Lancer",
+        "LANCER EVOLUTION",
+        "MIRAGE",
+        "Outlander",
+        "Outlander PHEV",
+        "SIGMA",
+        "SPACE RUNNER"
+      ],
+      "varebil": [
+        "L 200",
+        "L200"
+      ]
+    },
+    "Navor": {
+      "personbil": [
+        "E5"
+      ]
+    },
+    "NIO": {
+      "personbil": [
+        "EL6",
+        "EL7",
+        "ET5"
+      ]
+    },
+    "Nissan": {
+      "personbil": [
+        "100 NX",
+        "200 SX",
+        "300 ZX",
+        "350Z",
+        "370Z",
+        "ALMERA TINO",
+        "Ariya",
+        "BLUEBIRD",
+        "Juke",
+        "Leaf",
+        "Micra",
+        "Note",
+        "PIXO",
+        "PRAIRIE",
+        "Pulsar",
+        "Qashqai",
+        "SKYLINE",
+        "SUNNY",
+        "X-Trail"
+      ],
+      "personbil,varebil": [
+        "e-NV200",
+        "Townstar",
+        "Townstar EV"
+      ],
+      "varebil": [
+        "Interstar",
+        "Primastar"
+      ]
+    },
+    "OLDSMOBILE": {
+      "personbil": [
+        "TORONADO"
+      ]
+    },
+    "Omoda": {
+      "personbil": [
+        "5",
+        "5 EV",
+        "9"
+      ]
+    },
+    "Opel": {
+      "personbil": [
+        "Adam",
+        "Adam Rocks",
+        "Ampera",
+        "Antara",
+        "Astra",
+        "Astra GTC",
+        "CALIBRA",
+        "Cascada",
+        "Corsa",
+        "Corsa-e",
+        "Crossland",
+        "Frontera",
+        "Frontera Electric",
+        "Grandland",
+        "Grandland Electric",
+        "Insignia",
+        "MANTA",
+        "Mokka",
+        "Omega",
+        "REKORD",
+        "SENATOR",
+        "SINTRA",
+        "Speedster",
+        "Zafira Life"
+      ],
+      "varebil": [
+        "Combo Cargo",
+        "Movano",
+        "Vivaro",
+        "Vivaro Electric"
+      ],
+      "personbil,varebil": [
+        "Combo Electric"
+      ]
+    },
+    "Peugeot": {
+      "personbil": [
+        "1007",
+        "106",
+        "107",
+        "108",
+        "2008",
+        "205",
+        "206",
+        "206 CC",
+        "206+",
+        "207",
+        "207 CC",
+        "207 SW",
+        "208",
+        "3008",
+        "306",
+        "307",
+        "307 CC",
+        "307 SW",
+        "308",
+        "308 CC",
+        "308 Plug-in Hybrid",
+        "4007",
+        "4008",
+        "405",
+        "406",
+        "408",
+        "5008",
+        "505",
+        "508",
+        "508 Plug-in Hybrid",
+        "604",
+        "605",
+        "607",
+        "806",
+        "807",
+        "e-2008",
+        "e-208",
+        "e-3008",
+        "e-308",
+        "E-408",
+        "e-5008",
+        "e-Traveller",
+        "RCZ",
+        "Rifter",
+        "Traveller"
+      ],
+      "varebil": [
+        "Boxer",
+        "e-Expert",
+        "e-Partner",
+        "Expert",
+        "Partner Van"
+      ],
+      "personbil,varebil": [
+        "Partner"
+      ]
+    },
+    "PLYMOUTH": {
+      "personbil": [
+        "ACCLAIM"
+      ]
+    },
+    "Polestar": {
+      "personbil": [
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "PONTIAC": {
+      "personbil": [
+        "SOLSTICE",
+        "TRANS SPORT"
+      ]
+    },
+    "Porsche": {
+      "personbil": [
+        "718 Boxster S",
+        "718 Cayman",
+        "911",
+        "911 CARRERA 4",
+        "911 CARRERA S",
+        "911 Carrera T",
+        "911 Targa",
+        "911 Targa 4 GTS",
+        "911 TARGA 4S",
+        "928",
+        "928 S",
+        "944",
+        "944 Turbo",
+        "BOXSTER",
+        "Cayenne E-Hybrid",
+        "Cayenne S Diesel",
+        "Cayenne S Hybrid",
+        "Cayenne Turbo E-Hybrid",
+        "cayman R",
+        "Macan",
+        "Macan Electric",
+        "Macan T",
+        "Panamera 4 E-Hybrid",
+        "Panamera 4S E-Hybrid",
+        "PANAMERA DIESEL",
+        "Panamera GTS",
+        "Panamera GTS Sport Turismo",
+        "PANAMERA S",
+        "Panamera Turbo S E-hybrid",
+        "Taycan"
+      ]
+    },
+    "Renault": {
+      "personbil": [
+        "11",
+        "16",
+        "18",
+        "19",
+        "25",
+        "30",
+        "4 E-Tech",
+        "5",
+        "9",
+        "Arkana",
+        "Austral",
+        "Captur",
+        "Clio",
+        "Espace",
+        "Fluence",
+        "FUEGO",
+        "Grand Modus",
+        "Kadjar",
+        "Latitude",
+        "Mégane",
+        "Mégane E-Tech",
+        "R5 E-Tech",
+        "Rafale",
+        "Rafale E-Tech",
+        "SAFRANE",
+        "Scenic E-Tech",
+        "Scenic XMod",
+        "Twingo",
+        "Vel Satis",
+        "Wind",
+        "Zoe"
+      ],
+      "varebil": [
+        "Alaskan",
+        "Master",
+        "Trafic"
+      ],
+      "personbil,varebil": [
+        "Express",
+        "Kangoo",
+        "Kangoo E-Tech"
+      ]
+    },
+    "ROLLS-ROYCE": {
+      "personbil": [
+        "CULLINAN",
+        "Spectre"
+      ]
+    },
+    "Saab": {
+      "personbil": [
+        "9-3",
+        "9-3 SPORTCOMBI",
+        "9-5",
+        "900",
+        "9000"
+      ]
+    },
+    "SCION": {
+      "personbil": [
+        "XD"
+      ]
+    },
+    "Seat": {
+      "personbil": [
+        "Alhambra",
+        "Arona",
+        "AROSA",
+        "Ateca",
+        "CORDOBA",
+        "EXEO",
+        "Exeo ST",
+        "Ibiza",
+        "IBIZA ST",
+        "Leon",
+        "LEON CUPRA",
+        "LEON ST",
+        "Leon X-Perience",
+        "MALAGA",
+        "Mii",
+        "Tarraco",
+        "Toledo"
+      ]
+    },
+    "Skoda": {
+      "personbil": [
+        "Citigo",
+        "Elroq",
+        "Enyaq",
+        "Enyaq Coupé",
+        "Fabia",
+        "Kamiq",
+        "Karoq",
+        "Kodiaq",
+        "Octavia",
+        "Octavia iV",
+        "Rapid",
+        "Roomster",
+        "Scala",
+        "Superb",
+        "Yeti"
+      ]
+    },
+    "Smart": {
+      "personbil": [
+        "#1",
+        "#3",
+        "#5",
+        "Fortwo Cabrio"
+      ]
+    },
+    "SSANGYONG": {
+      "personbil": [
+        "ACTYON",
+        "KYRON",
+        "TIVOLI"
+      ]
+    },
+    "Subaru": {
+      "personbil": [
+        "ascent",
+        "BRZ",
+        "Crosstrek",
+        "Forester",
+        "Outback",
+        "Solterra",
+        "SVX",
+        "WRX",
+        "XV"
+      ]
+    },
+    "Suzuki": {
+      "personbil": [
+        "Across",
+        "Alto",
+        "Baleno",
+        "e Vitara",
+        "Ignis",
+        "Jimny",
+        "KIZASHI",
+        "S-Cross",
+        "Splash",
+        "Swace",
+        "Swift",
+        "SX4",
+        "Vitara",
+        "Wagon R"
+      ]
+    },
+    "Tesla": {
+      "personbil": [
+        "Model 3",
+        "Model S",
+        "Model X",
+        "Model Y",
+        "Model Y 7-sæder"
+      ]
+    },
+    "Toyota": {
+      "personbil": [
+        "Auris",
+        "Avensis",
+        "AVENSIS VERSO",
+        "Aygo",
+        "Aygo X",
+        "bZ4X",
+        "C-HR",
+        "C-HR+",
+        "Camry",
+        "Celica",
+        "Corolla",
+        "Corolla Cross",
+        "Crown",
+        "FJ CRUISER",
+        "GR Supra",
+        "GR Yaris",
+        "IQ",
+        "MR2",
+        "Paseo",
+        "Picnic",
+        "Prius",
+        "Prius Plug-in Hybrid",
+        "Proace City Verso",
+        "Proace Verso",
+        "Proace Verso Electric",
+        "RAV4",
+        "Starlet",
+        "Urban Cruiser",
+        "Verso",
+        "Verso-S",
+        "Yaris",
+        "Yaris Cross",
+        "YARIS VERSO"
+      ],
+      "varebil": [
+        "Hilux",
+        "Proace",
+        "Proace City",
+        "Proace City Electric",
+        "Proace Electric"
+      ]
+    },
+    "TVR": {
+      "personbil": [
+        "CHIMAERA",
+        "GRIFFITH"
+      ]
+    },
+    "VAUXHALL": {
+      "personbil": [
+        "Insignia",
+        "VECTRA",
+        "VIVA",
+        "ZAFIRA"
+      ]
+    },
+    "VINFAST": {
+      "personbil": [
+        "VF 6",
+        "VF 8"
+      ]
+    },
+    "Volkswagen": {
+      "varebil": [
+        "Amarok",
+        "Caddy Cargo",
+        "Crafter",
+        "e-Transporter",
+        "ID. Buzz Cargo",
+        "Transporter"
+      ],
+      "personbil": [
+        "Arteon",
+        "Beetle",
+        "Beetle Cabrio",
+        "CC",
+        "CORRADO",
+        "e-Golf",
+        "e-up!",
+        "Eos",
+        "Golf",
+        "Golf ALLTRACK",
+        "Golf Cabrio",
+        "Golf GTE",
+        "Golf Plus",
+        "Golf R",
+        "Golf Sportsvan",
+        "ID. Buzz",
+        "ID.3",
+        "ID.4",
+        "ID.5",
+        "ID.6",
+        "ID.7",
+        "Lupo",
+        "Multivan",
+        "Passat",
+        "PASSAT ALLTRACK",
+        "Passat GTE",
+        "Phaeton",
+        "Polo",
+        "Polo Variant",
+        "Routan",
+        "SANTANA",
+        "Sharan",
+        "T-Cross",
+        "T-Roc",
+        "Taigo",
+        "Tayron",
+        "Tiguan",
+        "Tiguan eHybrid",
+        "TOUAREG R",
+        "Touran",
+        "up!"
+      ],
+      "personbil,varebil": [
+        "Caddy",
+        "TRANSPORTER KOMBI"
+      ]
+    },
+    "Volvo": {
+      "personbil": [
+        "145",
+        "244",
+        "245",
+        "343",
+        "345",
+        "440",
+        "460",
+        "480",
+        "760",
+        "850",
+        "940",
+        "960",
+        "C30",
+        "C40 Recharge",
+        "EC40",
+        "EX30",
+        "EX40",
+        "EX90",
+        "S60",
+        "S60 Cross Country",
+        "S70",
+        "S90",
+        "V40",
+        "V50",
+        "V60",
+        "V70",
+        "V90",
+        "V90 Cross Country",
+        "XC40",
+        "XC60",
+        "XC90 plug-in hybrid"
+      ]
+    },
+    "Voyah": {
+      "personbil": [
+        "FREE"
+      ]
+    },
+    "Wiesmann": {
+      "personbil": [
+        "MF5"
+      ]
+    },
+    "XPeng": {
+      "personbil": [
+        "G6",
+        "G9",
+        "P7"
+      ]
+    },
+    "Zeekr": {
+      "personbil": [
+        "001",
+        "7X",
+        "X"
+      ]
+    }
+  }
+}

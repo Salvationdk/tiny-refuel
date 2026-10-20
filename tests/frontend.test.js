@@ -662,7 +662,7 @@ for (const [make, png] of Object.entries(packagedCatalog.logo_pngs)) {
   form._katalog = packagedCatalog;
   form.dispatchEvent = () => {};
   form.setConfig({ biler: [{ mærke: 'Honda', model: 'CB 500', brændstof: 'benzin', tank_liters: 17 }] });
-  assert.equal(form._makeSuggestions('').total, 89);
+  assert.equal(form._makeSuggestions('').total, 97);
   assert.ok((form._makeSuggestions('').html.match(/<option/g) || []).length <= 60);
   assert.ok(form.innerHTML.includes('bil:0:koeretoejstype'));
   assert.ok(form.innerHTML.includes('bil:0:aargang'));
@@ -810,7 +810,7 @@ console.log('PASS: compact display, independent row limits, retained vehicle sel
 // Committed identity changes clear dependent values; equivalent edits and custom names survive.
 {
   const catalog = { brands: [
-    { mærke: 'Alpha', modeller: [{ model: 'One', tank_l: 45, brændstof: 'benzin' }, { model: 'Two', batteri_kwh: 50, brændstof: 'el' }] },
+    { mærke: 'Alpha', modeller: [{ model: 'One', tank_l: 45, brændstof: 'benzin', vehicle_types: ['personbil'] }, { model: 'Two', batteri_kwh: 50, brændstof: 'el', vehicle_types: ['personbil'] }] },
     { mærke: 'Beta', modeller: [{ model: 'Three' }] },
   ] };
   function form(car) { const f = new StableEditor(); f._katalog = catalog; f.dispatchEvent = () => {}; f.setConfig({ biler: [car] }); return f; }
@@ -942,4 +942,37 @@ console.log('PASS: diesel, small tanks, small batteries, hybrid metrics and cata
   assert.ok(!c.innerHTML.includes('Fuld tank (50'));
   const tariffs=c._evTariffsHtml([{name:'Normal',kwh:3,stale:true}]);
   assert.ok(tariffs.includes('gemt takst'));
+}
+
+// Categories filter model families, never a whole manufacturer by assumption.
+{
+  const f = new StableEditor(); f.dispatchEvent = () => {}; f._katalog = packagedCatalog;
+  assert.equal(f._makeSuggestions('', 'lastbil').total, 3);
+  assert.ok(f._makeSuggestions('Volkswagen', 'varebil').html.includes('Volkswagen'));
+  assert.ok(!f._makeSuggestions('BMW', 'varebil').html.includes('BMW'));
+  assert.ok(f._modelSuggestions('Volkswagen', '', 'varebil').html.includes('Caddy Cargo'));
+  assert.ok(!f._modelSuggestions('Volkswagen', '', 'varebil').html.includes('value="up!"'));
+  assert.ok(!f._modelSuggestions('Volkswagen', '', 'personbil').html.includes('Caddy Cargo'));
+  assert.equal(f._modelSuggestions('Volkswagen', '', 'varevogn').html, f._modelSuggestions('Volkswagen', '', 'varebil').html);
+  assert.ok(f._modelSuggestions('KTM', '', 'personbil').html.includes('X-BOW'));
+  f.setConfig({biler:[{mærke:'Volkswagen',model:'up!',tank_liters:35,brændstof:'benzin',navn:'Min bil',location_entity:'device_tracker.phone'}, {mærke:'Ford',model:'Fiesta'}]});
+  f.events.change({target:{dataset:{key:'bil:0:koeretoejstype'},value:'varebil'}});
+  assert.equal(f._config.biler[0].mærke, 'Volkswagen');
+  assert.equal(f._config.biler[0].model, undefined);
+  assert.equal(f._config.biler[0].tank_liters, undefined);
+  assert.equal(f._config.biler[0].navn, 'Min bil');
+  assert.equal(f._config.biler[0].location_entity, 'device_tracker.phone');
+  assert.equal(f._config.biler[1].model, 'Fiesta');
+  f.events.change({target:{dataset:{key:'bil:0:koeretoejstype'},value:'lastbil'}});
+  assert.equal(f._config.biler[0].mærke, undefined);
+  f._katalog = {brands:[{mærke:'Mixed',modeller:[{model:'Truck',vehicle_types:['lastbil']},{model:'Car',vehicle_type:'Personbil'},{model:'Unknown'}]}]};
+  assert.equal(f._makeSuggestions('Mixed','lastbil').total,1);
+  assert.ok(f._modelSuggestions('Mixed','','lastbil').html.includes('Truck'));
+  assert.ok(!f._modelSuggestions('Mixed','','lastbil').html.includes('Car'));
+  assert.ok(!f._modelSuggestions('Mixed','','personbil').html.includes('Unknown'));
+  assert.equal(f._modelSuggestions('Mixed','').total,3);
+  f.setConfig({biler:[{mærke:'Custom',model:'Own',tank_liters:75}]});
+  f.events.change({target:{dataset:{key:'bil:0:koeretoejstype'},value:'lastbil'}});
+  assert.equal(f._config.biler[0].model,'Own');
+  assert.equal(f._config.biler[0].tank_liters,75);
 }

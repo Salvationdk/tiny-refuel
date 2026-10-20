@@ -16,8 +16,10 @@ import zipfile
 
 if __package__:
     from .vehicle_catalog import CATALOG, save_json, load_catalog
+    from .vehicle_type_names import vehicle_types
 else:
     from vehicle_catalog import CATALOG, save_json, load_catalog
+    from vehicle_type_names import vehicle_types
 
 SOURCE = 'https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange'
 # Shared public download credentials published by Motorstyrelsen, not a user account.
@@ -168,7 +170,7 @@ def deduplicate_catalog(base):
     return result, report
 
 
-def download_latest(destination, ftp_factory=FTP):
+def download_latest(destination, ftp_factory=FTP, max_attempts=3):
     """Retry interrupted transfers with FTP REST; never replace a valid local file."""
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -176,9 +178,9 @@ def download_latest(destination, ftp_factory=FTP):
     with tempfile.NamedTemporaryFile('wb', dir=destination.parent, delete=False) as handle:
         temporary = Path(handle.name)
     try:
-        for attempt in range(1, 4):
+        for attempt in range(1, max_attempts + 1):
             try:
-                print(f'DMR: connection attempt {attempt}/3', file=sys.stderr, flush=True)
+                print(f'DMR: connection attempt {attempt}/{max_attempts}', file=sys.stderr, flush=True)
                 with ftp_factory(FTP_HOST, timeout=180) as ftp:
                     ftp.login(FTP_USER, FTP_PASSWORD)
                     ftp.cwd('ESStatistikListeModtag')
@@ -215,7 +217,7 @@ def download_latest(destination, ftp_factory=FTP):
                 break
             except (OSError, EOFError, error_perm) as exc:
                 print(f'DMR: transfer interrupted ({type(exc).__name__}); saved {temporary.stat().st_size // (1024 * 1024)} MiB', file=sys.stderr, flush=True)
-                if attempt == 3:
+                if attempt == max_attempts:
                     raise
         with zipfile.ZipFile(temporary) as archive:
             if not any(info.filename.lower().endswith('.xml') for info in archive.infolist()):
@@ -310,6 +312,9 @@ def build_catalog(stream, base, source_date, source_file, limit=None, include_pr
             names = entry.setdefault('source_names', [])
             if model not in names:
                 names.append(model)
+        observed_types = vehicle_types(row.get('KoeretoejArtNummer', ()), row.get('KoeretoejArtNavn', ()))
+        entry['vehicle_types'] = sorted(set(entry.get('vehicle_types', [])) | set(observed_types))
+        entry['dmr_vehicle_types'] = sorted(set(entry.get('dmr_vehicle_types', [])) | set(observed_types))
         entry['fuel_types'] = sorted(set(entry.get('fuel_types', [])) | row.get('DrivkraftTypeNavn', set()))
         entry['model_years'] = sorted(set(entry.get('model_years', [])) | row.get('KoeretoejOplysningModelAar', set()))
         # Only explicitly allowlisted model-level facts leave the record parser.
@@ -359,11 +364,13 @@ def build_catalog(stream, base, source_date, source_file, limit=None, include_pr
               'deduplication': cleanup,
               'technical_profiles_included': include_profiles,
               'technical_values': 'Raw source fields; units not inferred; not used as confirmed tank, battery or consumption specifications.',
-              'scope': 'DMR powered kinds 1,2,3,4,7,8,12,16,17,91 plus recognized powered kind names; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
+              'scope': 'DMR powered kinds 1,2,3,4,7,8,16,17,91 plus recognized powered kind names; unknown kinds and unpowered trailers excluded. Historical records included; not every future model or specification.'}
     result, final_cleanup = deduplicate_catalog(result)
     report['deduplication']['variant_conflicts'] = final_cleanup['conflicts']
     report['deduplication']['requires_review'] = bool(cleanup['conflicts'] or final_cleanup['conflicts'])
     report['unique_profiles'] = sum(len(m.get('dmr_profiles', [])) for b in result['brands'] for m in b['modeller'])
+    report['unique_models_by_type'] = {kind: sum(kind in model.get('dmr_vehicle_types', []) for brand in result['brands'] for model in brand['modeller']) for kind in ('personbil', 'varebil', 'lastbil', 'bus', 'motorcykel', 'knallert', 'traktor', 'andet')}
+    report['type_counts_note'] = 'Unique normalized make/model pairs per observed category. A model may occur in several categories; counts are not vehicle records.'
     result['dmr_catalog'] = report
     return result, report
 
@@ -401,6 +408,7 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     download = commands.add_parser('download')
     download.add_argument('--output', type=Path, required=True)
+    download.add_argument('--attempts', type=int, choices=range(1, 31), default=12, help='Resume interrupted public FTP downloads, up to 30 attempts')
     build = commands.add_parser('build')
     build.add_argument('--input', type=Path, required=True)
     build.add_argument('--source-date', required=True)
@@ -429,7 +437,7 @@ def main():
         if args.output.resolve() in protected or args.report.resolve() in protected or args.report.resolve() == args.output.resolve():
             parser.error('Input, base, output and report must be separate files')
     if args.command == 'download':
-        print(download_latest(args.output))
+        print(download_latest(args.output, max_attempts=args.attempts))
     elif args.command == 'deduplicate':
         base = load_catalog(args.input)
         catalog, report = deduplicate_catalog(base)

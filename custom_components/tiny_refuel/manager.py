@@ -5,6 +5,8 @@ import logging
 from pathlib import Path
 from typing import Callable
 
+from .dashboard_data import general_tariffs
+from .price_history import PriceHistory, station_rows
 from . import scraper
 from .const import CARD_VERSION, VERSION
 from .entity_data import nearest_row, price_rows
@@ -13,9 +15,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class RefuelManager:
-    def __init__(self, hass, data_dir: Path, collector=None, vehicles=None):
+    def __init__(self, hass, data_dir: Path, collector=None, vehicles=None, history_days=90):
         self.hass = hass
         self.vehicles = list(vehicles or [])
+        self.history = PriceHistory(data_dir / "price-history.sqlite3", history_days)
+        self.history_error = None
         self.data_dir = data_dir
         self.collector = collector or scraper.collect
         # Injected collectors are commonly small test doubles with the historic
@@ -85,6 +89,12 @@ class RefuelManager:
             if not isinstance(data, dict) or not data.get("updated") or not (data.get("stations") or data.get("ev")):
                 raise ValueError("Ingen brugbare priser eller ladesteder i hentningen")
             self.data = data
+            try:
+                await self.hass.async_add_executor_job(self.history.record, data)
+                self.history_error = None
+            except Exception:
+                self.history_error = "Prishistorikken kunne ikke gemmes"
+                _LOGGER.exception("Tiny Refuel history write failed")
         except asyncio.CancelledError:
             raise
         except Exception as exc:
@@ -95,6 +105,20 @@ class RefuelManager:
             self.progress = None
             if not self.closed:
                 self._notify()
+
+    def station_snapshot(self):
+        data = self.data
+        failed = bool(self.last_error)
+        cached = getattr(self,"_station_cache",None)
+        if cached is not None and cached[0] is data and cached[1] == failed:
+            rows = cached[2]
+        else:
+            rows = station_rows(data,failed)
+            self._station_cache = (data,failed,rows)
+        return {"stations":rows,"updated":data.get("updated"),"refreshing":self.refreshing,
+                "last_error":self.last_error,"history_days":self.history.days,
+                "history_error":self.history_error,
+                "tariffs":general_tariffs(data,failed)}
 
     def snapshot(self):
         return {**self.data, "vehicles": self.vehicles, "version": VERSION, "refreshing": self.refreshing,

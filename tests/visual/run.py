@@ -4,9 +4,12 @@ Run from any directory with Python 3.14 and requirements.txt installed.
 No real account, source scraper, location or Home Assistant installation is used.
 """
 import json
+import hashlib
 import os
 from pathlib import Path
 import secrets
+import sqlite3
+from datetime import datetime, timedelta, timezone
 import shutil
 import subprocess
 import sys
@@ -59,6 +62,26 @@ def prepare(folder):
     manager = custom / "tiny_refuel/manager.py"
     payload = json.dumps(json.dumps(FIXTURE))
     manager.write_text(manager.read_text() + '\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads(' + payload + ')\n    self._notify()\n\nRefuelManager.start_refresh = _visual_refresh\n')
+    # Exercise the real downloader/cache/API against deterministic catalog bytes.
+    bundled = json.loads((ROOT / "custom_components/tiny_refuel/frontend/katalog.json").read_text())
+    names = {"personbil":"car.json", "varebil":"van.json", "lastbil":"truck.json", "motorcykel":"motorcycle.json", "knallert":"moped.json", "bus":"bus.json", "traktor":"tractor.json", "andet":"other.json"}
+    payloads = {}
+    index = {"schema_version":1, "version":"visual-fixture", "catalogs":{}}
+    for kind, filename in names.items():
+        brands = []
+        for brand in bundled["brands"]:
+            models = [m for m in brand["modeller"] if kind in [("varebil" if t=="varevogn" else t) for t in m.get("vehicle_types",[])]]
+            if models: brands.append({**brand,"modeller":models})
+        raw = json.dumps({"vehicle_type":kind,"brands":brands},ensure_ascii=False)
+        payloads[filename] = raw
+        index["catalogs"][kind] = {"file":filename,"size_bytes":len(raw.encode()),"sha256":hashlib.sha256(raw.encode()).hexdigest()}
+    payloads["index.json"] = json.dumps(index)
+    store = custom / "tiny_refuel/catalog_store.py"
+    store.write_text(store.read_text() + "\n_visual_payloads = " + repr(payloads) + "\n" +
+        "_original_catalog_init = CatalogStore.__init__\n" +
+        "async def _visual_fetch(url, limit):\n    return _visual_payloads[url.rsplit('/',1)[-1]].encode()\n" +
+        "def _visual_init(self, directory, fetch_bytes, bundled_catalog, base_url=CATALOG_BASE):\n    _original_catalog_init(self,directory,_visual_fetch,bundled_catalog,base_url)\n" +
+        "CatalogStore.__init__ = _visual_init\n")
     (folder / "configuration.yaml").write_text(yaml.safe_dump({
         "homeassistant": {"name": "Tiny Refuel visuel test", "latitude": 55.67,
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
@@ -67,7 +90,7 @@ def prepare(folder):
         "lovelace": {"mode": "storage"},
     }))
     (storage / "lovelace").write_text(json.dumps({"version": 1, "minor_version": 1, "key": "lovelace",
-        "data": {"config": {"title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}]}}}, ensure_ascii=False))
+        "data": {"config": {"title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}, {"title":"Stationskort","path":"stationer","cards":[{"type":"map","title":"Stationer","geo_location_sources":["tiny_refuel"],"default_zoom":11,"auto_fit":True}]}]}}}, ensure_ascii=False))
 
 
 def api(session, path, data):
@@ -85,7 +108,7 @@ def websocket_messages(payload):
     return [item for item in (decoded if isinstance(decoded, list) else [decoded]) if isinstance(item, dict)]
 
 
-def onboard():
+def onboard(folder):
     session = requests.Session()
     for _ in range(240):
         try:
@@ -131,10 +154,18 @@ def onboard():
     assert asset.content == (ROOT / "custom_components/tiny_refuel/frontend/tiny-refuel-card.js").read_bytes(), "HA served a different card module"
     # Exercise the actual integration options API and reload with shared vehicles.
     options = api(session, "/api/config/config_entries/options/flow", {"handler": result["result"]["entry_id"]})
-    options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {"next_step_id": "vehicle"})
+    options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {"next_step_id": "catalog_vehicle"})
+    for expected_step, values in [("catalog_vehicle",{"koeretoejstype":"personbil"}),
+                                  ("catalog_make",{"mærke":"Volkswagen"}),
+                                  ("catalog_model",{"model":"up!"})]:
+        assert options["step_id"] == expected_step, options
+        options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], values)
+    assert options["step_id"] == "vehicle", options
+    defaults = {field["name"]:field.get("default") for field in options["data_schema"]}
+    assert defaults.get("tank_liters") == 35, defaults
     options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {
         "navn": "Fælles testbil", "mærke": "Volkswagen", "model": "up!", "brændstof": "benzin",
-        "tank_liters": 35, "location_entity": "device_tracker.visual"})
+        "tank_liters": 35, "koeretoejstype":"personbil", "location_entity": "device_tracker.visual"})
     assert options["type"] == "create_entry", options
     for _ in range(60):
         data = session.get(BASE + "/api/tiny_refuel/data", timeout=10)
@@ -150,6 +181,40 @@ def onboard():
         time.sleep(1)
     else:
         raise RuntimeError("No shared vehicle entity produced a usable state")
+    status = next(row for row in states if row.get("attributes",{}).get("friendly_name","").endswith("Katalogstatus"))
+    assert status["state"] == "ready", status
+    assert status["attributes"]["catalogs"]["personbil"]["source"] == "github", status
+    assert status["attributes"]["catalogs"]["personbil"]["models"] > 0, status
+    stations = session.get(BASE + "/api/tiny_refuel/stations", timeout=10)
+    stations.raise_for_status()
+    rows = stations.json()["stations"]
+    assert len(rows) == len(FIXTURE["stations"])+len(FIXTURE["ev"]), rows
+    tokens["testStationId"] = next(row["id"] for row in rows if row["brand"]=="Q8" and row["kind"]=="fuel")
+    # Seed fixed history only in the disposable HA directory. Recorder contracts
+    # are exercised separately; this checks the real authenticated read API/chart.
+    with sqlite3.connect(folder / ".storage/tiny_refuel/price-history.sqlite3") as db:
+        db.execute("CREATE TABLE IF NOT EXISTS prices (station TEXT NOT NULL,field TEXT NOT NULL,at TEXT NOT NULL,value REAL NOT NULL,PRIMARY KEY(station,field,at))")
+        now=datetime.now(timezone.utc)
+        for days, value in [(3,14.79),(2,14.59),(1,14.49)]:
+            db.execute("INSERT INTO prices VALUES (?,?,?,?)",(tokens["testStationId"],"p95",(now-timedelta(days=days)).isoformat(),value))
+    history=session.get(BASE + "/api/tiny_refuel/history/"+tokens["testStationId"]+"?field=p95&days=7",timeout=10)
+    history.raise_for_status()
+    assert len(history.json()["points"])==3,history.text
+    options=api(session,"/api/config/config_entries/options/flow",{"handler":result["result"]["entry_id"]})
+    options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],{"next_step_id":"map"})
+    options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],{
+        "map_enabled":True,"map_radius_km":25,"map_limit":5,"map_brands":[],
+        "map_selected_only":False,"map_location_entity":"device_tracker.visual"})
+    assert options["type"]=="create_entry",options
+    for _ in range(60):
+        states=session.get(BASE+"/api/states",timeout=10).json()
+        markers=[row for row in states if row['entity_id'].startswith('geo_location.') and row.get('attributes',{}).get('source')=='tiny_refuel']
+        if len(markers)==5:break
+        time.sleep(1)
+    else:raise RuntimeError("Native map entities were not created")
+    summary=session.get(BASE+"/api/tiny_refuel/dashboard",timeout=10);summary.raise_for_status()
+    assert summary.json()['map']['count']==5,summary.text
+    assert summary.json()['vehicles'][0]['navn']=='Fælles testbil',summary.text
     tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
@@ -203,6 +268,23 @@ def browsers(tokens):
             page.screenshot(path=str(OUT / "startup-failure.png"), full_page=True)
             raise
         page.wait_for_function("customElements.get('tiny-refuel-card-editor') !== undefined")
+        def set_theme(dark):
+            # Change HA's real default theme as well as the browser preference.
+            page.evaluate("dark => document.querySelector('home-assistant').dispatchEvent(new CustomEvent('settheme', {detail:{theme:'default',dark},bubbles:true,composed:true}))", dark)
+            page.emulate_media(color_scheme="dark" if dark else "light")
+            page.wait_for_function("dark => document.querySelector('home-assistant').hass.themes.darkMode === dark", arg=dark)
+            page.wait_for_timeout(300)
+
+        def paired_page_shots(name, full_page=False):
+            for dark in [False, True]:
+                set_theme(dark)
+                theme = "dark" if dark else "light"
+                filename = "desktop-" + theme + "-" + name
+                page.screenshot(path=str(OUT / (filename + ".png")), full_page=full_page, animations="disabled")
+                results.append(filename)
+            set_theme(False)
+
+        set_theme(False)
         # Native Lovelace entry, save, reload and reopen; no manually added resource.
         page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/lovelace/test?edit=1")
@@ -218,8 +300,7 @@ def browsers(tokens):
         tank = native_editor.locator('[data-key="bil:0:tank_liters"]')
         tank.fill("36")
         tank.dispatch_event("change")
-        page.screenshot(path=str(OUT / "native-editor-save.png"), animations="disabled")
-        results.append("native-editor-save")
+        paired_page_shots("native-editor-save")
         dialog.locator('ha-button[slot="primaryAction"]').click()
         expect(native_editor).not_to_be_visible(timeout=15000)
         page.goto(BASE + "/lovelace/test?edit=1")
@@ -253,11 +334,7 @@ def browsers(tokens):
             page.set_viewport_size({"width": width, "height": 2400})
             for dark in [False, True]:
                 theme = "dark" if dark else "light"
-                # Set actual HA theme, inherited by the card/editor.
-                page.evaluate("dark => document.querySelector('home-assistant').dispatchEvent(new CustomEvent('settheme', {detail:{theme:'default',dark},bubbles:true,composed:true}))", dark)
-                page.emulate_media(color_scheme=theme)
-                page.wait_for_function("dark => document.querySelector('home-assistant').hass.themes.darkMode === dark", arg=dark)
-                page.wait_for_timeout(300)
+                set_theme(dark)
                 prefix = label + "-" + theme
                 set_config(CONFIG)
                 expect(card).to_contain_text("Billigst")
@@ -314,7 +391,7 @@ def browsers(tokens):
                     host.append(editor); document.body.append(host); window.visualEditor=editor;
                 }""", CONFIG)
                 editor = page.locator("tiny-refuel-card-editor")
-                expect(editor).to_contain_text("895", timeout=30000)
+                expect(editor).to_contain_text("913", timeout=30000)
                 shot(prefix + "-editor-overview", editor)
                 editor.locator('[data-editor-section="providers"] > summary').click()
                 shot(prefix + "-editor-providers", editor)
@@ -335,22 +412,173 @@ def browsers(tokens):
                 extra = editor.locator('[data-editor-section="vehicle-extra-0"]')
                 extra.locator("summary").click()
                 shot(prefix + "-editor-details", editor)
+                def wait_catalog(kind):
+                    page.wait_for_function("kind => window.visualEditor._katalogUrlUsed === 'types:' + kind && window.visualEditor._katalogLoading === false", arg=kind)
+                type_select = editor.locator('[data-key="bil:0:koeretoejstype"]')
+                type_select.select_option("varebil")
+                wait_catalog("varebil")
+                expect(editor.locator('[data-key="bil:0:model"]')).to_have_value("")
+                expect(editor.locator('[data-key="bil:0:tank_liters"]')).to_have_value("")
+                model_values = editor.locator('[data-model-options="0"] option').evaluate_all("els => els.map(el => el.value)")
+                assert "Jumper" in model_values and "C3" not in model_values
+                shot(prefix + "-editor-vehicle-type", editor)
+                type_select.select_option("lastbil")
+                wait_catalog("lastbil")
+                expect(editor.locator('[data-key="bil:0:mærke"]')).to_have_value("")
+                expect(editor.locator('[data-make-options="0"] option')).to_have_count(3)
+                assert 'Citroën' not in editor.locator('[data-make-options="0"] option').evaluate_all('els => els.map(el => el.value)')
+                for category, brand, name, field, capacity in [
+                    ("lastbil", "Volvo", "FH Electric (540 kWh-konfiguration)", "batteri_kwh", "460"),
+                    ("bus", "Mercedes", "eCitaro G NMC3 (7 batteripakker)", "batteri_kwh", "686"),
+                    ("motorcykel", "Honda", "CB500 Hornet", "tank_liters", "17.1"),
+                    ("knallert", "Piaggio", "Zip 50 i-get Special Edition", "tank_liters", "6.6"),
+                    ("traktor", "John Deere", "6M 150 (205 L-konfiguration)", "tank_liters", "205"),
+                    ("andet", "Polaris", "Ranger 1000 (2025, terrænmodel)", "tank_liters", "43"),
+                ]:
+                    type_select.select_option(category)
+                    wait_catalog(category)
+                    make = editor.locator('[data-key="bil:0:mærke"]')
+                    make.fill(brand)
+                    make.dispatch_event("change")
+                    model = editor.locator('[data-key="bil:0:model"]')
+                    model.fill(name)
+                    model.dispatch_event("change")
+                    expect(editor.locator('[data-key="bil:0:' + field + '"]')).to_have_value(capacity)
+                shot(prefix + "-editor-expanded-catalog", editor)
+                type_select.select_option("personbil")
+                wait_catalog("personbil")
+                make = editor.locator('[data-key="bil:0:mærke"]')
+                make.fill("Volkswagen")
+                make.dispatch_event("change")
+                model_values = editor.locator('[data-model-options="0"] option').evaluate_all("els => els.map(el => el.value)")
+                assert "up!" in model_values and "Caddy Cargo" not in model_values
                 page.locator("#visual-editor-host").evaluate("el => el.remove()")
+                # Optional station cards keep the existing vehicle card intact.
+                page.wait_for_function("customElements.get('tiny-refuel-prices-card') !== undefined")
+                page.evaluate("""id => {
+                    const host=document.createElement('div'); host.id='station-card-test';
+                    host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
+                    document.querySelector('home-assistant').shadowRoot.append(host);window.stationTestHost=host;
+                    window.stationTestConfig={type:'custom:tiny-refuel-prices-card',fuel:'p95',limit:4};
+                    window.stationTestCard=document.createElement('tiny-refuel-prices-card');
+                    window.stationTestCard.setConfig(window.stationTestConfig);window.stationTestCard.hass=window.visualCard._hass;
+                    host.append(window.stationTestCard);
+                }""",tokens["testStationId"])
+                price_card=page.locator('tiny-refuel-prices-card')
+                expect(price_card.locator('.ts-station')).to_have_count(4)
+                price_card.locator('[data-search]').fill('Q8')
+                expect(price_card.locator('.ts-station')).to_have_count(1)
+                shot(prefix+'-station-prices',price_card)
+                price_card.locator('[data-fuel]').select_option('kwh')
+                expect(price_card.locator('.ts-price small')).to_contain_text('kWh')
+                page.evaluate("""id=>{
+                    const host=window.stationTestHost;host.replaceChildren();
+                    const card=document.createElement('tiny-refuel-station-card');
+                    card.setConfig({type:'custom:tiny-refuel-station-card',station_id:id,fuel:'all'});
+                    card.hass=window.visualCard._hass;host.append(card);
+                }""",tokens["testStationId"])
+                single=page.locator('tiny-refuel-station-card')
+                expect(single.locator('.ts-station')).to_have_count(1)
+                single.locator('.ts-history > summary').click()
+                expect(single.locator('.ts-history svg')).to_be_visible()
+                expect(single.locator('.ts-history tbody tr')).to_have_count(3)
+                shot(prefix+'-station-history',single)
+                page.evaluate("""id=>{
+                    const host=window.stationTestHost;host.replaceChildren();
+                    const card=document.createElement('tiny-refuel-favorites-card');
+                    card.setConfig({type:'custom:tiny-refuel-favorites-card',favorites:[id],fuel:'all'});
+                    card.hass=window.visualCard._hass;host.append(card);
+                }""",tokens["testStationId"])
+                favorites=page.locator('tiny-refuel-favorites-card')
+                expect(favorites.locator('.ts-station')).to_have_count(1)
+                shot(prefix+'-station-favorites',favorites)
+                page.evaluate("""id=>{
+                    const host=window.stationTestHost;host.replaceChildren();
+                    const editor=document.createElement('tiny-refuel-stations-editor');
+                    editor.setConfig({type:'custom:tiny-refuel-favorites-card',favorites:[id],fuel:'all'});
+                    editor.hass=window.visualCard._hass;
+                    editor.addEventListener('config-changed',e=>window.stationSavedConfig=e.detail.config);
+                    host.append(editor);
+                }""",tokens["testStationId"])
+                station_editor=page.locator('tiny-refuel-stations-editor')
+                expect(station_editor.locator('[data-favorite]')).to_have_count(15)
+                station_editor.locator('[data-filter]').fill('Q8')
+                expect(station_editor.locator('[data-favorite]')).to_have_count(2)
+                station_editor.locator('[data-favorite]').first.set_checked(True)
+                station_editor.locator('[data-key="title"]').fill('Mine lokale priser')
+                station_editor.locator('[data-key="title"]').dispatch_event('change')
+                assert page.evaluate("window.stationSavedConfig.title")=='Mine lokale priser'
+                shot(prefix+'-station-editor',station_editor)
+                page.locator('#station-card-test').evaluate('el=>el.remove()')
+                page.wait_for_function("customElements.get('tiny-refuel-vehicles-card') !== undefined")
+                for type_, marker in [('vehicles','.td-car'),('comparison','.td-table'),('vehicle-details','.td-kv'),('status','[data-collect]'),('charging','.ts-station')]:
+                    page.evaluate("""type=>{
+                        const host=document.createElement('div');host.id='dashboard-card-test';
+                        host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
+                        document.querySelector('home-assistant').shadowRoot.append(host);
+                        const card=document.createElement('tiny-refuel-'+type+'-card');
+                        card.setConfig({type:'custom:tiny-refuel-'+type+'-card',limit:4,sort:'price'});
+                        card.hass=window.visualCard._hass;host.append(card);window.extraTestCard=card;
+                    }""",type_)
+                    extra_card=page.locator('tiny-refuel-'+type_+'-card')
+                    expect(extra_card.locator(marker).first).to_be_visible(timeout=30000)
+                    if type_=='comparison':
+                        expect(extra_card).to_contain_text('496,65')
+                    if type_=='charging':
+                        extra_card.evaluate("el=>{el._data={...el._data,tariffs:[{brand:'OK',name:'Generel normal',kwh:3.49,current:true}]};el._render();}")
+                        expect(extra_card).to_contain_text('Generelle selskabstakster')
+                        expect(extra_card.locator('[data-fuel]')).to_have_value('kwh')
+                    assert extra_card.evaluate('el=>el.scrollWidth<=el.clientWidth+1')
+                    shot(prefix+'-dashboard-'+type_,extra_card)
+                    page.locator('#dashboard-card-test').evaluate('el=>el.remove()')
+                for kind in ['comparison','charging']:
+                    page.evaluate("""kind=>{
+                        const host=document.createElement('div');host.id='dashboard-editor-test';
+                        host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
+                        document.querySelector('home-assistant').shadowRoot.append(host);
+                        const editor=document.createElement(kind==='charging'?'tiny-refuel-charging-editor':'tiny-refuel-dashboard-editor');
+                        editor.setConfig({type:'custom:tiny-refuel-'+kind+'-card'});editor.hass=window.visualCard._hass;
+                        editor.addEventListener('config-changed',e=>{window.extraSavedConfig=e.detail.config;editor.setConfig(e.detail.config);});
+                        host.append(editor);
+                    }""",kind)
+                    extra_editor=page.locator('tiny-refuel-charging-editor' if kind=='charging' else 'tiny-refuel-dashboard-editor')
+                    if kind=='comparison':
+                        expect(extra_editor.locator('[data-key="vehicle_id"] option')).to_have_count(2)
+                    extra_editor.locator('[data-key="title"]').fill('Mit ekstra kort')
+                    extra_editor.locator('[data-key="title"]').dispatch_event('change')
+                    assert page.evaluate('window.extraSavedConfig.title')=='Mit ekstra kort'
+                    shot(prefix+'-dashboard-'+kind+'-editor',extra_editor)
+                    page.locator('#dashboard-editor-test').evaluate('el=>el.remove()')
                 assert card.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), prefix + " horizontal overflow"
+        page.goto(BASE + "/lovelace/stationer")
+        native_map=page.locator('hui-map-card')
+        expect(native_map.locator('ha-map')).to_be_visible(timeout=30000)
+        assert native_map.evaluate('el=>el._filteredMapEntities.length')==5
+        for width,label in [(1280,'desktop'),(390,'mobile')]:
+            page.set_viewport_size({'width':width,'height':1000})
+            for dark in [False,True]:
+                set_theme(dark)
+                shot(label+('-dark-' if dark else '-light-')+'native-station-map',native_map)
         page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/config/integrations/integration/tiny_refuel")
         expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)
-        page.screenshot(path=str(OUT / "integration-settings.png"), full_page=True, animations="disabled")
-        results.append("integration-settings")
+        paired_page_shots("integration-settings", full_page=True)
         page.goto(BASE + "/config/entities?config_entry=" + tokens["testEntryId"])
         expect(page.locator("ha-data-table")).to_be_visible(timeout=30000)
-        page.screenshot(path=str(OUT / "integration-entities.png"), full_page=True, animations="disabled")
-        results.append("integration-entities")
+        paired_page_shots("integration-entities", full_page=True)
         diagnostics = {"errors": errors, "rejections": rejections, "websocket_errors": websocket_errors}
         (OUT / "browser-diagnostics.json").write_text(json.dumps(diagnostics, indent=2))
         assert not errors, diagnostics
+        # Every successful gallery screenshot must have its opposite-theme twin.
+        assert len(results) == len(set(results)), "Duplicate screenshot names"
+        names = set(results)
+        for name in results:
+            assert "-light-" in name or "-dark-" in name, "Missing theme: " + name
+            twin = name.replace("-light-", "-dark-") if "-light-" in name else name.replace("-dark-", "-light-")
+            assert twin in names, "Missing theme pair: " + twin
+            assert (OUT / (twin + ".png")).is_file(), "Missing screenshot: " + twin
         browser.close()
-    return results
+    return sorted(results, key=lambda name: name.replace("-light-", "-theme-").replace("-dark-", "-theme-"))
 
 
 def main():
@@ -364,10 +592,10 @@ def main():
             environment = {**os.environ, "VIRTUAL_ENV": sys.prefix}
             process = subprocess.Popen([sys.executable, "-m", "homeassistant", "--config", str(folder)], cwd=folder, env=environment, stdout=log, stderr=subprocess.STDOUT)
             try:
-                tokens = onboard()
+                tokens = onboard(folder)
                 screenshots = browsers(tokens)
                 (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
-                    "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True}, indent=2))
+                    "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True, "themes": ["light", "dark"], "theme_pairs": len(screenshots) // 2}, indent=2))
                 gallery = ''.join(f'<figure><a href="{name}.png"><img src="{name}.png" loading="lazy"></a><figcaption>{name}</figcaption></figure>' for name in screenshots)
                 (OUT / "index.html").write_text('<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tiny Refuel screenshots</title><style>body{font:16px system-ui;margin:24px;background:#eee;color:#222}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0;padding:12px;background:white;border-radius:12px}img{max-width:100%;max-height:600px;object-fit:contain;object-position:top}figcaption{margin-top:8px}</style><h1>Tiny Refuel · Home Assistant 2026.10</h1><p>Fiktive priser og position. Klik på et billede for fuld størrelse.</p><main>' + gallery + '</main></html>')
                 print(f"PASS: {len(screenshots)} screenshots; real Home Assistant, desktop/mobile, light/dark")
@@ -386,3 +614,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

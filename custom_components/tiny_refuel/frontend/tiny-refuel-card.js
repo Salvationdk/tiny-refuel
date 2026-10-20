@@ -276,11 +276,69 @@
   function vehicleModelNote(entry, variant) {
     var ref = entry && VEHICLE_MODEL_REFERENCES.get(entry);
     if (ref && ref.failed) return "Årgang og varianter kunne ikke hentes. Du kan stadig skrive oplysningerne manuelt.";
+    if (entry && entry.capacity_status === "needs_review") return entry.specification_note || "Katalogets kapacitet mangler kildekontrol. Kontrollér tallet for dit køretøj.";
     return entry && entry.specification_note || (variant ? "Variant valgt: vælg drivmiddel og kontrollér tank/batteri for denne variant." : "");
+  }
+
+  var TYPE_CATALOG_NAMES = {personbil:"car", varebil:"van", lastbil:"truck", motorcykel:"motorcycle", knallert:"moped", bus:"bus", traktor:"tractor", andet:"other"};
+  function typedCatalogSelection(owner) {
+    // Explicit custom catalogs keep their existing URL behavior.
+    if (owner._config && owner._config.katalog_url) return [];
+    var cars = typeof owner._cars === "function" ? owner._cars() : ((owner._config && owner._config.biler) || owner._sharedVehicles || []);
+    return Array.from(new Set(cars.map(function (car) {
+      var type = String(car.koeretoejstype || "").toLowerCase();
+      return type === "varevogn" ? "varebil" : type;
+    }).filter(function (type) { return !!TYPE_CATALOG_NAMES[type]; }))).sort();
+  }
+  function mergeTypedCatalogs(catalogs, logos) {
+    var merged = Object.assign({}, logos || {}, {brands:[], catalog_downloads:[]});
+    var makes = new Map();
+    catalogs.forEach(function (catalog) {
+      validateVehicleCatalog(catalog);
+      merged.catalog_downloads.push({type:catalog.vehicle_type, download:catalog._download});
+      catalog.brands.forEach(function (brand) {
+        var key = catalogKey(brand.mærke), target = makes.get(key);
+        if (!target) { target = Object.assign({}, brand, {modeller:[]}); makes.set(key, target); merged.brands.push(target); }
+        brand.modeller.forEach(function (model) {
+          var previous = target.modeller.find(function (row) { return catalogKey(row.model) === catalogKey(model.model); });
+          if (previous) previous.vehicle_types = Array.from(new Set((previous.vehicle_types || []).concat(model.vehicle_types || [])));
+          else target.modeller.push(Object.assign({}, model));
+        });
+      });
+    });
+    return merged;
+  }
+  function loadTypedVehicleCatalog(owner, types) {
+    if (!owner._hass || typeof owner._hass.callApi !== "function") return false;
+    var key = "types:" + types.join(",");
+    if (owner._katalogUrlUsed === key && (owner._katalog || owner._katalogLoading || owner._katalogFailed)) return true;
+    owner._katalogUrlUsed = key;
+    owner._katalogLoading = true;
+    owner._katalogFailed = false;
+    owner._katalog = null;
+    if (!VEHICLE_CATALOG_REQUESTS[key]) {
+      var downloads = types.map(function (type) { return owner._hass.callApi("GET", "tiny_refuel/catalog/" + type); });
+      var logos = VEHICLE_CATALOG_REQUESTS["logos"];
+      if (!logos) logos = VEHICLE_CATALOG_REQUESTS["logos"] = fetch("/tiny_refuel/static/vehicle-logos.json").then(function(r) {
+        if (!r.ok) throw new Error("Logo catalog unavailable"); return r.json();
+      }).catch(function () { delete VEHICLE_CATALOG_REQUESTS["logos"]; return {}; });
+      VEHICLE_CATALOG_REQUESTS[key] = Promise.all([Promise.all(downloads), logos]).then(function (parts) { return mergeTypedCatalogs(parts[0], parts[1]); });
+    }
+    VEHICLE_CATALOG_REQUESTS[key].then(function (catalog) {
+      if (owner._katalogUrlUsed !== key) return;
+      owner._katalog = catalog; owner._katalogLoading = false; owner._render();
+    }).catch(function () {
+      delete VEHICLE_CATALOG_REQUESTS[key];
+      if (owner._katalogUrlUsed !== key) return;
+      owner._katalogLoading = false; owner._katalogFailed = true; owner._render();
+    });
+    return true;
   }
 
   function loadVehicleCatalog(owner) {
     if (typeof fetch !== "function") return;
+    var types = typedCatalogSelection(owner);
+    if (types.length && loadTypedVehicleCatalog(owner, types)) return;
     var url = vehicleCatalogUrl(owner._config);
     if (owner._katalogUrlUsed === url && (owner._katalog || owner._katalogLoading || owner._katalogFailed)) return;
     owner._katalogUrlUsed = url;
@@ -1758,6 +1816,7 @@
 
   }
 
+  TinyRefuelCard.stationTheme = Object.freeze({css:CSS, editorCss:ECSS, brands:BRANDS, apply:vehicleLogoTheme});
   customElements.define("tiny-refuel-card", TinyRefuelCard);
   window.TinyRefuelCard = TinyRefuelCard;
   window.customCards = window.customCards || [];
@@ -1815,7 +1874,7 @@
         var index = Number(match[1]), car = (self._config.biler || [])[index] || {};
         if (match[2] === "mærke") {
           var makes = self.querySelector('[data-make-options="' + index + '"]');
-          if (makes) makes.innerHTML = self._makeSuggestions(target.value).html;
+          if (makes) makes.innerHTML = self._makeSuggestions(target.value, car.koeretoejstype).html;
           return;
         }
         if (match[2] === "variant") {
@@ -1823,7 +1882,7 @@
           if (variants) variants.innerHTML = self._variantOptions(car.mærke, car.model, target.value, car.aargang);
           return;
         }
-        var suggestions = self._modelSuggestions(car.mærke, target.value);
+        var suggestions = self._modelSuggestions(car.mærke, target.value, car.koeretoejstype);
         var list = self.querySelector('[data-model-options="' + index + '"]');
         if (list) list.innerHTML = suggestions.html;
         var count = self.querySelector('[data-model-count="' + index + '"]');
@@ -1898,6 +1957,21 @@
             var bv = parseFloat(t.value);
             if (isFinite(bv) && bv > 0) biler[bi][field] = bv;
             else delete biler[bi][field];
+          } else if (field === "koeretoejstype") {
+            var type = self._vehicleType(t.value);
+            if (type) biler[bi].koeretoejstype = type;
+            else delete biler[bi].koeretoejstype;
+            var known = self._katalogFind(biler[bi].mærke, biler[bi].model);
+            var index = catalogIndex(self._katalog);
+            var brand = index && index.makes.get(catalogKey(biler[bi].mærke));
+            var incompatibleBrand = type && brand && (!biler[bi].model || known) && !self._katalogModels(biler[bi].mærke, type).length;
+            if (incompatibleBrand || (known && !self._matchesVehicleType(known, type))) {
+              if (incompatibleBrand) delete biler[bi].mærke;
+              delete biler[bi].model;
+              clearSelection();
+              if (autoName) delete biler[bi].navn;
+            }
+            needRender = true;
           } else if (field === "mærke") {
             var mk = String(t.value || "").trim();
             var foundMake = catalogIndex(self._katalog);
@@ -1915,6 +1989,7 @@
           } else if (field === "model") {
             var md = String(t.value || "").trim();
             var entry = md ? self._katalogFind(biler[bi].mærke, md) : null;
+            if (entry && !self._matchesVehicleType(entry, biler[bi].koeretoejstype)) entry = null;
             if (entry) md = entry.model;
             var oldEntry = self._katalogFind(biler[bi].mærke, biler[bi].model);
             var modelChanged = entry && oldEntry ? entry !== oldEntry : catalogKey(md) !== catalogKey(biler[bi].model);
@@ -2075,20 +2150,36 @@
       loadVehicleCatalog(this);
     }
 
+    _vehicleType(value) {
+      var type = catalogKey(value);
+      return type === "varevogn" ? "varebil" : type;
+    }
+
+    _matchesVehicleType(entry, type) {
+      type = this._vehicleType(type);
+      if (!type) return true;
+      var values = entry.vehicle_types || entry.vehicle_type || entry.koeretoejstype || [];
+      if (!Array.isArray(values)) values = [values];
+      return values.some(function (value) { return this._vehicleType(value) === type; }, this);
+    }
+
     _katalogBrands() {
       if (this._katalog && Array.isArray(this._katalog.brands)) return this._katalog.brands;
       return [];
     }
 
-    _katalogModels(maerke) {
+    _katalogModels(maerke, type) {
       var index = catalogIndex(this._katalog);
       var brand = index && index.makes.get(catalogKey(maerke));
-      return brand && brand.modeller || [];
+      if (!type) return brand && brand.modeller || [];
+      return (brand && brand.modeller || []).filter(function (entry) { return this._matchesVehicleType(entry, type); }, this);
     }
 
-    _makeSuggestions(query) {
+    _makeSuggestions(query, type) {
+      var self = this;
       var words = catalogKey(query).split(/\s+/).filter(Boolean);
       var matches = this._katalogBrands().filter(function (brand) {
+        if (type && !self._katalogModels(brand.mærke, type).length) return false;
         var name = catalogKey([brand.mærke].concat(brand.source_names || []).join(" "));
         return words.every(function (word) { return name.indexOf(word) !== -1; });
       });
@@ -2104,10 +2195,10 @@
       }).map(function (year) { return '<option value="' + esc(year) + '"></option>'; }).join("");
     }
 
-    _modelSuggestions(make, query) {
+    _modelSuggestions(make, query, type) {
       var normalize = function (value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/æ/g, "ae").replace(/ø/g, "o"); };
       var words = normalize(query).trim().split(/\s+/).filter(Boolean);
-      var matches = this._katalogModels(make).filter(function (entry) {
+      var matches = this._katalogModels(make, type).filter(function (entry) {
         var name = normalize([entry.model].concat(entry.source_names || []).join(" "));
         return words.every(function (word) { return name.indexOf(word) !== -1; });
       });
@@ -2306,16 +2397,19 @@
           '<span data-model-logo="' + bi2 + '">' + vehicleLogoHtml(this._katalog, bb, "trfe-model-logo", true) + '</span>';
         html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
           esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
-        html += '<div class="trfe-hint">Køretøjstype (valgfrit, vælges manuelt)</div><select data-key="bil:' + bi2 + ':koeretoejstype">';
+        html += '<div class="trfe-hint">Køretøjstype (henter kun det valgte katalog)</div><select data-key="bil:' + bi2 + ':koeretoejstype">';
+        var selectedVehicleType = this._vehicleType(bb.koeretoejstype);
         [["", "Ikke valgt"], ["personbil", "Personbil"], ["varebil", "Varevogn"], ["lastbil", "Lastbil"], ["bus", "Bus"], ["motorcykel", "Motorcykel"], ["knallert", "Knallert"], ["traktor", "Traktor"], ["andet", "Andet motorkøretøj"]].forEach(function (type) {
-          html += '<option value="' + type[0] + '"' + ((bb.koeretoejstype || "") === type[0] ? " selected" : "") + '>' + type[1] + '</option>';
+          html += '<option value="' + type[0] + '"' + (selectedVehicleType === type[0] ? " selected" : "") + '>' + type[1] + '</option>';
         });
-        html += '</select><div class="trfe-hint">Mærke (søg — eller skriv dit eget)</div>' +
+        html += '</select>';
+        if (selectedVehicleType && !this._makeSuggestions('', selectedVehicleType).total) html += '<div class="trfe-muted">Kataloget har endnu ingen modeller til denne type. Skriv selv mærke og model, eller brug et eget katalog med typeoplysninger.</div>';
+        html += '<div class="trfe-hint">Mærke (søg — eller skriv dit eget)</div>' +
           '<input type="text" data-key="bil:' + bi2 + ':mærke" list="trf-makes-' + bi2 + '" value="' + esc(bb.mærke || "") + '" placeholder="Skriv et mærke">' +
-          '<datalist id="trf-makes-' + bi2 + '" data-make-options="' + bi2 + '">' + this._makeSuggestions(bb.mærke).html + '</datalist>';
-        var katModels = bb.mærke ? this._katalogModels(bb.mærke) : [];
+          '<datalist id="trf-makes-' + bi2 + '" data-make-options="' + bi2 + '">' + this._makeSuggestions(bb.mærke, bb.koeretoejstype).html + '</datalist>';
+        var katModels = bb.mærke ? this._katalogModels(bb.mærke, bb.koeretoejstype) : [];
         var dlmId = "trf-models-" + bi2;
-        var suggestions = this._modelSuggestions(bb.mærke, bb.model);
+        var suggestions = this._modelSuggestions(bb.mærke, bb.model, bb.koeretoejstype);
         var dlm = '<datalist id="' + dlmId + '" data-model-options="' + bi2 + '">' + suggestions.html + '</datalist>';
         html += '<div class="trfe-hint">Model (søg i fabrikantens modeller — eller skriv selv)</div>' +
           '<input type="text" list="' + dlmId + '" data-key="bil:' + bi2 + ':model" value="' +
@@ -2423,4 +2517,5 @@
   customElements.define("tiny-refuel-card-editor", TinyRefuelCardEditor);
   window.TinyRefuelCardEditor = TinyRefuelCardEditor;
 }(window);
+
 

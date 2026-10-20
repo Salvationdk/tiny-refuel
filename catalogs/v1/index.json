@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "version": "2026-10-20.1",
+  "catalogs": {
+    "personbil": {
+      "file": "car.json",
+      "sha256": "11ccad75c4fc51f5978222e047d239333a736e205de6f7dc4792a8ffed5b1f22",
+      "size_bytes": 5571784,
+      "models": 11945
+    },
+    "varebil": {
+      "file": "van.json",
+      "sha256": "c4b0332ef2ff8bd7d764d79dda3d945c294a3c89998439d442fc8b7f5e008d01",
+      "size_bytes": 2028715,
+      "models": 3757
+    },
+    "lastbil": {
+      "file": "truck.json",
+      "sha256": "f0cb4b539b4405ce415f385feba9eb900b660be6d26377eb9cc3b8e5e6e39692",
+      "size_bytes": 947858,
+      "models": 2364
+    },
+    "motorcykel": {
+      "file": "motorcycle.json",
+      "sha256": "10a2e0a2fbe1bfab936ed37fc2e05f5b0088086499ddb7d7b8e4d255f52fb4e7",
+      "size_bytes": 2102943,
+      "models": 5131
+    },
+    "knallert": {
+      "file": "moped.json",
+      "sha256": "07b8a02148931582c04522f29cd53b62d971e6aab2e830017104b154935d4cd6",
+      "size_bytes": 555729,
+      "models": 1480
+    },
+    "bus": {
+      "file": "bus.json",
+      "sha256": "0b38dcb8f7b6f0f10eac15142d17e18e6d7290a23273a416e20ff7028c11e268",
+      "size_bytes": 711052,
+      "models": 1405
+    },
+    "traktor": {
+      "file": "tractor.json",
+      "sha256": "11129a82f9a55983950e5a1cd435e156b499c6c2228e776faf3d029fe8bad72d",
+      "size_bytes": 1930198,
+      "models": 5352
+    },
+    "andet": {
+      "file": "other.json",
+      "sha256": "85574afabd49a50b883c42802a5ce88065a7dc17dcb8a44abad20becc94a3930",
+      "size_bytes": 333008,
+      "models": 900
+    }
+  }
+}

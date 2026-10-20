@@ -30,6 +30,8 @@ def device_info():
 async def async_setup_entry(hass, entry, async_add_entities):
     manager = entry.runtime_data
     entities = [RefuelSensor(manager, key) for key in BASE]
+    catalog_store=hass.data.get(DOMAIN,{}).get("catalogs") if hasattr(hass,"data") else None
+    if catalog_store is not None:entities.append(RefuelCatalogStatusSensor(catalog_store))
     # Optional provider sensors remain available without cluttering a default install.
     for brand in BRANDS:
         fields = ("kwh",) if brand in ("Clever", "E.ON", "IONITY") else tuple(FUELS)
@@ -246,3 +248,30 @@ class RefuelTariffSensor(RefuelSensor):
                 "datagrundlag": "Generel selskabstakst eller fra-pris; ikke en lokal stationspris. Abonnement og ekstra gebyrer er ikke medregnet.",
                 "takster": [{"navn": r.get("name"), "kr_kwh": r["kwh"], "gemte_data": bool(r.get("stale")),
                              "hentet": r.get("source_updated")} for r in self._tariffs()]}
+
+
+
+class RefuelCatalogStatusSensor(SensorEntity):
+    """One diagnostic entity; catalogs themselves are not sensor states."""
+    _attr_should_poll=False
+    _attr_has_entity_name=True
+    _attr_name="Katalogstatus"
+    _attr_icon="mdi:book-search-outline"
+    _attr_entity_category=EntityCategory.DIAGNOSTIC
+    _attr_unique_id=DOMAIN+"_catalog_status"
+    _attr_device_info=device_info()
+
+    def __init__(self,store):self.store=store
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(self.store.subscribe(self.async_write_ha_state))
+
+    @property
+    def native_value(self):
+        data=self.store.snapshot()
+        if not data['loaded_types']:return 'not_loaded'
+        return 'cached' if data['stale_types'] else 'ready'
+
+    @property
+    def extra_state_attributes(self):return self.store.snapshot()

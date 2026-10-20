@@ -20,20 +20,24 @@
         "title": "Tiny Refuel",
         "menu_options": {
           "settings": "Update interval",
-          "vehicle": "Add shared vehicle",
+          "vehicle": "Add manually",
           "edit_vehicle": "Edit shared vehicle",
-          "remove_vehicle": "Remove shared vehicle"
+          "remove_vehicle": "Remove shared vehicle",
+          "catalog_vehicle": "Add from catalog",
+          "map": "Stations on the HA map"
         }
       },
       "settings": {
         "title": "Update interval",
         "data": {
-          "scan_hours": "Hours between collections"
-        }
+          "scan_hours": "Hours between collections",
+          "history_days": "Price history retention (days, 0 disables)"
+        },
+        "description": "Price changes are stored locally. One earlier price per station and fuel is retained as a baseline. History starts when enabled."
       },
       "vehicle": {
         "title": "Shared vehicle",
-        "description": "Shared vehicles are used by vehicle sensors and cards without their own vehicles. Enter capacities verified for your vehicle.",
+        "description": "Shared vehicles are used by vehicle sensors and cards without their own vehicles. Catalog capacities are suggestions; check the year and variant before saving.",
         "data": {
           "navn": "Name",
           "mærke": "Make",
@@ -42,7 +46,10 @@
           "tank_liters": "Tank (L)",
           "batteri_kwh": "Battery (kWh)",
           "location_entity": "Position entity",
-          "notify_service": "Notification service"
+          "notify_service": "Notification service",
+          "koeretoejstype": "Vehicle type",
+          "variant": "Variant",
+          "aargang": "Model year"
         }
       },
       "edit_vehicle": {
@@ -57,10 +64,56 @@
         "data": {
           "vehicle_id": "Vehicle"
         }
+      },
+      "catalog_vehicle": {
+        "title": "Vehicle type",
+        "data": {
+          "koeretoejstype": "Vehicle type"
+        }
+      },
+      "catalog_make": {
+        "title": "Make",
+        "data": {
+          "mærke": "Make"
+        }
+      },
+      "catalog_model": {
+        "title": "Model",
+        "data": {
+          "model": "Model"
+        }
+      },
+      "catalog_variant": {
+        "title": "Variant",
+        "data": {
+          "variant_choice": "Variant"
+        },
+        "description": "Select the variant matching your year and powertrain, or enter the capacity manually."
+      },
+      "map": {
+        "title": "Stations on the map",
+        "description": "Opt in to physical station markers. Without a position entity the Home Assistant home location is used. Distances are straight-line distances. No map entities are created when disabled.",
+        "data": {
+          "map_enabled": "Enable station markers",
+          "map_location_entity": "Position entity (optional)",
+          "map_radius_km": "Radius (km)",
+          "map_limit": "Maximum markers (1–250)",
+          "map_brands": "Companies (empty means all)",
+          "map_selected_only": "Choose specific stations"
+        }
+      },
+      "map_stations": {
+        "title": "Choose stations",
+        "description": "Up to 1000 matching stations are shown. Adjust the area or companies if needed. Your radius and marker limit still apply.",
+        "data": {
+          "map_station_ids": "Stations"
+        }
       }
     },
     "abort": {
-      "no_vehicles": "No shared vehicles configured."
+      "no_vehicles": "No shared vehicles configured.",
+      "catalog_unavailable": "Catalog unavailable. Try again or add the vehicle manually.",
+      "stations_unavailable": "No matching stations. Load station data or choose a different area."
     },
     "error": {
       "required_name": "Enter a name.",

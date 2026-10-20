@@ -162,6 +162,22 @@ class DmrCatalogTests(unittest.TestCase):
         self.assertEqual(model['fuel_types'], ['Diesel'])
         self.assertEqual(model['variants'], [{'name': '1.6 TDI', 'fuel_types': ['Diesel'], 'model_years': ['2021']}])
         self.assertFalse(report['technical_profiles_included'])
+        self.assertEqual(model['vehicle_types'], ['personbil'])
+        self.assertEqual(report['unique_models_by_type']['personbil'], 1)
+
+    def test_unique_categories_are_model_counts_not_record_counts(self):
+        payload = xml(record(model='One', kind='1'), record(model='One', kind='1'),
+                      record(model='One', kind='3'), record(model='Truck', kind='4'),
+                      record(model='Bike', kind='7'), record(model='Moped', kind='16'),
+                      record(model='Moped', kind='17'), record(model='Tractor', kind='8'),
+                      record(model='Bus', kind='2'), record(model='Heavy', kind='91'))
+        result, report = dmr.build_catalog(BytesIO(payload), {'brands': []},
+                                          '2026-10-07', 'test.zip', include_profiles=False)
+        self.assertEqual(report['unique_models_by_type'], dict.fromkeys(
+            ['personbil', 'varebil', 'lastbil', 'bus', 'motorcykel', 'knallert', 'traktor', 'andet'], 1))
+        self.assertEqual(report['models'], 7)
+        self.assertEqual(report['processed_records'], 10)
+        self.assertTrue(all('dmr_profiles' not in m for b in result['brands'] for m in b['modeller']))
 
     def test_download_uses_latest_archive_and_keeps_old_file_on_interrupted_download(self):
         with tempfile.TemporaryDirectory() as folder:

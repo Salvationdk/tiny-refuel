@@ -1,0 +1,356 @@
+{
+  "note": "Manufacturer facts for explicitly scoped configurations. No blanket capacity claims for all years, battery packages, registrations or markets.",
+  "models": [
+    {
+      "make": "Mercedes",
+      "model": "eActros 600 (3 batteripakker)",
+      "vehicle_types": [
+        "lastbil"
+      ],
+      "brændstof": "el",
+      "batteri_kwh": 621,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.mercedes-benz-trucks.com/dk/da/trucks/eactros.html",
+      "capacity_source_urls": [
+        "https://www.mercedes-benz-trucks.com/dk/da/trucks/eactros.html"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Tre LFP-pakker, samlet nominel kapacitet 621 kWh; ikke dokumenteret som brugbar energi.",
+      "specification_note": "Tre LFP-pakker, samlet nominel kapacitet 621 kWh; ikke dokumenteret som brugbar energi. Kontrollér den konkrete udgave før beregning.",
+      "battery_basis": "unspecified"
+    },
+    {
+      "make": "Volvo",
+      "model": "FH Electric (540 kWh-konfiguration)",
+      "vehicle_types": [
+        "lastbil"
+      ],
+      "brændstof": "el",
+      "batteri_kwh": 460,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.volvotrucks.dk/da-dk/trucks/electric/volvo-fh-electric.html",
+      "capacity_source_urls": [
+        "https://www.volvotrucks.dk/da-dk/trucks/electric/volvo-fh-electric.html"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Konfiguration med 540 kWh installeret energi og op til 460 kWh brugbar energi; mindre batterikonfigurationer er ikke dækket.",
+      "specification_note": "Konfiguration med 540 kWh installeret energi og op til 460 kWh brugbar energi; mindre batterikonfigurationer er ikke dækket. Kontrollér den konkrete udgave før beregning.",
+      "battery_basis": "usable"
+    },
+    {
+      "make": "Scania",
+      "model": "45 R (624 kWh, regional 2022)",
+      "vehicle_types": [
+        "lastbil"
+      ],
+      "brændstof": "el",
+      "batteri_kwh": 468,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.scania.com/content/dam/group/press-and-media/exhibitions---events/iaa-2022/english/Brochure_Battery_Electric_Solutions_new.pdf",
+      "capacity_source_urls": [
+        "https://www.scania.com/content/dam/group/press-and-media/exhibitions---events/iaa-2022/english/Brochure_Battery_Electric_Solutions_new.pdf"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Regional batterielektrisk 45 R fra IAA 2022: 624 kWh installeret, 468 kWh brugbart ved producentens 75 % SOC-vindue.",
+      "specification_note": "Regional batterielektrisk 45 R fra IAA 2022: 624 kWh installeret, 468 kWh brugbart ved producentens 75 % SOC-vindue. Kontrollér den konkrete udgave før beregning.",
+      "battery_basis": "usable",
+      "model_years": [
+        2022
+      ]
+    },
+    {
+      "make": "Mercedes",
+      "model": "eCitaro NMC3 (6 batteripakker)",
+      "vehicle_types": [
+        "bus"
+      ],
+      "brændstof": "el",
+      "batteri_kwh": 588,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.daimlertruck.com/en/newsroom/pressrelease/fully-electric-mercedes-benz-ecitaro-with-innovative-technologies-new-nmc-3-high-performance-batteries-and-new-thermal-management-increase-capacity-extend-range-and-reduce-energy-consumption-52214919",
+      "capacity_source_urls": [
+        "https://www.daimlertruck.com/en/newsroom/pressrelease/fully-electric-mercedes-benz-ecitaro-with-innovative-technologies-new-nmc-3-high-performance-batteries-and-new-thermal-management-increase-capacity-extend-range-and-reduce-energy-consumption-52214919"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "NMC3-udgave med seks pakker à 98 kWh nominel energi; 588 kWh er samlet nominel kapacitet, ikke dokumenteret brugbar energi.",
+      "specification_note": "NMC3-udgave med seks pakker à 98 kWh nominel energi; 588 kWh er samlet nominel kapacitet, ikke dokumenteret brugbar energi. Kontrollér den konkrete udgave før beregning.",
+      "battery_basis": "unspecified"
+    },
+    {
+      "make": "Mercedes",
+      "model": "eCitaro G NMC3 (7 batteripakker)",
+      "vehicle_types": [
+        "bus"
+      ],
+      "brændstof": "el",
+      "batteri_kwh": 686,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.daimlertruck.com/en/newsroom/pressrelease/fully-electric-mercedes-benz-ecitaro-with-innovative-technologies-new-nmc-3-high-performance-batteries-and-new-thermal-management-increase-capacity-extend-range-and-reduce-energy-consumption-52214919",
+      "capacity_source_urls": [
+        "https://www.daimlertruck.com/en/newsroom/pressrelease/fully-electric-mercedes-benz-ecitaro-with-innovative-technologies-new-nmc-3-high-performance-batteries-and-new-thermal-management-increase-capacity-extend-range-and-reduce-energy-consumption-52214919"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "NMC3-ledbus med syv pakker à 98 kWh nominel energi; 686 kWh er samlet nominel kapacitet, ikke dokumenteret brugbar energi.",
+      "specification_note": "NMC3-ledbus med syv pakker à 98 kWh nominel energi; 686 kWh er samlet nominel kapacitet, ikke dokumenteret brugbar energi. Kontrollér den konkrete udgave før beregning.",
+      "battery_basis": "unspecified"
+    },
+    {
+      "make": "Mercedes",
+      "model": "eCitaro K (6 batteripakker)",
+      "vehicle_types": [
+        "bus"
+      ],
+      "brændstof": "el",
+      "batteri_kwh": 588,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.mercedes-benz-bus.com/dk/da/news-and-stories/the-ecitaro-family-at-a-glance.html",
+      "capacity_source_urls": [
+        "https://www.mercedes-benz-bus.com/dk/da/news-and-stories/the-ecitaro-family-at-a-glance.html"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Kort eCitaro K med seks batteripakker og samlet oplyst kapacitet 588 kWh; kilden angiver ikke brugbar energi.",
+      "specification_note": "Kort eCitaro K med seks batteripakker og samlet oplyst kapacitet 588 kWh; kilden angiver ikke brugbar energi. Kontrollér den konkrete udgave før beregning.",
+      "battery_basis": "unspecified"
+    },
+    {
+      "make": "Honda",
+      "model": "CB500 Hornet",
+      "vehicle_types": [
+        "motorcykel"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 17.1,
+      "requires_fuel_selection": false,
+      "source_url": "https://hondanews.eu/eu/en/motorcycles/media/pressreleases/452842/24ym-honda-cb500-hornet",
+      "capacity_source_urls": [
+        "https://hondanews.eu/eu/en/motorcycles/media/pressreleases/452842/24ym-honda-cb500-hornet"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "EU-modelår 2024; tankkapacitet inklusive reserve.",
+      "specification_note": "EU-modelår 2024; tankkapacitet inklusive reserve. Kontrollér den konkrete udgave før beregning.",
+      "model_years": [
+        2024
+      ]
+    },
+    {
+      "make": "Yamaha",
+      "model": "MT-07 35 kW",
+      "vehicle_types": [
+        "motorcykel"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 14,
+      "requires_fuel_selection": false,
+      "source_url": "https://cdn2.yamaha-motor.eu/prod/product-assets/2025/MT07A-35/Factsheets/2025-MT07A-35_da-DK.pdf",
+      "capacity_source_urls": [
+        "https://cdn2.yamaha-motor.eu/prod/product-assets/2025/MT07A-35/Factsheets/2025-MT07A-35_da-DK.pdf"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Dansk producentdatablad for MT-07 35 kW, modelår 2025; tankkapacitet 14 liter.",
+      "specification_note": "Dansk producentdatablad for MT-07 35 kW, modelår 2025; tankkapacitet 14 liter. Kontrollér den konkrete udgave før beregning.",
+      "model_years": [
+        2025
+      ]
+    },
+    {
+      "make": "Kawasaki",
+      "model": "Z650",
+      "vehicle_types": [
+        "motorcykel"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 15,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.kawasaki.eu/en/Motorcycles/Supernaked/Z650_2026.html",
+      "capacity_source_urls": [
+        "https://www.kawasaki.eu/en/Motorcycles/Supernaked/Z650_2026.html"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Europæisk Z650, modelår 2026; tankkapacitet 15 liter.",
+      "specification_note": "Europæisk Z650, modelår 2026; tankkapacitet 15 liter. Kontrollér den konkrete udgave før beregning.",
+      "model_years": [
+        2026
+      ]
+    },
+    {
+      "make": "Piaggio",
+      "model": "Liberty 50 Euro 5",
+      "vehicle_types": [
+        "knallert"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 6,
+      "requires_fuel_selection": false,
+      "source_url": "https://wlassets.piaggio.com/wlassets/piaggio/master/tech_spec/Liberty/EU5/EN_Liberty_50_eu5/original/EN_Liberty_50_eu5.pdf",
+      "capacity_source_urls": [
+        "https://wlassets.piaggio.com/wlassets/piaggio/master/tech_spec/Liberty/EU5/EN_Liberty_50_eu5/original/EN_Liberty_50_eu5.pdf"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "50 cc Euro 5 i-get; 6 liter inklusive reserve. Kategorien angiver modelfamilie, ikke dansk 30/45-godkendelse.",
+      "specification_note": "50 cc Euro 5 i-get; 6 liter inklusive reserve. Kategorien angiver modelfamilie, ikke dansk 30/45-godkendelse. Kontrollér den konkrete udgave før beregning."
+    },
+    {
+      "make": "Piaggio",
+      "model": "Zip 50 i-get Special Edition",
+      "vehicle_types": [
+        "knallert"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 6.6,
+      "requires_fuel_selection": false,
+      "source_url": "https://wlassets.piaggio.com/wlassets/piaggio/gb/tech_spec/2023/Piaggio_ZIP_SE_50_tec_spec_EN/original/Piaggio_ZIP_SE_50_tec_spec_EN.pdf",
+      "capacity_source_urls": [
+        "https://wlassets.piaggio.com/wlassets/piaggio/gb/tech_spec/2023/Piaggio_ZIP_SE_50_tec_spec_EN/original/Piaggio_ZIP_SE_50_tec_spec_EN.pdf"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Britisk producentdatablad 2023 for 50 cc Euro 5 i-get Special Edition; 6,6 liter. Ikke dokumentation for dansk 30/45-godkendelse.",
+      "specification_note": "Britisk producentdatablad 2023 for 50 cc Euro 5 i-get Special Edition; 6,6 liter. Ikke dokumentation for dansk 30/45-godkendelse. Kontrollér den konkrete udgave før beregning."
+    },
+    {
+      "make": "Vespa",
+      "model": "Primavera 50 4T3V Euro 5",
+      "vehicle_types": [
+        "knallert"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 8,
+      "requires_fuel_selection": false,
+      "source_url": "https://wlassets.vespa.com/wlassets/vespa/gb/tech_spec/PRIMAVERA_50_4T3V/original/PRIMAVERA_50_4T3V.pdf",
+      "capacity_source_urls": [
+        "https://wlassets.vespa.com/wlassets/vespa/gb/tech_spec/PRIMAVERA_50_4T3V/original/PRIMAVERA_50_4T3V.pdf"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Britisk producentdatablad for 50 cc 4T3V Euro 5; 8 liter. Ikke dokumentation for dansk 30/45-godkendelse.",
+      "specification_note": "Britisk producentdatablad for 50 cc 4T3V Euro 5; 8 liter. Ikke dokumentation for dansk 30/45-godkendelse. Kontrollér den konkrete udgave før beregning."
+    },
+    {
+      "make": "Kubota",
+      "model": "L1-382",
+      "vehicle_types": [
+        "traktor"
+      ],
+      "brændstof": "diesel",
+      "tank_l": 42,
+      "requires_fuel_selection": false,
+      "source_url": "https://ke.kubota-eu.com/groundcare/series/l1-382/",
+      "capacity_source_urls": [
+        "https://ke.kubota-eu.com/groundcare/series/l1-382/"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Europæisk L1-382 Stage V; dieseltank 42 liter, ikke motorolie eller hydraulikolie.",
+      "specification_note": "Europæisk L1-382 Stage V; dieseltank 42 liter, ikke motorolie eller hydraulikolie. Kontrollér den konkrete udgave før beregning."
+    },
+    {
+      "make": "John Deere",
+      "model": "6M 125 (175 L-konfiguration)",
+      "vehicle_types": [
+        "traktor"
+      ],
+      "brændstof": "diesel",
+      "tank_l": 175,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.deere.ca/en/tractors/utility-tractors/6-family-utility-tractors/6m-125-tractor/",
+      "capacity_source_urls": [
+        "https://www.deere.ca/en/tractors/utility-tractors/6-family-utility-tractors/6m-125-tractor/"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Canadisk producentspecifikation for 6M 125 med 175 liters dieseltank; AdBlue/DEF er en separat tank.",
+      "specification_note": "Canadisk producentspecifikation for 6M 125 med 175 liters dieseltank; AdBlue/DEF er en separat tank. Kontrollér den konkrete udgave før beregning."
+    },
+    {
+      "make": "John Deere",
+      "model": "6M 150 (205 L-konfiguration)",
+      "vehicle_types": [
+        "traktor"
+      ],
+      "brændstof": "diesel",
+      "tank_l": 205,
+      "requires_fuel_selection": false,
+      "source_url": "https://www.deere.ca/en/tractors/utility-tractors/6-family-utility-tractors/6m-150-tractor/",
+      "capacity_source_urls": [
+        "https://www.deere.ca/en/tractors/utility-tractors/6-family-utility-tractors/6m-150-tractor/"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "Canadisk producentspecifikation for 6M 150 med 205 liters dieseltank; AdBlue/DEF er en separat tank.",
+      "specification_note": "Canadisk producentspecifikation for 6M 150 med 205 liters dieseltank; AdBlue/DEF er en separat tank. Kontrollér den konkrete udgave før beregning."
+    },
+    {
+      "make": "Polaris",
+      "model": "Sportsman 570 (2025, terrænmodel)",
+      "vehicle_types": [
+        "andet"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 17,
+      "requires_fuel_selection": false,
+      "source_url": "https://publications.polaris.com/owner/owners-manuals/9941679_R02/0000934919.XML.xml/$/0000946043",
+      "capacity_source_urls": [
+        "https://publications.polaris.com/owner/owners-manuals/9941679_R02/0000934919.XML.xml/$/0000946043"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "2025-manual 9941679: Sportsman 570/570 EPS terrænmodel, 17 liter. Traktorregistrerede eller andre markedsudgaver er ikke dækket.",
+      "specification_note": "2025-manual 9941679: Sportsman 570/570 EPS terrænmodel, 17 liter. Traktorregistrerede eller andre markedsudgaver er ikke dækket. Kontrollér den konkrete udgave før beregning.",
+      "model_years": [
+        2025
+      ]
+    },
+    {
+      "make": "Polaris",
+      "model": "Sportsman 450 H.O. Utility (2025, terrænmodel)",
+      "vehicle_types": [
+        "andet"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 17,
+      "requires_fuel_selection": false,
+      "source_url": "https://publications.polaris.com/owner/owners-manuals/9941697_R02/0000934847.XML.xml/$/0000948988",
+      "capacity_source_urls": [
+        "https://publications.polaris.com/owner/owners-manuals/9941697_R02/0000934847.XML.xml/$/0000948988"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "2025-manual 9941697: Sportsman 450 H.O. Utility terrænmodel, 17 liter. Traktorregistrerede eller andre markedsudgaver er ikke dækket.",
+      "specification_note": "2025-manual 9941697: Sportsman 450 H.O. Utility terrænmodel, 17 liter. Traktorregistrerede eller andre markedsudgaver er ikke dækket. Kontrollér den konkrete udgave før beregning.",
+      "model_years": [
+        2025
+      ]
+    },
+    {
+      "make": "Polaris",
+      "model": "Ranger 1000 (2025, terrænmodel)",
+      "vehicle_types": [
+        "andet"
+      ],
+      "brændstof": "benzin",
+      "tank_l": 43,
+      "requires_fuel_selection": false,
+      "source_url": "https://publications.polaris.com/owner/owners-manuals/0000908523.xml/$/0000937209",
+      "capacity_source_urls": [
+        "https://publications.polaris.com/owner/owners-manuals/0000908523.xml/$/0000937209"
+      ],
+      "capacity_status": "manufacturer_documented_scoped_configuration",
+      "capacity_checked_at": "2026-10-19",
+      "capacity_scope": "2025-manual 9941422: Ranger 1000 terrænmodel, 43 liter. Traktorregistrerede eller andre markedsudgaver er ikke dækket.",
+      "specification_note": "2025-manual 9941422: Ranger 1000 terrænmodel, 43 liter. Traktorregistrerede eller andre markedsudgaver er ikke dækket. Kontrollér den konkrete udgave før beregning.",
+      "model_years": [
+        2025
+      ]
+    }
+  ]
+}

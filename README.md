@@ -1,6 +1,8 @@
-# Tiny Refuel v0.2.2
+# Tiny Refuel v0.2.3
 
-Benzin, diesel og opladning til køretøjer i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
+**Nyt i 0.2.3:** valgfrie stations- og køretøjskort, favoritter, lokal prishistorik, særskilt opladningsoversigt, datastatus og stationer på Home Assistants indbyggede kort. Det eksisterende kort og dets opsætninger bevares. Se [de nye kort og paneler](docs/dashboards.md), [stationskort og historik](docs/station-cards.md) og [panel-eksemplet](examples/dashboards.yaml).
+
+Benzin, diesel og opladning i Home Assistant – med eller uden køretøj. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
 
 ## Installation
 
@@ -26,8 +28,8 @@ Brug knappen til at åbne Tiny Refuel direkte i HACS:
 2. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**.
 3. Vælg opdateringsinterval. Standard er hver 6. time.
 4. Genindlæs browseren med **Ctrl+F5**.
-5. Tilføj **Tiny Refuel** fra dashboardets kortvælger.
-6. Vælg din positionsenhed, køretøjer og Waze eller Google Maps i den visuelle editor.
+5. Tilføj **Tiny Refuel** eller et af de valgfrie ekstra kort fra dashboardets kortvælger.
+6. Vælg selskaber, stationer, position eller fælles køretøjer i det valgte korts visuelle editor. Prisoversigt, stationskort, favoritter og opladning kræver ikke et køretøj.
 
 Kort, editor, selskabslogoer, køretøjskatalog og scraper følger med integrationen. Kortets JavaScript indlæses automatisk.
 
@@ -54,40 +56,112 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card.js?v=0.2.2
+/tiny_refuel/static/tiny-refuel-card.js?v=0.2.3
 ```
 
-## Skærmbilleder
+## Vælg de kort, du har brug for
 
-Skærmbilleder fra v0.2.2 i Home Assistant 2026.10. Priser, ladesteder og position er fiktive testdata. Browsertesten dækker mobil/desktop og lyst/mørkt tema; hele billedsættet kan hentes fra [Visual Home Assistant](https://github.com/Salvationdk/tiny-refuel/actions/workflows/visual.yml). Se [testvejledningen](docs/visual-testing.md).
+Det eksisterende kort og dets gemte opsætninger bevares. De nye kort er valgfrie og kan tilføjes flere gange på samme eller forskellige betjeningspaneler. Alle har visuel editor; ingen ekstra kortudvidelser er nødvendige.
 
-| Brændstofkort | Kompakt på mobil |
+| Kort i kortvælgeren | Type | Brug |
+|---|---|---|
+| Tiny Refuel | `custom:tiny-refuel-card` | Det eksisterende samlede kort med køretøjer, priser, opladning og fordele |
+| Tiny Refuel · Prisoversigt | `custom:tiny-refuel-prices-card` | Stationspriser uden køretøj; søgning, drivmiddel, selskaber, radius og sortering |
+| Tiny Refuel · Station | `custom:tiny-refuel-station-card` | Én station med priser, navigation og lokal prishistorik |
+| Tiny Refuel · Favoritter | `custom:tiny-refuel-favorites-card` | Selvvalgte stationer, gemt sammen med kortets opsætning |
+| Tiny Refuel · Mine køretøjer | `custom:tiny-refuel-vehicles-card` | Fælles køretøjer med nærmeste relevante steder og beregnet pris for hele kapaciteten |
+| Tiny Refuel · Prissammenligning | `custom:tiny-refuel-comparison-card` | Enhedspris, afstand, hel kapacitet og merpris for samme drivmiddel |
+| Tiny Refuel · Køretøjsoplysninger | `custom:tiny-refuel-vehicle-details-card` | Model, årgang, variant, kapacitet og tilgængelig kontrolstatus/kilder |
+| Tiny Refuel · Opladning | `custom:tiny-refuel-charging-card` | Lokale ladesteder og særskilte generelle selskabstakster |
+| Tiny Refuel · Datastatus | `custom:tiny-refuel-status-card` | Kilder, fejl, kataloger, historik og kortmarkører samt start af datahentning |
+
+En positionsenhed er kun nødvendig for afstand/radius og nærmeste sted. Afstand er i luftlinje. Prissammenligningen blander ikke liter og kWh. Uden kapacitet vises enhedspriser uden en opdigtet total; beregningen for en hel tank eller batterikapacitet medregner ikke aktuelt indhold, ladetab eller gebyrer. Generelle selskabstakster fremstår særskilt fra lokale stationspriser.
+
+### Prishistorik
+
+Prisændringer gemmes lokalt fra aktivering. Standard er **90 dage**; vælg **0–365 dage** under integrationens **Konfigurer → Opdateringsinterval**. 0 stopper registrering og visning, men sletter ikke en eksisterende database. Én tidligere observation pr. station/drivmiddel bevares som udgangspunkt for uændrede priser. Fejlramte gemte priser og generelle selskabstakster bliver ikke registreret som aktuelle lokale prisændringer.
+
+Åbn **Prishistorik** i stationskortet for graf, periodevalg og de seneste observationer. Ældre priser kan ikke hentes bagud uden en historisk kilde. Historikken gemmer ikke køretøjer eller brugerpositioner. Se [stationskort og historik](docs/station-cards.md).
+
+### Stationer på Home Assistants indbyggede kort
+
+Aktivér under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Stationer på HA-kortet**. Vælg selskaber, radius, eventuelle bestemte stationer og højst **250 markører**. Funktionen er slået fra som standard. Uden positionsenhed bruges HA’s hjemmeplacering; en valgt utilgængelig positionsenhed giver ingen markører.
+
+Tilføj et indbygget **Kort** og vælg den geografiske kilde **tiny_refuel**. Kun fysiske steder med koordinater får markører. Priser, adresse, ladeform, hentetid og aktualitet kan ses på entiteten. HA styrer selv kortets design.
+
+```yaml
+type: map
+title: Stationer
+geo_location_sources:
+  - tiny_refuel
+```
+
+### Flere betjeningspaneler
+
+Byg eksempelvis **Priser**, **Opladning**, **Mine køretøjer** og **Datastatus** ved at tilføje kortene gennem UI. [Panel-eksemplet](examples/dashboards.yaml) indeholder alle fire visninger til et nyt betjeningspanel. Vælg derefter stationer, favoritter og køretøjer i editorerne. Eksisterende paneler overskrives ikke. Se [den samlede vejledning](docs/dashboards.md).
+
+## Skærmbilleder fra 0.2.3
+
+Billederne kommer fra en rigtig Home Assistant 2026.10-installation og Chromium. Priser, køretøjer, ladesteder og position er fiktive testdata. Den visuelle kontrol består med **110 skærmbilleder** på computer og mobil i lyst og mørkt tema. Her er et udvalg; billederne ligger i repository og udløber ikke som workflow-artifacts. Hele kørslen findes under [Visual Home Assistant](https://github.com/Salvationdk/tiny-refuel/actions/runs/39447222908). Se [testvejledningen](docs/visual-testing.md).
+
+| Det oprindelige kort | Kompakt på mobil |
 |---|---|
-| ![Benzinpriser i mørkt tema](docs/screenshots/0.2.2/desktop-dark-fuel.png) | ![Kompakt kort med billigste pris og Vis 10 mere](docs/screenshots/0.2.2/mobile-light-compact.png) |
+| ![Det oprindelige kort](docs/screenshots/0.2.3/desktop-dark-fuel.png) | ![Kompakt på mobil](docs/screenshots/0.2.3/mobile-light-compact.png) |
 
-| Opladning på mobil | Ladesteder |
+| Prisoversigt uden køretøj | Selvvalgte favoritstationer |
 |---|---|
-| ![Ladeoversigt i mørkt tema på mobil](docs/screenshots/0.2.2/mobile-dark-charging.png) | ![Popup med ladesteder](docs/screenshots/0.2.2/desktop-dark-charging-locations.png) |
+| ![Prisoversigt uden køretøj](docs/screenshots/0.2.3/desktop-light-station-prices.png) | ![Selvvalgte favoritstationer](docs/screenshots/0.2.3/mobile-dark-station-favorites.png) |
 
-| Plug-in-hybrid og flere køretøjer | Information og datagrundlag |
+| Stationskort og prishistorik | Prishistorik på mobil |
 |---|---|
-| ![Plug-in-hybrid med benzin og opladning](docs/screenshots/0.2.2/desktop-light-hybrid.png) | ![Informationspanel med beregninger og kildeoplysninger](docs/screenshots/0.2.2/desktop-light-information.png) |
+| ![Stationskort og prishistorik](docs/screenshots/0.2.3/desktop-light-station-history.png) | ![Prishistorik på mobil](docs/screenshots/0.2.3/mobile-dark-station-history.png) |
 
-| Editor: udbydere | Editor: køretøj på mobil |
+| Mine køretøjer | Prissammenligning |
 |---|---|
-| ![Valg af stationer og udbydere](docs/screenshots/0.2.2/desktop-light-editor-providers.png) | ![Mærke, model, drivmiddel og kapaciteter på mobil](docs/screenshots/0.2.2/mobile-dark-editor-vehicle.png) |
+| ![Mine køretøjer](docs/screenshots/0.2.3/desktop-dark-dashboard-vehicles.png) | ![Prissammenligning](docs/screenshots/0.2.3/mobile-light-dashboard-comparison.png) |
 
-| Kildefejl med gemte data | Integrationen i Home Assistant |
+| Køretøjsoplysninger | Opladning: lokale priser og generelle takster |
 |---|---|
-| ![Fejl fra Clever med fortsat visning af gemte priser](docs/screenshots/0.2.2/desktop-dark-source-error.png) | ![Tiny Refuel under Enheder og tjenester](docs/screenshots/0.2.2/integration-settings.png) |
+| ![Køretøjsoplysninger](docs/screenshots/0.2.3/desktop-light-dashboard-vehicle-details.png) | ![Opladning: lokale priser og generelle takster](docs/screenshots/0.2.3/mobile-dark-dashboard-charging.png) |
 
-Editorbillederne viser produktets editor monteret direkte med Home Assistants tilstand og tema. Den udvidede browsertest kontrollerer desuden åbning, gemning og genåbning gennem Home Assistants egen korteditor uden manuel tilføjelse af JavaScript-ressourcen.
+| Datastatus | Stationer på HA’s indbyggede kort |
+|---|---|
+| ![Datastatus](docs/screenshots/0.2.3/desktop-light-dashboard-status.png) | ![Stationer på HA’s indbyggede kort](docs/screenshots/0.2.3/mobile-dark-native-station-map.png) |
 
-Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende katalog rummer 895 modeller fordelt på 89 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
+| Visuel editor: prissammenligning | Visuel editor: opladning |
+|---|---|
+| ![Visuel editor: prissammenligning](docs/screenshots/0.2.3/desktop-light-dashboard-comparison-editor.png) | ![Visuel editor: opladning](docs/screenshots/0.2.3/mobile-dark-dashboard-charging-editor.png) |
 
-Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype vælges manuelt og bruges ikke til at filtrere kataloget. Modelværdier bekræfter ikke alle årgange eller motorvarianter. Se [logodokumentationen](docs/vehicle-logos.md).
+| Visuel editor: stationer og favoritter | Visuel editor: køretøj |
+|---|---|
+| ![Visuel editor: stationer og favoritter](docs/screenshots/0.2.3/desktop-light-station-editor.png) | ![Visuel editor: køretøj](docs/screenshots/0.2.3/mobile-light-editor-vehicle.png) |
 
-![Valgfri årgang, variant og kapaciteter](docs/screenshots/0.2.2/desktop-light-editor-details.png)
+| Editor: selskaber og udbydere | Information og datagrundlag |
+|---|---|
+| ![Editor: selskaber og udbydere](docs/screenshots/0.2.3/desktop-light-editor-providers.png) | ![Information og datagrundlag](docs/screenshots/0.2.3/desktop-light-information.png) |
+
+| Plug-in-hybrid i det oprindelige kort | Oprindelig ladeoversigt på mobil |
+|---|---|
+| ![Plug-in-hybrid i det oprindelige kort](docs/screenshots/0.2.3/desktop-light-hybrid.png) | ![Oprindelig ladeoversigt på mobil](docs/screenshots/0.2.3/mobile-dark-charging.png) |
+
+| Popup med ladesteder | Kildefejl med gemte data |
+|---|---|
+| ![Popup med ladesteder](docs/screenshots/0.2.3/desktop-dark-charging-locations.png) | ![Kildefejl med gemte data](docs/screenshots/0.2.3/desktop-dark-source-error.png) |
+
+| Home Assistants korteditor | Integrationens entiteter |
+|---|---|
+| ![Home Assistants korteditor](docs/screenshots/0.2.3/desktop-light-native-editor-save.png) | ![Integrationens entiteter](docs/screenshots/0.2.3/desktop-light-integration-entities.png) |
+
+| Integrationens indstillinger | Årgang, variant og kapacitet |
+|---|---|
+| ![Integrationens indstillinger](docs/screenshots/0.2.3/desktop-light-integration-settings.png) | ![Årgang, variant og kapacitet](docs/screenshots/0.2.3/desktop-light-editor-details.png) |
+
+De nye og eksisterende kort deler tema, farver og logoer. HA’s indbyggede kort bruger Home Assistants eget markør- og kortdesign. Den visuelle test kontrollerer også åbning, gemning og genåbning af det oprindelige kort gennem Home Assistants korteditor.
+
+Et køretøj kan udvides for at vælge mærke, model, drivmiddel, tank eller batteri, positionsenhed og hvilke energityper der skal vises. Det medfølgende fallback-katalog rummer 913 modeller fordelt på 97 mærker i én `katalog.json` uden variantinventarer. Kun modeller med en kendt positiv tank- eller batteristørrelse medtages; motorredskaber og selvbyg er udeladt. En kapacitet på modelniveau bekræfter ikke alle årgange eller varianter. Egne køretøjer kan stadig indtastes manuelt. Ved mærke-/modelskift ryddes afhængige felter og tidligere automatisk dannede navne; selvvalgte navne bevares. Årgang og variant er valgfrie manuelle oplysninger i et sammenklappeligt afsnit; standardkataloget bruges til tank-/batteristørrelse. Egne kataloger kan tilføje årgangsdata.
+
+Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG-fallbacks. 16 SVG’er er gennemgåede vektoriseringer af rasterkilder, ikke originale vektorudgaver. Kilder og konverteringer er dokumenteret. Logoerne bruges i både editor og køretøjsknapper, også til manuelt indtastede køretøjer. Katalogets mærke- og modelfelter har søgning med højst 60 synlige forslag. Køretøjstype filtrerer både mærke- og modelforslag efter modellens `vehicle_types`. Mærker med flere typer viser kun de relevante modeller. Kataloget indeholder også lastbiler, busser, motorcykler, knallerter, traktorer og andre motorkøretøjer. Typer uden dokumenterede modeller i et eget katalog giver ingen katalogforslag. Eget mærke og model kan stadig indtastes manuelt. Kategorierne beskriver modelfamilier, ikke registreringsklassen for den enkelte bil. Modelværdier bekræfter ikke alle årgange eller motorvarianter. Se [logodokumentationen](docs/vehicle-logos.md).
+
 
 ## Funktioner
 
@@ -108,9 +182,6 @@ Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG
 
 AC og DC på samme sted tælles én gang pr. selskab. Generelle selskabstakster tæller ikke som lokale priser. Medlemsrabat trækkes ikke automatisk fra priserne.
 
-| Home Assistants egen korteditor | Brændstof-, el- og køretøjsentiteter |
-|---|---|
-| ![Native Lovelace-editor med Gem-knap og kortets forhåndsvisning](docs/screenshots/0.2.2/native-editor-save.png) | ![Tiny Refuels entiteter med brændstofpriser og valgfrie selskabssensorer](docs/screenshots/0.2.2/integration-entities.png) |
 
 ## Sensorer og fælles køretøjer
 
@@ -123,11 +194,13 @@ De tre eksisterende sensorers identitet bevares. Integrationens nye entiteter ka
 | Seneste hentning, antal fejl og adresser uden koordinater | Hentningens status, inklusive fejl fra kundefordele |
 | Hentning i gang og datakildefejl | Binære sensorer til status og automationer |
 | Valgfrie sensorer pr. selskab | Billigste lokale priser, generelle standardladetakster og kildestatus. Aktivér dem under integrationens entiteter efter behov. |
+| Katalogstatus | Indlæste typer, versioner, modelantal og eventuel brug af gemte kopier. Status godkender ikke modellernes kapaciteter. |
+| Valgfrie stationsmarkører | Fysiske steder med koordinater på HA’s indbyggede kort, afgrænset i integrationens indstillinger. |
 | Fire henteknapper | Alle data, benzin, diesel eller el. Samtidige kald deler den igangværende hentning. |
 
 De generelle standardladetakster vises særskilt fra lokale priser. Standard er OK/Q8 Normal, E.ON AC, Circle K Lyn og IONITY direkte betaling. Taksterne kan være fra-priser og kan afvige fra den lokale pris. Sensorens attributter viser de øvrige offentliggjorte takster. Ved kildefejl bevares taksterne som gemte oplysninger; den aktuelle numeriske værdi er ukendt.
 
-Opret fælles køretøjer under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Tilføj fælles køretøj**. Angiv navn, drivmiddel, kontrolleret tank-/batteristørrelse og en positionsenhed. Mærke, model og notifikationsservice er valgfrie. Samme menu kan ændre intervallet og redigere eller fjerne køretøjer.
+Opret fælles køretøjer under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Tilføj fra katalog** eller **Tilføj manuelt**. Vælg type, mærke, model og eventuel variant fra kataloget, eller indtast køretøjet manuelt. Kontrollér kapaciteten for årgang/variant, og angiv eventuelt en positionsenhed. Mærke, model og notifikationsservice er valgfrie. Samme menu kan ændre intervallet og redigere eller fjerne køretøjer.
 
 Hvert fælles køretøj får sensorer for nærmeste relevante station, afstand i luftlinje, lokal pris på stedet og beregnet fuld tank/opladning. Et benzinkøretøj får 95 og 100; diesel får diesel; el får opladning; plug-in-hybrid får benzin og opladning. Hvis nærmeste ladested mangler lokal pris, kan station og afstand stadig vises, mens pris og opladningsbeløb er ukendte. Der antages ingen tankstørrelse. Beregninger bruger hele kapaciteten og medregner ikke ladetab, rabatter, abonnementer eller ekstra gebyrer.
 
@@ -185,7 +258,7 @@ Genererede prisdata, ny historik og koordinatcacher gemmes privat under:
 
 Disse data overlever kodeopdateringer. Scraping ændrer ikke HACS' kodefiler. Data til kortet leveres gennem en Home Assistant-API, der kræver login.
 
-Køretøjskatalog og standardlogoer ligger under integrationens `frontend/`. Direkte ændringer dér kan blive overskrevet af en HACS-opdatering. Eget køretøjskatalog kan vælges med en brugerdefineret URL i korteditoren.
+Det medfølgende fallback-katalog og standardlogoer ligger under integrationens `frontend/`. Typekataloger hentes efter behov fra GitHub og gemmes under `.storage/tiny_refuel/catalogs/`. Prishistorikken ligger i `.storage/tiny_refuel/price-history.sqlite3`. Direkte ændringer i integrationens kode- og frontendfiler kan blive overskrevet af en HACS-opdatering. Private cacher og historik bevares. Eget køretøjskatalog kan vælges med en brugerdefineret URL i korteditoren.
 
 Efter en opdatering gennem HACS: genstart Home Assistant, og genindlæs browseren.
 
@@ -203,7 +276,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.2**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.2` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
+Teknisk integrationsversion: **0.2.3**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.3` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2** og **2026.10.0**.
 
@@ -212,6 +285,9 @@ Workflowet **Visual Home Assistant** starter desuden en midlertidig Home Assista
 ```bash
 python -m unittest discover -s tests -v
 node tests/frontend.test.js
+node tests/station-cards.test.js
+node tests/dashboard-cards.test.js
+node tests/type-catalogs.test.js
 ```
 
 Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigation eller selskabernes fortsatte datatilgængelighed.
@@ -219,7 +295,7 @@ Automatiske tests dækker ikke hele den visuelle brugeroplevelse, telefonnavigat
 
 ### Vedligeholdelse af køretøjskataloget
 
-Det indbyggede katalog indeholder 895 modeller fra 89 mærker. Kun modeller med tank- eller batteristørrelse er med. Modelværdier kan dække flere årgange og varianter; kontrollér kapaciteten for dit konkrete køretøj. Egne kataloger kan supplere de indbyggede data.
+Det medfølgende fallback-katalog indeholder 913 modeller fra 97 mærker. Kun modeller med tank- eller batteristørrelse er med. Modelværdier kan dække flere årgange og varianter; kontrollér kapaciteten for dit konkrete køretøj. Egne kataloger kan supplere de indbyggede data.
 
 Et udviklerværktøj kan hente modelnavne fra Toyota Danmarks officielle, strukturerede modeloversigt. Det skriver en kandidatliste til gennemgang og ændrer ikke integrationens katalog automatisk. Det kører ikke ved almindelig pris-scraping. Flere producentadaptere kan tilføjes senere; den første dækker Toyota, ikke alle mærker.
 
@@ -232,13 +308,21 @@ python scripts/vehicle_catalog.py merge --input /tmp/toyota-models.json
 
 Uden --write viser importen kun, hvilke navne der ville blive tilføjet. Kendte poster, logoer, tankstørrelser og brugerdata overskrives ikke. De gennemgåede tilføjelser ligger i scripts/data/vehicle-model-additions-2026-10.json.
 
+De 18 producentdokumenterede tilføjelser og deres kildehenvisninger findes i [kildelisten](scripts/data/vehicle-model-additions-2026-10-types.json). De omfatter tre lastbiler, tre busser, tre motorcykler, tre knallerter, tre traktorer og tre terrænmodeller under “andet”. Batterital er mærket som brugbare eller som nominel/oplyst energi med ukendt brugbar kapacitet. Registrering og dansk 30/45-godkendelse udledes ikke af modelkategorien. Kubota bruger tekstfallback, da mærket ikke har et indlejret logo.
+
+Tilføjelserne kan lægges ind i et eget katalog uden at overskrive eksisterende modeller:
+
+```bash
+python -m scripts.add_reviewed_vehicle_models --catalog mit-katalog.json --output mit-katalog-udvidet.json
+```
+
 ### Dansk registerkatalog og lokal modelsøgning
 
-Køretøjsoprettelsen bruger det medfølgende katalog: vælg fabrikant, søg model og vælg selv drivmiddel samt eventuelt årgang/variant. Der hentes ikke modeldata fra eksterne sider under oprettelsen. Ændres årgang/variant, ryddes modelstandarderne for drivmiddel, tank og batteri, så de kan bekræftes for den konkrete variant. Højst 60 modelforslag vises ad gangen; skriv mere for at indsnævre. Egne modeller og egne JSON-kataloger kan stadig bruges.
+Ved valg af køretøjstype kan integrationen hente det relevante typekatalog fra GitHub gennem sin autentificerede API. En lokal kopi genbruges, og det medfølgende katalog bruges som fallback. Der scrapes ikke producenthjemmesider under oprettelsen. Vælg mærke, model, drivmiddel og eventuelt årgang/variant. I det oprindelige korts editor ryddes modelstandarderne ved ændring af årgang/variant for drivmiddel, tank og batteri, så de kan bekræftes for den konkrete variant. Højst 60 modelforslag vises ad gangen; skriv mere for at indsnævre. Egne modeller og egne JSON-kataloger kan stadig bruges.
 
 Motorstyrelsens gratis statistikudtræk er hovedkilden til den nye importfunktion. Den læser personbiler/busser, varebiler og lastbiler (DMR-art 1–4) samt genkendte navngivne motorkøretøjstyper, bl.a. motorcykler, knallerter og traktorer, fra en hentet XML- eller ZIP-fil. Ukendte typer medtages ikke automatisk. Mærker, modeller og variantnavne samles uden gentagelser. Rå tekniske kombinationer gemmes separat som `dmr_profiles`; de bruges endnu ikke som bekræftede specifikationer i kortet. Eksisterende modelværdier og logoer bevares. Ukendte mærker har tekstfallback. Nummerplader, stelnumre og køretøjs-ID'er eksporteres ikke til kataloget. Årgang og tank-/batteristørrelse udledes ikke af første registrering eller modelnavnet.
 
-**Status:** Integrationen leverer én selvstændig `custom_components/tiny_refuel/frontend/katalog.json` med 895 modeller fra 89 mærker. Den indeholder kapaciteter, kendte drivmidler, logoer og korte kildeoplysninger. 425 nye modeller er tilføjet ud fra entydige indsamlede kapaciteter; eksisterende værdier er bevaret. Nye værdier er mærket som kildedatasætstandarder, der skal kontrolleres for det konkrete køretøj. Lange variantinventarer, rå DMR-profiler og importforslag distribueres ikke i driftskataloget. Kort og editor deler én hentning pr. URL i browserens session.
+**Status for det medfølgende fallback-katalog:** Integrationen leverer en selvstændig `custom_components/tiny_refuel/frontend/katalog.json` med 913 modeller fra 97 mærker. Den indeholder kapaciteter, kendte drivmidler, logoer og korte kildeoplysninger. 425 nye modeller er tilføjet ud fra entydige indsamlede kapaciteter; eksisterende værdier er bevaret. Kildedatasætstandarder er mærket som sådanne. Yderligere 18 modeller og konfigurationer er dokumenteret med producentkilder, kontroltidspunkt og præcis afgrænsning af årgang, marked eller batteripakker. Lange variantinventarer, rå DMR-profiler og importforslag distribueres ikke i driftskataloget. Kort og editor deler én hentning pr. URL i browserens session.
 
 Kilde og gratis adgang: [Motorstyrelsen – statistikudtræk](https://motorst.dk/erhverv/motorregistret-for-virksomheder/faa-adgang-til-motorregistret/andre-adgange). Udtrækket er stort og behandles uden for Home Assistant.
 
@@ -257,6 +341,12 @@ Byg et katalog med unikke modelrækker, bevarede varianter og rapport over samme
 
 Standardkataloget er cirka 2,56 MB inklusive 261 SVG- og 20 PNG-logoer. Der bruges ingen `catalog-parts/` eller `catalog-details/` i integrationen. Eksisterende kort, som peger på det gamle indbyggede `bilkatalog.json`, vælger automatisk det nye standardkatalog.
 
+### Kataloger efter køretøjstype
+
+Ved typevalg hentes kun relevante kataloger: `car.json`, `van.json`, `truck.json`, `motorcycle.json`, `moped.json`, `bus.json`, `tractor.json` eller `other.json`. Flere typer kan bruges samtidigt. Downloaderen kontrollerer format, filnavn, størrelse og checksum, gemmer en lokal kopi og kan bruge den ved netværksfejl. Egne katalog-URL’er bevarer deres funktion.
+
+Typekatalogerne er et arbejdsgrundlag med bevarede positive kapaciteter, årgangsoplysninger og kapacitetsafhængige varianter, når de findes. `needs_review` betyder, at værdien mangler kontrol; en online kilde eller en vellykket download gør ikke i sig selv kapaciteten korrekt for alle årgange og varianter. Importmetadata og omfattende kontrolrapporter er udeladt. Allerede gemte køretøjskapaciteter ændres ikke af katalogopdateringer. Se [typekataloger og datastatus](docs/type-catalogs.md).
+
 ### Byg og brug dit eget katalog
 
 Standardkataloget virker uden ekstra filer eller konfiguration. Til eget katalog kan du kopiere det indbyggede `katalog.json`, tilføje eller rette modeller og bevare kilde-/licensoplysninger. Det direkte format er:
@@ -271,7 +361,7 @@ I kataloget hedder tankfeltet **tank_l**. Editorens gemte køretøj bruger forts
 python scripts/validate_vehicle_catalog.py --input mit-katalog.json --output katalog.json
 ```
 
-Læg din egen fil i `/config/www/katalog.json`, og angiv `/local/katalog.json` i editorens **Eget katalog** eller som `katalog_url`. Tomt felt bruger det indbyggede katalog. Genindlæs browseren efter filændringer. HACS-opdateringer erstatter standardkataloget, men ikke din egen fil under www. Brug ikke all-candidates.json direkte som katalog.
+Læg din egen fil i `/config/www/katalog.json`, og angiv `/local/katalog.json` i editorens **Eget katalog** eller som `katalog_url`. Tomt felt bruger det valgte typekatalog eller det medfølgende fallback-katalog. Genindlæs browseren efter filændringer. HACS-opdateringer erstatter standardkataloget, men ikke din egen fil under www. Brug ikke all-candidates.json direkte som katalog.
 
 Til et fuldt kildekatalog med indsamlede forslag kan `python -m scripts.build_enriched_vehicle_catalog --catalog FULL.json --candidates all-candidates.json --output katalog.json` bygge et kompakt, kildebaseret forslag. Se [byggevejledningen](docs/vehicle-runtime-catalog.md). `build_supported_catalog.py` kan filtrere et almindeligt JSON-katalog til modeller med kendt kapacitet og skriver nu også en enkelt fil. Den gamle pakker bevares alene som udviklerværktøj til gamle data.
 
@@ -314,4 +404,5 @@ Teksterne bruger **køretøj**, fordi kataloget også omfatter motorcykler, knal
 
 Kompakt visning viser også billigste brændstofpris blandt alle valgte selskaber, inklusive rækker skjult af visningsgrænsen. Vis færre gendanner grænsen efter Vis 10 mere i begge oversigter og i ladepopup'en. En laveste oplyst elpris kan være en generel takst og er ikke en garanti for den lokale pris på et ladested.
 
-Tank- og batteriberegninger bruger den angivne positive kapacitet uden de tidligere grænser for personbiler. Fuld tank virker med benzin og diesel; plug-in-hybrid kan vise både tank og batteri. Uden køretøjskapacitet bruges fælles tankstørrelse, en eventuel tank-helper eller 50 liter som sidste fallback. Udbyderpriser og fuld opladning er vejledende og medregner ikke ladetab.
+I det oprindelige kort bruger tank- og batteriberegninger den angivne positive kapacitet uden de tidligere grænser for personbiler. Fuld tank virker med benzin og diesel; plug-in-hybrid kan vise både tank og batteri. Uden køretøjskapacitet bruges fælles tankstørrelse, en eventuel tank-helper eller 50 liter som sidste fallback. Udbyderpriser og fuld opladning er vejledende og medregner ikke ladetab.
+

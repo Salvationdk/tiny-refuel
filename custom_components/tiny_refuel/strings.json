@@ -20,20 +20,24 @@
         "title": "Tiny Refuel",
         "menu_options": {
           "settings": "Opdateringsinterval",
-          "vehicle": "Tilføj fælles køretøj",
+          "vehicle": "Tilføj manuelt",
           "edit_vehicle": "Rediger fælles køretøj",
-          "remove_vehicle": "Fjern fælles køretøj"
+          "remove_vehicle": "Fjern fælles køretøj",
+          "catalog_vehicle": "Tilføj fra katalog",
+          "map": "Stationer på HA-kortet"
         }
       },
       "settings": {
         "title": "Opdateringsinterval",
         "data": {
-          "scan_hours": "Timer mellem hentninger"
-        }
+          "scan_hours": "Timer mellem hentninger",
+          "history_days": "Gem prishistorik (dage, 0 slår fra)"
+        },
+        "description": "Prisændringer gemmes lokalt. Én tidligere pris pr. station og drivmiddel bevares som udgangspunkt. Historikken starter ved aktivering."
       },
       "vehicle": {
         "title": "Fælles køretøj",
-        "description": "Fælles køretøjer bruges af køretøjssensorerne og kort uden egne køretøjer. Angiv kapaciteter, der er kontrolleret for dit køretøj.",
+        "description": "Fælles køretøjer bruges af køretøjssensorerne og kort uden egne køretøjer. Katalogets kapaciteter er forslag; kontrollér årgang og variant før du gemmer.",
         "data": {
           "navn": "Navn",
           "mærke": "Mærke",
@@ -42,7 +46,10 @@
           "tank_liters": "Tank (L)",
           "batteri_kwh": "Batteri (kWh)",
           "location_entity": "Positionsenhed",
-          "notify_service": "Notifikationsservice"
+          "notify_service": "Notifikationsservice",
+          "koeretoejstype": "Køretøjstype",
+          "variant": "Variant",
+          "aargang": "Årgang"
         }
       },
       "edit_vehicle": {
@@ -57,10 +64,56 @@
         "data": {
           "vehicle_id": "Køretøj"
         }
+      },
+      "catalog_vehicle": {
+        "title": "Køretøjstype",
+        "data": {
+          "koeretoejstype": "Køretøjstype"
+        }
+      },
+      "catalog_make": {
+        "title": "Mærke",
+        "data": {
+          "mærke": "Mærke"
+        }
+      },
+      "catalog_model": {
+        "title": "Model",
+        "data": {
+          "model": "Model"
+        }
+      },
+      "catalog_variant": {
+        "title": "Variant",
+        "data": {
+          "variant_choice": "Variant"
+        },
+        "description": "Vælg varianten, der passer til årgang og drivmiddel, eller indtast kapaciteten selv."
+      },
+      "map": {
+        "title": "Stationer på kortet",
+        "description": "Vælg markører for fysiske stationer. Uden positionsenhed bruges Home Assistants hjemmeplacering. Afstand er i luftlinje. Når funktionen er slået fra, oprettes ingen kortentiteter.",
+        "data": {
+          "map_enabled": "Vis stationer på kortet",
+          "map_location_entity": "Positionsenhed (valgfri)",
+          "map_radius_km": "Radius (km)",
+          "map_limit": "Maksimalt antal markører (1–250)",
+          "map_brands": "Selskaber (tomt betyder alle)",
+          "map_selected_only": "Vælg bestemte stationer"
+        }
+      },
+      "map_stations": {
+        "title": "Vælg stationer",
+        "description": "Viser op til 1000 stationer i det valgte område. Afgræns med radius eller selskab efter behov. Radius og markørgrænse gælder også de valgte stationer.",
+        "data": {
+          "map_station_ids": "Stationer"
+        }
       }
     },
     "abort": {
-      "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer."
+      "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer.",
+      "catalog_unavailable": "Kataloget er ikke tilgængeligt. Prøv igen, eller tilføj køretøjet manuelt.",
+      "stations_unavailable": "Ingen matchende stationer. Hent stationsdata eller vælg et andet område."
     },
     "error": {
       "required_name": "Angiv et navn.",

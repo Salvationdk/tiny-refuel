@@ -260,6 +260,28 @@ class Fetcher:
             body = response.read(MAX_BYTES + 1)
             if len(body) > MAX_BYTES:
                 raise ValueError('Response exceeds 8 MiB.')
+            encoding = response.headers.get('Content-Encoding', '').strip().casefold()
+            if encoding in ('gzip', 'x-gzip'):
+                import gzip
+                import io
+                with gzip.GzipFile(fileobj=io.BytesIO(body)) as stream:
+                    body = stream.read(MAX_BYTES + 1)
+            elif encoding == 'deflate':
+                import zlib
+                try:
+                    decoder = zlib.decompressobj()
+                    body = decoder.decompress(body, MAX_BYTES + 1)
+                except zlib.error as exc:
+                    raise ValueError('Invalid compressed response') from exc
+                if len(body) <= MAX_BYTES and not decoder.eof:
+                    raise ValueError('Incomplete or oversized compressed response')
+            elif encoding not in ('', 'identity'):
+                raise ValueError('Unsupported response encoding: ' + encoding)
+            if len(body) > MAX_BYTES:
+                raise ValueError('Decompressed response exceeds 8 MiB.')
+            media_type = response.headers.get_content_type()
+            if media_type not in ('text/html', 'application/xhtml+xml', 'text/plain', 'application/ld+json', 'application/json'):
+                raise ValueError('Unsupported response content type: ' + media_type)
             return body.decode(response.headers.get_content_charset() or 'utf-8', errors='replace')
 
     def get(self, url):

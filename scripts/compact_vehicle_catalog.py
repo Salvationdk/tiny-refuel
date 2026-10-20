@@ -7,6 +7,11 @@ import re
 import sys
 import tempfile
 
+if __package__:
+    from .vehicle_type_names import vehicle_types
+else:
+    from vehicle_type_names import vehicle_types
+
 STRING = re.compile(r'"(?:[^"\\]|\\.)*"', re.S)
 SPACE = re.compile(r'\s*')
 DELIMITER = re.compile(r'[\s{}\[\],:]')
@@ -86,12 +91,13 @@ def compact_stream(source, destination):
         if actual != expected:
             raise ValueError(f'Expected JSON {expected!r}, got {actual!r}')
 
-    def value(token, output, path):
+    def value(token, output, path, observed=None):
         if token is None:
             raise ValueError('Unexpected end of JSON')
         if token == '{':
             if path == MODEL_PATH:
                 stats['models'] += 1
+                observed = {'codes': set(), 'names': set(), 'existing': set(), 'had_types': False}
             emit(output, '{')
             key = tokens.next()
             first = True
@@ -101,9 +107,10 @@ def compact_stream(source, destination):
                         raise ValueError('Expected JSON object key')
                     name = json.loads(key)
                     expect(':')
-                    remove = path == MODEL_PATH and name == 'dmr_profiles'
+                    if path == MODEL_PATH and name == 'vehicle_types': observed['had_types'] = True
+                    remove = path == MODEL_PATH and name in {'dmr_profiles', 'vehicle_types'}
                     if remove:
-                        stats['profile_fields_removed'] += 1
+                        if name == 'dmr_profiles': stats['profile_fields_removed'] += 1
                         child_output = None
                     else:
                         if not first:
@@ -111,13 +118,18 @@ def compact_stream(source, destination):
                         emit(output, key + ':')
                         first = False
                         child_output = output
-                    value(tokens.next(), child_output, path + (name,))
+                    value(tokens.next(), child_output, path + (name,), observed)
                     separator = tokens.next()
                     if separator == '}':
                         break
                     if separator != ',':
                         raise ValueError('Expected JSON object separator')
                     key = tokens.next()
+            if path == MODEL_PATH:
+                types = sorted(observed['existing'] | set(vehicle_types(observed['codes'], observed['names'])))
+                if types or observed['had_types']:
+                    if not first: emit(output, ',')
+                    emit(output, '"vehicle_types":' + json.dumps(types, ensure_ascii=False, separators=(',', ':')))
             emit(output, '}')
         elif token == '[':
             emit(output, '[')
@@ -128,7 +140,7 @@ def compact_stream(source, destination):
                     emit(output, ',')
                 if path == MODEL_PATH + ('dmr_profiles',):
                     stats['technical_profiles_removed'] += 1
-                value(item, output, path + ('*',))
+                value(item, output, path + ('*',), observed)
                 first = False
                 separator = tokens.next()
                 if separator == ']':
@@ -140,6 +152,16 @@ def compact_stream(source, destination):
                     raise ValueError('Trailing comma in JSON array')
             emit(output, ']')
         elif token.startswith('"') or token in {'true', 'false', 'null'} or token[0] in '-0123456789':
+            if observed is not None:
+                if path[:len(MODEL_PATH) + 1] == MODEL_PATH + ('vehicle_types',):
+                    item = json.loads(token)
+                    if isinstance(item, str): observed['existing'].add(item)
+                if path[:len(MODEL_PATH) + 1] == MODEL_PATH + ('dmr_profiles',):
+                    fields = set(path[len(MODEL_PATH) + 1:])
+                    item = json.loads(token)
+                    if isinstance(item, (str, int)) and not isinstance(item, bool):
+                        if 'KoeretoejArtNummer' in fields: observed['codes'].add(str(item))
+                        if 'KoeretoejArtNavn' in fields: observed['names'].add(str(item))
             emit(output, token)
         else:
             raise ValueError('Expected JSON value')
@@ -170,7 +192,7 @@ def compact_file(input_path, output_path):
             output.write('\n')
         stats.update(input_bytes=source.stat().st_size, output_bytes=temporary.stat().st_size,
                      original_preserved=True,
-                     note='Only model dmr_profiles removed. All other data retained; source import counts describe the original import.')
+                     note='Model dmr_profiles removed after extracting vehicle_types. All other data retained; source import counts describe the original import.')
         temporary.replace(destination)
         return stats
     finally:
