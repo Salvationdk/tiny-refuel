@@ -242,7 +242,7 @@
       ['tiny-refuel-station-card',SingleStationCard,'Tiny Refuel · Station','Din stations priser, navigation og lokale prishistorik'],
       ['tiny-refuel-favorites-card',FavoritesCard,'Tiny Refuel · Favoritter','Dine udvalgte stationer samlet i ét kort']]){
       customElements.define(type,Class);window.customCards=window.customCards||[];
-      window.customCards.push({type,name,description,preview:true});
+      window.customCards.push({type,name,description,preview:false});
     }
     // Pure contracts used by the offline frontend test suite.
     PricesCard.selectRows=selectRows;

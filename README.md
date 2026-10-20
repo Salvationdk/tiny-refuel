@@ -29,6 +29,10 @@ Brug knappen til at åbne Tiny Refuel direkte i HACS:
 3. Vælg opdateringsinterval. Standard er hver 6. time.
 4. Genindlæs browseren med **Ctrl+F5**.
 5. Tilføj **Tiny Refuel** eller et af de valgfrie ekstra kort fra dashboardets kortvælger.
+
+Køretøjskortene genbruger automatisk køretøjer fra eksisterende Tiny Refuel-kort på samme betjeningspanel, når der ikke er opsat fælles køretøjer. Dine eksisterende kortopsætninger bevares.
+
+Kortvælgeren viser kompakte navne og beskrivelser for Tiny Refuel-kortene. Når du vælger et kort, kan du fortsat se dets forhåndsvisning i editoren.
 6. Vælg selskaber, stationer, position eller fælles køretøjer i det valgte korts visuelle editor. Prisoversigt, stationskort, favoritter og opladning kræver ikke et køretøj.
 
 Kort, editor, selskabslogoer, køretøjskatalog og scraper følger med integrationen. Kortets JavaScript indlæses automatisk.
