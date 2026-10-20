@@ -443,7 +443,7 @@ def browsers(tokens):
                 page.evaluate("""id => {
                     const host=document.createElement('div'); host.id='station-card-test';
                     host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
-                    document.body.append(host);
+                    document.querySelector('home-assistant').shadowRoot.append(host);window.stationTestHost=host;
                     window.stationTestConfig={type:'custom:tiny-refuel-prices-card',fuel:'p95',limit:4};
                     window.stationTestCard=document.createElement('tiny-refuel-prices-card');
                     window.stationTestCard.setConfig(window.stationTestConfig);window.stationTestCard.hass=window.visualCard._hass;
@@ -457,7 +457,7 @@ def browsers(tokens):
                 price_card.locator('[data-fuel]').select_option('kwh')
                 expect(price_card.locator('.ts-price small')).to_contain_text('kWh')
                 page.evaluate("""id=>{
-                    const host=document.querySelector('#station-card-test');host.replaceChildren();
+                    const host=window.stationTestHost;host.replaceChildren();
                     const card=document.createElement('tiny-refuel-station-card');
                     card.setConfig({type:'custom:tiny-refuel-station-card',station_id:id,fuel:'all'});
                     card.hass=window.visualCard._hass;host.append(card);
@@ -469,7 +469,7 @@ def browsers(tokens):
                 expect(single.locator('.ts-history tbody tr')).to_have_count(3)
                 shot(prefix+'-station-history',single)
                 page.evaluate("""id=>{
-                    const host=document.querySelector('#station-card-test');host.replaceChildren();
+                    const host=window.stationTestHost;host.replaceChildren();
                     const card=document.createElement('tiny-refuel-favorites-card');
                     card.setConfig({type:'custom:tiny-refuel-favorites-card',favorites:[id],fuel:'all'});
                     card.hass=window.visualCard._hass;host.append(card);
@@ -478,7 +478,7 @@ def browsers(tokens):
                 expect(favorites.locator('.ts-station')).to_have_count(1)
                 shot(prefix+'-station-favorites',favorites)
                 page.evaluate("""id=>{
-                    const host=document.querySelector('#station-card-test');host.replaceChildren();
+                    const host=window.stationTestHost;host.replaceChildren();
                     const editor=document.createElement('tiny-refuel-stations-editor');
                     editor.setConfig({type:'custom:tiny-refuel-favorites-card',favorites:[id],fuel:'all'});
                     editor.hass=window.visualCard._hass;
