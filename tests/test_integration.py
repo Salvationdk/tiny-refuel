@@ -106,7 +106,7 @@ class ManagerTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(tiny_refuel,'add_extra_js_url') as add_js, patch.object(tiny_refuel,'async_track_time_interval',return_value=lambda:None) as interval:
             with patch.object(scraper,'collect',return_value=payload()):
                 self.assertTrue(await tiny_refuel.async_setup(self.hass,{}));self.assertTrue(await tiny_refuel.async_setup(self.hass,{}))
-                self.assertEqual(len(self.hass.paths),1);self.assertEqual(add_js.call_count,2)
+                self.assertEqual(len(self.hass.paths),1);self.assertEqual(add_js.call_count,3)
                 self.assertTrue(await tiny_refuel.async_setup_entry(self.hass,entry));await entry.runtime_data.task
                 self.assertEqual(interval.call_args.args[2].total_seconds(),21600)
                 self.assertIn(('tiny_refuel','refresh'),self.hass.services_map)

@@ -19,7 +19,7 @@ from .manager import RefuelManager
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
-PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.BUTTON]
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.BUTTON, Platform.GEO_LOCATION]
 
 
 class RefuelDataView(HomeAssistantView):
@@ -69,6 +69,20 @@ class RefuelStationsView(HomeAssistantView):
         return web.json_response(data,headers={"Cache-Control":"no-store"})
 
 
+class RefuelDashboardView(RefuelStationsView):
+    url = "/api/tiny_refuel/dashboard"
+    name = "api:tiny_refuel:dashboard"
+
+    async def get(self, request):
+        state=self.hass.data.get(DOMAIN,{})
+        manager=state.get('manager')
+        if manager is None:
+            return web.json_response({'message':'Tiny Refuel er ikke startet'},status=503)
+        from .dashboard_data import dashboard_snapshot
+        return web.json_response(dashboard_snapshot(manager,state.get('catalogs'),state.get('map_status')),
+                                 headers={'Cache-Control':'no-store'})
+
+
 class RefuelHistoryView(RefuelStationsView):
     url = "/api/tiny_refuel/history/{station_id}"
     name = "api:tiny_refuel:history"
@@ -101,6 +115,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         hass.http.register_view(RefuelDataView(hass))
         hass.http.register_view(RefuelStationsView(hass))
         hass.http.register_view(RefuelHistoryView(hass))
+        hass.http.register_view(RefuelDashboardView(hass))
 
         async def fetch_catalog_bytes(url, limit):
             try:
@@ -121,6 +136,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         hass.http.register_view(RefuelCatalogView(state["catalogs"]))
         add_extra_js_url(hass, CARD_URL)
         add_extra_js_url(hass, STATIC_URL + "/tiny-refuel-stations.js?v=0.2.2.1")
+        add_extra_js_url(hass, STATIC_URL + "/tiny-refuel-dashboards.js?v=0.2.2.1")
         state["registered"] = True
     return True
 

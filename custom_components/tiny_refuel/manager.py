@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import Callable
 
+from .dashboard_data import general_tariffs
 from .price_history import PriceHistory, station_rows
 from . import scraper
 from .const import CARD_VERSION, VERSION
@@ -116,7 +117,8 @@ class RefuelManager:
             self._station_cache = (data,failed,rows)
         return {"stations":rows,"updated":data.get("updated"),"refreshing":self.refreshing,
                 "last_error":self.last_error,"history_days":self.history.days,
-                "history_error":self.history_error}
+                "history_error":self.history_error,
+                "tariffs":general_tariffs(data,failed)}
 
     def snapshot(self):
         return {**self.data, "vehicles": self.vehicles, "version": VERSION, "refreshing": self.refreshing,

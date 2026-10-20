@@ -37,7 +37,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
         return [dict(vehicle) for vehicle in self.config_entry.options.get("vehicles", [])]
 
     async def async_step_init(self, user_input=None):
-        return self.async_show_menu(step_id="init", menu_options=["settings", "catalog_vehicle", "vehicle", "edit_vehicle", "remove_vehicle"])
+        return self.async_show_menu(step_id="init", menu_options=["settings", "map", "catalog_vehicle", "vehicle", "edit_vehicle", "remove_vehicle"])
 
     async def async_step_settings(self, user_input=None):
         if user_input is not None:
@@ -47,6 +47,47 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             vol.Required(CONF_SCAN_HOURS, default=hours): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
             vol.Optional("history_days",default=self.config_entry.options.get("history_days",90)):
                 vol.All(vol.Coerce(int),vol.Range(min=0,max=365))}))
+
+    async def async_step_map(self, user_input=None):
+        from homeassistant.helpers import selector
+        from .entity_data import BRANDS
+        if user_input is not None:
+            user_input={**user_input,'map_location_entity':user_input.get('map_location_entity','')}
+            self._map_options=user_input
+            if user_input.get('map_enabled') and user_input.get('map_selected_only'):
+                return await self.async_step_map_stations()
+            return self.async_create_entry(title='',data={**self._options(),**user_input})
+        options=self._options()
+        fields={vol.Required('map_enabled',default=options.get('map_enabled',False)):bool,
+                vol.Required('map_radius_km',default=options.get('map_radius_km',25)):
+                    vol.All(vol.Coerce(float),vol.Range(min=1,max=500)),
+                vol.Required('map_limit',default=options.get('map_limit',100)):
+                    vol.All(vol.Coerce(int),vol.Range(min=1,max=250)),
+                vol.Required('map_brands',default=options.get('map_brands',[])):
+                    selector.SelectSelector(selector.SelectSelectorConfig(options=list(BRANDS),multiple=True)),
+                vol.Required('map_selected_only',default=options.get('map_selected_only',False)):bool}
+        key=(vol.Optional('map_location_entity',default=options['map_location_entity'])
+             if options.get('map_location_entity') else vol.Optional('map_location_entity'))
+        fields[key]=selector.EntitySelector(selector.EntitySelectorConfig(domain=['person','device_tracker','zone']))
+        return self.async_show_form(step_id='map',data_schema=vol.Schema(fields))
+
+    async def async_step_map_stations(self, user_input=None):
+        from homeassistant.helpers import selector
+        from .geo_location import map_selection
+        manager=self.hass.data.get(DOMAIN,{}).get('manager')
+        if manager is None:return self.async_abort(reason='stations_unavailable')
+        if user_input is not None:
+            return self.async_create_entry(title='',data={**self._options(),**self._map_options,**user_input})
+        # Apply the selected area/brands first; HA's dropdown can search labels.
+        rows,_=map_selection(self.hass,manager,{**self._map_options,'map_selected_only':False,'map_limit':1000})
+        saved=set(self._options().get('map_station_ids',[]))
+        rows.extend(row for row in manager.station_snapshot()['stations'] if row['id'] in saved and row['id'] not in {r['id'] for r in rows})
+        if not rows:return self.async_abort(reason='stations_unavailable')
+        options=[{'value':r['id'],'label':r['brand']+' · '+r['name']+(' · '+r['charger_kind'] if r.get('charger_kind') else '')} for r in rows]
+        defaults=[r['id'] for r in rows if r['id'] in saved]
+        return self.async_show_form(step_id='map_stations',data_schema=vol.Schema({
+            vol.Required('map_station_ids',default=defaults):vol.All(
+                selector.SelectSelector(selector.SelectSelectorConfig(options=options,multiple=True)),vol.Length(min=1))}))
 
     async def _choose_vehicle(self, step, user_input):
         vehicles = self._vehicles()
@@ -148,6 +189,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
                 if positive(source.get(field)):values[target]=source[field]
         if source is not model and source.get('name'):values['variant']=source['name']
         self._catalog_defaults=values
+        self._catalog_evidence={k:source[k] for k in ('capacity_status','capacity_source_urls','capacity_checked_at','capacity_scope') if k in source}
 
     async def async_step_vehicle(self, user_input=None):
         from uuid import uuid4
@@ -165,6 +207,14 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
                 return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(defaults, selector), errors=invalid)
             if not vehicle.get("navn"):
                 return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(user_input, selector), errors={"navn": "required_name"})
+            evidence=getattr(self,'_catalog_evidence',None) or {k:old[k] for k in (
+                'capacity_status','capacity_source_urls','capacity_checked_at','capacity_scope') if k in old}
+            basis=getattr(self,'_catalog_defaults',None) or old
+            changed=any(vehicle.get(k)!=basis.get(k) for k in ('tank_liters','batteri_kwh','brændstof','variant','aargang'))
+            if evidence:
+                vehicle.update(evidence)
+                if changed:vehicle['capacity_status']='needs_review'
+            elif not old:vehicle['capacity_status']='user_entered'
             vehicle["id"] = vehicle_id or uuid4().hex
             fuel = vehicle["brændstof"]
             vehicle["vis"] = {"benzin": fuel in ("benzin", "hybrid", "plug_in_hybrid"),

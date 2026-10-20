@@ -23,7 +23,8 @@
           "vehicle": "Add manually",
           "edit_vehicle": "Edit shared vehicle",
           "remove_vehicle": "Remove shared vehicle",
-          "catalog_vehicle": "Add from catalog"
+          "catalog_vehicle": "Add from catalog",
+          "map": "Stations on the HA map"
         }
       },
       "settings": {
@@ -88,11 +89,31 @@
           "variant_choice": "Variant"
         },
         "description": "Select the variant matching your year and powertrain, or enter the capacity manually."
+      },
+      "map": {
+        "title": "Stations on the map",
+        "description": "Opt in to physical station markers. Without a position entity the Home Assistant home location is used. Distances are straight-line distances. No map entities are created when disabled.",
+        "data": {
+          "map_enabled": "Enable station markers",
+          "map_location_entity": "Position entity (optional)",
+          "map_radius_km": "Radius (km)",
+          "map_limit": "Maximum markers (1–250)",
+          "map_brands": "Companies (empty means all)",
+          "map_selected_only": "Choose specific stations"
+        }
+      },
+      "map_stations": {
+        "title": "Choose stations",
+        "description": "Up to 1000 matching stations are shown. Adjust the area or companies if needed. Your radius and marker limit still apply.",
+        "data": {
+          "map_station_ids": "Stations"
+        }
       }
     },
     "abort": {
       "no_vehicles": "No shared vehicles configured.",
-      "catalog_unavailable": "Catalog unavailable. Try again or add the vehicle manually."
+      "catalog_unavailable": "Catalog unavailable. Try again or add the vehicle manually.",
+      "stations_unavailable": "No matching stations. Load station data or choose a different area."
     },
     "error": {
       "required_name": "Enter a name.",

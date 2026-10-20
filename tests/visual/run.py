@@ -90,7 +90,7 @@ def prepare(folder):
         "lovelace": {"mode": "storage"},
     }))
     (storage / "lovelace").write_text(json.dumps({"version": 1, "minor_version": 1, "key": "lovelace",
-        "data": {"config": {"title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}]}}}, ensure_ascii=False))
+        "data": {"config": {"title": "Tiny Refuel", "views": [{"title": "Test", "path": "test", "cards": [CONFIG]}, {"title":"Stationskort","path":"stationer","cards":[{"type":"map","title":"Stationer","geo_location_sources":["tiny_refuel"],"default_zoom":11,"auto_fit":True}]}]}}}, ensure_ascii=False))
 
 
 def api(session, path, data):
@@ -200,6 +200,21 @@ def onboard(folder):
     history=session.get(BASE + "/api/tiny_refuel/history/"+tokens["testStationId"]+"?field=p95&days=7",timeout=10)
     history.raise_for_status()
     assert len(history.json()["points"])==3,history.text
+    options=api(session,"/api/config/config_entries/options/flow",{"handler":result["result"]["entry_id"]})
+    options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],{"next_step_id":"map"})
+    options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],{
+        "map_enabled":True,"map_radius_km":25,"map_limit":5,"map_brands":[],
+        "map_selected_only":False,"map_location_entity":"device_tracker.visual"})
+    assert options["type"]=="create_entry",options
+    for _ in range(60):
+        states=session.get(BASE+"/api/states",timeout=10).json()
+        markers=[row for row in states if row['entity_id'].startswith('geo_location.') and row.get('attributes',{}).get('source')=='tiny_refuel']
+        if len(markers)==5:break
+        time.sleep(1)
+    else:raise RuntimeError("Native map entities were not created")
+    summary=session.get(BASE+"/api/tiny_refuel/dashboard",timeout=10);summary.raise_for_status()
+    assert summary.json()['map']['count']==5,summary.text
+    assert summary.json()['vehicles'][0]['navn']=='Fælles testbil',summary.text
     tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
@@ -495,7 +510,55 @@ def browsers(tokens):
                 assert page.evaluate("window.stationSavedConfig.title")=='Mine lokale priser'
                 shot(prefix+'-station-editor',station_editor)
                 page.locator('#station-card-test').evaluate('el=>el.remove()')
+                page.wait_for_function("customElements.get('tiny-refuel-vehicles-card') !== undefined")
+                for type_, marker in [('vehicles','.td-car'),('comparison','.td-table'),('vehicle-details','.td-kv'),('status','[data-collect]'),('charging','.ts-station')]:
+                    page.evaluate("""type=>{
+                        const host=document.createElement('div');host.id='dashboard-card-test';
+                        host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
+                        document.querySelector('home-assistant').shadowRoot.append(host);
+                        const card=document.createElement('tiny-refuel-'+type+'-card');
+                        card.setConfig({type:'custom:tiny-refuel-'+type+'-card',limit:4,sort:'price'});
+                        card.hass=window.visualCard._hass;host.append(card);window.extraTestCard=card;
+                    }""",type_)
+                    extra_card=page.locator('tiny-refuel-'+type_+'-card')
+                    expect(extra_card.locator(marker).first).to_be_visible(timeout=30000)
+                    if type_=='comparison':
+                        expect(extra_card).to_contain_text('496,65')
+                    if type_=='charging':
+                        extra_card.evaluate("el=>{el._data={...el._data,tariffs:[{brand:'OK',name:'Generel normal',kwh:3.49,current:true}]};el._render();}")
+                        expect(extra_card).to_contain_text('Generelle selskabstakster')
+                        expect(extra_card.locator('[data-fuel]')).to_have_value('kwh')
+                    assert extra_card.evaluate('el=>el.scrollWidth<=el.clientWidth+1')
+                    shot(prefix+'-dashboard-'+type_,extra_card)
+                    page.locator('#dashboard-card-test').evaluate('el=>el.remove()')
+                for kind in ['comparison','charging']:
+                    page.evaluate("""kind=>{
+                        const host=document.createElement('div');host.id='dashboard-editor-test';
+                        host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
+                        document.querySelector('home-assistant').shadowRoot.append(host);
+                        const editor=document.createElement(kind==='charging'?'tiny-refuel-charging-editor':'tiny-refuel-dashboard-editor');
+                        editor.setConfig({type:'custom:tiny-refuel-'+kind+'-card'});editor.hass=window.visualCard._hass;
+                        editor.addEventListener('config-changed',e=>{window.extraSavedConfig=e.detail.config;editor.setConfig(e.detail.config);});
+                        host.append(editor);
+                    }""",kind)
+                    extra_editor=page.locator('tiny-refuel-charging-editor' if kind=='charging' else 'tiny-refuel-dashboard-editor')
+                    if kind=='comparison':
+                        expect(extra_editor.locator('[data-key="vehicle_id"] option')).to_have_count(2)
+                    extra_editor.locator('[data-key="title"]').fill('Mit ekstra kort')
+                    extra_editor.locator('[data-key="title"]').dispatch_event('change')
+                    assert page.evaluate('window.extraSavedConfig.title')=='Mit ekstra kort'
+                    shot(prefix+'-dashboard-'+kind+'-editor',extra_editor)
+                    page.locator('#dashboard-editor-test').evaluate('el=>el.remove()')
                 assert card.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), prefix + " horizontal overflow"
+        page.goto(BASE + "/lovelace/stationer")
+        native_map=page.locator('hui-map-card')
+        expect(native_map.locator('ha-map')).to_be_visible(timeout=30000)
+        assert native_map.evaluate('el=>el._filteredMapEntities.length')==5
+        for width,label in [(1280,'desktop'),(390,'mobile')]:
+            page.set_viewport_size({'width':width,'height':1000})
+            for dark in [False,True]:
+                set_theme(dark)
+                shot(label+('-dark-' if dark else '-light-')+'native-station-map',native_map)
         page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/config/integrations/integration/tiny_refuel")
         expect(page.get_by_text("Tiny Refuel", exact=True).first).to_be_visible(timeout=30000)

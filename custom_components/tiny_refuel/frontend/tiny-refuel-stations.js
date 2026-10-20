@@ -246,6 +246,7 @@
     }
     // Pure contracts used by the offline frontend test suite.
     PricesCard.selectRows=selectRows;
+    PricesCard.dashboardTools=Object.freeze({StationCard,StationEditor,css:extraCSS,esc,fmt,stamp,valid,coords,origin,distance,snapshot,selectRows,fuels});
   }
   if(customElements.get('tiny-refuel-card'))register();
   else customElements.whenDefined('tiny-refuel-card').then(register);

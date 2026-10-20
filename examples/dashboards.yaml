@@ -1,0 +1,48 @@
+title: Tiny Refuel
+views:
+  - title: Priser
+    path: priser
+    icon: mdi:gas-station
+    cards:
+      - type: custom:tiny-refuel-prices-card
+        title: Brændstofpriser
+        fuel: p95
+        sort: price
+        limit: 8
+      - type: custom:tiny-refuel-favorites-card
+        fuel: all
+        sort: name
+        favorites: []
+      - type: custom:tiny-refuel-station-card
+        title: Min station
+        fuel: all
+  - title: Opladning
+    path: opladning
+    icon: mdi:ev-station
+    cards:
+      - type: custom:tiny-refuel-charging-card
+        title: Ladesteder og priser
+        fuel: kwh
+        sort: price
+        limit: 8
+        show_tariffs: true
+      - type: map
+        title: Stationer på kortet
+        geo_location_sources:
+          - tiny_refuel
+        default_zoom: 11
+  - title: Mine køretøjer
+    path: koeretoejer
+    icon: mdi:car-multiple
+    cards:
+      - type: custom:tiny-refuel-vehicles-card
+      - type: custom:tiny-refuel-comparison-card
+        limit: 6
+        sort: price
+      - type: custom:tiny-refuel-vehicle-details-card
+  - title: Datastatus
+    path: datastatus
+    icon: mdi:database-check
+    cards:
+      - type: custom:tiny-refuel-status-card
+        show_ok_sources: false
