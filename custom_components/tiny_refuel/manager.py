@@ -104,6 +104,9 @@ class RefuelManager:
             self.refreshing = False
             self.progress = None
             if not self.closed:
+                if getattr(self, "_station_entities_enabled", False):
+                    from .station_entities import refresh_station_index
+                    await self.hass.async_add_executor_job(refresh_station_index, self)
                 self._notify()
 
     def station_snapshot(self):

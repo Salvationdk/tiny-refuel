@@ -24,7 +24,8 @@
           "edit_vehicle": "Edit shared vehicle",
           "remove_vehicle": "Remove shared vehicle",
           "catalog_vehicle": "Add from catalog",
-          "map": "Stations on the HA map"
+          "map": "Stations on the HA map",
+          "station_sensors": "Station price sensors"
         }
       },
       "settings": {
@@ -108,12 +109,20 @@
         "data": {
           "map_station_ids": "Stations"
         }
+      },
+      "station_sensors": {
+        "title": "Station price sensors",
+        "description": "Choose up to 50 stations for standard Home Assistant cards. Four price entities per station; missing or stale prices are unknown. Clear the selection to remove them.",
+        "data": {
+          "station_sensor_ids": "Stations"
+        }
       }
     },
     "abort": {
       "no_vehicles": "No shared vehicles configured.",
       "catalog_unavailable": "Catalog unavailable. Try again or add the vehicle manually.",
-      "stations_unavailable": "No matching stations. Load station data or choose a different area."
+      "stations_unavailable": "No matching stations. Load station data or choose a different area.",
+      "too_many_stations": "Choose no more than 50 stations."
     },
     "error": {
       "required_name": "Enter a name.",
