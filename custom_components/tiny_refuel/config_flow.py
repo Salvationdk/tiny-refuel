@@ -97,7 +97,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_map_stations(self, user_input=None):
         from homeassistant.helpers import selector
-        from .geo_location import map_selection
+        from .geo_location import map_selection, map_sites
         manager=self.hass.data.get(DOMAIN,{}).get('manager')
         if manager is None:return self.async_abort(reason='stations_unavailable')
         if user_input is not None:
@@ -105,10 +105,10 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
         # Apply the selected area/brands first; HA's dropdown can search labels.
         rows,_=map_selection(self.hass,manager,{**self._map_options,'map_selected_only':False,'map_limit':1000})
         saved=set(self._options().get('map_station_ids',[]))
-        rows.extend(row for row in manager.station_snapshot()['stations'] if row['id'] in saved and row['id'] not in {r['id'] for r in rows})
+        rows.extend(row for row in map_sites(manager.station_snapshot()['stations']) if saved.intersection(row['member_ids']) and row['id'] not in {r['id'] for r in rows})
         if not rows:return self.async_abort(reason='stations_unavailable')
         options=[{'value':r['id'],'label':r['brand']+' · '+r['name']+(' · '+r['charger_kind'] if r.get('charger_kind') else '')} for r in rows]
-        defaults=[r['id'] for r in rows if r['id'] in saved]
+        defaults=[r['id'] for r in rows if saved.intersection(r['member_ids'])]
         return self.async_show_form(step_id='map_stations',data_schema=vol.Schema({
             vol.Required('map_station_ids',default=defaults):vol.All(
                 selector.SelectSelector(selector.SelectSelectorConfig(options=options,multiple=True)),vol.Length(min=1))}))

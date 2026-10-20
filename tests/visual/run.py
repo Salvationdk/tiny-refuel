@@ -40,6 +40,7 @@ FIXTURE = {
            for i, brand in enumerate(["OK", "Q8", "Circle K", "Clever", "E.ON", "Ionity"])],
     "fuel_sources": {}, "ev_sources": {}, "benefits": {}, "geocode_pending": 0,
 }
+FIXTURE["ev"].append({**FIXTURE["ev"][1], "kind":"AC", "kwh":3.19})
 FIXTURE["ev_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"]}
                          for key in ["clever", "eon", "ionity", "ok", "oil", "shell", "circle_k", "q8"]}
 FIXTURE["fuel_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"], "records": count, "priced": count, "missing_coordinates": 0}
@@ -212,6 +213,18 @@ def onboard(folder):
         if len(markers)==5:break
         time.sleep(1)
     else:raise RuntimeError("Native map entities were not created")
+    for marker in markers:
+        picture=marker["attributes"].get("entity_picture")
+        assert picture and picture.startswith("/tiny_refuel/static/logos/"),marker
+        image=session.get(BASE+picture,timeout=10)
+        image.raise_for_status()
+        assert "<svg" in image.text,picture
+    grouped=[row for row in markers if row["attributes"].get("selskab")=="Q8"
+             and "AC" in (row["attributes"].get("ladeform") or "") and "DC" in (row["attributes"].get("ladeform") or "")]
+    assert len(grouped)==1,markers
+    assert len(grouped[0]["attributes"]["station_ids"])==2,grouped
+    assert "3,19 kr/kWh" in grouped[0]["attributes"]["oplysninger"],grouped
+    assert "2,69 kr/kWh" in grouped[0]["attributes"]["oplysninger"],grouped
     summary=session.get(BASE+"/api/tiny_refuel/dashboard",timeout=10);summary.raise_for_status()
     assert summary.json()['map']['count']==5,summary.text
     assert summary.json()['vehicles'][0]['navn']=='Fælles testbil',summary.text
@@ -501,7 +514,7 @@ def browsers(tokens):
                 expect(price_card.locator('.ts-station')).to_have_count(1)
                 shot(prefix+'-station-prices',price_card)
                 price_card.locator('[data-fuel]').select_option('kwh')
-                expect(price_card.locator('.ts-price small')).to_contain_text('kWh')
+                expect(price_card.locator('.ts-price small')).to_have_text(['kr/kWh','kr/kWh'])
                 page.evaluate("""id=>{
                     const host=window.stationTestHost;host.replaceChildren();
                     const card=document.createElement('tiny-refuel-station-card');
@@ -532,9 +545,9 @@ def browsers(tokens):
                     host.append(editor);
                 }""",tokens["testStationId"])
                 station_editor=page.locator('tiny-refuel-stations-editor')
-                expect(station_editor.locator('[data-favorite]')).to_have_count(15)
+                expect(station_editor.locator('[data-favorite]')).to_have_count(len(FIXTURE['stations'])+len(FIXTURE['ev']))
                 station_editor.locator('[data-filter]').fill('Q8')
-                expect(station_editor.locator('[data-favorite]')).to_have_count(2)
+                expect(station_editor.locator('[data-favorite]')).to_have_count(3)
                 station_editor.locator('[data-favorite]').first.set_checked(True)
                 station_editor.locator('[data-key="title"]').fill('Mine lokale priser')
                 station_editor.locator('[data-key="title"]').dispatch_event('change')
@@ -621,6 +634,9 @@ def browsers(tokens):
         native_map=page.locator('hui-map-card')
         expect(native_map.locator('ha-map')).to_be_visible(timeout=30000)
         assert native_map.evaluate('el=>el._filteredMapEntities.length')==5
+        logo=native_map.locator('ha-entity-marker .entity-picture:visible').first
+        expect(logo).to_be_visible(timeout=30000)
+        assert '/tiny_refuel/static/logos/logo-' in logo.evaluate('el=>getComputedStyle(el).backgroundImage')
         for width,label in [(1280,'desktop'),(390,'mobile')]:
             page.set_viewport_size({'width':width,'height':1000})
             for dark in [False,True]:

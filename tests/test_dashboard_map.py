@@ -28,6 +28,36 @@ class MapSelectionTests(unittest.TestCase):
         self.assertEqual(map_selection(self.hass,self.manager,{**options,'map_brands':['ok']})[0][0]['brand'],'OK')
         self.assertEqual(map_selection(self.hass,self.manager,{**options,'map_selected_only':True,'map_station_ids':[]})[0],[])
         self.assertEqual(len(map_selection(self.hass,self.manager,{**options,'map_radius_km':10})[0]),1)
+    def test_one_site_keeps_different_prices_and_old_selected_member_ids(self):
+        self.rows=[
+            {**ROW,"id":"a"*24},
+            {**ROW,"id":"b"*24,"kind":"ev","charger_kind":"AC","prices":{"kwh":2.99}},
+            {**ROW,"id":"c"*24,"kind":"ev","charger_kind":"DC","prices":{"kwh":3.99}},
+            {**ROW,"id":"d"*24,"brand":"OK"}]
+        options={"map_enabled":True,"map_selected_only":True,"map_station_ids":["c"*24]}
+        rows,status=map_selection(self.hass,self.manager,options)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["id"],"a"*24)
+        self.assertEqual(rows[0]["prices"],{"p95":15})
+        self.assertEqual(rows[0]["charger_kind"],"AC / DC")
+        self.assertEqual(len(rows[0]["variants"]),3)
+        entity=StationMapEntity({**rows[0],"distance":0})
+        details=entity.extra_state_attributes
+        self.assertIn("2,99 kr/kWh",details["oplysninger"])
+        self.assertIn("3,99 kr/kWh",details["oplysninger"])
+        self.assertEqual(len(details["ladeformer_og_priser"]),3)
+        self.assertEqual(len(map_selection(self.hass,self.manager,{"map_enabled":True})[0]),2)
+
+    def test_sites_share_coordinates_or_address_but_never_company(self):
+        self.rows=[ROW,{**ROW,"id":"b"*24,"address":"Other spelling"},
+                   {**ROW,"id":"c"*24,"lat":55.0002},
+                   {**ROW,"id":"d"*24,"brand":"OK"},
+                   {**ROW,"id":"e"*24,"address":"Another site","lat":55.1}]
+        rows,status=map_selection(self.hass,self.manager,{"map_enabled":True,"map_limit":1})
+        self.assertEqual(status["matched"],3)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(len(rows[0]["member_ids"]),3)
+
     def test_explicit_unavailable_position_never_falls_back_to_home(self):
         rows,status=map_selection(self.hass,self.manager,{'map_enabled':True,'map_location_entity':'person.missing'})
         self.assertEqual(rows,[]);self.assertFalse(status['origin_available'])
@@ -37,6 +67,20 @@ class MapSelectionTests(unittest.TestCase):
         self.assertEqual(entity.distance,1.25);self.assertFalse(entity.extra_state_attributes['aktuelle_priser'])
         self.assertEqual(entity.extra_state_attributes['benzin_95_kr_l'],15)
         self.assertEqual(entity.unique_id,'tiny_refuel_map_'+'a'*24)
+
+    def test_brand_logos_use_bundled_assets_with_safe_icon_fallback(self):
+        from custom_components.tiny_refuel.geo_location import BRAND_LOGOS
+        folder=Path(__file__).resolve().parents[1]/"custom_components/tiny_refuel/frontend"
+        for brand, filename in BRAND_LOGOS.items():
+            with self.subTest(brand=brand):
+                entity=StationMapEntity({**ROW,"brand":brand.upper(),"distance":1})
+                self.assertEqual(entity.entity_picture,"/tiny_refuel/static/logos/logo-"+filename+".svg")
+                self.assertTrue((folder/"logos"/("logo-"+filename+".svg")).is_file())
+        entity=StationMapEntity({**ROW,"brand":"Unknown company","distance":1})
+        self.assertIsNone(entity.entity_picture)
+        self.assertEqual(entity.icon,"mdi:gas-station")
+        entity.row={**ROW,"brand":"  IONITY  ","kind":"ev","distance":1}
+        self.assertTrue(entity.entity_picture.endswith("logo-ionity.svg"))
 
 class MapLifecycleTests(unittest.IsolatedAsyncioTestCase):
     async def test_refresh_reuses_entity_then_removes_out_of_scope_station(self):
