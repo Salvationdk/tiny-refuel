@@ -42,7 +42,7 @@
       rows=rows.filter(row=>{
         if (config.mode==='station' && row.id!==config.station_id) return false;
         if (config.mode==='favorites' && !selected.includes(row.id)) return false;
-        if (config.brands && config.brands.length && !config.brands.includes(row.brand)) return false;
+        if (config.brands && config.brands.length && !config.brands.some(brand=>brand.toLowerCase()===String(row.brand).toLowerCase())) return false;
         if (config.radius_km>0 && (row.distance===null || row.distance>config.radius_km)) return false;
         if (search && ![row.brand,row.name,row.address].join(' ').toLocaleLowerCase('da').includes(search.toLocaleLowerCase('da'))) return false;
         return field==='all' || valid(row.prices[field]) || (row.kind==='ev' && field==='kwh');

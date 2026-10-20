@@ -26,6 +26,9 @@ assert.equal(calc(data,{},hass,car,'kwh').length,0,'petrol capacity cannot becom
 assert.equal(calc(data,{},hass,{...car,tank_liters:null},'p95')[0].full_cost,null);
 assert.equal(calc(data,{radius_km:10},hass,car,'p95').length,1);
 assert.equal(calc(data,{radius_km:10},null,car,'p95').length,0);
+const ionity={...data,stations:[{...data.stations[3],brand:'IONITY'}]};
+assert.equal(calc(ionity,{brands:['Ionity']},hass,{...car,brændstof:'el',batteri_kwh:45},'kwh')[0].full_cost,135);
+
 const compare=new Compare();compare.setConfig({type:'custom:tiny-refuel-comparison-card'});compare._data=data;compare._hass=hass;compare._render();
 assert.ok(compare.shadowRoot.innerHTML.includes('490,00'));assert.ok(!compare.shadowRoot.innerHTML.includes('Cached'));
 compare._config.vehicle_id='removed';compare._render();assert.ok(compare.shadowRoot.innerHTML.includes('Vælg et fælles køretøj'));
