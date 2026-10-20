@@ -38,6 +38,20 @@ class MapSelectionTests(unittest.TestCase):
         self.assertEqual(entity.extra_state_attributes['benzin_95_kr_l'],15)
         self.assertEqual(entity.unique_id,'tiny_refuel_map_'+'a'*24)
 
+    def test_brand_logos_use_bundled_assets_with_safe_icon_fallback(self):
+        from custom_components.tiny_refuel.geo_location import BRAND_LOGOS
+        folder=Path(__file__).resolve().parents[1]/"custom_components/tiny_refuel/frontend"
+        for brand, filename in BRAND_LOGOS.items():
+            with self.subTest(brand=brand):
+                entity=StationMapEntity({**ROW,"brand":brand.upper(),"distance":1})
+                self.assertEqual(entity.entity_picture,"/tiny_refuel/static/logos/logo-"+filename+".svg")
+                self.assertTrue((folder/"logos"/("logo-"+filename+".svg")).is_file())
+        entity=StationMapEntity({**ROW,"brand":"Unknown company","distance":1})
+        self.assertIsNone(entity.entity_picture)
+        self.assertEqual(entity.icon,"mdi:gas-station")
+        entity.row={**ROW,"brand":"  IONITY  ","kind":"ev","distance":1}
+        self.assertTrue(entity.entity_picture.endswith("logo-ionity.svg"))
+
 class MapLifecycleTests(unittest.IsolatedAsyncioTestCase):
     async def test_refresh_reuses_entity_then_removes_out_of_scope_station(self):
         with tempfile.TemporaryDirectory() as temp:

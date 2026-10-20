@@ -2,9 +2,17 @@
 from homeassistant.components.geo_location import GeolocationEvent
 from homeassistant.core import callback
 from homeassistant.helpers.event import async_track_state_change_event
-from .const import DOMAIN
+from .const import DOMAIN, STATIC_URL
 from .entity_data import coordinates, distance_km, vehicle_origin
 from .sensor import device_info
+
+
+# Only bundled assets: map markers never contact third-party logo hosts.
+BRAND_LOGOS = {
+    "circle k": "circle-k", "ingo": "ingo", "q8": "q8", "f24": "f24",
+    "go'on": "goon", "shell": "shell", "uno-x": "uno-x", "ok": "ok",
+    "oil": "oil", "clever": "clever", "e.on": "eon", "ionity": "ionity",
+}
 
 
 def map_selection(hass, manager, options):
@@ -102,6 +110,11 @@ class StationMapEntity(GeolocationEvent):
 
     @property
     def name(self):return self.row['brand']+' · '+self.row['name']+(' · '+self.row['charger_kind'] if self.row.get('charger_kind') else '')
+
+    @property
+    def entity_picture(self):
+        logo = BRAND_LOGOS.get(str(self.row.get("brand", "")).strip().casefold())
+        return STATIC_URL + "/logos/logo-" + logo + ".svg" if logo else None
 
     @property
     def latitude(self):return self.row['lat']

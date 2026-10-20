@@ -212,6 +212,12 @@ def onboard(folder):
         if len(markers)==5:break
         time.sleep(1)
     else:raise RuntimeError("Native map entities were not created")
+    for marker in markers:
+        picture=marker["attributes"].get("entity_picture")
+        assert picture and picture.startswith("/tiny_refuel/static/logos/"),marker
+        image=session.get(BASE+picture,timeout=10)
+        image.raise_for_status()
+        assert "<svg" in image.text,picture
     summary=session.get(BASE+"/api/tiny_refuel/dashboard",timeout=10);summary.raise_for_status()
     assert summary.json()['map']['count']==5,summary.text
     assert summary.json()['vehicles'][0]['navn']=='Fælles testbil',summary.text
@@ -621,6 +627,9 @@ def browsers(tokens):
         native_map=page.locator('hui-map-card')
         expect(native_map.locator('ha-map')).to_be_visible(timeout=30000)
         assert native_map.evaluate('el=>el._filteredMapEntities.length')==5
+        logo=native_map.locator('ha-entity-marker .entity-picture:visible').first
+        expect(logo).to_be_visible(timeout=30000)
+        assert '/tiny_refuel/static/logos/logo-' in logo.evaluate('el=>getComputedStyle(el).backgroundImage')
         for width,label in [(1280,'desktop'),(390,'mobile')]:
             page.set_viewport_size({'width':width,'height':1000})
             for dark in [False,True]:
