@@ -14,8 +14,8 @@ Vælg entiteterne fra integrationssiden; deres entity_id afhænger af navn og ev
 type: entities
 title: Mine brændstofpriser
 entities:
-  - entity: sensor.ERSTAT_MED_DIN_STATIONSSENSOR
-  - entity: sensor.ERSTAT_MED_DIN_TANKKAPACITET
+  - entity: sensor.erstat_med_din_stationssensor
+  - entity: sensor.erstat_med_din_tankkapacitet
 ```
 
 Home Assistants Recorder kan gemme numeriske sensorers historik, medmindre de er udeladt i Recorder. Historik før en stationssensor blev valgt udfyldes ikke bagud. Tiny Refuels lokale prishistorik er separat og tilgængelig via get_history.

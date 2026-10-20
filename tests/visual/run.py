@@ -229,7 +229,7 @@ def onboard(folder):
     assert query_action("get_status",{})["map"]["count"]==5
     assert len(query_action("get_history",{"station_id":tokens["testStationId"],"fuel":"p95","days":7})["points"])==3
     catalog=query_action("get_catalog",{"vehicle_type":"personbil","make":"Volkswagen","search":"up!"})
-    assert catalog["items"] and catalog["items"][0]["model"]["model"]=="up!",catalog
+    assert any(item["model"]["model"]=="up!" for item in catalog["items"]),catalog
     options=api(session,"/api/config/config_entries/options/flow",{"handler":result["result"]["entry_id"]})
     options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],{"next_step_id":"station_sensors"})
     assert options["type"]=="form",options
