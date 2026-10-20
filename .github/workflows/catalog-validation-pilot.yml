@@ -23,7 +23,7 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - name: Offline checks against cached source pages and Yahoo HTML
         run: python scripts/catalog_validation/run_pilot.py offline
-      - name: Ten bounded live search probes (three threads)
+      - name: Five vehicle models on Yahoo and Gibiru (three threads)
         if: success()
         run: timeout --signal=INT --kill-after=20s 480s python -u scripts/catalog_validation/run_pilot.py live
       - name: Save reports, HTML, cache and screenshots

@@ -21,7 +21,7 @@ def offline():
     assert not cs[0]['verified'];checks.append('real cached Roma battery configurations')
     assert not v.extract_page(page_data,'2 TWENTY','ROMA 4800');checks.append('different model rejected')
     source=json.loads((ROOT/'fixtures/auto-data-up.json').read_text())
-    candidates=v.extract_page(source,'Volkswagen','up!')
+    candidates=v.extract_page(source,make,model)
     assert len(candidates)==1 and candidates[0]['value']==35 and candidates[0]['field']=='tank_l'
     assert candidates[0]['scope']['variant']=='1.0 (60 Hp)' and candidates[0]['scope']['year_start']==2012 and candidates[0]['scope']['year_end']==2016
     assert not candidates[0]['verified'];checks.append('actual Auto-Data table: 35 L, explicit variant and production years')
@@ -61,10 +61,10 @@ ENGINES={
 'Mojeek':'https://www.mojeek.com/search?q=',
 }
 
-def probe(engine,base):
+def probe(engine,base,make,model,category):
     from playwright.sync_api import sync_playwright
-    report={'engine':engine,'query_make':'Volkswagen','query_model':'up!','status':'started'}
-    folder=OUT/engine.lower();folder.mkdir(exist_ok=True)
+    report={'engine':engine,'query_make':make,'query_model':model,'category':category,'status':'started'}
+    folder=OUT/(engine.lower()+'-'+hashlib.sha256((make+' '+model).encode()).hexdigest()[:10]);folder.mkdir(exist_ok=True)
     try:
         with sync_playwright() as p:
             browser=p.chromium.launch()
@@ -72,11 +72,11 @@ def probe(engine,base):
                 context=browser.new_context(user_agent=v.AGENT,viewport={'width':1280,'height':900})
                 page=context.new_page()
                 fetch=v.ThreadFetcher(page,folder/'cache',3)
-                url=base+quote('"Volkswagen" "up!" fuel tank capacity specifications')
+                url=base+quote(f'"{make}" "{model}" fuel tank battery capacity specifications')
                 response=fetch.get(url)
                 report.update({k:val for k,val in response.items() if k not in ('text','links','diagnostic_html','search_results')})
                 rows=response.get('search_results',[])
-                links=v.relevant_results(rows,'Volkswagen','up!')
+                links=v.relevant_results(rows,make,model)
                 report['result_blocks']=len(rows);report['relevant_links']=links
                 v.save(folder/'search-results.json',rows)
                 # Public unauthenticated pages only; no credentials/cookies/traces in artifact.
@@ -88,7 +88,7 @@ def probe(engine,base):
                     source=fetch.get(links[0])
                     report['sources'].append({k:val for k,val in source.items() if k not in ('text','links','diagnostic_html')})
                     if source.get('status')=='fetched':
-                        report['capacity_candidates']=v.extract_page(source,'Volkswagen','up!')
+                        report['capacity_candidates']=v.extract_page(source,make,model)
             finally:browser.close()
     except Exception as exc:
         report['status']='probe_error';report['error']=str(exc)
@@ -100,7 +100,8 @@ def probe(engine,base):
 def live():
     reports=[]
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-        futures=[pool.submit(probe,name,url) for name,url in ENGINES.items()]
+        models=[('Toyota','Aygo','petrol'),('Volkswagen','Golf','diesel_or_petrol_variant_required'),('Tesla','Model 3','electric'),('Honda','CB500F','motorcycle'),('Ford','Transit','van')]
+        futures=[pool.submit(probe,name,ENGINES[name],make,model,category) for make,model,category in models for name in ('Yahoo','Gibiru')]
         for future in concurrent.futures.as_completed(futures):
             reports.append(future.result());v.save(OUT/'live-report.json',{'reports':reports,'note':'A fetched search page or link does not validate a vehicle capacity.'})
     print('Live probes completed. Results may include access restrictions.',flush=True)
