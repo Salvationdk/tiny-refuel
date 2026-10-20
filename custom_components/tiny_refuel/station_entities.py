@@ -18,6 +18,7 @@ class RefuelStationPriceSensor(SensorEntity):
     _attr_has_entity_name = True
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_icon = "mdi:cash"
+    _unrecorded_attributes = frozenset({"station", "last_error"})
     _attr_device_info = device_info()
 
     def __init__(self, manager, station_id, fuel):

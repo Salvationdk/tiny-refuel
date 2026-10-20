@@ -562,12 +562,12 @@ def browsers(tokens):
                     assert extra_card.evaluate('el=>el.scrollWidth<=el.clientWidth+1')
                     shot(prefix+'-dashboard-'+type_,extra_card)
                     page.locator('#dashboard-card-test').evaluate('el=>el.remove()')
-                page.evaluate("""entity=>{
+                page.evaluate("""async entity=>{
                     const host=document.createElement('div');host.id='native-price-card-test';
                     host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color)';
                     document.querySelector('home-assistant').shadowRoot.append(host);
-                    const card=document.createElement('hui-entities-card');
-                    card.setConfig({type:'entities',title:'Tiny Refuel · Egne kort',entities:[entity]});
+                    const helpers=await window.loadCardHelpers();
+                    const card=helpers.createCardElement({type:'entities',title:'Tiny Refuel · Egne kort',entities:[entity]});
                     card.hass=window.visualCard._hass;host.append(card);
                 }""",tokens["testPriceEntity"])
                 native_card=page.locator('#native-price-card-test')
