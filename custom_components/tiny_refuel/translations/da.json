@@ -20,9 +20,10 @@
         "title": "Tiny Refuel",
         "menu_options": {
           "settings": "Opdateringsinterval",
-          "vehicle": "Tilføj fælles køretøj",
+          "vehicle": "Tilføj manuelt",
           "edit_vehicle": "Rediger fælles køretøj",
-          "remove_vehicle": "Fjern fælles køretøj"
+          "remove_vehicle": "Fjern fælles køretøj",
+          "catalog_vehicle": "Tilføj fra katalog"
         }
       },
       "settings": {
@@ -33,7 +34,7 @@
       },
       "vehicle": {
         "title": "Fælles køretøj",
-        "description": "Fælles køretøjer bruges af køretøjssensorerne og kort uden egne køretøjer. Angiv kapaciteter, der er kontrolleret for dit køretøj.",
+        "description": "Fælles køretøjer bruges af køretøjssensorerne og kort uden egne køretøjer. Katalogets kapaciteter er forslag; kontrollér årgang og variant før du gemmer.",
         "data": {
           "navn": "Navn",
           "mærke": "Mærke",
@@ -42,7 +43,10 @@
           "tank_liters": "Tank (L)",
           "batteri_kwh": "Batteri (kWh)",
           "location_entity": "Positionsenhed",
-          "notify_service": "Notifikationsservice"
+          "notify_service": "Notifikationsservice",
+          "koeretoejstype": "Køretøjstype",
+          "variant": "Variant",
+          "aargang": "Årgang"
         }
       },
       "edit_vehicle": {
@@ -57,10 +61,36 @@
         "data": {
           "vehicle_id": "Køretøj"
         }
+      },
+      "catalog_vehicle": {
+        "title": "Køretøjstype",
+        "data": {
+          "koeretoejstype": "Køretøjstype"
+        }
+      },
+      "catalog_make": {
+        "title": "Mærke",
+        "data": {
+          "mærke": "Mærke"
+        }
+      },
+      "catalog_model": {
+        "title": "Model",
+        "data": {
+          "model": "Model"
+        }
+      },
+      "catalog_variant": {
+        "title": "Variant",
+        "data": {
+          "variant_choice": "Variant"
+        },
+        "description": "Vælg varianten, der passer til årgang og drivmiddel, eller indtast kapaciteten selv."
       }
     },
     "abort": {
-      "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer."
+      "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer.",
+      "catalog_unavailable": "Kataloget er ikke tilgængeligt. Prøv igen, eller tilføj køretøjet manuelt."
     },
     "error": {
       "required_name": "Angiv et navn.",

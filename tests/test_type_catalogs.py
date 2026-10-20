@@ -72,4 +72,22 @@ class CatalogTests(unittest.IsolatedAsyncioTestCase):
         self.catalog['brands'][0]['modeller'][0]['tank_l']=-1
         with self.assertRaises(ValueError):mod.validate_catalog(self.catalog)
 
+    async def test_status_notifies_restores_and_marks_offline_copy(self):
+        store=self.store();changes=[]
+        unsubscribe=store.subscribe(lambda:changes.append(store.snapshot()))
+        await store.get('personbil')
+        self.assertEqual(len(changes),1)
+        summary=store.snapshot()['catalogs']['personbil']
+        self.assertEqual(summary['models'],1)
+        self.assertEqual(summary['source'],'github')
+        self.assertIn('fetched_at',summary)
+        unsubscribe()
+        restarted=self.store()
+        await restarted.async_load_status()
+        self.assertEqual(restarted.snapshot()['loaded_types'],['personbil'])
+        async def offline(*args):raise OSError('offline')
+        restarted.fetch_bytes=offline
+        await restarted.get('personbil')
+        self.assertEqual(restarted.snapshot()['stale_types'],['personbil'])
+
 if __name__=='__main__':unittest.main()

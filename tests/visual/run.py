@@ -4,6 +4,7 @@ Run from any directory with Python 3.14 and requirements.txt installed.
 No real account, source scraper, location or Home Assistant installation is used.
 """
 import json
+import hashlib
 import os
 from pathlib import Path
 import secrets
@@ -59,6 +60,26 @@ def prepare(folder):
     manager = custom / "tiny_refuel/manager.py"
     payload = json.dumps(json.dumps(FIXTURE))
     manager.write_text(manager.read_text() + '\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads(' + payload + ')\n    self._notify()\n\nRefuelManager.start_refresh = _visual_refresh\n')
+    # Exercise the real downloader/cache/API against deterministic catalog bytes.
+    bundled = json.loads((ROOT / "custom_components/tiny_refuel/frontend/katalog.json").read_text())
+    names = {"personbil":"car.json", "varebil":"van.json", "lastbil":"truck.json", "motorcykel":"motorcycle.json", "knallert":"moped.json", "bus":"bus.json", "traktor":"tractor.json", "andet":"other.json"}
+    payloads = {}
+    index = {"schema_version":1, "version":"visual-fixture", "catalogs":{}}
+    for kind, filename in names.items():
+        brands = []
+        for brand in bundled["brands"]:
+            models = [m for m in brand["modeller"] if kind in [("varebil" if t=="varevogn" else t) for t in m.get("vehicle_types",[])]]
+            if models: brands.append({**brand,"modeller":models})
+        raw = json.dumps({"vehicle_type":kind,"brands":brands},ensure_ascii=False)
+        payloads[filename] = raw
+        index["catalogs"][kind] = {"file":filename,"size_bytes":len(raw.encode()),"sha256":hashlib.sha256(raw.encode()).hexdigest()}
+    payloads["index.json"] = json.dumps(index)
+    store = custom / "tiny_refuel/catalog_store.py"
+    store.write_text(store.read_text() + "\n_visual_payloads = " + repr(payloads) + "\n" +
+        "_original_catalog_init = CatalogStore.__init__\n" +
+        "async def _visual_fetch(url, limit):\n    return _visual_payloads[url.rsplit('/',1)[-1]].encode()\n" +
+        "def _visual_init(self, directory, fetch_bytes, bundled_catalog, base_url=CATALOG_BASE):\n    _original_catalog_init(self,directory,_visual_fetch,bundled_catalog,base_url)\n" +
+        "CatalogStore.__init__ = _visual_init\n")
     (folder / "configuration.yaml").write_text(yaml.safe_dump({
         "homeassistant": {"name": "Tiny Refuel visuel test", "latitude": 55.67,
                           "longitude": 12.56, "elevation": 0, "unit_system": "metric", "time_zone": "Europe/Copenhagen"},
@@ -131,10 +152,18 @@ def onboard():
     assert asset.content == (ROOT / "custom_components/tiny_refuel/frontend/tiny-refuel-card.js").read_bytes(), "HA served a different card module"
     # Exercise the actual integration options API and reload with shared vehicles.
     options = api(session, "/api/config/config_entries/options/flow", {"handler": result["result"]["entry_id"]})
-    options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {"next_step_id": "vehicle"})
+    options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {"next_step_id": "catalog_vehicle"})
+    for expected_step, values in [("catalog_vehicle",{"koeretoejstype":"personbil"}),
+                                  ("catalog_make",{"mærke":"Volkswagen"}),
+                                  ("catalog_model",{"model":"up!"})]:
+        assert options["step_id"] == expected_step, options
+        options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], values)
+    assert options["step_id"] == "vehicle", options
+    defaults = {field["name"]:field.get("default") for field in options["data_schema"]}
+    assert defaults.get("tank_liters") == 35, defaults
     options = api(session, "/api/config/config_entries/options/flow/" + options["flow_id"], {
         "navn": "Fælles testbil", "mærke": "Volkswagen", "model": "up!", "brændstof": "benzin",
-        "tank_liters": 35, "location_entity": "device_tracker.visual"})
+        "tank_liters": 35, "koeretoejstype":"personbil", "location_entity": "device_tracker.visual"})
     assert options["type"] == "create_entry", options
     for _ in range(60):
         data = session.get(BASE + "/api/tiny_refuel/data", timeout=10)
@@ -150,6 +179,10 @@ def onboard():
         time.sleep(1)
     else:
         raise RuntimeError("No shared vehicle entity produced a usable state")
+    status = next(row for row in states if row.get("attributes",{}).get("friendly_name","").endswith("Katalogstatus"))
+    assert status["state"] == "ready", status
+    assert status["attributes"]["catalogs"]["personbil"]["source"] == "github", status
+    assert status["attributes"]["catalogs"]["personbil"]["models"] > 0, status
     tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
@@ -347,14 +380,18 @@ def browsers(tokens):
                 extra = editor.locator('[data-editor-section="vehicle-extra-0"]')
                 extra.locator("summary").click()
                 shot(prefix + "-editor-details", editor)
+                def wait_catalog(kind):
+                    page.wait_for_function("kind => window.visualEditor._katalogUrlUsed === 'types:' + kind && window.visualEditor._katalogLoading === false", arg=kind)
                 type_select = editor.locator('[data-key="bil:0:koeretoejstype"]')
                 type_select.select_option("varebil")
+                wait_catalog("varebil")
                 expect(editor.locator('[data-key="bil:0:model"]')).to_have_value("")
                 expect(editor.locator('[data-key="bil:0:tank_liters"]')).to_have_value("")
                 model_values = editor.locator('[data-model-options="0"] option').evaluate_all("els => els.map(el => el.value)")
                 assert "Jumper" in model_values and "C3" not in model_values
                 shot(prefix + "-editor-vehicle-type", editor)
                 type_select.select_option("lastbil")
+                wait_catalog("lastbil")
                 expect(editor.locator('[data-key="bil:0:mærke"]')).to_have_value("")
                 expect(editor.locator('[data-make-options="0"] option')).to_have_count(3)
                 assert 'Citroën' not in editor.locator('[data-make-options="0"] option').evaluate_all('els => els.map(el => el.value)')
@@ -367,6 +404,7 @@ def browsers(tokens):
                     ("andet", "Polaris", "Ranger 1000 (2025, terrænmodel)", "tank_liters", "43"),
                 ]:
                     type_select.select_option(category)
+                    wait_catalog(category)
                     make = editor.locator('[data-key="bil:0:mærke"]')
                     make.fill(brand)
                     make.dispatch_event("change")
@@ -376,6 +414,7 @@ def browsers(tokens):
                     expect(editor.locator('[data-key="bil:0:' + field + '"]')).to_have_value(capacity)
                 shot(prefix + "-editor-expanded-catalog", editor)
                 type_select.select_option("personbil")
+                wait_catalog("personbil")
                 make = editor.locator('[data-key="bil:0:mærke"]')
                 make.fill("Volkswagen")
                 make.dispatch_event("change")
@@ -438,3 +477,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -20,9 +20,10 @@
         "title": "Tiny Refuel",
         "menu_options": {
           "settings": "Update interval",
-          "vehicle": "Add shared vehicle",
+          "vehicle": "Add manually",
           "edit_vehicle": "Edit shared vehicle",
-          "remove_vehicle": "Remove shared vehicle"
+          "remove_vehicle": "Remove shared vehicle",
+          "catalog_vehicle": "Add from catalog"
         }
       },
       "settings": {
@@ -33,7 +34,7 @@
       },
       "vehicle": {
         "title": "Shared vehicle",
-        "description": "Shared vehicles are used by vehicle sensors and cards without their own vehicles. Enter capacities verified for your vehicle.",
+        "description": "Shared vehicles are used by vehicle sensors and cards without their own vehicles. Catalog capacities are suggestions; check the year and variant before saving.",
         "data": {
           "navn": "Name",
           "mærke": "Make",
@@ -42,7 +43,10 @@
           "tank_liters": "Tank (L)",
           "batteri_kwh": "Battery (kWh)",
           "location_entity": "Position entity",
-          "notify_service": "Notification service"
+          "notify_service": "Notification service",
+          "koeretoejstype": "Vehicle type",
+          "variant": "Variant",
+          "aargang": "Model year"
         }
       },
       "edit_vehicle": {
@@ -57,10 +61,36 @@
         "data": {
           "vehicle_id": "Vehicle"
         }
+      },
+      "catalog_vehicle": {
+        "title": "Vehicle type",
+        "data": {
+          "koeretoejstype": "Vehicle type"
+        }
+      },
+      "catalog_make": {
+        "title": "Make",
+        "data": {
+          "mærke": "Make"
+        }
+      },
+      "catalog_model": {
+        "title": "Model",
+        "data": {
+          "model": "Model"
+        }
+      },
+      "catalog_variant": {
+        "title": "Variant",
+        "data": {
+          "variant_choice": "Variant"
+        },
+        "description": "Select the variant matching your year and powertrain, or enter the capacity manually."
       }
     },
     "abort": {
-      "no_vehicles": "No shared vehicles configured."
+      "no_vehicles": "No shared vehicles configured.",
+      "catalog_unavailable": "Catalog unavailable. Try again or add the vehicle manually."
     },
     "error": {
       "required_name": "Enter a name.",

@@ -87,6 +87,8 @@ async def async_setup_entry(hass: HomeAssistant, entry) -> bool:
                             vehicles=getattr(entry, "options", {}).get("vehicles", []))
     await manager.async_load()
     state["manager"] = manager
+    if state.get("catalogs"):
+        await state["catalogs"].async_load_status()
     entry.runtime_data = manager
 
     async def refresh(call: ServiceCall):

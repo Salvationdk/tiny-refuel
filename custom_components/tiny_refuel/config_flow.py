@@ -4,6 +4,9 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from .const import CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS, DOMAIN
 from .entity_data import positive
+from .catalog_store import CATALOG_FILES
+
+TYPE_LABELS = {"personbil":"Personbil", "varebil":"Varebil", "lastbil":"Lastbil", "motorcykel":"Motorcykel", "knallert":"Knallert", "bus":"Bus", "traktor":"Traktor", "andet":"Andet"}
 
 
 class TinyRefuelConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -34,7 +37,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
         return [dict(vehicle) for vehicle in self.config_entry.options.get("vehicles", [])]
 
     async def async_step_init(self, user_input=None):
-        return self.async_show_menu(step_id="init", menu_options=["settings", "vehicle", "edit_vehicle", "remove_vehicle"])
+        return self.async_show_menu(step_id="init", menu_options=["settings", "catalog_vehicle", "vehicle", "edit_vehicle", "remove_vehicle"])
 
     async def async_step_settings(self, user_input=None):
         if user_input is not None:
@@ -61,19 +64,85 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
     async def async_step_remove_vehicle(self, user_input=None):
         return await self._choose_vehicle("remove_vehicle", user_input)
 
+    async def async_step_catalog_vehicle(self, user_input=None):
+        if user_input is not None:
+            type_ = user_input.get("koeretoejstype")
+            if type_ not in CATALOG_FILES:
+                return self.async_abort(reason="catalog_unavailable")
+            store = self.hass.data.get(DOMAIN, {}).get("catalogs")
+            if store is None:return self.async_abort(reason="catalog_unavailable")
+            self._catalog_type = type_
+            self._selected_catalog = await store.get(type_)
+            if not self._selected_catalog.get("brands"):return self.async_abort(reason="catalog_unavailable")
+            return await self.async_step_catalog_make()
+        return self.async_show_form(step_id="catalog_vehicle", data_schema=vol.Schema({
+            vol.Required("koeretoejstype"):vol.In(TYPE_LABELS)}))
+
+    async def async_step_catalog_make(self, user_input=None):
+        from homeassistant.helpers import selector
+        brands = self._selected_catalog['brands']
+        if user_input is not None:
+            self._catalog_make = next((b for b in brands if b['mærke']==user_input.get('mærke')),None)
+            if self._catalog_make is None:return self.async_abort(reason="catalog_unavailable")
+            return await self.async_step_catalog_model()
+        return self.async_show_form(step_id="catalog_make",data_schema=vol.Schema({
+            vol.Required("mærke"):selector.SelectSelector(selector.SelectSelectorConfig(
+                options=[b['mærke'] for b in brands],mode=selector.SelectSelectorMode.DROPDOWN))}))
+
+    async def async_step_catalog_model(self, user_input=None):
+        from homeassistant.helpers import selector
+        models = self._catalog_make['modeller']
+        if user_input is not None:
+            self._catalog_model = next((m for m in models if m['model']==user_input.get('model')),None)
+            if self._catalog_model is None:return self.async_abort(reason="catalog_unavailable")
+            variants=self._catalog_model.get('variants',[])
+            if variants:return await self.async_step_catalog_variant()
+            self._set_catalog_defaults(self._catalog_model)
+            return await self.async_step_vehicle()
+        return self.async_show_form(step_id="catalog_model",data_schema=vol.Schema({
+            vol.Required("model"):selector.SelectSelector(selector.SelectSelectorConfig(
+                options=[m['model'] for m in models],mode=selector.SelectSelectorMode.DROPDOWN))}))
+
+    async def async_step_catalog_variant(self, user_input=None):
+        variants=self._catalog_model.get('variants',[])
+        if user_input is not None:
+            chosen=next((v for i,v in enumerate(variants) if str(i)==user_input.get('variant_choice')),None)
+            if chosen is None and user_input.get('variant_choice')!='manual':return self.async_abort(reason="catalog_unavailable")
+            self._set_catalog_defaults(chosen, manual=chosen is None)
+            return await self.async_step_vehicle()
+        return self.async_show_form(step_id="catalog_variant",data_schema=vol.Schema({
+            vol.Required("variant_choice"):vol.In({"manual":"Indtast kapacitet selv",**{str(i):v['name'] for i,v in enumerate(variants)}})}))
+
+    def _set_catalog_defaults(self, source, manual=False):
+        model=self._catalog_model; make=self._catalog_make['mærke']
+        source=source or {}
+        values={"mærke":make,"model":model['model'],"koeretoejstype":self._catalog_type,"navn":make+' '+model['model']}
+        # A scoped variant never inherits a conflicting model-level capacity/fuel.
+        fuel=source.get('brændstof')
+        if not fuel:
+            fuels=source.get('fuel_types',[])
+            if len(fuels)==1:fuel={'benzin':'benzin','diesel':'diesel','el':'el'}.get(fuels[0].casefold())
+        if fuel:values['brændstof']=fuel
+        if not manual:
+            for field,target in [('tank_l','tank_liters'),('batteri_kwh','batteri_kwh')]:
+                if positive(source.get(field)):values[target]=source[field]
+        if source is not model and source.get('name'):values['variant']=source['name']
+        self._catalog_defaults=values
+
     async def async_step_vehicle(self, user_input=None):
         from uuid import uuid4
         from homeassistant.helpers import selector
         vehicles = self._vehicles()
         vehicle_id = getattr(self, "_vehicle_id", None)
         old = next((v for v in vehicles if v["id"] == vehicle_id), {})
+        defaults = getattr(self,"_catalog_defaults",None) or old
         if user_input is not None:
             vehicle = {key: value.strip() if isinstance(value, str) else value for key, value in user_input.items()
                        if value is not None and value != ""}
             invalid = {key: "invalid_capacity" for key in ("tank_liters", "batteri_kwh")
                        if key in vehicle and not positive(vehicle[key])}
             if invalid:
-                return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(old, selector), errors=invalid)
+                return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(defaults, selector), errors=invalid)
             if not vehicle.get("navn"):
                 return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(user_input, selector), errors={"navn": "required_name"})
             vehicle["id"] = vehicle_id or uuid4().hex
@@ -84,7 +153,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             if not old:
                 vehicles.append(vehicle)
             return self.async_create_entry(title="", data={**self._options(), "vehicles": vehicles})
-        return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(old, selector))
+        return self.async_show_form(step_id="vehicle", data_schema=self._vehicle_schema(defaults, selector))
 
     @staticmethod
     def _vehicle_schema(vehicle, selector):
@@ -92,12 +161,16 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             return vol.Optional(key, default=vehicle[key]) if key in vehicle else vol.Optional(key)
         return vol.Schema({
             vol.Required("navn", default=vehicle.get("navn", "")): str,
+            optional("koeretoejstype"): vol.In(TYPE_LABELS),
             optional("mærke"): str,
             optional("model"): str,
-            vol.Required("brændstof", default=vehicle.get("brændstof", "benzin")): vol.In({
+            optional("variant"): str,
+            optional("aargang"): vol.All(vol.Coerce(int),vol.Range(min=1886,max=2100)),
+            (vol.Required("brændstof", default=vehicle["brændstof"]) if vehicle.get("brændstof") else vol.Required("brændstof")): vol.In({
                 "benzin": "Benzin", "diesel": "Diesel", "el": "El", "hybrid": "Hybrid uden stik", "plug_in_hybrid": "Plug-in-hybrid"}),
             optional("tank_liters"): vol.All(vol.Coerce(float), vol.Range(min=0.01)),
             optional("batteri_kwh"): vol.All(vol.Coerce(float), vol.Range(min=0.01)),
             optional("location_entity"): selector.EntitySelector(selector.EntitySelectorConfig(domain=["device_tracker", "person", "zone"])),
             optional("notify_service"): str,
         })
+

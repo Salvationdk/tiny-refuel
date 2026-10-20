@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 CATALOG_FILES = {'personbil': 'car.json', 'varebil': 'van.json', 'lastbil': 'truck.json',
@@ -50,6 +51,30 @@ class CatalogStore:
         self.index_at = -86401
         self.memory = {}
         self.checked = {}
+        self.listeners = set()
+        self.status = {}
+
+    def subscribe(self, callback):
+        self.listeners.add(callback)
+        return lambda:self.listeners.discard(callback)
+
+    def snapshot(self):
+        return {"loaded_types":sorted(self.status),"catalogs":{k:dict(v) for k,v in self.status.items()},
+                "stale_types":[k for k,v in self.status.items() if v.get('stale')],
+                "versions":sorted({str(v['version']) for v in self.status.values() if v.get('version')})}
+
+    def _record_status(self, type_, catalog):
+        self.status[type_] = {**catalog.get('_download',{}),
+            'models':sum(len(b['modeller']) for b in catalog['brands']),
+            'last_used':datetime.now(timezone.utc).isoformat()}
+        for callback in tuple(self.listeners):callback()
+
+    async def async_load_status(self):
+        for type_, filename in CATALOG_FILES.items():
+            try:
+                data=validate_catalog(await self._read(self.directory/filename))
+                self.status[type_]={**data.get('_download',{}),'models':sum(len(b['modeller']) for b in data['brands'])}
+            except (OSError,ValueError,TypeError):continue
 
     async def _read(self, path):
         def read():
@@ -107,7 +132,7 @@ class CatalogStore:
                         raise ValueError('Catalog integrity check failed')
                     data = validate_catalog(json.loads(raw))
                     if data.get('vehicle_type') != vehicle_type:raise ValueError('Wrong catalog type')
-                    data['_download'] = {'sha256': digest, 'version': index['version'], 'source': 'github', 'stale': False}
+                    data['_download'] = {'sha256': digest, 'version': index['version'], 'source': 'github', 'stale': False, 'fetched_at': datetime.now(timezone.utc).isoformat()}
                     await self._write(path, data)
                     current = data
             except (OSError, ValueError, TypeError, KeyError, TimeoutError):
@@ -125,4 +150,5 @@ class CatalogStore:
                 # Retry temporary failures after five minutes rather than every render.
                 self.checked[vehicle_type] = time.monotonic() - 86400 + 300
             self.memory[vehicle_type] = current
+            self._record_status(vehicle_type,current)
             return current

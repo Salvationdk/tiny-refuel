@@ -55,3 +55,23 @@ pr. kategori. Kontrolstatus ændres ikke til verificeret af opdelingen.
 Downloaderen bruger GitHubs `main`-branch. Kataloger og downloader skal derfor
 merges sammen, før en udgivelse aktiverer hentningen. En kladde-PR ændrer ikke
 den installerede integration.
+
+## Fælles køretøjer og katalogstatus
+
+Under integrationens indstillinger kan **Tilføj fra katalog** vælge type,
+mærke, model og eventuel variant. Kun den valgte type hentes. Den sidste
+formular giver mulighed for at rette kapacitet og angive årgang, position og
+notifikationer. En variants kapacitet arver ikke modstridende modeltal.
+**Tilføj manuelt** fungerer fortsat uden katalog. Fælles køretøjer bruges af
+sensorerne og kort uden egne køretøjer; gemte kapaciteter ændres ikke ved
+opdatering af kataloget.
+
+En diagnostisk **Katalogstatus** viser `not_loaded`, `ready` eller `cached`.
+Attributterne viser indlæste typer, antal modeller, version, kilde,
+hentningstidspunkt og typer, der bruger en kopi efter hentefejl. Sensoren
+indeholder kun disse summer, ikke hele kataloget. `ready` betyder, at
+katalogfilen er tilgængelig; det godkender ikke modellernes kapaciteter.
+
+Den visuelle test kører den rigtige integration, optionsflow, API, kort og
+editor i Home Assistant og Chromium. Kataloghentninger leveres fra faste
+prøvedata, så alle typer kan afprøves uden afhængighed af GitHub-netværket.
