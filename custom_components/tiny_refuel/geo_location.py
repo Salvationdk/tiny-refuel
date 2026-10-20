@@ -33,7 +33,7 @@ def map_selection(hass, manager, options):
         km=distance_km(origin,coordinates(row))
         if km<=radius:rows.append({**row,'distance':km})
     rows.sort(key=lambda row:(row['distance'],row['id']))
-    limit=options.get('map_limit',100)
+    limit=options.get('map_limit',10)
     return rows[:limit],{'enabled':True,'count':min(len(rows),limit),'matched':len(rows),
                         'limit':limit,'radius_km':radius,'origin_available':True}
 

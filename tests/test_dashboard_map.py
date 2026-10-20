@@ -28,6 +28,14 @@ class MapSelectionTests(unittest.TestCase):
         self.assertEqual(map_selection(self.hass,self.manager,{**options,'map_brands':['ok']})[0][0]['brand'],'OK')
         self.assertEqual(map_selection(self.hass,self.manager,{**options,'map_selected_only':True,'map_station_ids':[]})[0],[])
         self.assertEqual(len(map_selection(self.hass,self.manager,{**options,'map_radius_km':10})[0]),1)
+    def test_default_limits_map_to_ten_nearest_without_overriding_saved_choice(self):
+        self.rows=[{**ROW,"id":str(i).zfill(24),"lat":55+i*0.001} for i in range(20)]
+        rows,status=map_selection(self.hass,self.manager,{"map_enabled":True})
+        self.assertEqual(len(rows),10)
+        self.assertEqual(status["matched"],20)
+        self.assertEqual([row["id"] for row in rows],[str(i).zfill(24) for i in range(10)])
+        self.assertEqual(len(map_selection(self.hass,self.manager,{"map_enabled":True,"map_limit":3})[0]),3)
+
     def test_explicit_unavailable_position_never_falls_back_to_home(self):
         rows,status=map_selection(self.hass,self.manager,{'map_enabled':True,'map_location_entity':'person.missing'})
         self.assertEqual(rows,[]);self.assertFalse(status['origin_available'])

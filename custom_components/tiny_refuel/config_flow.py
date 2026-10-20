@@ -85,7 +85,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
         fields={vol.Required('map_enabled',default=options.get('map_enabled',False)):bool,
                 vol.Required('map_radius_km',default=options.get('map_radius_km',25)):
                     vol.All(vol.Coerce(float),vol.Range(min=1,max=500)),
-                vol.Required('map_limit',default=options.get('map_limit',100)):
+                vol.Required('map_limit',default=options.get('map_limit',10)):
                     vol.All(vol.Coerce(int),vol.Range(min=1,max=250)),
                 vol.Required('map_brands',default=options.get('map_brands',[])):
                     selector.SelectSelector(selector.SelectSelectorConfig(options=list(BRANDS),multiple=True)),

@@ -132,7 +132,7 @@ Prisændringer gemmes lokalt fra aktivering. Standard er **90 dage**; vælg **0�
 
 ### Stationer på Home Assistants indbyggede kort
 
-Aktivér under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Stationer på HA-kortet**. Vælg selskaber, radius, eventuelle bestemte stationer og højst **250 markører**. Funktionen er slået fra som standard. Uden positionsenhed bruges HA’s hjemmeplacering; en valgt utilgængelig positionsenhed giver ingen markører.
+Aktivér under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Stationer på HA-kortet**. Vælg selskaber, radius og eventuelt bestemte stationer. Nye opsætninger viser som standard **de 10 nærmeste stationer**; grænsen kan ændres op til **250 markører**. En tidligere gemt grænse bevares — sænk **Maksimalt antal markører** i indstillingerne, hvis kortet er for tæt. Funktionen er slået fra som standard. Uden positionsenhed bruges HA’s hjemmeplacering; en valgt utilgængelig positionsenhed giver ingen markører.
 
 Tilføj et indbygget **Kort** og vælg den geografiske kilde **tiny_refuel**. Kun fysiske steder med koordinater får markører. Fra **0.2.5** vises selskabets logo på markøren, når det findes i integrationen; ukendte selskaber bruger et stationsikon. Priser, adresse, ladeform, hentetid og aktualitet kan ses på entiteten. HA styrer selv kortets design.
 
