@@ -276,11 +276,69 @@
   function vehicleModelNote(entry, variant) {
     var ref = entry && VEHICLE_MODEL_REFERENCES.get(entry);
     if (ref && ref.failed) return "Årgang og varianter kunne ikke hentes. Du kan stadig skrive oplysningerne manuelt.";
+    if (entry && entry.capacity_status === "needs_review") return entry.specification_note || "Katalogets kapacitet mangler kildekontrol. Kontrollér tallet for dit køretøj.";
     return entry && entry.specification_note || (variant ? "Variant valgt: vælg drivmiddel og kontrollér tank/batteri for denne variant." : "");
+  }
+
+  var TYPE_CATALOG_NAMES = {personbil:"car", varebil:"van", lastbil:"truck", motorcykel:"motorcycle", knallert:"moped", bus:"bus", traktor:"tractor", andet:"other"};
+  function typedCatalogSelection(owner) {
+    // Explicit custom catalogs keep their existing URL behavior.
+    if (owner._config && owner._config.katalog_url) return [];
+    var cars = typeof owner._cars === "function" ? owner._cars() : ((owner._config && owner._config.biler) || owner._sharedVehicles || []);
+    return Array.from(new Set(cars.map(function (car) {
+      var type = String(car.koeretoejstype || "").toLowerCase();
+      return type === "varevogn" ? "varebil" : type;
+    }).filter(function (type) { return !!TYPE_CATALOG_NAMES[type]; }))).sort();
+  }
+  function mergeTypedCatalogs(catalogs, logos) {
+    var merged = Object.assign({}, logos || {}, {brands:[], catalog_downloads:[]});
+    var makes = new Map();
+    catalogs.forEach(function (catalog) {
+      validateVehicleCatalog(catalog);
+      merged.catalog_downloads.push({type:catalog.vehicle_type, download:catalog._download});
+      catalog.brands.forEach(function (brand) {
+        var key = catalogKey(brand.mærke), target = makes.get(key);
+        if (!target) { target = Object.assign({}, brand, {modeller:[]}); makes.set(key, target); merged.brands.push(target); }
+        brand.modeller.forEach(function (model) {
+          var previous = target.modeller.find(function (row) { return catalogKey(row.model) === catalogKey(model.model); });
+          if (previous) previous.vehicle_types = Array.from(new Set((previous.vehicle_types || []).concat(model.vehicle_types || [])));
+          else target.modeller.push(Object.assign({}, model));
+        });
+      });
+    });
+    return merged;
+  }
+  function loadTypedVehicleCatalog(owner, types) {
+    if (!owner._hass || typeof owner._hass.callApi !== "function") return false;
+    var key = "types:" + types.join(",");
+    if (owner._katalogUrlUsed === key && (owner._katalog || owner._katalogLoading || owner._katalogFailed)) return true;
+    owner._katalogUrlUsed = key;
+    owner._katalogLoading = true;
+    owner._katalogFailed = false;
+    owner._katalog = null;
+    if (!VEHICLE_CATALOG_REQUESTS[key]) {
+      var downloads = types.map(function (type) { return owner._hass.callApi("GET", "tiny_refuel/catalog/" + type); });
+      var logos = VEHICLE_CATALOG_REQUESTS["logos"];
+      if (!logos) logos = VEHICLE_CATALOG_REQUESTS["logos"] = fetch("/tiny_refuel/static/vehicle-logos.json").then(function(r) {
+        if (!r.ok) throw new Error("Logo catalog unavailable"); return r.json();
+      }).catch(function () { delete VEHICLE_CATALOG_REQUESTS["logos"]; return {}; });
+      VEHICLE_CATALOG_REQUESTS[key] = Promise.all([Promise.all(downloads), logos]).then(function (parts) { return mergeTypedCatalogs(parts[0], parts[1]); });
+    }
+    VEHICLE_CATALOG_REQUESTS[key].then(function (catalog) {
+      if (owner._katalogUrlUsed !== key) return;
+      owner._katalog = catalog; owner._katalogLoading = false; owner._render();
+    }).catch(function () {
+      delete VEHICLE_CATALOG_REQUESTS[key];
+      if (owner._katalogUrlUsed !== key) return;
+      owner._katalogLoading = false; owner._katalogFailed = true; owner._render();
+    });
+    return true;
   }
 
   function loadVehicleCatalog(owner) {
     if (typeof fetch !== "function") return;
+    var types = typedCatalogSelection(owner);
+    if (types.length && loadTypedVehicleCatalog(owner, types)) return;
     var url = vehicleCatalogUrl(owner._config);
     if (owner._katalogUrlUsed === url && (owner._katalog || owner._katalogLoading || owner._katalogFailed)) return;
     owner._katalogUrlUsed = url;
@@ -2338,7 +2396,7 @@
           '<span data-model-logo="' + bi2 + '">' + vehicleLogoHtml(this._katalog, bb, "trfe-model-logo", true) + '</span>';
         html += '<details class="trfe-car" data-car-card="' + bi2 + '"' + (this._openCar === bi2 ? " open" : "") + '><summary data-car-toggle="' + bi2 + '">' + carLogoHtml + '<span class="trfe-car-title">' +
           esc(carTitle) + '</span><span class="trfe-summary-meta">' + esc(carHint) + '</span></summary><div class="trfe-car-fields">';
-        html += '<div class="trfe-hint">Køretøjstype (filtrerer mærker og modeller)</div><select data-key="bil:' + bi2 + ':koeretoejstype">';
+        html += '<div class="trfe-hint">Køretøjstype (henter kun det valgte katalog)</div><select data-key="bil:' + bi2 + ':koeretoejstype">';
         var selectedVehicleType = this._vehicleType(bb.koeretoejstype);
         [["", "Ikke valgt"], ["personbil", "Personbil"], ["varebil", "Varevogn"], ["lastbil", "Lastbil"], ["bus", "Bus"], ["motorcykel", "Motorcykel"], ["knallert", "Knallert"], ["traktor", "Traktor"], ["andet", "Andet motorkøretøj"]].forEach(function (type) {
           html += '<option value="' + type[0] + '"' + (selectedVehicleType === type[0] ? " selected" : "") + '>' + type[1] + '</option>';
@@ -2458,4 +2516,5 @@
   customElements.define("tiny-refuel-card-editor", TinyRefuelCardEditor);
   window.TinyRefuelCardEditor = TinyRefuelCardEditor;
 }(window);
+
 

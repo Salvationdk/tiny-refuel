@@ -2,7 +2,10 @@
 from datetime import timedelta
 from pathlib import Path
 
-from aiohttp import web
+from aiohttp import web, ClientError, ClientTimeout
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+from .catalog_store import CatalogStore, MAX_CATALOG_BYTES
 from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import HomeAssistantView, StaticPathConfig
 from homeassistant.const import Platform
@@ -33,12 +36,46 @@ class RefuelDataView(HomeAssistantView):
         return web.json_response(manager.snapshot(), headers={"Cache-Control": "no-store"})
 
 
+class RefuelCatalogView(HomeAssistantView):
+    url = "/api/tiny_refuel/catalog/{vehicle_type}"
+    name = "api:tiny_refuel:catalog"
+    requires_auth = True
+
+    def __init__(self, store):
+        self.store = store
+
+    async def get(self, request, vehicle_type):
+        try:
+            catalog = await self.store.get(vehicle_type)
+        except ValueError:
+            return web.json_response({"message": "Ukendt køretøjstype"}, status=400)
+        return web.json_response(catalog, headers={"Cache-Control": "no-store"})
+
+
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     state = hass.data.setdefault(DOMAIN, {})
     if not state.get("registered"):
         folder = str(Path(__file__).parent / "frontend")
         await hass.http.async_register_static_paths([StaticPathConfig(STATIC_URL, folder, False)])
         hass.http.register_view(RefuelDataView(hass))
+
+        async def fetch_catalog_bytes(url, limit):
+            try:
+                async with async_get_clientsession(hass).get(url, timeout=ClientTimeout(total=20)) as response:
+                    response.raise_for_status()
+                    chunks = bytearray()
+                    async for chunk in response.content.iter_chunked(65536):
+                        chunks.extend(chunk)
+                        if len(chunks) > limit:
+                            raise ValueError("Catalog response too large")
+                    return bytes(chunks)
+            except ClientError as exc:
+                raise OSError("Catalog download failed") from exc
+
+        state["catalogs"] = CatalogStore(
+            Path(hass.config.path(".storage", DOMAIN, "catalogs")),
+            fetch_catalog_bytes, Path(folder) / "katalog.json")
+        hass.http.register_view(RefuelCatalogView(state["catalogs"]))
         add_extra_js_url(hass, CARD_URL)
         state["registered"] = True
     return True

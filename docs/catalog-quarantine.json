@@ -1,0 +1,80 @@
+{
+  "note": "Original capacities remain in the source working catalog. These identities need review.",
+  "items": [
+    {
+      "make": "-",
+      "model": "BACKDRAFT",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "BERNA",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Bitter",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "graham",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Kioti",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Liangzi Branson",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Lola-T70 Replica",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "STUTS",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "TRIUMPH",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Velorex",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Vista",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "WOODS",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "-",
+      "model": "Zündapp janus 250",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "10279",
+      "model": "Austral",
+      "reason": "unresolved_register_identity"
+    },
+    {
+      "make": "10279",
+      "model": "ZUK A-11",
+      "reason": "unresolved_register_identity"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+name: Type catalog checks
+on:
+  pull_request:
+    paths:
+      - catalogs/**
+      - custom_components/tiny_refuel/catalog_store.py
+      - custom_components/tiny_refuel/frontend/**
+      - tests/test_type_catalogs.py
+      - tests/type-catalogs.test.js
+      - scripts/split_type_catalogs.py
+      - .github/workflows/type-catalogs.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  catalog-cache:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - run: python -m unittest discover -s tests -p test_type_catalogs.py -v
+      - run: node tests/type-catalogs.test.js
