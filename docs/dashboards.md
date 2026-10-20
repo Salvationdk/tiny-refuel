@@ -84,4 +84,7 @@ HA's eget kort på mobil/computer i lyst/mørkt tema med faste prøvedata.
 
 Fra 0.2.5 får stationernes geo_location-entiteter et lokalt selskabslogo som entity_picture. Home Assistants indbyggede kort bruger billedet som markør, når standardetiketten bruges. Ukendte selskaber beholder et almindeligt stationsikon. Logoerne følger med integrationen og kræver ingen ekstern billedtjeneste eller ekstra kort. Eksisterende kortopsætninger, positionsvalg og stationsfiltre bevares.
 
-Nye kortopsætninger bruger som standard højst de 10 nærmeste markører. En allerede gemt grænse ændres ikke automatisk: gå til **Konfigurer → Stationer på HA-kortet → Maksimalt antal markører**, vælg eksempelvis 10 og gem. Radius, selskabsvalg og bestemte stationer kan afgrænse kortet yderligere.
+
+### Ét logo pr. sted
+
+Brændstofrækker og ladeformer fra samme selskab på samme adresse eller samme koordinat samles til én markør. Klik på logoet for oplysninger med adresse, brændstofpriser, hver ladeforms pris, hentetid og aktualitet. Forskellige AC/DC-priser bevares separat; de erstattes ikke af en opdigtet fælles kWh-pris. Forskellige selskaber bevares som separate stationer. Markørgrænsen gælder de samlede steder. Tidligere valgte stations-ID'er genkendes også som medlemmer af et samlet sted.

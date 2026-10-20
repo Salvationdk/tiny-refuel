@@ -40,6 +40,7 @@ FIXTURE = {
            for i, brand in enumerate(["OK", "Q8", "Circle K", "Clever", "E.ON", "Ionity"])],
     "fuel_sources": {}, "ev_sources": {}, "benefits": {}, "geocode_pending": 0,
 }
+FIXTURE["ev"].append({**FIXTURE["ev"][1], "kind":"AC", "kwh":3.19})
 FIXTURE["ev_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"]}
                          for key in ["clever", "eon", "ionity", "ok", "oil", "shell", "circle_k", "q8"]}
 FIXTURE["fuel_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"], "records": count, "priced": count, "missing_coordinates": 0}
@@ -218,6 +219,12 @@ def onboard(folder):
         image=session.get(BASE+picture,timeout=10)
         image.raise_for_status()
         assert "<svg" in image.text,picture
+    grouped=[row for row in markers if row["attributes"].get("selskab")=="Q8"
+             and "AC" in (row["attributes"].get("ladeform") or "") and "DC" in (row["attributes"].get("ladeform") or "")]
+    assert len(grouped)==1,markers
+    assert len(grouped[0]["attributes"]["station_ids"])==2,grouped
+    assert "3,19 kr/kWh" in grouped[0]["attributes"]["oplysninger"],grouped
+    assert "2,69 kr/kWh" in grouped[0]["attributes"]["oplysninger"],grouped
     summary=session.get(BASE+"/api/tiny_refuel/dashboard",timeout=10);summary.raise_for_status()
     assert summary.json()['map']['count']==5,summary.text
     assert summary.json()['vehicles'][0]['navn']=='Fælles testbil',summary.text
@@ -538,9 +545,9 @@ def browsers(tokens):
                     host.append(editor);
                 }""",tokens["testStationId"])
                 station_editor=page.locator('tiny-refuel-stations-editor')
-                expect(station_editor.locator('[data-favorite]')).to_have_count(15)
+                expect(station_editor.locator('[data-favorite]')).to_have_count(len(FIXTURE['stations'])+len(FIXTURE['ev']))
                 station_editor.locator('[data-filter]').fill('Q8')
-                expect(station_editor.locator('[data-favorite]')).to_have_count(2)
+                expect(station_editor.locator('[data-favorite]')).to_have_count(3)
                 station_editor.locator('[data-favorite]').first.set_checked(True)
                 station_editor.locator('[data-key="title"]').fill('Mine lokale priser')
                 station_editor.locator('[data-key="title"]').dispatch_event('change')

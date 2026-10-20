@@ -1,6 +1,6 @@
 # Tiny Refuel v0.2.5
 
-**Nyt i 0.2.5:** Stationerne på Home Assistants indbyggede kort viser nu selskabernes medfølgende logoer. Ukendte selskaber bruger fortsat et stationsikon. Logoerne indlæses lokalt fra integrationen; ingen ekstra kortudvidelse er nødvendig.
+**Nyt i 0.2.5:** Stationerne på Home Assistants indbyggede kort viser nu selskabernes medfølgende logoer. Ukendte selskaber bruger fortsat et stationsikon. Brændstof, AC/DC og andre ladeformer på samme sted samles under ét logo med fælles oplysninger ved klik. Logoerne indlæses lokalt fra integrationen; ingen ekstra kortudvidelse er nødvendig.
 
 **Nyt i 0.2.4:** brug alle Tiny Refuels indsamlede data i andre Home Assistant-kort, templates, scripts og automatiseringer. Vælg stationssensorer i integrationsindstillingerne, brug de nye køretøjsentiteter, eller hent data gennem seks svarhandlinger. Eksisterende kort og opsætninger bevares. Se [dataadgang og eksempler](docs/data-access.md).
 
@@ -132,9 +132,9 @@ Prisændringer gemmes lokalt fra aktivering. Standard er **90 dage**; vælg **0�
 
 ### Stationer på Home Assistants indbyggede kort
 
-Aktivér under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Stationer på HA-kortet**. Vælg selskaber, radius og eventuelt bestemte stationer. Nye opsætninger viser som standard **de 10 nærmeste stationer**; grænsen kan ændres op til **250 markører**. En tidligere gemt grænse bevares — sænk **Maksimalt antal markører** i indstillingerne, hvis kortet er for tæt. Funktionen er slået fra som standard. Uden positionsenhed bruges HA’s hjemmeplacering; en valgt utilgængelig positionsenhed giver ingen markører.
+Aktivér under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Stationer på HA-kortet**. Vælg selskaber, radius, eventuelle bestemte stationer og højst **250 markører**. Markørgrænsen gælder fysiske steder efter sammenlægning. Funktionen er slået fra som standard. Uden positionsenhed bruges HA’s hjemmeplacering; en valgt utilgængelig positionsenhed giver ingen markører.
 
-Tilføj et indbygget **Kort** og vælg den geografiske kilde **tiny_refuel**. Kun fysiske steder med koordinater får markører. Fra **0.2.5** vises selskabets logo på markøren, når det findes i integrationen; ukendte selskaber bruger et stationsikon. Priser, adresse, ladeform, hentetid og aktualitet kan ses på entiteten. HA styrer selv kortets design.
+Tilføj et indbygget **Kort** og vælg den geografiske kilde **tiny_refuel**. Kun fysiske steder med koordinater får markører. Fra **0.2.5** vises selskabets logo på markøren, når det findes i integrationen; ukendte selskaber bruger et stationsikon. Priser, adresse, ladeformer, hentetid og aktualitet samles som oplysninger på entiteten og åbnes ved klik. Forskellige AC/DC-priser bevares hver for sig. HA styrer selv kortets design.
 
 ```yaml
 type: map
