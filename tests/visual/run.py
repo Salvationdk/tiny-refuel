@@ -215,6 +215,37 @@ def onboard(folder):
     summary=session.get(BASE+"/api/tiny_refuel/dashboard",timeout=10);summary.raise_for_status()
     assert summary.json()['map']['count']==5,summary.text
     assert summary.json()['vehicles'][0]['navn']=='Fælles testbil',summary.text
+    # Exercise response actions through the real authenticated HA service API.
+    def query_action(name, data):
+        response=session.post(BASE+"/api/services/tiny_refuel/"+name+"?return_response",
+                              json=data,timeout=30)
+        response.raise_for_status()
+        return response.json()["service_response"]
+    metadata=query_action("get_data",{})
+    assert "stations" in metadata["sections"],metadata
+    selected=query_action("get_stations",{"fuel":"p95","sort":"price","limit":1})
+    assert len(selected["items"])==1 and selected["items"][0]["current"],selected
+    assert query_action("get_vehicles",{})["items"][0]["tank_liters"]==35
+    assert query_action("get_status",{})["map"]["count"]==5
+    assert len(query_action("get_history",{"station_id":tokens["testStationId"],"fuel":"p95","days":7})["points"])==3
+    catalog=query_action("get_catalog",{"vehicle_type":"personbil","make":"Volkswagen","search":"up!"})
+    assert catalog["items"] and catalog["items"][0]["model"]["model"]=="up!",catalog
+    options=api(session,"/api/config/config_entries/options/flow",{"handler":result["result"]["entry_id"]})
+    options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],{"next_step_id":"station_sensors"})
+    assert options["type"]=="form",options
+    options=api(session,"/api/config/config_entries/options/flow/"+options["flow_id"],
+                {"station_sensor_ids":[tokens["testStationId"]]})
+    assert options["type"]=="create_entry",options
+    for _ in range(60):
+        states=session.get(BASE+"/api/states",timeout=10).json()
+        prices=[state for state in states if state.get("attributes",{}).get("station_id")==tokens["testStationId"]
+                and state.get("attributes",{}).get("fuel")=="p95"]
+        if prices and prices[0]["state"] not in ("unknown","unavailable"):
+            tokens["testPriceEntity"]=prices[0]["entity_id"]
+            break
+        time.sleep(1)
+    else:raise RuntimeError("Selected station price entity did not become usable")
+    assert float(prices[0]["state"])>0
     tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
@@ -531,6 +562,18 @@ def browsers(tokens):
                     assert extra_card.evaluate('el=>el.scrollWidth<=el.clientWidth+1')
                     shot(prefix+'-dashboard-'+type_,extra_card)
                     page.locator('#dashboard-card-test').evaluate('el=>el.remove()')
+                page.evaluate("""entity=>{
+                    const host=document.createElement('div');host.id='native-price-card-test';
+                    host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color)';
+                    document.querySelector('home-assistant').shadowRoot.append(host);
+                    const card=document.createElement('hui-entities-card');
+                    card.setConfig({type:'entities',title:'Tiny Refuel · Egne kort',entities:[entity]});
+                    card.hass=window.visualCard._hass;host.append(card);
+                }""",tokens["testPriceEntity"])
+                native_card=page.locator('#native-price-card-test')
+                expect(native_card.locator('hui-entities-card')).to_contain_text('Tiny Refuel · Egne kort')
+                shot(prefix+'-native-entities-prices',native_card)
+                native_card.evaluate('el=>el.remove()')
                 for kind in ['comparison','charging']:
                     page.evaluate("""kind=>{
                         const host=document.createElement('div');host.id='dashboard-editor-test';

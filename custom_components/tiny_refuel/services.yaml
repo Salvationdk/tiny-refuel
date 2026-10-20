@@ -1,14 +1,325 @@
-refresh:
-  name: Hent data
-  description: Starter en fælles opdatering. Kortets knap kan sende de drivmidler, der passer til det valgte køretøj. Gentagne kald deler den igangværende hentning.
-  fields:
-    fuel_types:
-      name: Drivmidler
-      description: Udelad feltet for at hente alle drivmidler.
-      selector:
-        select:
-          options:
-            - benzin
-            - diesel
-            - el
-          multiple: true
+{
+  "refresh": {
+    "name": "Hent data",
+    "description": "Starter én fælles opdatering. Gentagne kald deler den igangværende hentning.",
+    "fields": {
+      "fuel_types": {
+        "name": "Drivmidler",
+        "description": "Udelad feltet for alle drivmidler.",
+        "selector": {
+          "select": {
+            "options": [
+              "benzin",
+              "diesel",
+              "el"
+            ],
+            "multiple": true
+          }
+        }
+      }
+    }
+  },
+  "get_data": {
+    "name": "Hent alle data",
+    "description": "Læs et udsnit af de originale indsamlede data. Udelad section for metadata og listen over alle tilgængelige sektioner. Ingen ny indsamling.",
+    "fields": {
+      "section": {
+        "name": "Sektion",
+        "default": "metadata",
+        "example": "benefits",
+        "selector": {
+          "text": {}
+        }
+      },
+      "offset": {
+        "name": "Startposition",
+        "description": "0 for første side; brug next_offset til næste side.",
+        "default": 0,
+        "selector": {
+          "number": {
+            "min": 0,
+            "max": 1000000,
+            "mode": "box"
+          }
+        }
+      },
+      "limit": {
+        "name": "Antal resultater",
+        "default": 100,
+        "selector": {
+          "number": {
+            "min": 1,
+            "max": 500,
+            "mode": "box"
+          }
+        }
+      }
+    }
+  },
+  "get_status": {
+    "name": "Hent datastatus",
+    "description": "Kilder, fejl, fremdrift, katalogstatus, historik og kortstatus. Ingen private køretøjspositioner.",
+    "fields": {}
+  },
+  "get_stations": {
+    "name": "Hent stationer og priser",
+    "description": "Filtrer stationer fra den fælles cache. Gamle priser udelades som standard. Afstand er luftlinje; vælg et drivmiddel ved prissortering.",
+    "fields": {
+      "fuel": {
+        "name": "Drivmiddel",
+        "selector": {
+          "select": {
+            "options": [
+              "p95",
+              "p100",
+              "diesel",
+              "kwh"
+            ]
+          }
+        }
+      },
+      "brands": {
+        "name": "Selskaber",
+        "selector": {
+          "select": {
+            "options": [
+              "Circle K",
+              "Ingo",
+              "F24",
+              "Q8",
+              "Go'on",
+              "Shell",
+              "Uno-X",
+              "OK",
+              "OIL",
+              "Clever",
+              "E.ON",
+              "IONITY"
+            ],
+            "multiple": true,
+            "custom_value": true
+          }
+        }
+      },
+      "station_ids": {
+        "name": "Stations-id'er",
+        "description": "ID fra get_stations; kan bruges til favoritter.",
+        "selector": {
+          "object": {}
+        }
+      },
+      "search": {
+        "name": "Søg efter navn eller adresse",
+        "selector": {
+          "text": {}
+        }
+      },
+      "current_only": {
+        "name": "Kun aktuelle data",
+        "default": true,
+        "selector": {
+          "boolean": {}
+        }
+      },
+      "location_entity": {
+        "name": "Positionsenhed",
+        "selector": {
+          "entity": {
+            "domain": [
+              "person",
+              "device_tracker",
+              "zone"
+            ]
+          }
+        }
+      },
+      "radius_km": {
+        "name": "Radius i km",
+        "description": "0 betyder ingen radiusgrænse.",
+        "selector": {
+          "number": {
+            "min": 0,
+            "max": 20000,
+            "mode": "box"
+          }
+        }
+      },
+      "sort": {
+        "name": "Sortering",
+        "default": "name",
+        "selector": {
+          "select": {
+            "options": [
+              "name",
+              "price",
+              "distance"
+            ]
+          }
+        }
+      },
+      "offset": {
+        "name": "Startposition",
+        "description": "0 for første side; brug next_offset til næste side.",
+        "default": 0,
+        "selector": {
+          "number": {
+            "min": 0,
+            "max": 1000000,
+            "mode": "box"
+          }
+        }
+      },
+      "limit": {
+        "name": "Antal resultater",
+        "default": 100,
+        "selector": {
+          "number": {
+            "min": 1,
+            "max": 500,
+            "mode": "box"
+          }
+        }
+      }
+    }
+  },
+  "get_vehicles": {
+    "name": "Hent køretøjer og beregninger",
+    "description": "Fælles køretøjer med alle registrerede felter samt beregning fra nærmeste aktuelle station. Et korts egen bil kan sendes i vehicle.",
+    "fields": {
+      "vehicle_id": {
+        "name": "Køretøjs-id",
+        "selector": {
+          "text": {}
+        }
+      },
+      "vehicle": {
+        "name": "Eget køretøj (valgfrit)",
+        "description": "Samme felter som en bil i kortets biler-liste.",
+        "selector": {
+          "object": {}
+        }
+      },
+      "offset": {
+        "name": "Startposition",
+        "description": "0 for første side; brug next_offset til næste side.",
+        "default": 0,
+        "selector": {
+          "number": {
+            "min": 0,
+            "max": 1000000,
+            "mode": "box"
+          }
+        }
+      },
+      "limit": {
+        "name": "Antal resultater",
+        "default": 100,
+        "selector": {
+          "number": {
+            "min": 1,
+            "max": 500,
+            "mode": "box"
+          }
+        }
+      }
+    }
+  },
+  "get_history": {
+    "name": "Hent prishistorik",
+    "description": "Lokalt gemte observationer. Svaret viser retention_days, enabled og truncated; ingen historik hentes fra nettet.",
+    "fields": {
+      "station_id": {
+        "name": "Stations-id",
+        "required": true,
+        "selector": {
+          "text": {}
+        }
+      },
+      "fuel": {
+        "name": "Drivmiddel",
+        "default": "p95",
+        "selector": {
+          "select": {
+            "options": [
+              "p95",
+              "p100",
+              "diesel",
+              "kwh"
+            ]
+          }
+        }
+      },
+      "days": {
+        "name": "Antal dage",
+        "default": 7,
+        "selector": {
+          "number": {
+            "min": 1,
+            "max": 365,
+            "mode": "box"
+          }
+        }
+      }
+    }
+  },
+  "get_catalog": {
+    "name": "Søg i køretøjskatalog",
+    "description": "Henter kun den valgte køretøjstype. Alle modelfelter, varianter, kilder og kontrolstatus bevares i svaret.",
+    "fields": {
+      "vehicle_type": {
+        "name": "Køretøjstype",
+        "required": true,
+        "selector": {
+          "select": {
+            "options": [
+              "personbil",
+              "varebil",
+              "lastbil",
+              "motorcykel",
+              "knallert",
+              "bus",
+              "traktor",
+              "andet"
+            ]
+          }
+        }
+      },
+      "make": {
+        "name": "Mærke (præcist navn)",
+        "example": "Volkswagen",
+        "selector": {
+          "text": {}
+        }
+      },
+      "search": {
+        "name": "Søg efter mærke og model",
+        "selector": {
+          "text": {}
+        }
+      },
+      "offset": {
+        "name": "Startposition",
+        "description": "0 for første side; brug next_offset til næste side.",
+        "default": 0,
+        "selector": {
+          "number": {
+            "min": 0,
+            "max": 1000000,
+            "mode": "box"
+          }
+        }
+      },
+      "limit": {
+        "name": "Antal resultater",
+        "default": 100,
+        "selector": {
+          "number": {
+            "min": 1,
+            "max": 500,
+            "mode": "box"
+          }
+        }
+      }
+    }
+  }
+}

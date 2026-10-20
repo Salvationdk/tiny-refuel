@@ -156,6 +156,8 @@ async def async_setup_entry(hass: HomeAssistant, entry) -> bool:
         manager.start_refresh(getattr(call, "data", {}).get("fuel_types"))
 
     hass.services.async_register(DOMAIN, "refresh", refresh)
+    from .data_services import async_register_services
+    async_register_services(hass, manager)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     async def scheduled_refresh(now):
@@ -177,6 +179,8 @@ async def async_unload_entry(hass: HomeAssistant, entry) -> bool:
     if not await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         return False
     hass.services.async_remove(DOMAIN, "refresh")
+    from .data_services import async_remove_services
+    async_remove_services(hass)
     await entry.runtime_data.async_close()
     hass.data[DOMAIN].pop("manager", None)
     return True

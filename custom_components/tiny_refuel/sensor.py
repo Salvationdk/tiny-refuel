@@ -40,15 +40,20 @@ async def async_setup_entry(hass, entry, async_add_entities):
     entities.extend(RefuelTariffSensor(manager, brand) for brand in ("OK", "Q8", "Circle K", "E.ON", "IONITY"))
     for kind, sources in SOURCE_NAMES.items():
         entities.extend(RefuelSourceSensor(manager, kind, source, label) for source, label in sources.items())
+    from .station_entities import RefuelStationPriceSensor
+    selected_stations = set(getattr(entry, "options", {}).get("station_sensor_ids", []))
+    for station_id in sorted(selected_stations):
+        entities.extend(RefuelStationPriceSensor(manager, station_id, field) for field in FUELS)
     for vehicle in manager.vehicles:
+        entities.extend(RefuelVehicleInfoSensor(manager, vehicle, metric) for metric in ("info", "tank_liters", "batteri_kwh"))
         for field in FUEL_FIELDS.get(vehicle.get("brændstof"), ()):
             for metric in ("station", "distance", "price", "full_cost"):
                 entities.append(RefuelVehicleSensor(manager, vehicle, field, metric))
     if getattr(entry, "entry_id", None):
-        valid = {entity.unique_id for entity in entities if isinstance(entity, RefuelVehicleSensor)}
+        valid = {entity.unique_id for entity in entities if isinstance(entity, (RefuelVehicleSensor, RefuelVehicleInfoSensor, RefuelStationPriceSensor))}
         registry = er.async_get(hass)
         for registered in er.async_entries_for_config_entry(registry, entry.entry_id):
-            if registered.unique_id.startswith(DOMAIN + "_vehicle_") and registered.unique_id not in valid:
+            if registered.unique_id.startswith((DOMAIN + "_vehicle_", DOMAIN + "_station_")) and registered.unique_id not in valid:
                 registry.async_remove(registered.entity_id)
     async_add_entities(entities)
 
@@ -275,3 +280,29 @@ class RefuelCatalogStatusSensor(SensorEntity):
 
     @property
     def extra_state_attributes(self):return self.store.snapshot()
+
+
+class RefuelVehicleInfoSensor(RefuelSensor):
+    """Stable shared vehicle metadata and capacities for standard HA cards."""
+
+    def __init__(self, manager, vehicle, metric="info"):
+        super().__init__(manager, "errors")
+        self.vehicle, self.metric = vehicle, metric
+        self._attr_unique_id = f"{DOMAIN}_vehicle_{vehicle['id']}_{metric}"
+        label = {"info": "oplysninger", "tank_liters": "tankkapacitet", "batteri_kwh": "batterikapacitet"}[metric]
+        self._attr_name = vehicle["navn"] + " " + label
+        self._attr_icon = "mdi:car-info" if metric == "info" else "mdi:gas-station" if metric == "tank_liters" else "mdi:battery"
+        self._attr_entity_category = None
+        self._attr_native_unit_of_measurement = {"info": None, "tank_liters": "L", "batteri_kwh": "kWh"}[metric]
+        self._attr_state_class = None if metric == "info" else SensorStateClass.MEASUREMENT
+
+    @property
+    def native_value(self):
+        if self.metric == "info":
+            return str(self.vehicle.get("navn") or "Køretøj")[:255]
+        value = self.vehicle.get(self.metric)
+        return value if positive(value) else None
+
+    @property
+    def extra_state_attributes(self):
+        return dict(self.vehicle)

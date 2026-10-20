@@ -32,7 +32,7 @@ class FakeHass:
         self.config = SimpleNamespace(path=lambda *args: str(Path(directory).joinpath(*args)))
         self.views, self.paths, self.services_map = [], [], {}
         self.http = SimpleNamespace(async_register_static_paths=self.register_paths, register_view=self.views.append)
-        self.services = SimpleNamespace(async_register=lambda d,n,f:self.services_map.update({(d,n):f}),
+        self.services = SimpleNamespace(async_register=lambda d,n,f,**kwargs:self.services_map.update({(d,n):f}),
                                         async_remove=lambda d,n:self.services_map.pop((d,n),None))
         self.config_entries = SimpleNamespace(async_forward_entry_setups=AsyncMock(), async_unload_platforms=AsyncMock(return_value=True))
 

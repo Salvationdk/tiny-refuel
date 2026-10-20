@@ -24,7 +24,8 @@
           "edit_vehicle": "Rediger fælles køretøj",
           "remove_vehicle": "Fjern fælles køretøj",
           "catalog_vehicle": "Tilføj fra katalog",
-          "map": "Stationer på HA-kortet"
+          "map": "Stationer på HA-kortet",
+          "station_sensors": "Stationssensorer til andre kort"
         }
       },
       "settings": {
@@ -108,12 +109,20 @@
         "data": {
           "map_station_ids": "Stationer"
         }
+      },
+      "station_sensors": {
+        "title": "Stationssensorer",
+        "description": "Vælg op til 50 stationer til almindelige Home Assistant-kort. Der oprettes fire prissensorer pr. station; manglende eller gamle priser vises som ukendt. Tøm valget for at fjerne sensorerne.",
+        "data": {
+          "station_sensor_ids": "Stationer"
+        }
       }
     },
     "abort": {
       "no_vehicles": "Der er endnu ikke oprettet fælles køretøjer.",
       "catalog_unavailable": "Kataloget er ikke tilgængeligt. Prøv igen, eller tilføj køretøjet manuelt.",
-      "stations_unavailable": "Ingen matchende stationer. Hent stationsdata eller vælg et andet område."
+      "stations_unavailable": "Ingen matchende stationer. Hent stationsdata eller vælg et andet område.",
+      "too_many_stations": "Vælg højst 50 stationer."
     },
     "error": {
       "required_name": "Angiv et navn.",

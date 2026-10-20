@@ -37,7 +37,7 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
         return [dict(vehicle) for vehicle in self.config_entry.options.get("vehicles", [])]
 
     async def async_step_init(self, user_input=None):
-        return self.async_show_menu(step_id="init", menu_options=["settings", "map", "catalog_vehicle", "vehicle", "edit_vehicle", "remove_vehicle"])
+        return self.async_show_menu(step_id="init", menu_options=["settings", "station_sensors", "map", "catalog_vehicle", "vehicle", "edit_vehicle", "remove_vehicle"])
 
     async def async_step_settings(self, user_input=None):
         if user_input is not None:
@@ -47,6 +47,30 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             vol.Required(CONF_SCAN_HOURS, default=hours): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
             vol.Optional("history_days",default=self.config_entry.options.get("history_days",90)):
                 vol.All(vol.Coerce(int),vol.Range(min=0,max=365))}))
+
+
+    async def async_step_station_sensors(self, user_input=None):
+        from homeassistant.helpers import selector
+        from .data_services import STATION_ID
+        if user_input is not None:
+            ids = list(dict.fromkeys(user_input.get("station_sensor_ids", [])))
+            vol.Schema([STATION_ID])(ids)
+            if len(ids) > 50:
+                return self.async_abort(reason="too_many_stations")
+            return self.async_create_entry(title="", data={**self._options(), "station_sensor_ids": ids})
+        manager = self.hass.data.get(DOMAIN, {}).get("manager")
+        if manager is None:
+            return self.async_abort(reason="stations_unavailable")
+        snapshot = await self.hass.async_add_executor_job(manager.station_snapshot)
+        rows = sorted(snapshot["stations"], key=lambda r: (r["brand"], r["name"], r["id"]))
+        choices = {row["id"]: row["brand"] + " · " + row["name"] + (" · " + row["charger_kind"] if row.get("charger_kind") else "") for row in rows}
+        saved = self._options().get("station_sensor_ids", [])
+        for uid in saved:
+            choices.setdefault(uid, uid + " · ikke i seneste hentning")
+        return self.async_show_form(step_id="station_sensors", data_schema=vol.Schema({
+            vol.Required("station_sensor_ids", default=saved): selector.SelectSelector(
+                selector.SelectSelectorConfig(options=[{"value": k, "label": v} for k, v in choices.items()],
+                                              multiple=True, mode=selector.SelectSelectorMode.DROPDOWN))}))
 
     async def async_step_map(self, user_input=None):
         from homeassistant.helpers import selector
