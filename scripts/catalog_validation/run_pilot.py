@@ -20,6 +20,12 @@ def offline():
     assert cs and cs[0]['value']==1.44 and cs[0]['battery_configurations'][1]['nominal_total_kwh']==2.88
     assert not cs[0]['verified'];checks.append('real cached Roma battery configurations')
     assert not v.extract_page(page_data,'2 TWENTY','ROMA 4800');checks.append('different model rejected')
+    source=json.loads((ROOT/'fixtures/auto-data-up.json').read_text())
+    candidates=v.extract_page(source,'Volkswagen','up!')
+    assert len(candidates)==1 and candidates[0]['value']==35 and candidates[0]['field']=='tank_l'
+    assert candidates[0]['scope']['variant']=='1.0 (60 Hp)' and candidates[0]['scope']['year_start']==2012 and candidates[0]['scope']['year_end']==2016
+    assert not candidates[0]['verified'];checks.append('actual Auto-Data table: 35 L, explicit variant and production years')
+    assert not v.extract_page(source,'Volkswagen','e-up!');checks.append('electric variant rejected for petrol source')
     with sync_playwright() as p:
         browser=p.chromium.launch()
         context=browser.new_context(java_script_enabled=True)

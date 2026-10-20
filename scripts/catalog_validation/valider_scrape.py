@@ -98,6 +98,31 @@ def compact_label(value):
 
 def extract_page(page, make, model):
     text=page.get('text','')
+    host=(urlparse(page.get('final_url','')).hostname or '').lower()
+    if host == 'auto-data.net' or host.endswith('.auto-data.net'):
+        def cell(label):
+            match=re.search(r'(?m)^'+re.escape(label)+r'\s*\n([^\n]+)',text)
+            return match.group(1).strip() if match else None
+        # Match explicit Brand and Model cells, not incidental mentions or related cars.
+        if norm(cell('Brand') or '')!=norm(make) or norm(cell('Model') or '')!=norm(model):return []
+        variant=cell('Modification (Engine)')
+        start,end=cell('Start of production'),cell('End of production')
+        if not variant:return []
+        scope={'model_year':None,'year_start':int(start) if start and start.isdigit() else None,
+               'year_end':int(end) if end and end.isdigit() else None,'variant':variant,'market':None,
+               'year_basis':'production dates; not assumed to be model years'}
+        found=[]
+        for field,label,unit in [('tank_l','Fuel tank capacity','l'),('batteri_kwh','Gross battery capacity','kWh'),('batteri_kwh','Net (usable) battery capacity','kWh')]:
+            match=re.search(r'(?m)^'+re.escape(label)+r'\s*\n(\d+(?:[.,]\d+)?)\s*'+unit+r'\b',text,re.I)
+            if not match:continue
+            value=float(match[1].replace(',','.'))
+            if value<=0:continue
+            found.append({'field':field,'value':value,'unit':'L' if field=='tank_l' else 'kWh',
+                'battery_basis':None if field=='tank_l' else ('gross' if label.startswith('Gross') else 'usable'),
+                'excerpt':match.group(0),'identity_evidence':{k:cell(k) for k in ['Brand','Model','Modification (Engine)','Start of production','End of production']},
+                'scope':scope,'source_class':'secondary_specification_database','parser':'auto_data_labelled_cells_v1',
+                'verified':False,'status':'needs_review','reason':'Labelled table value for this explicit variant and production period. Market and applicability to the catalog entry still require review.'})
+        return found
     # Source-specific adapter: only this product's visible heading establishes model identity.
     if (urlparse(page.get('final_url','')).hostname or '').endswith('2twentyscooters.com'):
         heading=text[:650]
