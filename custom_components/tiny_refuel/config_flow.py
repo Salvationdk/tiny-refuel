@@ -111,7 +111,25 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             self._set_catalog_defaults(chosen, manual=chosen is None)
             return await self.async_step_vehicle()
         return self.async_show_form(step_id="catalog_variant",data_schema=vol.Schema({
-            vol.Required("variant_choice"):vol.In({"manual":"Indtast kapacitet selv",**{str(i):v['name'] for i,v in enumerate(variants)}})}))
+            vol.Required("variant_choice"):vol.In({"manual":"Indtast kapacitet selv",**{str(i):self._variant_label(v) for i,v in enumerate(variants)}})}))
+
+    @staticmethod
+    def _variant_label(variant):
+        parts = [variant['name']]
+        scope = variant.get('capacity_scope') or {}
+        start, end = scope.get('production_start'), scope.get('production_end')
+        if start or end:
+            parts.append(f"produktion {start or '?'}–{end or '?'}")
+        if scope.get('market'):
+            parts.append(str(scope['market']))
+        fuels = variant.get('fuel_types') or [variant.get('brændstof')]
+        parts.extend(str(fuel) for fuel in fuels if fuel)
+        for key, unit in [('tank_l', 'L'), ('batteri_kwh', 'kWh')]:
+            if positive(variant.get(key)):
+                parts.append(f"{variant[key]:g} {unit}")
+        if variant.get('capacity_status') == 'needs_review':
+            parts.append('mangler tjek')
+        return ' · '.join(parts)
 
     def _set_catalog_defaults(self, source, manual=False):
         model=self._catalog_model; make=self._catalog_make['mærke']
