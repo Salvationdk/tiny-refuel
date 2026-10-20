@@ -411,7 +411,7 @@ Kompakt visning viser også billigste brændstofpris blandt alle valgte selskabe
 I det oprindelige kort bruger tank- og batteriberegninger den angivne positive kapacitet uden de tidligere grænser for personbiler. Fuld tank virker med benzin og diesel; plug-in-hybrid kan vise både tank og batteri. Uden køretøjskapacitet bruges fælles tankstørrelse, en eventuel tank-helper eller 50 liter som sidste fallback. Udbyderpriser og fuld opladning er vejledende og medregner ikke ladetab.
 
 
-## Data i andre kort og automatiseringer
+## Nyt i 0.2.4: data i andre kort og automatiseringer
 
 Tiny Refuel stiller alle indsamlede data til rådighed gennem svarhandlinger, valgbare stationssensorer og køretøjsoplysninger. Egne Tiny Refuel-kort bevares. Vælg stationer under integrationens indstillinger, eller brug handlingerne til filtrerede priser, rå kildedata og fordele, beregninger, historik og kataloger.
 

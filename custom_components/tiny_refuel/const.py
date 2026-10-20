@@ -1,7 +1,7 @@
 """Tiny Refuel constants."""
 DOMAIN = "tiny_refuel"
-VERSION = "0.2.3"
-CARD_VERSION = f"{VERSION}-1"
+VERSION = "0.2.4"
+CARD_VERSION = VERSION
 CONF_SCAN_HOURS = "scan_hours"
 DEFAULT_SCAN_HOURS = 6
 STATIC_URL = "/tiny_refuel/static"
