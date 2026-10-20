@@ -40,8 +40,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
     entities.extend(RefuelTariffSensor(manager, brand) for brand in ("OK", "Q8", "Circle K", "E.ON", "IONITY"))
     for kind, sources in SOURCE_NAMES.items():
         entities.extend(RefuelSourceSensor(manager, kind, source, label) for source, label in sources.items())
-    from .station_entities import RefuelStationPriceSensor
+    from .station_entities import RefuelStationPriceSensor, refresh_station_index
     selected_stations = set(getattr(entry, "options", {}).get("station_sensor_ids", []))
+    if selected_stations:
+        manager._station_entities_enabled = True
+        await hass.async_add_executor_job(refresh_station_index, manager)
     for station_id in sorted(selected_stations):
         entities.extend(RefuelStationPriceSensor(manager, station_id, field) for field in FUELS)
     for vehicle in manager.vehicles:

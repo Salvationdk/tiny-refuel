@@ -5,11 +5,20 @@ from .entity_data import FUELS
 from .sensor import device_info
 
 
+def refresh_station_index(manager):
+    """Build large station indexes off the HA event loop before entity updates."""
+    data, failed = manager.data, bool(manager.last_error)
+    rows = {row["id"]: row for row in manager.station_snapshot()["stations"]}
+    if manager.data is data and bool(manager.last_error) == failed:
+        manager._entity_station_rows = rows
+        manager._entity_station_data = data
+        manager._entity_station_failed = failed
+
+
 def station_lookup(manager, station_id):
-    marker = (id(manager.data), bool(manager.last_error))
-    if getattr(manager, "_entity_station_marker", None) != marker:
-        manager._entity_station_rows = {row["id"]: row for row in manager.station_snapshot()["stations"]}
-        manager._entity_station_marker = marker
+    if (getattr(manager, "_entity_station_data", None) is not manager.data
+            or getattr(manager, "_entity_station_failed", None) != bool(manager.last_error)):
+        return None
     return manager._entity_station_rows.get(station_id)
 
 

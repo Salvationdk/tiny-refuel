@@ -14,7 +14,7 @@ from homeassistant.exceptions import HomeAssistantError, Unauthorized
 from custom_components.tiny_refuel.const import DOMAIN
 from custom_components.tiny_refuel.manager import RefuelManager
 from custom_components.tiny_refuel import data_services as api, sensor
-from custom_components.tiny_refuel.station_entities import RefuelStationPriceSensor
+from custom_components.tiny_refuel.station_entities import RefuelStationPriceSensor, refresh_station_index
 from custom_components.tiny_refuel.config_flow import TinyRefuelOptionsFlow
 
 
@@ -156,6 +156,7 @@ class PublicDataTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_station_sensor_and_vehicle_metadata(self):
         uid=self.manager.station_snapshot()["stations"][0]["id"]
+        await self.hass.async_add_executor_job(refresh_station_index,self.manager)
         station=RefuelStationPriceSensor(self.manager,uid,"p95")
         self.assertEqual(station.native_value,15)
         self.assertEqual(station.extra_state_attributes["station"]["address"],"A")
