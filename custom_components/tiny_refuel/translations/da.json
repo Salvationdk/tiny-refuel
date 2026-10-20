@@ -29,8 +29,10 @@
       "settings": {
         "title": "Opdateringsinterval",
         "data": {
-          "scan_hours": "Timer mellem hentninger"
-        }
+          "scan_hours": "Timer mellem hentninger",
+          "history_days": "Gem prishistorik (dage, 0 slår fra)"
+        },
+        "description": "Prisændringer gemmes lokalt. Én tidligere pris pr. station og drivmiddel bevares som udgangspunkt. Historikken starter ved aktivering."
       },
       "vehicle": {
         "title": "Fælles køretøj",

@@ -1816,6 +1816,7 @@
 
   }
 
+  TinyRefuelCard.stationTheme = Object.freeze({css:CSS, editorCss:ECSS, brands:BRANDS, apply:vehicleLogoTheme});
   customElements.define("tiny-refuel-card", TinyRefuelCard);
   window.TinyRefuelCard = TinyRefuelCard;
   window.customCards = window.customCards || [];

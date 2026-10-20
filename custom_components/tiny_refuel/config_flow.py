@@ -44,7 +44,9 @@ class TinyRefuelOptionsFlow(config_entries.OptionsFlow):
             return self.async_create_entry(title="", data={**self._options(), **user_input})
         hours = self.config_entry.options.get(CONF_SCAN_HOURS, self.config_entry.data.get(CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS))
         return self.async_show_form(step_id="settings", data_schema=vol.Schema({
-            vol.Required(CONF_SCAN_HOURS, default=hours): vol.All(vol.Coerce(int), vol.Range(min=1, max=24))}))
+            vol.Required(CONF_SCAN_HOURS, default=hours): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
+            vol.Optional("history_days",default=self.config_entry.options.get("history_days",90)):
+                vol.All(vol.Coerce(int),vol.Range(min=0,max=365))}))
 
     async def _choose_vehicle(self, step, user_input):
         vehicles = self._vehicles()

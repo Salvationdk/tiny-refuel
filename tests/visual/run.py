@@ -8,6 +8,8 @@ import hashlib
 import os
 from pathlib import Path
 import secrets
+import sqlite3
+from datetime import datetime, timedelta, timezone
 import shutil
 import subprocess
 import sys
@@ -106,7 +108,7 @@ def websocket_messages(payload):
     return [item for item in (decoded if isinstance(decoded, list) else [decoded]) if isinstance(item, dict)]
 
 
-def onboard():
+def onboard(folder):
     session = requests.Session()
     for _ in range(240):
         try:
@@ -183,6 +185,21 @@ def onboard():
     assert status["state"] == "ready", status
     assert status["attributes"]["catalogs"]["personbil"]["source"] == "github", status
     assert status["attributes"]["catalogs"]["personbil"]["models"] > 0, status
+    stations = session.get(BASE + "/api/tiny_refuel/stations", timeout=10)
+    stations.raise_for_status()
+    rows = stations.json()["stations"]
+    assert len(rows) == len(FIXTURE["stations"])+len(FIXTURE["ev"]), rows
+    tokens["testStationId"] = next(row["id"] for row in rows if row["brand"]=="Q8" and row["kind"]=="fuel")
+    # Seed fixed history only in the disposable HA directory. Recorder contracts
+    # are exercised separately; this checks the real authenticated read API/chart.
+    with sqlite3.connect(folder / ".storage/tiny_refuel/price-history.sqlite3") as db:
+        db.execute("CREATE TABLE IF NOT EXISTS prices (station TEXT NOT NULL,field TEXT NOT NULL,at TEXT NOT NULL,value REAL NOT NULL,PRIMARY KEY(station,field,at))")
+        now=datetime.now(timezone.utc)
+        for days, value in [(3,14.79),(2,14.59),(1,14.49)]:
+            db.execute("INSERT INTO prices VALUES (?,?,?,?)",(tokens["testStationId"],"p95",(now-timedelta(days=days)).isoformat(),value))
+    history=session.get(BASE + "/api/tiny_refuel/history/"+tokens["testStationId"]+"?field=p95&days=7",timeout=10)
+    history.raise_for_status()
+    assert len(history.json()["points"])==3,history.text
     tokens["testEntryId"] = result["result"]["entry_id"]
     return tokens
 
@@ -421,6 +438,63 @@ def browsers(tokens):
                 model_values = editor.locator('[data-model-options="0"] option').evaluate_all("els => els.map(el => el.value)")
                 assert "up!" in model_values and "Caddy Cargo" not in model_values
                 page.locator("#visual-editor-host").evaluate("el => el.remove()")
+                # Optional station cards keep the existing vehicle card intact.
+                page.wait_for_function("customElements.get('tiny-refuel-prices-card') !== undefined")
+                page.evaluate("""id => {
+                    const host=document.createElement('div'); host.id='station-card-test';
+                    host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
+                    document.body.append(host);
+                    window.stationTestConfig={type:'custom:tiny-refuel-prices-card',fuel:'p95',limit:4};
+                    window.stationTestCard=document.createElement('tiny-refuel-prices-card');
+                    window.stationTestCard.setConfig(window.stationTestConfig);window.stationTestCard.hass=window.visualCard._hass;
+                    host.append(window.stationTestCard);
+                }""",tokens["testStationId"])
+                price_card=page.locator('tiny-refuel-prices-card')
+                expect(price_card.locator('.ts-station')).to_have_count(4)
+                price_card.locator('[data-search]').fill('Q8')
+                expect(price_card.locator('.ts-station')).to_have_count(1)
+                shot(prefix+'-station-prices',price_card)
+                price_card.locator('[data-fuel]').select_option('kwh')
+                expect(price_card.locator('.ts-price small')).to_contain_text('kWh')
+                page.evaluate("""id=>{
+                    const host=document.querySelector('#station-card-test');host.replaceChildren();
+                    const card=document.createElement('tiny-refuel-station-card');
+                    card.setConfig({type:'custom:tiny-refuel-station-card',station_id:id,fuel:'all'});
+                    card.hass=window.visualCard._hass;host.append(card);
+                }""",tokens["testStationId"])
+                single=page.locator('tiny-refuel-station-card')
+                expect(single.locator('.ts-station')).to_have_count(1)
+                single.locator('.ts-history > summary').click()
+                expect(single.locator('.ts-history svg')).to_be_visible()
+                expect(single.locator('.ts-history tbody tr')).to_have_count(3)
+                shot(prefix+'-station-history',single)
+                page.evaluate("""id=>{
+                    const host=document.querySelector('#station-card-test');host.replaceChildren();
+                    const card=document.createElement('tiny-refuel-favorites-card');
+                    card.setConfig({type:'custom:tiny-refuel-favorites-card',favorites:[id],fuel:'all'});
+                    card.hass=window.visualCard._hass;host.append(card);
+                }""",tokens["testStationId"])
+                favorites=page.locator('tiny-refuel-favorites-card')
+                expect(favorites.locator('.ts-station')).to_have_count(1)
+                shot(prefix+'-station-favorites',favorites)
+                page.evaluate("""id=>{
+                    const host=document.querySelector('#station-card-test');host.replaceChildren();
+                    const editor=document.createElement('tiny-refuel-stations-editor');
+                    editor.setConfig({type:'custom:tiny-refuel-favorites-card',favorites:[id],fuel:'all'});
+                    editor.hass=window.visualCard._hass;
+                    editor.addEventListener('config-changed',e=>window.stationSavedConfig=e.detail.config);
+                    host.append(editor);
+                }""",tokens["testStationId"])
+                station_editor=page.locator('tiny-refuel-stations-editor')
+                expect(station_editor.locator('[data-favorite]')).to_have_count(15)
+                station_editor.locator('[data-filter]').fill('Q8')
+                expect(station_editor.locator('[data-favorite]')).to_have_count(2)
+                station_editor.locator('[data-favorite]').first.set_checked(True)
+                station_editor.locator('[data-key="title"]').fill('Mine lokale priser')
+                station_editor.locator('[data-key="title"]').dispatch_event('change')
+                assert page.evaluate("window.stationSavedConfig.title")=='Mine lokale priser'
+                shot(prefix+'-station-editor',station_editor)
+                page.locator('#station-card-test').evaluate('el=>el.remove()')
                 assert card.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), prefix + " horizontal overflow"
         page.set_viewport_size({"width": 1280, "height": 1000})
         page.goto(BASE + "/config/integrations/integration/tiny_refuel")
@@ -455,7 +529,7 @@ def main():
             environment = {**os.environ, "VIRTUAL_ENV": sys.prefix}
             process = subprocess.Popen([sys.executable, "-m", "homeassistant", "--config", str(folder)], cwd=folder, env=environment, stdout=log, stderr=subprocess.STDOUT)
             try:
-                tokens = onboard()
+                tokens = onboard(folder)
                 screenshots = browsers(tokens)
                 (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
                     "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True, "themes": ["light", "dark"], "theme_pairs": len(screenshots) // 2}, indent=2))

@@ -29,8 +29,10 @@
       "settings": {
         "title": "Update interval",
         "data": {
-          "scan_hours": "Hours between collections"
-        }
+          "scan_hours": "Hours between collections",
+          "history_days": "Price history retention (days, 0 disables)"
+        },
+        "description": "Price changes are stored locally. One earlier price per station and fuel is retained as a baseline. History starts when enabled."
       },
       "vehicle": {
         "title": "Shared vehicle",
