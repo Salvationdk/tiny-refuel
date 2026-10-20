@@ -34,5 +34,10 @@ assert.equal(editor.lastEvent.type,'config-changed');assert.equal(editor.lastEve
  assert.ok(a._station({...data.stations[0],distance:null}).includes('/static/logos/logo-q8.svg'));
  assert.ok(!a._station({...data.stations[0],distance:null}).includes('undefined'));
  assert.throws(()=>a.setConfig({fuel:'unknown'}));
+ const large=new Card();large.setConfig({type:'custom:tiny-refuel-prices-card',limit:100});
+ large._data={stations:Array.from({length:101},(_,i)=>({...data.stations[0],id:String(i)}))};large._render();
+ assert.ok(!large.shadowRoot.innerHTML.includes('data-more>Vis flere'));
+ assert.ok(large.shadowRoot.innerHTML.includes('Viser 100 resultater.'));
+
  console.log('PASS: station filters, favorites, stale ordering, request reuse and saved editor choices');
 })().catch(error=>{console.error(error);process.exitCode=1;});

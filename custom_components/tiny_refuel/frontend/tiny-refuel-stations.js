@@ -162,7 +162,7 @@
         if(c.mode!=='station'&&this._fuel==='all'&&this._sort==='price')html+='<div class="ts-address">Vælg ét drivmiddel for at sortere efter pris. Liter og kWh sammenlignes ikke.</div>';
         html+='<div class="ts-count" aria-live="polite">'+rows.length+' resultater'+(location?' · afstand i luftlinje':'')+'</div><div class="ts-list">'+shown.map(r=>this._station(r)).join('')+'</div>';
         if(!shown.length)html+='<div class="ts-empty"><strong>'+(this._loading?'Henter stationer…':c.mode==='favorites'?'Dine favoritter starter her':c.mode==='station'?(c.station_id?'Stationen mangler i de indlæste data':'Vælg din station'):'Ingen stationer matcher')+'</strong>'+(c.mode==='favorites'?'Vælg favoritter i kortets visuelle editor.':c.mode==='station'?'Åbn kortets visuelle editor og vælg en station.':'Prøv et andet drivmiddel eller en bredere afgrænsning.')+'</div>';
-        if(rows.length>shown.length)html+='<button class="ts-btn" data-more>Vis flere</button>';
+        if(rows.length>shown.length)html+=shown.length<100?'<button class="ts-btn" data-more>Vis flere</button>':'<div class="ts-sub">Viser 100 resultater. Søg eller afgræns med selskab og radius for at finde flere.</div>';
         html+='<div class="ts-sub">Hentet '+esc(stamp(data.updated))+' · '+(data.refreshing?'Datahentning i gang':'Generelle selskabstakster er udeladt')+'</div></div></ha-card>';
         const root=this.shadowRoot;root.innerHTML=html;
         root.querySelector('[data-reload]').onclick=()=>{this._fetched=0;this._histories.clear();this._load(true);};
