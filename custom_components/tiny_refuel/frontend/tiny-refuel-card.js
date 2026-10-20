@@ -1821,7 +1821,7 @@
   window.TinyRefuelCard = TinyRefuelCard;
   window.customCards = window.customCards || [];
   if (!window.customCards.some(function (card) { return card.type === "tiny-refuel-card"; })) {
-    window.customCards.push({ type: "tiny-refuel-card", name: "Tiny Refuel", description: "Benzin, diesel og opladning", preview: true });
+    window.customCards.push({ type: "tiny-refuel-card", name: "Tiny Refuel", description: "Benzin, diesel og opladning", preview: false });
   }
 
   // ---------- Visual editor ----------

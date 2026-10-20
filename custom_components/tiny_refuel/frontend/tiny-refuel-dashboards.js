@@ -250,10 +250,10 @@
   customElements.define('tiny-refuel-charging-editor',ChargingEditor);
   for(const [type,kind,name,description] of definitions){
    class Card extends DashboardCard{}
-   customElements.define(type,Card);window.customCards.push({type,name:'Tiny Refuel · '+name,description,preview:true});
+   customElements.define(type,Card);window.customCards.push({type,name:'Tiny Refuel · '+name,description,preview:false});
   }
   customElements.define('tiny-refuel-charging-card',ChargingCard);
-  window.customCards.push({type:'tiny-refuel-charging-card',name:'Tiny Refuel · Opladning',description:'Lokale ladesteder og særskilte generelle selskabstakster',preview:true});
+  window.customCards.push({type:'tiny-refuel-charging-card',name:'Tiny Refuel · Opladning',description:'Lokale ladesteder og særskilte generelle selskabstakster',preview:false});
   customElements.get('tiny-refuel-comparison-card').calculateRows=comparisons;
  }
  if(customElements.get('tiny-refuel-prices-card'))register();else customElements.whenDefined('tiny-refuel-prices-card').then(register);

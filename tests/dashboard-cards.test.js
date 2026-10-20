@@ -10,6 +10,8 @@ const window={customElements:{define:(n,c)=>registry.set(n,c),get:n=>registry.ge
 const context={window,customElements:window.customElements,HTMLElement:Node,document:{createElement:n=>new(registry.get(n)||Node)()},CustomEvent:class{constructor(type,o){this.type=type;Object.assign(this,o);}},setInterval(){return 1;},clearInterval(){},setTimeout,clearTimeout,console};
 for(const name of ['tiny-refuel-card.js','tiny-refuel-stations.js','tiny-refuel-dashboards.js'])vm.runInNewContext(fs.readFileSync('custom_components/tiny_refuel/frontend/'+name,'utf8'),context);
 assert.equal(window.customCards.length,9);
+assert.ok(window.customCards.every(card=>card.preview===false), "All Tiny Refuel entries keep the card picker compact");
+for(const name of ["tiny-refuel-card","tiny-refuel-prices-card","tiny-refuel-vehicles-card","tiny-refuel-charging-card"])assert.equal(typeof registry.get(name).getConfigElement,"function", "Selected cards retain their editor");
 for(const name of ['vehicles','comparison','vehicle-details','status','charging'])assert.ok(registry.get('tiny-refuel-'+name+'-card'));
 const Compare=registry.get('tiny-refuel-comparison-card');
 const car={id:'car',navn:'Testbil',brændstof:'benzin',tank_liters:35,location_entity:'person.driver'};
