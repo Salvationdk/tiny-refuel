@@ -61,7 +61,7 @@ def prepare(folder):
     # Inject fixed source data only into the disposable copy, never the repository.
     manager = custom / "tiny_refuel/manager.py"
     payload = json.dumps(json.dumps(FIXTURE))
-    manager.write_text(manager.read_text() + '\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads(' + payload + ')\n    self._notify()\n\nRefuelManager.start_refresh = _visual_refresh\n')
+    manager.write_text(manager.read_text() + '\n\nasync def _visual_publish(self):\n    if getattr(self, "_station_entities_enabled", False):\n        from .station_entities import refresh_station_index\n        await self.hass.async_add_executor_job(refresh_station_index, self)\n    self._notify()\n\ndef _visual_refresh(self, fuel_types=None):\n    import json\n    self.data = json.loads(' + payload + ')\n    self.hass.async_create_background_task(_visual_publish(self), "Tiny Refuel visual publish")\n\nRefuelManager.start_refresh = _visual_refresh\n')
     # Exercise the real downloader/cache/API against deterministic catalog bytes.
     bundled = json.loads((ROOT / "custom_components/tiny_refuel/frontend/katalog.json").read_text())
     names = {"personbil":"car.json", "varebil":"van.json", "lastbil":"truck.json", "motorcykel":"motorcycle.json", "knallert":"moped.json", "bus":"bus.json", "traktor":"tractor.json", "andet":"other.json"}

@@ -25,6 +25,7 @@ class PublicDataTests(unittest.IsolatedAsyncioTestCase):
         async def executor(function, *args):
             return await asyncio.to_thread(function, *args)
         self.hass = SimpleNamespace(data={DOMAIN:{}}, async_add_executor_job=executor,
+            async_create_background_task=lambda coroutine,name:asyncio.create_task(coroutine,name=name),
             states={"person.driver": SimpleNamespace(state="home", attributes={"latitude":55,"longitude":12})})
         self.car = {"id":"car", "navn":"Bil", "mærke":"VW", "brændstof":"benzin", "tank_liters":35,
                     "location_entity":"person.driver", "capacity_status":"needs_review"}
@@ -186,3 +187,23 @@ class PublicDataTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["data"]["vehicles"],[self.car])
         cleared=await flow.async_step_station_sensors({"station_sensor_ids":[]})
         self.assertEqual(cleared["data"]["station_sensor_ids"],[])
+
+    async def test_station_prices_follow_the_real_refresh_and_failure_cycle(self):
+        await self.hass.async_add_executor_job(refresh_station_index,self.manager)
+        uid=self.manager.station_snapshot()["stations"][0]["id"]
+        entity=RefuelStationPriceSensor(self.manager,uid,"p95")
+        self.manager._station_entities_enabled=True
+        updated={**self.manager.data,"stations":[{**self.manager.data["stations"][0],"p95":18}]}
+        self.manager.collector=lambda path:updated
+        self.manager._collector_supports_progress=False
+        self.manager.start_refresh()
+        await self.manager.task
+        self.assertEqual(entity.native_value,18)
+        def fail(path):raise OSError("offline")
+        self.manager.collector=fail
+        with self.assertLogs("custom_components.tiny_refuel.manager",level="ERROR"):
+            self.manager.start_refresh()
+            await self.manager.task
+        self.assertIsNone(entity.native_value)
+        self.assertFalse(entity.extra_state_attributes["current"])
+        await self.manager.async_close()
