@@ -550,6 +550,30 @@ def browsers(tokens):
                     shot(prefix+'-dashboard-'+kind+'-editor',extra_editor)
                     page.locator('#dashboard-editor-test').evaluate('el=>el.remove()')
                 assert card.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), prefix + " horizontal overflow"
+        # Empty shared list: use the real Lovelace websocket to discover the old card.
+        page.evaluate("""()=>{
+            const original=window.visualCard._hass;
+            const hass=new Proxy(original,{get(target,key){
+                if(key==='connection')return window.legacyVehicleConnection||(window.legacyVehicleConnection={});
+                if(key==='callApi')return async(method,path,...args)=>{
+                    const data=await target.callApi(method,path,...args);
+                    return path==='tiny_refuel/dashboard'?{...data,vehicles:[]}:data;
+                };
+                const value=target[key];return typeof value==='function'?value.bind(target):value;
+            }});
+            const host=document.createElement('div');host.id='legacy-vehicles-test';
+            document.querySelector('home-assistant').shadowRoot.append(host);
+            const config={type:'custom:tiny-refuel-vehicle-details-card'};
+            const card=document.createElement('tiny-refuel-vehicle-details-card');
+            card.setConfig(config);card.hass=hass;host.append(card);
+            const editor=document.createElement('tiny-refuel-dashboard-editor');
+            editor.setConfig(config);editor.hass=hass;host.append(editor);
+        }""")
+        legacy=page.locator('#legacy-vehicles-test')
+        expect(legacy.locator('tiny-refuel-vehicle-details-card .td-car')).to_contain_text('Familiebil')
+        expect(legacy.locator('tiny-refuel-dashboard-editor [data-key="vehicle_id"] option')).to_have_count(2)
+        assert legacy.locator('tiny-refuel-vehicle-details-card').evaluate('el=>el._selected()[0].tank_liters')==35
+        legacy.evaluate('el=>el.remove()')
         page.goto(BASE + "/lovelace/stationer")
         native_map=page.locator('hui-map-card')
         expect(native_map.locator('ha-map')).to_be_visible(timeout=30000)

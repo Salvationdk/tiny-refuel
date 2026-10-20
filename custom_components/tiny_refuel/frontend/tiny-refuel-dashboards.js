@@ -27,7 +27,43 @@
    }).catch(error=>{dataRequests.delete(key);throw error;});
    dataRequests.set(key,record);return record.promise;
   }
-  function vehicles(data,config){return (Array.isArray(config.biler)?config.biler:(data.vehicles||[])).map((car,i)=>({...car,id:car.id||'local-'+i}));}
+  // Read only the current dashboard. Never migrate or modify existing card configs.
+  const dashboardRequests=new WeakMap();
+  function collectVehicles(config){
+   const found=new Map();
+   function visit(node){
+    if(!node||typeof node!=='object')return;
+    if(Array.isArray(node)){node.forEach(visit);return;}
+    if(node.type==='custom:tiny-refuel-card'&&Array.isArray(node.biler)){
+     for(const car of node.biler){
+      if(!car||typeof car!=='object'||Array.isArray(car))continue;
+      const canonical=JSON.stringify(Object.keys(car).sort().map(key=>[key,car[key]]));
+      // The full canonical value keeps IDs stable and avoids hash collisions.
+      const id='dashboard:'+canonical;
+      if(!found.has(id))found.set(id,{...car,id});
+     }
+    }
+    for(const key of ['views','sections','cards','card'])visit(node[key]);
+   }
+   visit(config);return [...found.values()];
+  }
+  async function withDashboardVehicles(hass,data,config,force=false){
+   if(Array.isArray(config.biler)||data.vehicles.length||modes[config.type]==='status')return data;
+   if(typeof hass.callWS!=='function')return {...data,dashboard_vehicles:[]};
+   const path=((window.location&&window.location.pathname)||'/lovelace').split('/')[1]||'lovelace';
+   const key=hass.connection||hass;
+   let cache=dashboardRequests.get(key);if(!cache){cache=new Map();dashboardRequests.set(key,cache);}
+   let record=cache.get(path);
+   if(!record||!record.pending&&(force||Date.now()-record.at>=30000)){
+    record={at:Date.now(),pending:true};
+    record.promise=Promise.resolve().then(()=>hass.callWS({type:'lovelace/config',url_path:path==='lovelace'?null:path}))
+     .then(collectVehicles).finally(()=>{record.pending=false;});
+    cache.set(path,record);
+   }
+   try{return {...data,dashboard_vehicles:await record.promise};}
+   catch(error){if(cache.get(path)===record)cache.delete(path);return {...data,dashboard_vehicles:[],dashboard_vehicle_error:true};}
+  }
+  function vehicles(data,config){return (Array.isArray(config.biler)?config.biler:((data.vehicles||[]).length?data.vehicles:(data.dashboard_vehicles||[]))).map((car,i)=>({...car,id:car.id||'local-'+i}));}
   function capacity(car,field){const value=field==='kwh'?car.batteri_kwh:car.tank_liters;return valid(value)?value:null;}
   function vehicleName(car){return car.navn||[car.mærke,car.model].filter(Boolean).join(' ')||'Køretøj';}
   function comparisons(data,config,hass,car,field,sort='price'){
@@ -89,7 +125,7 @@
     this._loading=true;
     try{
      const [data,stations]=await Promise.all([dashboard(this._hass,force),['vehicles','comparison'].includes(this._kind)?base.snapshot(this._hass,force):Promise.resolve({})]);
-     this._data={...data,...stations};this._error=null;this._fetched=Date.now();
+     this._data={...await withDashboardVehicles(this._hass,data,this._config,force),...stations};this._error=null;this._fetched=Date.now();
     }catch(error){this._error='Oplysningerne kunne ikke hentes. Prøv igen om lidt.';}
     finally{this._loading=false;if(this._connected)this._render();}
    }
@@ -116,7 +152,7 @@
    _comparison(){
     const all=vehicles(this._data||{},this._config),selected=this._selected(),car=selected[0];
     let html='<div class="ts-tools"><label>Køretøj<select data-vehicle>'+all.map(v=>'<option value="'+esc(v.id)+'"'+(car&&car.id===v.id?' selected':'')+'>'+esc(vehicleName(v))+'</option>').join('')+'</select></label>';
-    if(!car)return '<div class="ts-empty"><strong>Vælg et fælles køretøj</strong>Tilføj eller vælg et køretøj i opsætningen.</div>';
+    if(!car)return '<div class="ts-empty"><strong>Vælg et køretøj</strong>Tilføj eller vælg et køretøj i opsætningen.</div>';
     const allowed=fuelFields[car.brændstof]||[],field=allowed.includes(this._comparisonField)?this._comparisonField:allowed.includes(this._config.fuel)?this._config.fuel:allowed[0];
     html+='<label>Drivmiddel<select data-comparison-field>'+allowed.map(f=>'<option value="'+f+'"'+(field===f?' selected':'')+'>'+fuels[f]+'</option>').join('')+'</select></label></div>';
     if(!field)return html+'<div class="ts-notice">Køretøjets drivmiddel er ikke oplyst.</div>';
@@ -173,7 +209,7 @@
     else{
      const rows=this._selected();
      content+='<div class="td-list">'+rows.map(car=>kind==='details'?this._details(car):this._overview(car)).join('')+'</div>';
-     if(!rows.length)content+='<div class="ts-empty"><strong>Intet fælles køretøj valgt</strong>Tilføj køretøjer under Tiny Refuels integrationsindstillinger, eller vælg et eksisterende køretøj i editoren.</div>';
+     if(!rows.length)content+='<div class="ts-empty"><strong>Intet køretøj valgt</strong>Tilføj køretøjer under Tiny Refuels integrationsindstillinger, eller vælg et eksisterende køretøj i editoren.</div>';
      if(kind==='vehicles'&&rows.length)content+='<div class="ts-sub">Omkostningen er for hele den indtastede kapacitet. Aktuelt tankindhold, batteriniveau, ladetab og gebyrer indgår ikke.</div>';
     }
     this.shadowRoot.innerHTML='<style>'+theme.css+base.css+css+'</style><ha-card><div class="trf'+(c.compact?' trf-compact':'')+'"><div class="trf-titlebar"><div class="trf-title">'+esc(c.title||titles[kind])+'</div><button class="ts-btn" data-reload aria-label="Opdatér visning">↻</button></div><div class="trf-rule"></div><div class="ts-sub">'+({vehicles:'Dine køretøjer · relevante steder og priser',comparison:'Samme drivmiddel · sammenlignelige priser',details:'Det gemte køretøj · variant og kapacitet',status:'Overblik over dine datakilder'})[kind]+'</div>'+content+'</div></ha-card>';
@@ -197,7 +233,7 @@
    async _load(){
     if(!this._hass||!this._hass.callApi||this._data||this._loading)return;
     this._loading=true;
-    try{this._data=await dashboard(this._hass);this._error=null;}
+    try{this._data=await withDashboardVehicles(this._hass,await dashboard(this._hass),this._config);this._error=null;}
     catch(error){this._error='Køretøjslisten kunne ikke hentes. Åbn editoren igen for at prøve igen.';}
     finally{this._loading=false;this._render();}
    }
@@ -210,8 +246,10 @@
     const cars=vehicles(this._data||{},c);
     let html='<style>'+theme.editorCss+base.css+'.trfe label{display:grid;gap:5px;margin:10px 0}.td-check{display:flex!important;align-items:center}.td-check input{width:18px;min-height:18px}</style><div class="trfe"><h4>'+titles[kind]+'</h4><div class="trfe-hint">Valgfrit ekstra kort. Opsætningerne i dine andre kort bevares.</div><label>Overskrift<input data-key="title" type="text" value="'+esc(c.title||titles[kind])+'"></label>';
     if(kind!=='status'){
-     html+='<label>Fælles køretøj<select data-key="vehicle_id"><option value="">'+(kind==='comparison'?'Første fælles køretøj':'Alle fælles køretøjer')+'</option>'+cars.map(car=>'<option value="'+esc(car.id)+'"'+(car.id===c.vehicle_id?' selected':'')+'>'+esc(vehicleName(car))+'</option>').join('')+'</select></label>';
-     if(!cars.length)html+='<div class="ts-notice">Tilføj køretøjer i Tiny Refuels integrationsindstillinger. Derefter kan de vælges her.</div>';
+     html+='<label>Køretøj<select data-key="vehicle_id"><option value="">'+(kind==='comparison'?'Første køretøj':'Alle køretøjer')+'</option>'+cars.map(car=>'<option value="'+esc(car.id)+'"'+(car.id===c.vehicle_id?' selected':'')+'>'+esc(vehicleName(car))+'</option>').join('')+'</select></label>';
+     if(!cars.length)html+='<div class="ts-notice">Tilføj køretøjer i Tiny Refuels integrationsindstillinger eller i et Tiny Refuel-kort på dette betjeningspanel.</div>';
+     if((this._data||{}).dashboard_vehicle_error)html+='<div class="ts-notice">Køretøjer fra dette betjeningspanel kunne ikke læses. Prøv at åbne editoren igen.</div>';
+     if(cars.length&&(this._data||{}).dashboard_vehicles)html+='<div class="trfe-hint">Køretøjerne hentes fra eksisterende Tiny Refuel-kort på dette betjeningspanel.</div>';
      if(c.vehicle_id&&!cars.some(car=>car.id===c.vehicle_id))html+='<div class="ts-notice">Det valgte køretøj findes ikke længere. Vælg et andet.</div>';
     }
     if(kind==='comparison'){
@@ -255,6 +293,7 @@
   customElements.define('tiny-refuel-charging-card',ChargingCard);
   window.customCards.push({type:'tiny-refuel-charging-card',name:'Tiny Refuel · Opladning',description:'Lokale ladesteder og særskilte generelle selskabstakster',preview:false});
   customElements.get('tiny-refuel-comparison-card').calculateRows=comparisons;
+  customElements.get('tiny-refuel-comparison-card').vehicleTools=Object.freeze({collectVehicles,withDashboardVehicles,vehicles});
  }
  if(customElements.get('tiny-refuel-prices-card'))register();else customElements.whenDefined('tiny-refuel-prices-card').then(register);
 })(window);

@@ -21,7 +21,7 @@ computer og understøtter lyst/mørkt tema og kompakt visning.
 Tilføj fælles køretøjer under Tiny Refuels integrationsindstillinger. Vælg
 et bestemt køretøj eller alle i kortets visuelle editor. Kortene ændrer ikke
 værdierne i køretøjet. Tidligere kort med egne køretøjer fungerer fortsat;
-for avanceret brug kan de nye kort også få en `biler`-liste i samme format.
+Når der ikke er fælles køretøjer, finder de nye kort automatisk køretøjer fra eksisterende Tiny Refuel-kort på det samme betjeningspanel, også i andre visninger. Der læses kun data; eksisterende kort ændres ikke. Køretøjer fra andre betjeningspaneler hentes ikke. En egen `biler`-liste i det nye kort har altid førsteprioritet, derefter fælles køretøjer og til sidst betjeningspanelets eksisterende kort.
 
 Omkostninger beregnes kun fra positive kapaciteter og aktuelle lokale priser.
 Uden kapacitet vises enhedsprisen uden total. Uden position kan priser
