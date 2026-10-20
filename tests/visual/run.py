@@ -514,7 +514,7 @@ def browsers(tokens):
                 expect(price_card.locator('.ts-station')).to_have_count(1)
                 shot(prefix+'-station-prices',price_card)
                 price_card.locator('[data-fuel]').select_option('kwh')
-                expect(price_card.locator('.ts-price small')).to_contain_text('kWh')
+                expect(price_card.locator('.ts-price small')).to_have_text(['kr/kWh','kr/kWh'])
                 page.evaluate("""id=>{
                     const host=window.stationTestHost;host.replaceChildren();
                     const card=document.createElement('tiny-refuel-station-card');
