@@ -14,7 +14,7 @@ from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers import config_validation as cv
 
-from .const import CARD_URL, CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS, DOMAIN, STATIC_URL
+from .const import CARD_URL, CARD_VERSION, CONF_SCAN_HOURS, DEFAULT_SCAN_HOURS, DOMAIN, STATIC_URL
 from .manager import RefuelManager
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
@@ -135,8 +135,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             fetch_catalog_bytes, Path(folder) / "katalog.json")
         hass.http.register_view(RefuelCatalogView(state["catalogs"]))
         add_extra_js_url(hass, CARD_URL)
-        add_extra_js_url(hass, STATIC_URL + "/tiny-refuel-stations.js?v=0.2.2.1")
-        add_extra_js_url(hass, STATIC_URL + "/tiny-refuel-dashboards.js?v=0.2.2.1")
+        add_extra_js_url(hass, STATIC_URL + "/tiny-refuel-stations.js?v=" + CARD_VERSION)
+        add_extra_js_url(hass, STATIC_URL + "/tiny-refuel-dashboards.js?v=" + CARD_VERSION)
         state["registered"] = True
     return True
 

@@ -234,7 +234,7 @@
      this._change(el.dataset.key,value);
     });
     const picker=this.shadowRoot.querySelector('[data-location]');if(picker){picker.hass=this._hass;picker.value=c.location_entity||'';picker.includeDomains=['person','device_tracker','zone'];picker.addEventListener('value-changed',e=>{e.stopPropagation();this._change('location_entity',e.detail.value);});}
-    this.shadowRoot.querySelectorAll('[data-brand]').forEach(el=>el.onchange=()=>{const set=new Set(c.brands||[]);el.checked?set.add(el.dataset.brand):set.delete(el.dataset.brand);this._change('brands',[...set]);});
+    this.shadowRoot.querySelectorAll('[data-brand]').forEach(el=>el.onchange=()=>{const set=new Set(this._config.brands||[]);el.checked?set.add(el.dataset.brand):set.delete(el.dataset.brand);this._change('brands',[...set]);});
    }
   }
   class ChargingEditor extends base.StationEditor{

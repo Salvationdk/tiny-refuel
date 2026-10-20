@@ -1,4 +1,6 @@
-# Tiny Refuel v0.2.2
+# Tiny Refuel v0.2.3
+
+**Nyt i 0.2.3:** valgfrie stations- og køretøjskort, favoritter, lokal prishistorik, særskilt opladningsoversigt, datastatus og stationer på Home Assistants indbyggede kort. Det eksisterende kort og dets opsætninger bevares. Se [de nye kort og paneler](docs/dashboards.md), [stationskort og historik](docs/station-cards.md) og [panel-eksemplet](examples/dashboards.yaml).
 
 Benzin, diesel og opladning til køretøjer i Home Assistant. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
 
@@ -54,7 +56,7 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card.js?v=0.2.2
+/tiny_refuel/static/tiny-refuel-card.js?v=0.2.3
 ```
 
 ## Skærmbilleder
@@ -203,7 +205,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**.
 
-Teknisk integrationsversion: **0.2.2**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.2` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
+Teknisk integrationsversion: **0.2.3**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.3` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2** og **2026.10.0**.
 
@@ -323,3 +325,4 @@ Teksterne bruger **køretøj**, fordi kataloget også omfatter motorcykler, knal
 Kompakt visning viser også billigste brændstofpris blandt alle valgte selskaber, inklusive rækker skjult af visningsgrænsen. Vis færre gendanner grænsen efter Vis 10 mere i begge oversigter og i ladepopup'en. En laveste oplyst elpris kan være en generel takst og er ikke en garanti for den lokale pris på et ladested.
 
 Tank- og batteriberegninger bruger den angivne positive kapacitet uden de tidligere grænser for personbiler. Fuld tank virker med benzin og diesel; plug-in-hybrid kan vise både tank og batteri. Uden køretøjskapacitet bruges fælles tankstørrelse, en eventuel tank-helper eller 50 liter som sidste fallback. Udbyderpriser og fuld opladning er vejledende og medregner ikke ladetab.
+
