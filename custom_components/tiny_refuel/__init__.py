@@ -65,7 +65,8 @@ class RefuelStationsView(HomeAssistantView):
         manager = self.hass.data.get(DOMAIN, {}).get("manager")
         if manager is None:
             return web.json_response({"message":"Tiny Refuel er ikke startet"},status=503)
-        return web.json_response(manager.station_snapshot(),headers={"Cache-Control":"no-store"})
+        data = await self.hass.async_add_executor_job(manager.station_snapshot)
+        return web.json_response(data,headers={"Cache-Control":"no-store"})
 
 
 class RefuelHistoryView(RefuelStationsView):

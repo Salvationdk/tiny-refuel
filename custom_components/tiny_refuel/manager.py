@@ -106,7 +106,14 @@ class RefuelManager:
                 self._notify()
 
     def station_snapshot(self):
-        rows = station_rows(self.data, bool(self.last_error))
+        data = self.data
+        failed = bool(self.last_error)
+        if (getattr(self,"_station_data",None) is not data
+                or getattr(self,"_station_failed",None) != failed):
+            self._station_rows = station_rows(data, failed)
+            self._station_data = data
+            self._station_failed = failed
+        rows = self._station_rows
         return {"stations":rows,"updated":self.data.get("updated"),"refreshing":self.refreshing,
                 "last_error":self.last_error,"history_days":self.history.days,
                 "history_error":self.history_error}

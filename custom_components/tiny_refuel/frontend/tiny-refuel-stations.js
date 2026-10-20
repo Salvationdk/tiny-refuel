@@ -80,6 +80,10 @@
         if (!config || typeof config!=='object') throw Error('Kortets opsætning mangler');
         const modes={'custom:tiny-refuel-prices-card':'prices','custom:tiny-refuel-station-card':'station','custom:tiny-refuel-favorites-card':'favorites'};
         if (config.fuel && !Object.hasOwn(fuels,config.fuel) && config.fuel!=='all') throw Error('Ukendt drivmiddel');
+        if(config.sort && !['price','distance','name'].includes(config.sort))throw Error('Ukendt sortering');
+        for(const key of ['brands','favorites'])if(config[key]!==undefined && (!Array.isArray(config[key]) || config[key].some(v=>typeof v!=='string')))throw Error('Ugyldigt stationsvalg');
+        if(config.limit!==undefined && (!Number.isInteger(config.limit)||config.limit<1||config.limit>100))throw Error('Antallet skal være 1–100');
+        if(config.radius_km!==undefined && (typeof config.radius_km!=='number'||!Number.isFinite(config.radius_km)||config.radius_km<0))throw Error('Radius skal være et positivt tal eller 0');
         this._config={fuel:'p95',limit:8,sort:'price',...config,mode:modes[config.type]||'prices'};
         this._fuel=this._config.fuel;this._sort=this._config.sort;this._shown=this._config.limit;
         this._render();this._load();
@@ -123,13 +127,13 @@
           else if(!result.points.length)content='Ingen registrerede priser i perioden endnu. Historikken starter ved aktivering.';
           else {
             const points=result.points,values=points.map(p=>p.value),lo=Math.min(...values),hi=Math.max(...values),span=hi-lo||1;
-            const start=Date.now()-days*86400000,end=Date.now();
+            const start=Date.now()-result.days*86400000,end=Date.now();
             const x=p=>Math.max(0,Math.min(600,(Date.parse(p.at)-start)/(end-start)*600));
             const y=p=>100-(p.value-lo)/span*80;
             let path='M '+x(points[0])+' '+y(points[0]);
             for(let i=1;i<points.length;i++)path+=' H '+x(points[i])+' V '+y(points[i]);
             // End at the last observation, never extend a price to the present as a live fact.
-            content='<svg viewBox="0 0 600 120" role="img" aria-label="Registrerede prisændringer"><path d="'+path+'" fill="none" stroke="var(--primary-color)" stroke-width="3" vector-effect="non-scaling-stroke"/>'+points.map(p=>'<circle cx="'+x(p)+'" cy="'+y(p)+'" r="3" fill="var(--primary-color)"/>').join('')+'</svg><div class="ts-value-range"><span>Lavest '+fmt(lo)+'</span><span>Højest '+fmt(hi)+'</span></div><table><tbody>'+points.slice(-12).reverse().map(p=>'<tr><td>'+esc(stamp(p.at))+(p.baseline?' · udgangspunkt':'')+'</td><td>'+fmt(p.value)+' kr/'+(field==='kwh'?'kWh':'L')+'</td></tr>').join('')+'</tbody></table>'+(result.truncated?'<p>Perioden indeholder flere ændringer end visningsgrænsen. Vælg en kortere periode.</p>':'');
+            content='<svg viewBox="0 0 600 120" role="img" aria-label="Registrerede prisændringer"><path d="'+path+'" fill="none" stroke="var(--primary-color)" stroke-width="3" vector-effect="non-scaling-stroke"/>'+points.map(p=>'<circle cx="'+x(p)+'" cy="'+y(p)+'" r="3" fill="var(--primary-color)"/>').join('')+'</svg><div class="ts-value-range"><span>Lavest '+fmt(lo)+'</span><span>Højest '+fmt(hi)+'</span></div><table><tbody>'+points.slice(-12).reverse().map(p=>'<tr><td>'+esc(stamp(p.baseline?p.observed_at:p.at))+(p.baseline?' · tidligere observation (udgangspunkt)':'')+'</td><td>'+fmt(p.value)+' kr/'+(field==='kwh'?'kWh':'L')+'</td></tr>').join('')+'</tbody></table>'+(result.truncated?'<p>Perioden indeholder flere ændringer end visningsgrænsen. Vælg en kortere periode.</p>':'');
           }
         }
         return '<details class="ts-history"'+(this._historyOpen?' open':'')+'><summary>Prishistorik</summary><div class="ts-history-tools"><label>Drivmiddel<select data-history-field>'+opts.map(f=>'<option value="'+f+'"'+(f===field?' selected':'')+'>'+fuels[f]+'</option>').join('')+'</select></label><label>Periode<select data-history-days>'+[1,7,30,90,365].map(d=>'<option value="'+d+'"'+(d===days?' selected':'')+'>'+d+' dage</option>').join('')+'</select></label></div><div class="ts-sub">'+content+'</div><div class="ts-address">Viser observationer og prisændringer, ikke en garanti for prisen mellem hentninger. Opbevaring: '+(this._data.history_days||0)+' dage.</div></details>';
@@ -156,8 +160,8 @@
         if(data.history_error)html+='<div class="ts-notice">'+esc(data.history_error)+'</div>';
         if((c.radius_km>0||this._sort==='distance')&&!location)html+='<div class="ts-notice">Vælg en tilgængelig positionsenhed i kortets opsætning for afstand og radius.</div>';
         if(this._fuel==='all'&&this._sort==='price')html+='<div class="ts-address">Vælg ét drivmiddel for at sortere efter pris. Liter og kWh sammenlignes ikke.</div>';
-        html+='<div class="ts-count" aria-live="polite">'+rows.length+' stationer'+(location?' · afstand i luftlinje':'')+'</div><div class="ts-list">'+shown.map(r=>this._station(r)).join('')+'</div>';
-        if(!shown.length)html+='<div class="ts-empty"><strong>'+(this._loading?'Henter stationer…':c.mode==='favorites'?'Dine favoritter starter her':c.mode==='station'?'Vælg din station':'Ingen stationer matcher')+'</strong>'+(c.mode==='favorites'?'Vælg favoritter i kortets visuelle editor.':c.mode==='station'?'Åbn kortets visuelle editor og vælg en station.':'Prøv et andet drivmiddel eller en bredere afgrænsning.')+'</div>';
+        html+='<div class="ts-count" aria-live="polite">'+rows.length+' resultater'+(location?' · afstand i luftlinje':'')+'</div><div class="ts-list">'+shown.map(r=>this._station(r)).join('')+'</div>';
+        if(!shown.length)html+='<div class="ts-empty"><strong>'+(this._loading?'Henter stationer…':c.mode==='favorites'?'Dine favoritter starter her':c.mode==='station'?(c.station_id?'Stationen mangler i de indlæste data':'Vælg din station'):'Ingen stationer matcher')+'</strong>'+(c.mode==='favorites'?'Vælg favoritter i kortets visuelle editor.':c.mode==='station'?'Åbn kortets visuelle editor og vælg en station.':'Prøv et andet drivmiddel eller en bredere afgrænsning.')+'</div>';
         if(rows.length>shown.length)html+='<button class="ts-btn" data-more>Vis flere</button>';
         html+='<div class="ts-sub">Hentet '+esc(stamp(data.updated))+' · '+(data.refreshing?'Datahentning i gang':'Generelle selskabstakster er udeladt')+'</div></div></ha-card>';
         const root=this.shadowRoot;root.innerHTML=html;
@@ -209,12 +213,12 @@
           const brands=[...new Set(rows.map(r=>r.brand))].sort();
           html+='<details class="trfe-section"><summary>Selskaber</summary><div class="trfe-section-body"><p class="trfe-hint">Ingen afkrydsninger betyder alle selskaber.</p>'+brands.map(b=>'<label class="ts-check"><input data-brand="'+esc(b)+'" type="checkbox"'+((c.brands||[]).includes(b)?' checked':'')+'>'+esc(b)+'</label>').join('')+'</div></details>';
         }
-        html+='<details class="trfe-section"><summary>Afstand og udseende</summary><div class="trfe-section-body"><label>Positionsenhed<ha-entity-picker data-location></ha-entity-picker></label>'+input('radius_km','Radius i km (0 = alle)','number',c.radius_km||0)+'<div class="trfe-hint">Afstand er i luftlinje og kræver en positionsenhed med koordinater.</div><label>Navigation<select data-key="navigation"><option value="google"'+(c.navigation!=='waze'?' selected':'')+'>Google Maps</option><option value="waze"'+(c.navigation==='waze'?' selected':'')+'>Waze</option></select></label><label class="ts-check"><input data-key="compact" type="checkbox"'+(c.compact?' checked':'')+'>Kompakt visning</label></div></details>';
+        html+='<details class="trfe-section"><summary>Afstand og udseende</summary><div class="trfe-section-body"><label>Positionsenhed'+(this._hass?'<ha-entity-picker data-location></ha-entity-picker>':'<span>Indlæser Home Assistant…</span>')+'</label>'+input('radius_km','Radius i km (0 = alle)','number',c.radius_km||0)+'<div class="trfe-hint">Afstand er i luftlinje og kræver en positionsenhed med koordinater.</div><label>Navigation<select data-key="navigation"><option value="google"'+(c.navigation!=='waze'?' selected':'')+'>Google Maps</option><option value="waze"'+(c.navigation==='waze'?' selected':'')+'>Waze</option></select></label><label class="ts-check"><input data-key="compact" type="checkbox"'+(c.compact?' checked':'')+'>Kompakt visning</label></div></details>';
         if(mode==='station')html+='<p class="trfe-hint">Stationskortet har prishistorik. Opbevaringsperioden vælges under Tiny Refuels integrationsindstillinger.</p>';
         if(this._error)html+='<div role="alert" class="ts-notice">'+esc(this._error)+'</div>';
         this.shadowRoot.innerHTML=html+'</div>';
-        const picker=this.shadowRoot.querySelector('[data-location]');picker.hass=this._hass;picker.value=c.location_entity||'';picker.includeDomains=['person','device_tracker','zone'];picker.allowCustomEntity=false;
-        picker.addEventListener('value-changed',e=>{e.stopPropagation();this._change('location_entity',e.detail.value);});
+        const picker=this.shadowRoot.querySelector('[data-location]');if(picker){picker.hass=this._hass;picker.value=c.location_entity||'';picker.includeDomains=['person','device_tracker','zone'];picker.allowCustomEntity=false;
+        picker.addEventListener('value-changed',e=>{e.stopPropagation();this._change('location_entity',e.detail.value);});}
         this.shadowRoot.querySelectorAll('[data-key]').forEach(el=>el.onchange=()=>{
           let value=el.type==='checkbox'?el.checked:el.type==='number'?Number(el.value):el.value;
           if(el.type==='number' && (!Number.isFinite(value)||value<0))return;
