@@ -84,7 +84,7 @@
         for(const key of ['brands','favorites'])if(config[key]!==undefined && (!Array.isArray(config[key]) || config[key].some(v=>typeof v!=='string')))throw Error('Ugyldigt stationsvalg');
         if(config.limit!==undefined && (!Number.isInteger(config.limit)||config.limit<1||config.limit>100))throw Error('Antallet skal være 1–100');
         if(config.radius_km!==undefined && (typeof config.radius_km!=='number'||!Number.isFinite(config.radius_km)||config.radius_km<0))throw Error('Radius skal være et positivt tal eller 0');
-        this._config={fuel:'p95',limit:8,sort:'price',...config,mode:modes[config.type]||'prices'};
+        this._config={fuel:'p95',limit:8,sort:config.fuel==='all'?'name':'price',...config,mode:modes[config.type]||'prices'};
         this._fuel=this._config.fuel;this._sort=this._config.sort;this._shown=this._config.limit;
         this._render();this._load();
       }
@@ -159,7 +159,7 @@
         if(data.last_error)html+='<div class="ts-notice">Seneste datahentning fejlede. Priserne nedenfor er gemte oplysninger.</div>';
         if(data.history_error)html+='<div class="ts-notice">'+esc(data.history_error)+'</div>';
         if((c.radius_km>0||this._sort==='distance')&&!location)html+='<div class="ts-notice">Vælg en tilgængelig positionsenhed i kortets opsætning for afstand og radius.</div>';
-        if(this._fuel==='all'&&this._sort==='price')html+='<div class="ts-address">Vælg ét drivmiddel for at sortere efter pris. Liter og kWh sammenlignes ikke.</div>';
+        if(c.mode!=='station'&&this._fuel==='all'&&this._sort==='price')html+='<div class="ts-address">Vælg ét drivmiddel for at sortere efter pris. Liter og kWh sammenlignes ikke.</div>';
         html+='<div class="ts-count" aria-live="polite">'+rows.length+' resultater'+(location?' · afstand i luftlinje':'')+'</div><div class="ts-list">'+shown.map(r=>this._station(r)).join('')+'</div>';
         if(!shown.length)html+='<div class="ts-empty"><strong>'+(this._loading?'Henter stationer…':c.mode==='favorites'?'Dine favoritter starter her':c.mode==='station'?(c.station_id?'Stationen mangler i de indlæste data':'Vælg din station'):'Ingen stationer matcher')+'</strong>'+(c.mode==='favorites'?'Vælg favoritter i kortets visuelle editor.':c.mode==='station'?'Åbn kortets visuelle editor og vælg en station.':'Prøv et andet drivmiddel eller en bredere afgrænsning.')+'</div>';
         if(rows.length>shown.length)html+='<button class="ts-btn" data-more>Vis flere</button>';
@@ -178,7 +178,7 @@
     class StationEditor extends HTMLElement {
       constructor(){super();this.attachShadow({mode:'open'});this._config={};this._filter='';}
       setConfig(config){this._config={...config};this._render();}
-      set hass(hass){this._hass=hass;theme.apply(this,hass);if(!this._rendered)this._render();this._load();}
+      set hass(hass){this._hass=hass;theme.apply(this,hass);if(!this._rendered)this._render();const picker=this.shadowRoot.querySelector('[data-location]');if(picker)picker.hass=hass;this._load();}
       async _load(){
         if(this._loading||this._data||!this._hass||!this._hass.callApi)return;
         this._loading=true;
@@ -202,7 +202,7 @@
         const input=(key,label,type='text',value=c[key]||'')=>'<label>'+label+'<input data-key="'+key+'" type="'+type+'" value="'+esc(value)+'"'+(type==='number'?' min="0"':'')+'></label>';
         let html='<style>'+theme.editorCss+extraCSS+'.trfe label{display:grid;gap:5px;margin:9px 0}.ts-check{display:flex!important;align-items:center;gap:8px!important}.ts-check input{width:18px;min-height:18px}.ts-editor-choices{max-height:320px;overflow:auto;padding:0 8px;border:1px solid var(--divider-color);border-radius:10px}.ts-editor-choices label{border-bottom:1px solid var(--divider-color);padding:8px 0;line-height:1.5}.ts-editor-choices small{display:block;color:var(--secondary-text-color)}</style><div class="trfe"><h4>'+titles[mode]+'</h4><p class="trfe-hint">Et selvstændigt kort med stationspriser. Intet køretøj er nødvendigt.</p>'+input('title','Overskrift','text',c.title||titles[mode]);
         html+='<label>Drivmiddel<select data-key="fuel">'+['all',...Object.keys(fuels)].map(f=>'<option value="'+f+'"'+((c.fuel||'p95')===f?' selected':'')+'>'+(fuels[f]||'Alle priser')+'</option>').join('')+'</select></label>';
-        if(mode!=='station') html+='<label>Sortering<select data-key="sort">'+[['price','Laveste pris'],['distance','Nærmeste'],['name','Selskab og navn']].map(([v,l])=>'<option value="'+v+'"'+((c.sort||'price')===v?' selected':'')+'>'+l+'</option>').join('')+'</select></label>'+input('limit','Antal viste stationer (1–100)','number',c.limit||8);
+        if(mode!=='station') html+='<label>Sortering<select data-key="sort">'+[['price','Laveste pris'],['distance','Nærmeste'],['name','Selskab og navn']].map(([v,l])=>'<option value="'+v+'"'+((c.sort||(c.fuel==='all'?'name':'price'))===v?' selected':'')+'>'+l+'</option>').join('')+'</select></label>'+input('limit','Antal viste stationer (1–100)','number',c.limit||8);
         if(mode==='station'||mode==='favorites'){
           html+='<h4>'+ (mode==='station'?'Vælg station':'Vælg favoritter')+'</h4><label>Søg i stationer<input data-filter type="search" placeholder="Selskab, station eller adresse" value="'+esc(this._filter)+'"></label>';
           if(mode==='station') html+='<label>Station<select data-key="station_id"><option value="">Vælg en station</option>'+shown.map(r=>'<option value="'+r.id+'"'+(c.station_id===r.id?' selected':'')+'>'+esc(r.brand+' · '+r.name+(r.address&&r.address!==r.name?' · '+r.address:'')+(r.charger_kind?' · '+r.charger_kind:''))+'</option>').join('')+'</select></label>';
@@ -229,13 +229,13 @@
           this._change(el.dataset.key,value);
         });
         const filter=this.shadowRoot.querySelector('[data-filter]');if(filter)filter.oninput=()=>{const pos=filter.selectionStart;this._filter=filter.value;this._render();const next=this.shadowRoot.querySelector('[data-filter]');next.focus();next.setSelectionRange(pos,pos);};
-        this.shadowRoot.querySelectorAll('[data-favorite]').forEach(el=>el.onchange=()=>{const set=new Set(this._config.favorites||[]);el.checked?set.add(el.dataset.favorite):set.delete(el.dataset.favorite);this._change('favorites',[...set]);});
-        this.shadowRoot.querySelectorAll('[data-brand]').forEach(el=>el.onchange=()=>{const set=new Set(this._config.brands||[]);el.checked?set.add(el.dataset.brand):set.delete(el.dataset.brand);this._change('brands',[...set]);});
+        this.shadowRoot.querySelectorAll('[data-favorite]').forEach(el=>el.onchange=()=>{const set=new Set(this._config.favorites||[]);el.checked?set.add(el.dataset.favorite):set.delete(el.dataset.favorite);this._change('favorites',[...set]);this._render();});
+        this.shadowRoot.querySelectorAll('[data-brand]').forEach(el=>el.onchange=()=>{const set=new Set(this._config.brands||[]);el.checked?set.add(el.dataset.brand):set.delete(el.dataset.brand);this._change('brands',[...set]);this._render();});
       }
     }
     class PricesCard extends StationCard {}
     class SingleStationCard extends StationCard {static getStubConfig(){return {fuel:'all',limit:1};}}
-    class FavoritesCard extends StationCard {static getStubConfig(){return {fuel:'all',favorites:[],limit:8};}}
+    class FavoritesCard extends StationCard {static getStubConfig(){return {fuel:'all',favorites:[],limit:8,sort:'name'};}}
     customElements.define('tiny-refuel-stations-editor',StationEditor);
     for(const [type,Class,name,description] of [
       ['tiny-refuel-prices-card',PricesCard,'Tiny Refuel · Prisoversigt','Stationspriser med søgning, drivmiddel og afstand – uden køretøj'],

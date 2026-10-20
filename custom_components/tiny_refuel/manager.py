@@ -108,13 +108,13 @@ class RefuelManager:
     def station_snapshot(self):
         data = self.data
         failed = bool(self.last_error)
-        if (getattr(self,"_station_data",None) is not data
-                or getattr(self,"_station_failed",None) != failed):
-            self._station_rows = station_rows(data, failed)
-            self._station_data = data
-            self._station_failed = failed
-        rows = self._station_rows
-        return {"stations":rows,"updated":self.data.get("updated"),"refreshing":self.refreshing,
+        cached = getattr(self,"_station_cache",None)
+        if cached is not None and cached[0] is data and cached[1] == failed:
+            rows = cached[2]
+        else:
+            rows = station_rows(data,failed)
+            self._station_cache = (data,failed,rows)
+        return {"stations":rows,"updated":data.get("updated"),"refreshing":self.refreshing,
                 "last_error":self.last_error,"history_days":self.history.days,
                 "history_error":self.history_error}
 
