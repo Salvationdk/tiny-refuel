@@ -1,6 +1,6 @@
-# Tiny Refuel v0.2.3
+# Tiny Refuel v0.2.4
 
-**Nyt i 0.2.3:** valgfrie stations- og køretøjskort, favoritter, lokal prishistorik, særskilt opladningsoversigt, datastatus og stationer på Home Assistants indbyggede kort. Det eksisterende kort og dets opsætninger bevares. Se [de nye kort og paneler](docs/dashboards.md), [stationskort og historik](docs/station-cards.md) og [panel-eksemplet](examples/dashboards.yaml).
+**Nyt i 0.2.4:** brug alle Tiny Refuels indsamlede data i andre Home Assistant-kort, templates, scripts og automatiseringer. Vælg stationssensorer i integrationsindstillingerne, brug de nye køretøjsentiteter, eller hent data gennem seks svarhandlinger. Eksisterende kort og opsætninger bevares. Se [dataadgang og eksempler](docs/data-access.md).
 
 Benzin, diesel og opladning i Home Assistant – med eller uden køretøj. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
 
@@ -29,11 +29,11 @@ Brug knappen til at åbne Tiny Refuel direkte i HACS:
 3. Vælg opdateringsinterval. Standard er hver 6. time.
 4. Genindlæs browseren med **Ctrl+F5**.
 5. Tilføj **Tiny Refuel** eller et af de valgfrie ekstra kort fra dashboardets kortvælger.
+6. Vælg selskaber, stationer, position eller fælles køretøjer i det valgte korts visuelle editor. Prisoversigt, stationskort, favoritter og opladning kræver ikke et køretøj.
 
 Køretøjskortene genbruger automatisk køretøjer fra eksisterende Tiny Refuel-kort på samme betjeningspanel, når der ikke er opsat fælles køretøjer. Dine eksisterende kortopsætninger bevares.
 
 Kortvælgeren viser kompakte navne og beskrivelser for Tiny Refuel-kortene. Når du vælger et kort, kan du fortsat se dets forhåndsvisning i editoren.
-6. Vælg selskaber, stationer, position eller fælles køretøjer i det valgte korts visuelle editor. Prisoversigt, stationskort, favoritter og opladning kræver ikke et køretøj.
 
 Kort, editor, selskabslogoer, køretøjskatalog og scraper følger med integrationen. Kortets JavaScript indlæses automatisk.
 
@@ -60,8 +60,49 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card.js?v=0.2.3
+/tiny_refuel/static/tiny-refuel-card.js?v=0.2.4
 ```
+
+## Data i andre kort og automatiseringer
+
+Fra **0.2.4** kan Tiny Refuels data bruges i almindelige Home Assistant-kort og i egne templates, scripts og automatiseringer. Forespørgsler genbruger den fælles cache og starter ikke en ny prisindsamling.
+
+### Vælg stationssensorer uden YAML
+
+Åbn **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Stationssensorer til andre kort**. Vælg op til **50 stationer**. Hver valgt station får sensorer for benzin 95, benzin 100, diesel og el. Brug de relevante entiteter i eksempelvis **Entities**, **Tile**, **Gauge** eller **History Graph**.
+
+Manglende, tvetydige eller fejlramte priser vises som **ukendte**, ikke som 0 kr. Et tomt stationsvalg fjerner stationssensorerne. Identiteten følger stationens stabile ID, normalt udbyderens ID eller adressen. Prishistorik i almindelige kort følger Home Assistants Recorder; Tiny Refuels egen lokale historik er fortsat tilgængelig separat.
+
+Fælles køretøjer får desuden entiteter for **køretøjsoplysninger**, **tankkapacitet** og **batterikapacitet**. Attributter bevarer mærke, model, variant, årgang, drivmiddel og kapacitetens tilgængelige kilder/kontrolstatus.
+
+### Seks svarhandlinger til alle data
+
+| Handling | Indhold |
+|---|---|
+| `tiny_refuel.get_data` | Alle originale indsamlede felter, herunder priser, ladedata, fordele, kilder, fejl og geokodning. Udelad `section` for at se de tilgængelige sektioner. |
+| `tiny_refuel.get_stations` | Stationer og lokale priser med søgning, selskabsvalg, stations-ID'er, afstand, radius, sortering og navigation |
+| `tiny_refuel.get_vehicles` | Alle gemte fælles køretøjsfelter og beregninger ved nærmeste relevante station; kan også beregne et indsendt eget køretøj |
+| `tiny_refuel.get_status` | Kildestatus, seneste opdatering, fremdrift, fejl, kataloger, historik og kortstatus |
+| `tiny_refuel.get_history` | Lokalt gemte prisobservationer for en station og et drivmiddel |
+| `tiny_refuel.get_catalog` | Modeller, varianter, mærkeoplysninger og katalogmetadata med bevarede kilder og kontrolstatus |
+
+Handlingerne findes under **Udviklerværktøjer → Handlinger**. I scripts og automatiseringer gemmes svaret med `response_variable`:
+
+```yaml
+action: tiny_refuel.get_stations
+data:
+  fuel: p95
+  sort: price
+  current_only: true
+  limit: 5
+response_variable: refuel_stations
+```
+
+Resultatet ligger i `refuel_stations['items']`. En tom liste betyder, at der ikke er aktuelle priser med de valgte filtre. Drivmiddelkoder er `p95`, `p100`, `diesel` og `kwh`. Store lister understøtter `offset`, `limit` og `next_offset`, så hele datasættet kan hentes i sider uden enorme sensorattributter. Kataloger hentes kun for den efterspurgte køretøjstype.
+
+Kortlokale biler og favoritter flyttes ikke automatisk til integrationen. Et eget køretøj kan sendes til `get_vehicles`, og favorit-ID'er kan sendes til `get_stations`. Læseadgang til positionsenheder kontrolleres i svarhandlingerne.
+
+Se [alle felter, svarformater, historik og eksempler til egne kort/templates](docs/data-access.md).
 
 ## Vælg de kort, du har brug for
 
@@ -183,6 +224,9 @@ Logopuljen er klargjort til 281 mærkenavne: 261 indlejrede SVG-logoer og 20 PNG
 - Gentagne klik deler den igangværende hentning.
 - Sensorer for lokale priser på 95, 100, diesel og el, stationstal, hentetid, fejl og koordinatstatus.
 - Knapper til alle data, benzin, diesel eller el samt handlingen `tiny_refuel.refresh`.
+- Valgbare prissensorer for op til 50 stationer til almindelige HA-kort.
+- Entiteter for fælles køretøjers oplysninger, tank- og batterikapacitet.
+- Seks svarhandlinger til alle data, filtrerede stationer, beregninger, datastatus, historik og kataloger.
 
 AC og DC på samme sted tælles én gang pr. selskab. Generelle selskabstakster tæller ikke som lokale priser. Medlemsrabat trækkes ikke automatisk fra priserne.
 
@@ -198,6 +242,8 @@ De tre eksisterende sensorers identitet bevares. Integrationens nye entiteter ka
 | Seneste hentning, antal fejl og adresser uden koordinater | Hentningens status, inklusive fejl fra kundefordele |
 | Hentning i gang og datakildefejl | Binære sensorer til status og automationer |
 | Valgfrie sensorer pr. selskab | Billigste lokale priser, generelle standardladetakster og kildestatus. Aktivér dem under integrationens entiteter efter behov. |
+| Valgbare stationssensorer | Fire prissensorer pr. valgt station; vælg op til 50 stationer i integrationsindstillingerne. Manglende eller fejlramte priser giver ukendt værdi. |
+| Køretøjsoplysninger og kapaciteter | Fælles køretøjsdata, tank i liter og batteri i kWh med tilgængelig kontrolstatus og kildeoplysninger. |
 | Katalogstatus | Indlæste typer, versioner, modelantal og eventuel brug af gemte kopier. Status godkender ikke modellernes kapaciteter. |
 | Valgfrie stationsmarkører | Fysiske steder med koordinater på HA’s indbyggede kort, afgrænset i integrationens indstillinger. |
 | Fire henteknapper | Alle data, benzin, diesel eller el. Samtidige kald deler den igangværende hentning. |
@@ -206,7 +252,7 @@ De generelle standardladetakster vises særskilt fra lokale priser. Standard er 
 
 Opret fælles køretøjer under **Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer → Tilføj fra katalog** eller **Tilføj manuelt**. Vælg type, mærke, model og eventuel variant fra kataloget, eller indtast køretøjet manuelt. Kontrollér kapaciteten for årgang/variant, og angiv eventuelt en positionsenhed. Mærke, model og notifikationsservice er valgfrie. Samme menu kan ændre intervallet og redigere eller fjerne køretøjer.
 
-Hvert fælles køretøj får sensorer for nærmeste relevante station, afstand i luftlinje, lokal pris på stedet og beregnet fuld tank/opladning. Et benzinkøretøj får 95 og 100; diesel får diesel; el får opladning; plug-in-hybrid får benzin og opladning. Hvis nærmeste ladested mangler lokal pris, kan station og afstand stadig vises, mens pris og opladningsbeløb er ukendte. Der antages ingen tankstørrelse. Beregninger bruger hele kapaciteten og medregner ikke ladetab, rabatter, abonnementer eller ekstra gebyrer.
+Hvert fælles køretøj får entiteter for køretøjsoplysninger, tank- og batterikapacitet samt sensorer for nærmeste relevante station, afstand i luftlinje, lokal pris på stedet og beregnet fuld tank/opladning. Et benzinkøretøj får 95 og 100; diesel får diesel; el får opladning; plug-in-hybrid får benzin og opladning. Hvis nærmeste ladested mangler lokal pris, kan station og afstand stadig vises, mens pris og opladningsbeløb er ukendte. Der antages ingen tankstørrelse. Beregninger bruger hele kapaciteten og medregner ikke ladetab, rabatter, abonnementer eller ekstra gebyrer.
 
 Kort uden egne `biler` bruger automatisk integrationens fælles køretøjer. Det kan fravælges i editoren med **Brug integrationens køretøjer, når kortet ikke har egne** (`brug_faelles_koeretoejer: false`). Eksisterende køretøjer i kortets YAML har prioritet og flyttes ikke automatisk. Køretøjssensorerne følger de fælles køretøjer og ændres ikke, når en bruger vælger et andet køretøj eller andre filtre i et enkelt kort. Globale prissensorer følger heller ikke kortets selskabsfiltre.
 
@@ -278,9 +324,9 @@ HACS-afinstallation eller fjernelse af integrationen sletter ikke automatisk de 
 
 Minimum Home Assistant: **2025.11.2**.
 
-Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**.
+Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**. Version **0.2.4** er kontrolleret med **152 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.4-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/39460110740) består med **114 screenshots**, inklusive et almindeligt Entities-kort med en Tiny Refuel-stationssensor. Galleriet ovenfor er fortsat mærket 0.2.3, fordi det viser de gemte billeder fra den version.
 
-Teknisk integrationsversion: **0.2.3**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.3` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
+Teknisk integrationsversion: **0.2.4**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.4` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2** og **2026.10.0**.
 
@@ -409,10 +455,3 @@ Teksterne bruger **køretøj**, fordi kataloget også omfatter motorcykler, knal
 Kompakt visning viser også billigste brændstofpris blandt alle valgte selskaber, inklusive rækker skjult af visningsgrænsen. Vis færre gendanner grænsen efter Vis 10 mere i begge oversigter og i ladepopup'en. En laveste oplyst elpris kan være en generel takst og er ikke en garanti for den lokale pris på et ladested.
 
 I det oprindelige kort bruger tank- og batteriberegninger den angivne positive kapacitet uden de tidligere grænser for personbiler. Fuld tank virker med benzin og diesel; plug-in-hybrid kan vise både tank og batteri. Uden køretøjskapacitet bruges fælles tankstørrelse, en eventuel tank-helper eller 50 liter som sidste fallback. Udbyderpriser og fuld opladning er vejledende og medregner ikke ladetab.
-
-
-## Nyt i 0.2.4: data i andre kort og automatiseringer
-
-Tiny Refuel stiller alle indsamlede data til rådighed gennem svarhandlinger, valgbare stationssensorer og køretøjsoplysninger. Egne Tiny Refuel-kort bevares. Vælg stationer under integrationens indstillinger, eller brug handlingerne til filtrerede priser, rå kildedata og fordele, beregninger, historik og kataloger.
-
-Se [alle handlinger, felter og eksempler](docs/data-access.md). Store lister hentes med sideinddeling i stedet for at blive gemt som enorme sensorattributter.
