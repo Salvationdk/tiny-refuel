@@ -1,4 +1,6 @@
-# Tiny Refuel v0.2.5
+# Tiny Refuel v0.2.6
+
+**Nyt i 0.2.6:** Fælles Tiny-neontema på alle ni kort, også kompakt, og tydelig vejledning ved manglende køretøj. Shell bruger det officielle pris-API; E.ON-fordele og fejlrapportering er rettet. Se [releasebeskrivelsen](docs/releases/0.2.6.md).
 
 **Nyt i 0.2.5:** Stationerne på Home Assistants indbyggede kort viser nu selskabernes medfølgende logoer. Ukendte selskaber bruger fortsat et stationsikon. Brændstof, AC/DC og andre ladeformer på samme sted samles under ét logo med fælles oplysninger ved klik. Logoerne indlæses lokalt fra integrationen; ingen ekstra kortudvidelse er nødvendig.
 
@@ -15,7 +17,7 @@ Mine køretøjer, Prissammenligning og Køretøjsoplysninger viser oprettelsesve
 og et link til Tiny Refuel, hvis der ikke er et køretøj. Et slettet valg og en fejl
 ved indlæsning vises særskilt. Pris- og stationskort kræver fortsat ikke et køretøj.
 
-## Rettelser under udvikling
+## Rettelser i 0.2.6
 
 Shells officielle pris-API bruges før PDF/reservekilden og leverer også koordinater.
 V-Power 98 vises som et særskilt produkt, ikke som benzin 100. E.ONs fordelstekster
@@ -79,7 +81,7 @@ Brændstof- og elladekilder er opdelt i hver sit provider-modul. Fordele, apps, 
 Hvis kortet ikke findes efter genindlæsning, kan denne ressource tilføjes manuelt under dashboardets ressourcer med typen **JavaScript-modul**:
 
 ```text
-/tiny_refuel/static/tiny-refuel-card.js?v=0.2.5
+/tiny_refuel/static/tiny-refuel-card.js?v=0.2.6
 ```
 
 ## Data i andre kort og automatiseringer
@@ -345,7 +347,7 @@ Minimum Home Assistant: **2025.11.2**.
 
 Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**. Version **0.2.4** er kontrolleret med **152 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.4-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/39460110740) består med **114 screenshots**, inklusive et almindeligt Entities-kort med en Tiny Refuel-stationssensor. Galleriet ovenfor er fortsat mærket 0.2.3, fordi det viser de gemte billeder fra den version.
 
-Teknisk integrationsversion: **0.2.5**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.5` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
+Teknisk integrationsversion: **0.2.6**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.6` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
 GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2** og **2026.10.0**.
 
