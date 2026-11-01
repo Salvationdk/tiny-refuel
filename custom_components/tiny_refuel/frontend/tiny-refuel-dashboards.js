@@ -7,9 +7,9 @@
   const theme=customElements.get('tiny-refuel-card').stationTheme;
   const {esc,fmt,stamp,valid,origin,distance,coords,fuels}=base;
   const definitions=[
-   ['tiny-refuel-vehicles-card','vehicles','Mine køretøjer','Fælles køretøjer med nærmeste steder og beregnede omkostninger'],
-   ['tiny-refuel-comparison-card','comparison','Prissammenligning','Sammenlign pris, afstand og omkostning for ét køretøj'],
-   ['tiny-refuel-vehicle-details-card','details','Køretøjsoplysninger','Model, årgang, variant, kapacitet og tilgængelig kontrolstatus'],
+   ['tiny-refuel-vehicles-card','vehicles','Mine køretøjer','Kræver et køretøj · nærmeste steder og beregnede omkostninger'],
+   ['tiny-refuel-comparison-card','comparison','Prissammenligning','Kræver et køretøj · sammenlign pris, afstand og omkostning'],
+   ['tiny-refuel-vehicle-details-card','details','Køretøjsoplysninger','Kræver et køretøj · model, variant, kapacitet og kontrolstatus'],
    ['tiny-refuel-status-card','status','Datastatus','Kilder, seneste hentning, lokal historik, kort og katalogstatus']];
   const modes=Object.fromEntries(definitions.map(d=>['custom:'+d[0],d[1]]));
   const titles=Object.fromEntries(definitions.map(d=>[d[1],d[2]]));
@@ -149,10 +149,16 @@
     }
     return html+'</article>';
    }
+   _missingVehicle(){
+    const all=vehicles(this._data||{},this._config);
+    if(all.length)return '<div class="ts-empty td-vehicle-required" role="status"><strong>Vælg et køretøj</strong>Det valgte køretøj findes ikke længere. Vælg et andet i kortets editor.</div>';
+    if(this._data&&this._data.dashboard_vehicle_error)return '<div class="ts-empty td-vehicle-required" role="status"><strong>Køretøjer kunne ikke indlæses</strong>Prøv at opdatere kortet. Vi kan ikke afgøre, om der allerede er oprettet et køretøj.</div>';
+    return '<div class="ts-empty td-vehicle-required" role="status"><strong>Opret et køretøj først</strong>Dette kort kræver et køretøj. Åbn Indstillinger → Enheder og tjenester → Tiny Refuel → Konfigurer, og tilføj et køretøj. Vælg det derefter i kortets editor.<p><a class="ts-btn" href="/config/integrations/integration/tiny_refuel">Åbn Tiny Refuel</a></p></div>';
+   }
    _comparison(){
     const all=vehicles(this._data||{},this._config),selected=this._selected(),car=selected[0];
     let html='<div class="ts-tools"><label>Køretøj<select data-vehicle>'+all.map(v=>'<option value="'+esc(v.id)+'"'+(car&&car.id===v.id?' selected':'')+'>'+esc(vehicleName(v))+'</option>').join('')+'</select></label>';
-    if(!car)return '<div class="ts-empty"><strong>Vælg et køretøj</strong>Tilføj eller vælg et køretøj i opsætningen.</div>';
+    if(!car)return this._missingVehicle();
     const allowed=fuelFields[car.brændstof]||[],field=allowed.includes(this._comparisonField)?this._comparisonField:allowed.includes(this._config.fuel)?this._config.fuel:allowed[0];
     html+='<label>Drivmiddel<select data-comparison-field>'+allowed.map(f=>'<option value="'+f+'"'+(field===f?' selected':'')+'>'+fuels[f]+'</option>').join('')+'</select></label></div>';
     if(!field)return html+'<div class="ts-notice">Køretøjets drivmiddel er ikke oplyst.</div>';
@@ -209,7 +215,7 @@
     else{
      const rows=this._selected();
      content+='<div class="td-list">'+rows.map(car=>kind==='details'?this._details(car):this._overview(car)).join('')+'</div>';
-     if(!rows.length)content+='<div class="ts-empty"><strong>Intet køretøj valgt</strong>Tilføj køretøjer under Tiny Refuels integrationsindstillinger, eller vælg et eksisterende køretøj i editoren.</div>';
+     if(!rows.length)content+=this._missingVehicle();
      if(kind==='vehicles'&&rows.length)content+='<div class="ts-sub">Omkostningen er for hele den indtastede kapacitet. Aktuelt tankindhold, batteriniveau, ladetab og gebyrer indgår ikke.</div>';
     }
     this.shadowRoot.innerHTML='<style>'+theme.css+base.css+css+'</style><ha-card><div class="trf'+(c.compact?' trf-compact':'')+'"><div class="trf-titlebar"><div class="trf-title">'+esc(c.title||titles[kind])+'</div><button class="ts-btn" data-reload aria-label="Opdatér visning">↻</button></div><div class="trf-rule"></div><div class="ts-sub">'+({vehicles:'Dine køretøjer · relevante steder og priser',comparison:'Samme drivmiddel · sammenlignelige priser',details:'Det gemte køretøj · variant og kapacitet',status:'Overblik over dine datakilder'})[kind]+'</div>'+content+'</div></ha-card>';

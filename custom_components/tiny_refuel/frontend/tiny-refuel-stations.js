@@ -56,7 +56,7 @@
       return rows;
     }
     const extraCSS=`
-      :host{display:block}*{box-sizing:border-box}.trf{overflow:hidden}.trf-title{text-transform:none;letter-spacing:.2px;font-size:17px}
+      :host{display:block}*{box-sizing:border-box}.trf{overflow:hidden}
       .ts-sub{font-size:12px;color:var(--secondary-text-color);line-height:1.5;margin:8px 0 14px}
       .ts-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.ts-search{grid-column:1/-1}
       input,select,button{font:inherit;color:var(--primary-text-color)}input,select{min-height:40px;background:var(--card-background-color);border:1px solid var(--divider-color);border-radius:10px;padding:8px 10px;width:100%;min-width:0}
