@@ -374,6 +374,22 @@ def browsers(tokens):
                               style="app-header, app-toolbar, ha-toast { visibility: hidden !important; }")
             results.append(name)
 
+        def check_neon(target):
+            root = target.locator('.trf').first
+            style = root.evaluate("el => {const s=getComputedStyle(el);return {primary:s.getPropertyValue('--primary-color').trim(),background:s.backgroundImage,border:s.borderTopStyle,shadow:s.boxShadow};}")
+            assert style['primary'] in ['#00e5ff', '#007d8c'], style
+            assert 'linear-gradient' in style['background'] and style['border'] == 'solid', style
+            assert style['shadow'] != 'none', style
+            return style
+
+        def compact_shot(target, name):
+            normal = check_neon(target)
+            target.evaluate("el => el.setConfig({...el._config,compact:true})")
+            expect(target.locator('.trf-compact').first).to_be_visible()
+            assert check_neon(target) == normal, "Compact mode changed the shared theme"
+            assert target.evaluate('el=>el.scrollWidth<=el.clientWidth+1'), name
+            shot(name, target)
+
         for width, label in [(1280, "desktop"), (390, "mobile")]:
             page.set_viewport_size({"width": width, "height": 2400})
             for dark in [False, True]:
@@ -382,10 +398,12 @@ def browsers(tokens):
                 prefix = label + "-" + theme
                 set_config(CONFIG)
                 expect(card).to_contain_text("Billigst")
+                normal_neon = check_neon(card)
                 shot(prefix + "-fuel")
                 set_config({**CONFIG, "kompakt": True})
                 expect(card.locator(".trf-row")).to_have_count(3)
                 expect(card).to_contain_text("Billigst 95")
+                assert check_neon(card) == normal_neon
                 shot(prefix + "-compact")
                 card.locator('[data-more-stations="fuel"]').click()
                 expect(card.locator(".trf-row")).to_have_count(9)
@@ -513,6 +531,7 @@ def browsers(tokens):
                 price_card.locator('[data-search]').fill('Q8')
                 expect(price_card.locator('.ts-station')).to_have_count(1)
                 shot(prefix+'-station-prices',price_card)
+                compact_shot(price_card,prefix+'-station-prices-compact')
                 price_card.locator('[data-fuel]').select_option('kwh')
                 expect(price_card.locator('.ts-price small')).to_have_text(['kr/kWh','kr/kWh'])
                 page.evaluate("""id=>{
@@ -527,6 +546,7 @@ def browsers(tokens):
                 expect(single.locator('.ts-history svg')).to_be_visible()
                 expect(single.locator('.ts-history tbody tr')).to_have_count(3)
                 shot(prefix+'-station-history',single)
+                compact_shot(single,prefix+'-station-history-compact')
                 page.evaluate("""id=>{
                     const host=window.stationTestHost;host.replaceChildren();
                     const card=document.createElement('tiny-refuel-favorites-card');
@@ -536,6 +556,7 @@ def browsers(tokens):
                 favorites=page.locator('tiny-refuel-favorites-card')
                 expect(favorites.locator('.ts-station')).to_have_count(1)
                 shot(prefix+'-station-favorites',favorites)
+                compact_shot(favorites,prefix+'-station-favorites-compact')
                 page.evaluate("""id=>{
                     const host=window.stationTestHost;host.replaceChildren();
                     const editor=document.createElement('tiny-refuel-stations-editor');
@@ -574,6 +595,13 @@ def browsers(tokens):
                         expect(extra_card.locator('[data-fuel]')).to_have_value('kwh')
                     assert extra_card.evaluate('el=>el.scrollWidth<=el.clientWidth+1')
                     shot(prefix+'-dashboard-'+type_,extra_card)
+                    compact_shot(extra_card,prefix+'-dashboard-'+type_+'-compact')
+                    if type_ in ['vehicles','comparison','vehicle-details']:
+                        extra_card.evaluate("el => {el.setConfig({...el._config,biler:[]});el._render();}")
+                        expect(extra_card.locator('.td-vehicle-required')).to_contain_text('Opret et køretøj først')
+                        expect(extra_card.locator('.td-vehicle-required a')).to_have_attribute('href','/config/integrations/integration/tiny_refuel')
+                        shot(prefix+'-dashboard-'+type_+'-no-vehicle',extra_card)
+
                     page.locator('#dashboard-card-test').evaluate('el=>el.remove()')
                 page.evaluate("""async entity=>{
                     const host=document.createElement('div');host.id='native-price-card-test';

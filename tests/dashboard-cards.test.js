@@ -75,3 +75,17 @@ console.log('PASS: nine card registrations, vehicle costs, current local prices,
  assert.equal((await withDashboardVehicles({}, {vehicles:[]},config)).dashboard_vehicles.length,0);
  console.log('PASS: existing dashboard vehicles, nested cards, stable IDs, distinct capacities, shared priority, read-only fallback, editor/runtime agreement and request caching');
 })().catch(error=>{console.error(error);process.exitCode=1;});
+
+// Vehicle-only cards explain setup in both densities; read errors are not empty garages.
+for (const type of ['vehicles','comparison','vehicle-details']) {
+ for (const compact of [false,true]) {
+  const card=new(registry.get('tiny-refuel-'+type+'-card'))();
+  card.setConfig({type:'custom:tiny-refuel-'+type+'-card',compact});
+  card._data={vehicles:[],stations:[]};card._render();
+  assert.ok(card.shadowRoot.innerHTML.includes('Opret et køretøj først'));
+  assert.ok(card.shadowRoot.innerHTML.includes('/config/integrations/integration/tiny_refuel'));
+  card._data.dashboard_vehicle_error=true;card._render();
+  assert.ok(card.shadowRoot.innerHTML.includes('Køretøjer kunne ikke indlæses'));
+  assert.ok(!card.shadowRoot.innerHTML.includes('Opret et køretøj først'));
+ }
+}

@@ -6,6 +6,15 @@
 
 Benzin, diesel og opladning i Home Assistant – med eller uden køretøj. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
 
+## Fælles Tiny-neontema
+
+Alle ni Tiny Refuel-kort deler cyan/lilla farver, glød, paneler og knapper i både
+normal og kompakt visning. Kompakt visning ændrer afstande og størrelser, ikke temaet.
+Farvernes kontrast tilpasses Home Assistants lyse og mørke tilstand.
+Mine køretøjer, Prissammenligning og Køretøjsoplysninger viser oprettelsesvejledning
+og et link til Tiny Refuel, hvis der ikke er et køretøj. Et slettet valg og en fejl
+ved indlæsning vises særskilt. Pris- og stationskort kræver fortsat ikke et køretøj.
+
 ## Rettelser under udvikling
 
 Shells officielle pris-API bruges før PDF/reservekilden og leverer også koordinater.

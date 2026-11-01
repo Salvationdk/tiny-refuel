@@ -2,7 +2,40 @@
   "use strict";
   if (window.customElements.get("tiny-refuel-card")) return;
 
-  var CSS = `
+  // One palette for every Tiny Refuel card/editor; compact changes density only.
+  var NEON = `
+  .trf, .trfe {
+    --primary-color: var(--trf-neon-ink, #007d8c);
+    --accent-color: var(--trf-violet-ink, #7540aa);
+    --trf-line: rgba(0,180,205,.32);
+    --trf-surface: linear-gradient(135deg,rgba(0,229,255,.08),rgba(185,103,255,.06));
+    --trf-glow: 0 0 12px rgba(0,229,255,.12);
+    --divider-color: var(--trf-line);
+    accent-color: var(--primary-color);
+  }
+  .trf { box-sizing:border-box; border:1px solid var(--trf-line); border-radius:18px;
+    background:var(--trf-surface),var(--ha-card-background,var(--card-background-color,#fff));
+    box-shadow:var(--trf-glow); }
+  .trf :is(button,a,input,select,summary):focus-visible { outline:2px solid var(--primary-color); outline-offset:3px; }
+  .trf :is(.ts-station,.td-car,.td-tariff,.trf-row,.trf-evrow) {
+    border:1px solid var(--trf-line); background:var(--trf-surface); box-shadow:var(--trf-glow);
+  }
+  .trf :is(.ts-btn,.trf-ev-button) { border:1px solid var(--trf-line); background:var(--trf-surface);
+    border-radius:10px; box-shadow:var(--trf-glow); color:var(--primary-text-color); }
+  .trf :is(.ts-price,.td-fact) { border:1px solid var(--trf-line); background:var(--trf-surface); }
+  .trf :is(.ts-price strong,.td-fact strong,.td-cost,.td-tariff strong) {
+    color:var(--primary-color); text-shadow:0 0 10px rgba(0,229,255,.3);
+  }
+  .trf .ts-favorite[aria-pressed=true] { color:var(--accent-color); text-shadow:0 0 10px rgba(185,103,255,.35); }
+  .trf.trf-compact :is(.td-list,.ts-list) { gap:7px; }
+  .trf.trf-compact :is(.td-car,.td-tariff) { padding:9px; }
+  .trf.trf-compact :is(.td-facts,.ts-prices) { gap:5px; margin:7px 0; }
+  .trf.trf-compact :is(.td-fact,.ts-price) { padding:6px 8px; }
+  .trf.trf-compact :is(.td-fact strong,.td-cost,.td-tariff strong) { font-size:16px; }
+  .trf.trf-compact :is(.td-table th,.td-table td) { padding-top:6px; padding-bottom:6px; }
+  .trf.trf-compact .td-section { margin-top:10px; }
+  `;
+  var CSS = NEON + `
   .trf { container-type: inline-size; container-name: tiny-refuel; font-family: var(--paper-font-body1_-_font-family, inherit); padding: 14px 16px; color: var(--primary-text-color); }
   .trf.trf-compact { padding: 8px 10px; }
   .trf-compact .trf-title { font-size: 13px; }
@@ -136,7 +169,7 @@
   }
   `;
 
-  var ECSS = `
+  var ECSS = NEON + `
   .trfe { font-family: var(--paper-font-body1_-_font-family, inherit); padding: 8px 4px; color: var(--primary-text-color); font-size: 13px; }
   .trfe h4 { margin: 14px 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--secondary-text-color); }
   .trfe h4:first-child { margin-top: 0; }
@@ -384,6 +417,8 @@
     if (!owner.style || !owner.style.setProperty) return;
     var dark = hass && hass.themes && hass.themes.darkMode;
     if (dark === undefined) dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    owner.style.setProperty("--trf-neon-ink", dark ? "#00e5ff" : "#007d8c");
+    owner.style.setProperty("--trf-violet-ink", dark ? "#b967ff" : "#7540aa");
     owner.style.setProperty("--trf-vehicle-logo-filter", dark ? "brightness(0) invert(1)" : "brightness(0)");
     owner.style.setProperty("--trf-vehicle-logo-blend", "normal");
     owner.style.setProperty("--trf-color-logo-filter", dark ? "brightness(0) invert(1)" : "none");
