@@ -27,7 +27,9 @@ class ShellPriceTests(unittest.TestCase):
         self.assertEqual(row['alt'], {'V-Power (98 oktan)': 16.29, 'V-Power Diesel': 15.29})
         self.assertEqual((row['lat'], row['lon']), (55.64, 12.08))
         self.assertEqual(row['source'], 'shellservice.dk')
-        self.assertEqual(row['location_id'], 'D001')
+        self.assertEqual(row['provider_station_id'], 'D001')
+        self.assertNotIn('location_id', row)  # Legacy PDF stations use address IDs.
+        self.assertEqual(row['address'], 'Testvej 1 4000 Roskilde')
 
     def test_success_does_not_request_pdf(self):
         errors = []

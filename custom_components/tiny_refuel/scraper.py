@@ -903,7 +903,7 @@ def fetch_goon(errors):
 # ---------- Shell PDF ----------
 
 def normalize_shell_prices(payload):
-    """Read official per-station prices without treating V-Power 98 as 100."""
+    """Read official prices; preserve legacy address IDs and V-Power octane."""
     if not isinstance(payload, list):
         raise ValueError("Shell: expected station list")
     stations = []
@@ -916,11 +916,11 @@ def normalize_shell_prices(payload):
             continue
         row = {"brand": "Shell", "name": "Shell " + str(item.get("city") or item["street"]),
                "address": " ".join(str(item.get(k) or "").strip() for k in
-                                   ("street", "houseNumber", "postalCode", "city")).strip(),
+                                   ("street", "houseNumber", "postalCode", "city") if item.get(k)).strip(),
                "lat": position[0], "lon": position[1],
                "p95": None, "p100": None, "diesel": None, "kwh": None,
                "source": "shellservice.dk", "source_url": SHELL_PRICES_API,
-               "location_id": str(item["stationId"]), "alt": {}, "lu": None}
+               "provider_station_id": str(item["stationId"]), "alt": {}, "lu": None}
         dates = []
         for price in item.get("prices") or []:
             if not isinstance(price, dict) or price.get("currency") != "DKK":
