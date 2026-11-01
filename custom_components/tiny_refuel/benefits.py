@@ -7,7 +7,7 @@ import time
 
 REFRESH_AFTER = 7 * 24 * 60 * 60
 MAX_EXCERPT_WORDS = 36
-EXTRACTOR_VERSION = 6
+EXTRACTOR_VERSION = 7
 
 # One canonical public page per provider. Records are keyed to the card's brand
 # keys so both the fuel and charging views can show the right source.
@@ -44,7 +44,7 @@ PROVIDER_PAGES = {
     ]),
     "oil": ("OIL", ["https://www.oil-tankstationer.dk/betalingsformer/oil-loyalitetsaftale/"]),
     "clever": ("Clever", ["https://clever.dk/ladeloesninger/opladning-med-abonnement/"]),
-    "eon": ("E.ON", ["https://www.eon.dk/privat/kundesupport/kontakt-opladning.html"]),
+    "eon": ("E.ON", ["https://www.edri.com/da-dk/app"]),
     "ionity": ("IONITY", ["https://www.ionity.eu/dk/abonnementer"]),
 }
 
@@ -137,7 +137,8 @@ def extract_excerpt(page):
         return None
     # Prefer a concise block with concrete terms and avoid concatenating site text.
     ranked = sorted(eligible, key=lambda text: (
-        -len(re.findall(r"rabat|øre|abonnement|kwh|gratis|kort", text, re.I)), len(text)))
+        -len(re.findall(r"rabat|øre|abonnement|kwh|gratis", text, re.I)),
+        -len(re.findall(r"kort", text, re.I)), len(text)))
     words = ranked[0].split()
     if len(words) > MAX_EXCERPT_WORDS:
         words = words[:MAX_EXCERPT_WORDS]

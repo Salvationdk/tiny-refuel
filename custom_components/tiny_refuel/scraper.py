@@ -62,6 +62,7 @@ F24_URLS = [
 Q8_EL_URL = "https://www.q8.dk/erhverv/priser/"
 GOON_URL = "https://goon.nu/aktuelle-standerpriser/"
 UNOX_URL = "https://unoxmobility.dk/privat/braendstofpriser"
+SHELL_PRICES_API = "https://shellpumpepriser.geoapp.me/v1/prices"
 SHELL_PAGE = "https://shellservice.dk/pumpepriser"
 OK_URL = "https://www.ok.dk/privat/produkter/priser/seneste-prisaendring"
 OK_EL_URL = "https://www.ok.dk/privat/produkter/opladning/ude/ladestander-priser"
@@ -901,7 +902,63 @@ def fetch_goon(errors):
 
 # ---------- Shell PDF ----------
 
+def normalize_shell_prices(payload):
+    """Read official prices; preserve legacy address IDs and V-Power octane."""
+    if not isinstance(payload, list):
+        raise ValueError("Shell: expected station list")
+    stations = []
+    for item in payload:
+        if not isinstance(item, dict) or not item.get("stationId") or not item.get("street"):
+            continue
+        coords = item.get("coordinates") or {}
+        position = dk_coordinates(coords.get("latitude"), coords.get("longitude"))
+        if not position:
+            continue
+        row = {"brand": "Shell", "name": "Shell " + str(item.get("city") or item["street"]),
+               "address": " ".join(str(item.get(k) or "").strip() for k in
+                                   ("street", "houseNumber", "postalCode", "city") if item.get(k)).strip(),
+               "lat": position[0], "lon": position[1],
+               "p95": None, "p100": None, "diesel": None, "kwh": None,
+               "source": "shellservice.dk", "source_url": SHELL_PRICES_API,
+               "provider_station_id": str(item["stationId"]), "alt": {}, "lu": None}
+        dates = []
+        for price in item.get("prices") or []:
+            if not isinstance(price, dict) or price.get("currency") != "DKK":
+                continue
+            value = to_float(price.get("price"))
+            if value is None or value <= 0:
+                continue
+            name = str(price.get("productName") or "")
+            octane = to_float(price.get("octane"))
+            if price.get("fuelType") == "Autobenzin" and octane in (95, 100):
+                row["p95" if octane == 95 else "p100"] = value
+            elif price.get("fuelType") == "Autodiesel" and name == "FuelSave Diesel":
+                row["diesel"] = value
+            elif name:
+                label = name + (" (" + str(int(octane)) + " oktan)" if octane else "")
+                row["alt"][label] = value
+            if price.get("lastUpdated"):
+                dates.append(str(price["lastUpdated"]))
+        if not row["alt"] and all(row[k] is None for k in ("p95", "p100", "diesel")):
+            continue
+        row["alt"] = row["alt"] or None
+        # Use the oldest included timestamp rather than making old prices look new.
+        row["lu"] = min(dates) if dates else None
+        stations.append(row)
+    if not stations:
+        raise ValueError("Shell: no usable station prices")
+    return stations
+
+
 def fetch_shell(errors):
+    try:
+        return normalize_shell_prices(json.loads(get_text(SHELL_PRICES_API))), True
+    except Exception as exc:  # Preserve PDF/list fallback and cached-source identity.
+        errors.append({"shell_api": str(exc)[:120]})
+    return fetch_shell_pdf(errors)
+
+
+def fetch_shell_pdf(errors):
     try:
         page = get_text(SHELL_PAGE)
         pdfs = re.findall(r'href="([^"]*dk-priser-[\d.]+\.pdf)"', page)
@@ -922,8 +979,8 @@ def fetch_shell(errors):
             prices = [to_float(c) for c in cols[4:-1] if to_float(c) is not None]
             alt = None
             if len(prices) == 4:
-                p95, p100, diesel = prices[0], prices[1], prices[2]
-                alt = {"V-Power Diesel": prices[3]}
+                p95, p100, diesel = prices[0], None, prices[2]
+                alt = {"V-Power": prices[1], "V-Power Diesel": prices[3]}
             elif len(prices) == 3:
                 p95, p100, diesel = prices[0], None, prices[1]
                 alt = {"V-Power Diesel": prices[2]}
@@ -1041,7 +1098,7 @@ def shell_fallback(errors):
             raise ValueError("no erhverv prices parsed")
         return [{"brand": "Shell-liste", "name": "Shell listepris (erhverv)",
                  "address": "", "lat": None, "lon": None,
-                 "p95": found.get("FuelSave 95"), "p100": found.get("V-Power"),
+                 "p95": found.get("FuelSave 95"), "p100": None, "alt": {"V-Power": found["V-Power"]} if "V-Power" in found else None,
                  "diesel": found.get("FuelSave Diesel"), "kwh": None,
                  "lu": None, "source": "shellservice.dk"}][0:1], True
     except Exception as exc:  # noqa: BLE001
@@ -1410,7 +1467,7 @@ def _fuel_source_statuses(source_ok, stations, previous, errors, checked_at):
         "f24.dk": ("f24q8",),
         "goon.nu": ("goon",),
         "unoxmobility.dk": ("unox",),
-        "shellservice.dk": ("shell_pdf", "shell"),
+        "shellservice.dk": ("shell_api", "shell_pdf", "shell"),
         "ok.dk": ("ok",),
         "mobility-prices.ok.dk": ("ok_fuel_api",),
         "oil-fuel-api": ("oil_fuel_api",),

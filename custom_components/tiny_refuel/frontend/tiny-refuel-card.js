@@ -1700,6 +1700,7 @@
       if (data.last_error) groups.push({ source: "Hentning", message: data.last_error });
       (Array.isArray(data.errors) ? data.errors : []).forEach(function (error) {
         if (!error || typeof error !== "object") { groups.push({ source: "Datakilde", message: String(error) }); return; }
+        if (Object.keys(error).length === 1 && error.stale_reused) return;
         var source = error.source || Object.keys(error).filter(function (key) { return key !== "stale_reused"; })[0] || "Datakilde";
         groups.push({ source: source, message: error.error || error[source] || "Hentningen fejlede" });
       });
@@ -1714,7 +1715,7 @@
       // Raw exceptions may contain local paths, URLs, addresses or credentials.
       var lines = this._errorGroups().slice(0, 20).map(function (error) {
         var source = String(error.source || "");
-        var known = ["Home Assistant data-API", "Hentning", "Datakilde", "ck_api", "stations_cache", "f24q8", "q8_el", "circlek_el", "eon_el", "ionity_el", "unox", "goon", "shell_pdf", "shell", "ok_fuel_api", "oil_fuel_api", "ok", "ok_el", "oil", "geocode", "clever.dk", "eon.dk", "ionity.eu", "shell.dk", "unox.dk", "ok.dk", "oil-tankstationer.dk", "circlek.dk", "stale_reused"];
+        var known = ["Home Assistant data-API", "Hentning", "Datakilde", "ck_api", "stations_cache", "f24q8", "q8_el", "circlek_el", "eon_el", "ionity_el", "unox", "goon", "shell_api", "shell_pdf", "shell", "ok_fuel_api", "oil_fuel_api", "ok", "ok_el", "oil", "geocode", "clever.dk", "eon.dk", "ionity.eu", "shell.dk", "unox.dk", "ok.dk", "oil-tankstationer.dk", "circlek.dk", "stale_reused"];
         BRANDS.forEach(function (brand) { known.push("Fordele · " + brand.brand); });
         known.push("Fordele · IONITY");
         if (known.indexOf(source) < 0) source = "Datakilde";
@@ -1722,6 +1723,9 @@
         var http = message.match(/(?:HTTP(?: Error)?|status(?: code)?)[ :]*(\d{3})/i);
         var category = http ? "HTTP " + http[1] : /json|delimiter/i.test(message) ? "Ugyldigt JSON-svar" :
           /timeout|timed out/i.test(message) ? "Timeout" : "Hentningen fejlede (tilføj evt. renset fejltekst)";
+        // Only numeric diagnostics from our own Clever error format are public.
+        var cleverDetails = source === "clever.dk" && message.match(/cache-free retry at character (\d+) of (\d+)/);
+        if (cleverDetails) category += " (efter genforsøg; position " + cleverDetails[1] + " af " + cleverDetails[2] + " tegn)";
         return "- " + source + ": " + category;
       });
       var version = String(this._data && this._data.version || "ukendt").replace(/[^a-zA-Z0-9.+_-]/g, "").slice(0, 32);

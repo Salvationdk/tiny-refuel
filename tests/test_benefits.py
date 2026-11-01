@@ -10,6 +10,13 @@ spec.loader.exec_module(benefits)
 
 
 class BenefitsTests(unittest.TestCase):
+    def test_eon_uses_operator_and_prefers_subscription_over_map_instruction(self):
+        self.assertEqual(benefits.PROVIDER_PAGES["eon"][1], ["https://www.edri.com/da-dk/app"])
+        page = """<p>Brug kortet til at gennemse tilgængelige ladestationer.</p>
+        <p>Med et E.ON Drive Public-abonnement får du adgang til tusindvis af ladestationer til en reduceret pris i Danmark.</p>"""
+        self.assertIn("Public-abonnement", benefits.extract_excerpt(page))
+
+
     def test_extracts_relevant_page_text_and_skips_page_chrome(self):
         page = """
         <header><p>Navigation menu with app, price and benefits</p></header>

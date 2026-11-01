@@ -6,6 +6,14 @@
 
 Benzin, diesel og opladning i Home Assistant – med eller uden køretøj. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
 
+## Rettelser under udvikling
+
+Shells officielle pris-API bruges før PDF/reservekilden og leverer også koordinater.
+V-Power 98 vises som et særskilt produkt, ikke som benzin 100. E.ONs fordelstekster
+hentes fra E.ON Drive Infrastructure. Genbrug af gemte priser optræder ikke længere
+som en ekstra hentefejl. Clever-fejlrapporter medtager position og svarlængde efter
+genforsøg uden rå svardata; periodiske fejl hos kilden kan fortsat forekomme.
+
 ## Installation
 
 ### HACS

@@ -976,3 +976,18 @@ console.log('PASS: diesel, small tanks, small batteries, hybrid metrics and cata
   assert.equal(f._config.biler[0].model,'Own');
   assert.equal(f._config.biler[0].tank_liters,75);
 }
+// Cache reuse is status, and Clever diagnostics remain safe for public issues.
+{
+  const report = new Card();
+  report._data = {errors: [{stale_reused: 'shellservice.dk'},
+    {source: 'clever.dk', error: 'Clever returned invalid JSON on cache-free retry at character 123 of 456: PRIVATE_TOKEN'},
+    {shell_api: 'HTTP Error 503'}]};
+  assert.equal(report._errorGroups().length, 2);
+  const body = new URL(report._issueUrl()).searchParams.get('body');
+  assert.ok(body.includes('position 123 af 456 tegn'));
+  assert.ok(body.includes('shell_api: HTTP 503'));
+  assert.ok(!body.includes('PRIVATE_TOKEN'));
+  assert.ok(!body.includes('Datakilde:'));
+  report._data = {errors: [{stale_reused: 'shellservice.dk'}]};
+  assert.equal(report._errorGroups().length, 0);
+}
