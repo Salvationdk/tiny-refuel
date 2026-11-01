@@ -386,6 +386,9 @@ def browsers(tokens):
             normal = check_neon(target)
             target.evaluate("el => el.setConfig({...el._config,compact:true})")
             expect(target.locator('.trf-compact').first).to_be_visible()
+            if 'station-history' in name:
+                target.locator('.ts-history > summary').click()
+                expect(target.locator('.ts-history svg')).to_be_visible()
             assert check_neon(target) == normal, "Compact mode changed the shared theme"
             assert target.evaluate('el=>el.scrollWidth<=el.clientWidth+1'), name
             shot(name, target)
@@ -400,6 +403,10 @@ def browsers(tokens):
                 expect(card).to_contain_text("Billigst")
                 normal_neon = check_neon(card)
                 shot(prefix + "-fuel")
+                card.locator('[data-fordel]').first.click()
+                expect(card.locator('.trf-fordel-box').first).to_be_visible()
+                shot(prefix + '-provider-benefits')
+                set_config(CONFIG)
                 set_config({**CONFIG, "kompakt": True})
                 expect(card.locator(".trf-row")).to_have_count(3)
                 expect(card).to_contain_text("Billigst 95")
@@ -455,6 +462,10 @@ def browsers(tokens):
                 editor = page.locator("tiny-refuel-card-editor")
                 expect(editor).to_contain_text("913", timeout=30000)
                 shot(prefix + "-editor-overview", editor)
+                for section in ['yaml','advanced']:
+                    editor.locator('[data-editor-section="'+section+'"] > summary').click()
+                    shot(prefix + '-editor-' + section, editor)
+                    editor.locator('[data-editor-section="'+section+'"] > summary').click()
                 editor.locator('[data-editor-section="providers"] > summary').click()
                 shot(prefix + "-editor-providers", editor)
                 editor.locator('[data-editor-section="providers"] > summary').click()
@@ -615,7 +626,7 @@ def browsers(tokens):
                 expect(native_card.locator('hui-entities-card')).to_contain_text('Tiny Refuel · Egne kort')
                 shot(prefix+'-native-entities-prices',native_card)
                 native_card.evaluate('el=>el.remove()')
-                for kind in ['comparison','charging']:
+                for kind in ['vehicles','comparison','vehicle-details','status','charging']:
                     page.evaluate("""kind=>{
                         const host=document.createElement('div');host.id='dashboard-editor-test';
                         host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';

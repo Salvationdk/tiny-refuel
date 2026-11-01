@@ -166,7 +166,13 @@ geo_location_sources:
 
 Byg eksempelvis **Priser**, **Opladning**, **Mine køretøjer** og **Datastatus** ved at tilføje kortene gennem UI. [Panel-eksemplet](examples/dashboards.yaml) indeholder alle fire visninger til et nyt betjeningspanel. Vælg derefter stationer, favoritter og køretøjer i editorerne. Eksisterende paneler overskrives ikke. Se [den samlede vejledning](docs/dashboards.md).
 
-## Skærmbilleder fra 0.2.3
+## Skærmbilleder
+
+[Se hele billedgalleriet for 0.2.6](docs/screenshots/0.2.6/README.md): alle ni kort,
+kompakt visning, køretøjsvejledning, editorer, YAML, fordele, historik og HA-kort.
+Billederne bruger fiktive testdata og viser mobil/desktop i lyst og mørkt tema.
+
+### Tidligere udvalg fra 0.2.3
 
 Billederne kommer fra en rigtig Home Assistant 2026.10-installation og Chromium. Priser, køretøjer, ladesteder og position er fiktive testdata. Den visuelle kontrol består med **110 skærmbilleder** på computer og mobil i lyst og mørkt tema. Her er et udvalg; billederne ligger i repository og udløber ikke som workflow-artifacts. Hele kørslen findes under [Visual Home Assistant](https://github.com/Salvationdk/tiny-refuel/actions/runs/39447222908). Se [testvejledningen](docs/visual-testing.md).
 

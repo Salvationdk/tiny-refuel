@@ -43,3 +43,74 @@ jobs:
             await github.rest.repos.createRelease({...repo,tag_name:'v0.2.6',target_commitish:sha,
               name:'Tiny Refuel 0.2.6 – Fælles neontema og rettet datahentning',
               body:await read('docs/releases/0.2.6.md'),draft:false,prerelease:false,make_latest:'true'});
+  archive-screenshots:
+    needs: release
+    if: needs.release.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/github-script@v7
+        id: images
+        with:
+          script: |
+            const repo=context.repo;
+            let release;
+            try { release=(await github.rest.repos.getReleaseByTag({...repo,tag:'v0.2.6'})).data; }
+            catch(e) { if(e.status===404)return; throw e; }
+            const sha=context.payload.workflow_run.head_sha;
+            const branch=(await github.rest.repos.getBranch({...repo,branch:'main'})).data;
+            if(branch.commit.sha!==sha)return;
+            const runs=(await github.rest.actions.listWorkflowRunsForRepo({...repo,head_sha:sha,event:'push',per_page:100})).data.workflow_runs;
+            const run=runs.find(r=>r.name==='Visual Home Assistant'&&r.conclusion==='success');
+            if(!run)throw new Error('No successful visual run for release');
+            const artifacts=(await github.rest.actions.listWorkflowRunArtifacts({...repo,run_id:run.id})).data.artifacts;
+            const artifact=artifacts.find(a=>a.name==='tiny-refuel-visual'&&!a.expired);
+            if(!artifact)throw new Error('Visual artifact missing');
+            const zip=await github.rest.actions.downloadArtifact({...repo,artifact_id:artifact.id,archive_format:'zip'});
+            require('fs').writeFileSync(process.env.RUNNER_TEMP+'/tiny-refuel-visual.zip',Buffer.from(zip.data));
+            core.setOutput('ready','true');
+            core.setOutput('sha',sha);
+            core.setOutput('run',String(run.id));
+      - if: steps.images.outputs.ready == 'true'
+        env:
+          VISUAL_RUN: ${{ steps.images.outputs.run }}
+        run: |
+          python - <<'PY'
+          import json, os, re, zipfile
+          from pathlib import Path
+          dest=Path('docs/screenshots/0.2.6')
+          dest.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(Path(os.environ['RUNNER_TEMP'])/'tiny-refuel-visual.zip') as z:
+              report=json.loads(z.read('report.json'))
+              assert report['status']=='passed'
+              names=report['screenshots']
+              assert 100 <= len(names) <= 500 and len(names)==len(set(names))
+              for name in names:
+                  assert re.fullmatch(r'(desktop|mobile)-(light|dark)-[a-z0-9-]+',name), name
+                  (dest/(name+'.png')).write_bytes(z.read(name+'.png'))
+              (dest/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+          title='# Tiny Refuel 0.2.6 · Billedgalleri\n\n'
+          intro=f'{len(names)} screenshots fra Home Assistant 2026.10 og Chromium. Alle priser, køretøjer og positioner er fiktive testdata.\n\n'
+          intro+=f'[Bestået visuel test](https://github.com/Salvationdk/tiny-refuel/actions/runs/{os.environ["VISUAL_RUN"]})\n\n'
+          intro+='Kort, kompakt visning, manglende køretøj, editorer, YAML, udbyderfordele, prishistorik, HA-kort og integrationens oversigter. Funktioner uden selvstændig brugerflade kontrolleres i automatiske tests.\n\n'
+          gallery=''
+          for device in ['desktop','mobile']:
+              gallery+=f'## {device}\n\n| Funktion | Lyst tema | Mørkt tema |\n|---|---|---|\n'
+              for name in names:
+                  prefix=device+'-light-'
+                  if not name.startswith(prefix):continue
+                  feature=name[len(prefix):]
+                  dark=device+'-dark-'+feature
+                  assert dark in names
+                  gallery+=f'| {feature} | ![{feature}, lyst]({name}.png) | ![{feature}, mørkt]({dark}.png) |\n'
+              gallery+='\n'
+          (dest/'README.md').write_text(title+intro+gallery)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/screenshots/0.2.6
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Document 0.2.6 with complete visual screenshot gallery'
+          git push origin HEAD:main
