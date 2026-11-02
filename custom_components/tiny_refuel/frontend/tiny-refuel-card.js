@@ -5,16 +5,18 @@
   // One palette for every Tiny Refuel card/editor; compact changes density only.
   var NEON = `
   .trf, .trfe {
+    --primary-text-color: var(--trf-text, #17333c);
+    --secondary-text-color: var(--trf-muted, #465e68);
     --primary-color: var(--trf-neon-ink, #007d8c);
     --accent-color: var(--trf-violet-ink, #7540aa);
-    --trf-line: rgba(0,180,205,.32);
+    --trf-line: var(--trf-outline, rgba(0,125,140,.32));
     --trf-surface: linear-gradient(135deg,rgba(0,229,255,.08),rgba(185,103,255,.06));
     --trf-glow: 0 0 12px rgba(0,229,255,.12);
     --divider-color: var(--trf-line);
     accent-color: var(--primary-color);
   }
   .trf { box-sizing:border-box; border:1px solid var(--trf-line); border-radius:18px;
-    background:var(--trf-surface),var(--ha-card-background,var(--card-background-color,#fff));
+    background:var(--trf-surface),var(--trf-base, #f5fafc);
     box-shadow:var(--trf-glow); }
   .trf :is(button,a,input,select,summary):focus-visible { outline:2px solid var(--primary-color); outline-offset:3px; }
   .trf :is(.ts-station,.td-car,.td-tariff,.trf-row,.trf-evrow) {
@@ -417,8 +419,12 @@
     if (!owner.style || !owner.style.setProperty) return;
     var dark = hass && hass.themes && hass.themes.darkMode;
     if (dark === undefined) dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    owner.style.setProperty("--trf-neon-ink", dark ? "#00e5ff" : "#007d8c");
-    owner.style.setProperty("--trf-violet-ink", dark ? "#b967ff" : "#7540aa");
+    owner.style.setProperty("--trf-base", dark ? "#182731" : "#f5fafc");
+    owner.style.setProperty("--trf-text", dark ? "#edf5f7" : "#17333c");
+    owner.style.setProperty("--trf-muted", dark ? "#b8cbd3" : "#465e68");
+    owner.style.setProperty("--trf-outline", dark ? "rgba(121,216,223,.38)" : "rgba(0,125,140,.32)");
+    owner.style.setProperty("--trf-neon-ink", dark ? "#79d8df" : "#007d8c");
+    owner.style.setProperty("--trf-violet-ink", dark ? "#c6a7e9" : "#7540aa");
     owner.style.setProperty("--trf-vehicle-logo-filter", dark ? "brightness(0) invert(1)" : "brightness(0)");
     owner.style.setProperty("--trf-vehicle-logo-blend", "normal");
     owner.style.setProperty("--trf-color-logo-filter", dark ? "brightness(0) invert(1)" : "none");

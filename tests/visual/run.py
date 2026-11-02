@@ -28,7 +28,7 @@ CAR = {"navn": "Familiebil", "mærke": "Volkswagen", "model": "up!",
 CONFIG = {"type": "custom:tiny-refuel-card", "biler": [CAR], "vis_el": False}
 BRANDS = ["Circle K", "Ingo", "F24", "Q8", "Go'on", "Shell", "Uno-X", "OK", "OIL"]
 FIXTURE = {
-    "project": "Tiny Refuel", "version": "0.2.2", "scraper_version": "0.2.2",
+    "project": "Tiny Refuel", "version": json.loads((ROOT / "custom_components/tiny_refuel/manifest.json").read_text())["version"], "scraper_version": "0.2.6",
     "updated": "2026-10-18T12:00:00+00:00", "errors": [],
     "stations": [{"brand": brand, "name": brand + " Teststation", "address": "Eksempelvej " + str(i+1),
                   "lat": 55.67 + i*.005, "lon": 12.56, "p95": 14.19+i*.1,
@@ -377,9 +377,17 @@ def browsers(tokens):
         def check_neon(target):
             root = target.locator('.trf').first
             style = root.evaluate("el => {const s=getComputedStyle(el);return {primary:s.getPropertyValue('--primary-color').trim(),background:s.backgroundImage,border:s.borderTopStyle,shadow:s.boxShadow};}")
-            assert style['primary'] in ['#00e5ff', '#007d8c'], style
+            assert style['primary'] in ['#79d8df', '#007d8c'], style
             assert 'linear-gradient' in style['background'] and style['border'] == 'solid', style
             assert style['shadow'] != 'none', style
+            # Check actual theme tokens rather than merely checking for a glow.
+            contrast = root.evaluate("""el => {
+                const s=getComputedStyle(el);
+                const luminance=hex=>{const c=hex.trim().replace('#','').match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2];};
+                const bg=luminance(s.getPropertyValue('--trf-base'));
+                return ['--trf-text','--trf-muted','--trf-neon-ink','--trf-violet-ink'].map(key=>{const fg=luminance(s.getPropertyValue(key));return (Math.max(fg,bg)+.05)/(Math.min(fg,bg)+.05);});
+            }""")
+            assert min(contrast) >= 4.5, contrast
             return style
 
         def compact_shot(target, name):
@@ -542,8 +550,11 @@ def browsers(tokens):
                 expect(price_card.locator('.ts-station')).to_have_count(4)
                 price_card.locator('[data-search]').fill('Q8')
                 expect(price_card.locator('.ts-station')).to_have_count(1)
+                price_card.locator('[data-search]').fill('')
+                expect(price_card.locator('.ts-station')).to_have_count(4)
                 shot(prefix+'-station-prices',price_card)
                 compact_shot(price_card,prefix+'-station-prices-compact')
+                price_card.locator('[data-search]').fill('Q8')
                 price_card.locator('[data-fuel]').select_option('kwh')
                 expect(price_card.locator('.ts-price small')).to_have_text(['kr/kWh','kr/kWh'])
                 page.evaluate("""id=>{
@@ -594,11 +605,22 @@ def browsers(tokens):
                         host.style.cssText='position:absolute;z-index:9999;top:0;left:0;width:min(100%,600px);background:var(--card-background-color);font-family:Roboto,Arial,sans-serif';
                         document.querySelector('home-assistant').shadowRoot.append(host);
                         const card=document.createElement('tiny-refuel-'+type+'-card');
-                        card.setConfig({type:'custom:tiny-refuel-'+type+'-card',limit:4,sort:'price'});
+                        const demoCars=[
+                          {navn:'Familiebil · eksempel',mærke:'Volkswagen',model:'up!',brændstof:'benzin',tank_liters:35,koeretoejstype:'personbil',aargang:'2020',variant:'1.0 MPI',capacity_status:'user_entered',capacity_checked_at:'2026-11-02',location_entity:'device_tracker.visual'},
+                          {navn:'Elbil · eksempel',mærke:'Aiways',model:'U5',brændstof:'el',batteri_kwh:63,koeretoejstype:'personbil',aargang:'2022',variant:'Premium',capacity_status:'user_entered',capacity_checked_at:'2026-11-02',location_entity:'device_tracker.visual'}
+                        ];
+                        card.setConfig({type:'custom:tiny-refuel-'+type+'-card',limit:4,sort:'price',...(['vehicles','comparison','vehicle-details'].includes(type)?{biler:demoCars}:{})});
                         card.hass=window.visualCard._hass;host.append(card);window.extraTestCard=card;
                     }""",type_)
                     extra_card=page.locator('tiny-refuel-'+type_+'-card')
                     expect(extra_card.locator(marker).first).to_be_visible(timeout=30000)
+                    if type_=='vehicles':
+                        expect(extra_card.locator('.td-car')).to_have_count(2)
+                        expect(extra_card).to_contain_text('63')
+                    if type_=='vehicle-details':
+                        expect(extra_card).to_contain_text('1.0 MPI')
+                        expect(extra_card).to_contain_text('Premium')
+                        expect(extra_card).not_to_contain_text('Ikke oplyst')
                     if type_=='comparison':
                         expect(extra_card).to_contain_text('496,65')
                     if type_=='charging':
