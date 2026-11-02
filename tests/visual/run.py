@@ -387,7 +387,8 @@ def browsers(tokens):
             target.evaluate("el => el.setConfig({...el._config,compact:true})")
             expect(target.locator('.trf-compact').first).to_be_visible()
             if 'station-history' in name:
-                target.locator('.ts-history > summary').click()
+                if not target.locator('.ts-history').evaluate('el => el.open'):
+                    target.locator('.ts-history > summary').click()
                 expect(target.locator('.ts-history svg')).to_be_visible()
             assert check_neon(target) == normal, "Compact mode changed the shared theme"
             assert target.evaluate('el=>el.scrollWidth<=el.clientWidth+1'), name
