@@ -64,7 +64,7 @@ jobs:
             if(branch.commit.sha!==sha)return;
             const runs=(await github.rest.actions.listWorkflowRunsForRepo({...repo,head_sha:sha,event:'push',per_page:100})).data.workflow_runs;
             const run=runs.find(r=>r.name==='Visual Home Assistant'&&r.conclusion==='success');
-            if(!run)throw new Error('No successful visual run for release');
+            if(!run){core.info('Waiting for successful visual run');return;}
             const artifacts=(await github.rest.actions.listWorkflowRunArtifacts({...repo,run_id:run.id})).data.artifacts;
             const artifact=artifacts.find(a=>a.name==='tiny-refuel-visual'&&!a.expired);
             if(!artifact)throw new Error('Visual artifact missing');

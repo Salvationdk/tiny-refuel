@@ -38,7 +38,7 @@ FIXTURE = {
             "lat": 55.67+i*.005, "lon": 12.56, "kind": "DC", "kwh": 2.49+i*.2,
             "location_id": "test-" + str(i)}
            for i, brand in enumerate(["OK", "Q8", "Circle K", "Clever", "E.ON", "Ionity"])],
-    "fuel_sources": {}, "ev_sources": {}, "benefits": {}, "geocode_pending": 0,
+    "fuel_sources": {}, "ev_sources": {}, "benefits": {"ok": {"provider": "OK", "summary": "Fiktive testfordele: betaling og bilvask via appen.", "source_url": "https://www.ok.dk", "status": "ok"}}, "geocode_pending": 0,
 }
 FIXTURE["ev"].append({**FIXTURE["ev"][1], "kind":"AC", "kwh":3.19})
 FIXTURE["ev_sources"] = {key: {"status": "ok", "last_success": FIXTURE["updated"]}
