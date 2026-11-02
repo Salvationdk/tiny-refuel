@@ -1,0 +1,53 @@
+name: Replace published 0.2.6 once
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/replace-0.2.6.yml]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: replace-0.2.6
+  cancel-in-progress: false
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const repo=context.repo;
+            const target=context.sha;
+            const tested='92e7bb8cf8eefa387833b1a48368effc3c575297';
+            const expectedOld='7561aa641c1d1dad109dd8b3e6b1692c419f7c78';
+            const tag='v0.2.6';
+            const branch=(await github.rest.repos.getBranch({...repo,branch:'main'})).data;
+            if(branch.commit.sha!==target)throw Error('main moved; inspect before replacing');
+            const ref=(await github.rest.git.getRef({...repo,ref:'tags/'+tag})).data;
+            if(ref.object.sha!==expectedOld){core.info('Original tag no longer present; no replacement performed');return;}
+            const release=(await github.rest.repos.getReleaseByTag({...repo,tag})).data;
+            if(release.immutable||release.assets.length)throw Error('Unexpected immutable release or attached assets');
+            const runs=(await github.rest.actions.listWorkflowRunsForRepo({...repo,head_sha:tested,event:'push',per_page:100})).data.workflow_runs;
+            for(const name of ['Checks','Visual Home Assistant']){
+              const run=runs.filter(r=>r.name===name).sort((a,b)=>b.id-a.id)[0];
+              if(!run||run.conclusion!=='success')throw Error(name+' has not passed');
+            }
+            const tree=async sha=>(await github.rest.git.getTree({...repo,tree_sha:sha})).data.tree;
+            const before=await tree(tested),after=await tree(target);
+            for(const path of ['custom_components','tests']){
+              if(before.find(x=>x.path===path)?.sha!==after.find(x=>x.path===path)?.sha)throw Error('Untested changes in '+path);
+            }
+            const read=async path=>Buffer.from((await github.rest.repos.getContent({...repo,path,ref:target})).data.content,'base64').toString('utf8');
+            if(JSON.parse(await read('custom_components/tiny_refuel/manifest.json')).version!=='0.2.6')throw Error('Wrong version');
+            const report=JSON.parse(await read('docs/screenshots/0.2.6/report.json'));
+            if(report.status!=='passed'||report.screenshots.length!==182)throw Error('Incomplete screenshots');
+            await github.rest.git.updateRef({...repo,ref:'tags/'+tag,sha:target,force:true});
+            try {
+              await github.rest.repos.updateRelease({...repo,release_id:release.id,target_commitish:target,
+                name:'Tiny Refuel 0.2.6 – Tiny-neontema, læsbar natvisning og nye screenshots',
+                body:await read('docs/releases/0.2.6.md'),make_latest:'true'});
+            } catch(error) {
+              await github.rest.git.updateRef({...repo,ref:'tags/'+tag,sha:expectedOld,force:true});
+              throw error;
+            }
+            core.info('Replaced '+tag+' with validated commit '+target);

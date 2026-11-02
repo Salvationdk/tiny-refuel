@@ -2,7 +2,7 @@
 
 182 screenshots fra Home Assistant 2026.10 og Chromium. Alle priser, køretøjer og positioner er fiktive testdata.
 
-[Bestået visuel test](https://github.com/Salvationdk/tiny-refuel/actions/runs/41427441191)
+[Bestået visuel test](https://github.com/Salvationdk/tiny-refuel/actions/runs/41429691966)
 
 Kort, kompakt visning, manglende køretøj, editorer, YAML, udbyderfordele, prishistorik, HA-kort og integrationens oversigter. Funktioner uden selvstændig brugerflade kontrolleres i automatiske tests.
 

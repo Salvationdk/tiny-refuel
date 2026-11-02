@@ -168,7 +168,7 @@ Byg eksempelvis **Priser**, **Opladning**, **Mine køretøjer** og **Datastatus*
 
 ## Skærmbilleder
 
-Billederne nedenfor viser **udviklingsversionen efter 0.2.6** med det justerede Tiny-neontema. Køretøjer, priser og positioner er fiktive, udfyldte eksempeldata. Den udgivne versions billeder findes i [0.2.6-arkivet](docs/screenshots/0.2.6/README.md).
+Billederne nedenfor viser **den opdaterede 0.2.6-release** med det justerede Tiny-neontema. Køretøjer, priser og positioner er fiktive, udfyldte eksempeldata.
 
 ### Betjeningspaneler · dag og nat
 
@@ -176,39 +176,39 @@ Samme cyan/lilla stil i begge temaer, med afdæmpede natfarver og tydelig tekst.
 
 | Mine køretøjer · dag | Nat |
 |---|---|
-| ![Mine køretøjer, dag](docs/screenshots/current/desktop-light-dashboard-vehicles.png) | ![Mine køretøjer, nat](docs/screenshots/current/desktop-dark-dashboard-vehicles.png) |
+| ![Mine køretøjer, dag](docs/screenshots/0.2.6/desktop-light-dashboard-vehicles.png) | ![Mine køretøjer, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-vehicles.png) |
 
 | Prissammenligning · dag | Nat |
 |---|---|
-| ![Prissammenligning, dag](docs/screenshots/current/desktop-light-dashboard-comparison.png) | ![Prissammenligning, nat](docs/screenshots/current/desktop-dark-dashboard-comparison.png) |
+| ![Prissammenligning, dag](docs/screenshots/0.2.6/desktop-light-dashboard-comparison.png) | ![Prissammenligning, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-comparison.png) |
 
 | Køretøjsoplysninger · dag | Nat |
 |---|---|
-| ![Køretøjsoplysninger, dag](docs/screenshots/current/desktop-light-dashboard-vehicle-details.png) | ![Køretøjsoplysninger, nat](docs/screenshots/current/desktop-dark-dashboard-vehicle-details.png) |
+| ![Køretøjsoplysninger, dag](docs/screenshots/0.2.6/desktop-light-dashboard-vehicle-details.png) | ![Køretøjsoplysninger, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-vehicle-details.png) |
 
 | Opladning · dag | Nat |
 |---|---|
-| ![Opladning, dag](docs/screenshots/current/desktop-light-dashboard-charging.png) | ![Opladning, nat](docs/screenshots/current/desktop-dark-dashboard-charging.png) |
+| ![Opladning, dag](docs/screenshots/0.2.6/desktop-light-dashboard-charging.png) | ![Opladning, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-charging.png) |
 
 | Datastatus · dag | Nat |
 |---|---|
-| ![Datastatus, dag](docs/screenshots/current/desktop-light-dashboard-status.png) | ![Datastatus, nat](docs/screenshots/current/desktop-dark-dashboard-status.png) |
+| ![Datastatus, dag](docs/screenshots/0.2.6/desktop-light-dashboard-status.png) | ![Datastatus, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-status.png) |
 
 | Stationspriser · dag | Nat |
 |---|---|
-| ![Stationspriser, dag](docs/screenshots/current/desktop-light-station-prices.png) | ![Stationspriser, nat](docs/screenshots/current/desktop-dark-station-prices.png) |
+| ![Stationspriser, dag](docs/screenshots/0.2.6/desktop-light-station-prices.png) | ![Stationspriser, nat](docs/screenshots/0.2.6/desktop-dark-station-prices.png) |
 
 | Favoritstationer · dag | Nat |
 |---|---|
-| ![Favoritstationer, dag](docs/screenshots/current/desktop-light-station-favorites.png) | ![Favoritstationer, nat](docs/screenshots/current/desktop-dark-station-favorites.png) |
+| ![Favoritstationer, dag](docs/screenshots/0.2.6/desktop-light-station-favorites.png) | ![Favoritstationer, nat](docs/screenshots/0.2.6/desktop-dark-station-favorites.png) |
 
 | Prishistorik · dag | Nat |
 |---|---|
-| ![Prishistorik, dag](docs/screenshots/current/desktop-light-station-history.png) | ![Prishistorik, nat](docs/screenshots/current/desktop-dark-station-history.png) |
+| ![Prishistorik, dag](docs/screenshots/0.2.6/desktop-light-station-history.png) | ![Prishistorik, nat](docs/screenshots/0.2.6/desktop-dark-station-history.png) |
 
 | Det oprindelige kort · dag | Nat |
 |---|---|
-| ![Det oprindelige kort, dag](docs/screenshots/current/desktop-light-fuel.png) | ![Det oprindelige kort, nat](docs/screenshots/current/desktop-dark-fuel.png) |
+| ![Det oprindelige kort, dag](docs/screenshots/0.2.6/desktop-light-fuel.png) | ![Det oprindelige kort, nat](docs/screenshots/0.2.6/desktop-dark-fuel.png) |
 
 ### Kompakt på mobil
 
@@ -216,55 +216,55 @@ De samme funktioner med mindre afstand mellem felterne.
 
 | Mine køretøjer · dag | Nat |
 |---|---|
-| ![Mine køretøjer, dag](docs/screenshots/current/mobile-light-dashboard-vehicles-compact.png) | ![Mine køretøjer, nat](docs/screenshots/current/mobile-dark-dashboard-vehicles-compact.png) |
+| ![Mine køretøjer, dag](docs/screenshots/0.2.6/mobile-light-dashboard-vehicles-compact.png) | ![Mine køretøjer, nat](docs/screenshots/0.2.6/mobile-dark-dashboard-vehicles-compact.png) |
 
 | Prissammenligning · dag | Nat |
 |---|---|
-| ![Prissammenligning, dag](docs/screenshots/current/mobile-light-dashboard-comparison-compact.png) | ![Prissammenligning, nat](docs/screenshots/current/mobile-dark-dashboard-comparison-compact.png) |
+| ![Prissammenligning, dag](docs/screenshots/0.2.6/mobile-light-dashboard-comparison-compact.png) | ![Prissammenligning, nat](docs/screenshots/0.2.6/mobile-dark-dashboard-comparison-compact.png) |
 
 | Køretøjsoplysninger · dag | Nat |
 |---|---|
-| ![Køretøjsoplysninger, dag](docs/screenshots/current/mobile-light-dashboard-vehicle-details-compact.png) | ![Køretøjsoplysninger, nat](docs/screenshots/current/mobile-dark-dashboard-vehicle-details-compact.png) |
+| ![Køretøjsoplysninger, dag](docs/screenshots/0.2.6/mobile-light-dashboard-vehicle-details-compact.png) | ![Køretøjsoplysninger, nat](docs/screenshots/0.2.6/mobile-dark-dashboard-vehicle-details-compact.png) |
 
 | Opladning · dag | Nat |
 |---|---|
-| ![Opladning, dag](docs/screenshots/current/mobile-light-dashboard-charging-compact.png) | ![Opladning, nat](docs/screenshots/current/mobile-dark-dashboard-charging-compact.png) |
+| ![Opladning, dag](docs/screenshots/0.2.6/mobile-light-dashboard-charging-compact.png) | ![Opladning, nat](docs/screenshots/0.2.6/mobile-dark-dashboard-charging-compact.png) |
 
 | Datastatus · dag | Nat |
 |---|---|
-| ![Datastatus, dag](docs/screenshots/current/mobile-light-dashboard-status-compact.png) | ![Datastatus, nat](docs/screenshots/current/mobile-dark-dashboard-status-compact.png) |
+| ![Datastatus, dag](docs/screenshots/0.2.6/mobile-light-dashboard-status-compact.png) | ![Datastatus, nat](docs/screenshots/0.2.6/mobile-dark-dashboard-status-compact.png) |
 
 | Stationspriser · dag | Nat |
 |---|---|
-| ![Stationspriser, dag](docs/screenshots/current/mobile-light-station-prices-compact.png) | ![Stationspriser, nat](docs/screenshots/current/mobile-dark-station-prices-compact.png) |
+| ![Stationspriser, dag](docs/screenshots/0.2.6/mobile-light-station-prices-compact.png) | ![Stationspriser, nat](docs/screenshots/0.2.6/mobile-dark-station-prices-compact.png) |
 
 | Favoritstationer · dag | Nat |
 |---|---|
-| ![Favoritstationer, dag](docs/screenshots/current/mobile-light-station-favorites-compact.png) | ![Favoritstationer, nat](docs/screenshots/current/mobile-dark-station-favorites-compact.png) |
+| ![Favoritstationer, dag](docs/screenshots/0.2.6/mobile-light-station-favorites-compact.png) | ![Favoritstationer, nat](docs/screenshots/0.2.6/mobile-dark-station-favorites-compact.png) |
 
 | Prishistorik · dag | Nat |
 |---|---|
-| ![Prishistorik, dag](docs/screenshots/current/mobile-light-station-history-compact.png) | ![Prishistorik, nat](docs/screenshots/current/mobile-dark-station-history-compact.png) |
+| ![Prishistorik, dag](docs/screenshots/0.2.6/mobile-light-station-history-compact.png) | ![Prishistorik, nat](docs/screenshots/0.2.6/mobile-dark-station-history-compact.png) |
 
 | Det oprindelige kort · dag | Nat |
 |---|---|
-| ![Det oprindelige kort, dag](docs/screenshots/current/mobile-light-compact.png) | ![Det oprindelige kort, nat](docs/screenshots/current/mobile-dark-compact.png) |
+| ![Det oprindelige kort, dag](docs/screenshots/0.2.6/mobile-light-compact.png) | ![Det oprindelige kort, nat](docs/screenshots/0.2.6/mobile-dark-compact.png) |
 
 ### Opsætning og hjælp
 
 | Visuel editor · dag | Nat |
 |---|---|
-| ![Visuel editor, dag](docs/screenshots/current/desktop-light-dashboard-comparison-editor.png) | ![Visuel editor, nat](docs/screenshots/current/desktop-dark-dashboard-comparison-editor.png) |
+| ![Visuel editor, dag](docs/screenshots/0.2.6/desktop-light-dashboard-comparison-editor.png) | ![Visuel editor, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-comparison-editor.png) |
 
 | Køretøjseditor · dag | Nat |
 |---|---|
-| ![Køretøjseditor, dag](docs/screenshots/current/desktop-light-editor-vehicle.png) | ![Køretøjseditor, nat](docs/screenshots/current/desktop-dark-editor-vehicle.png) |
+| ![Køretøjseditor, dag](docs/screenshots/0.2.6/desktop-light-editor-vehicle.png) | ![Køretøjseditor, nat](docs/screenshots/0.2.6/desktop-dark-editor-vehicle.png) |
 
 | Vejledning uden køretøj · dag | Nat |
 |---|---|
-| ![Vejledning uden køretøj, dag](docs/screenshots/current/desktop-light-dashboard-vehicles-no-vehicle.png) | ![Vejledning uden køretøj, nat](docs/screenshots/current/desktop-dark-dashboard-vehicles-no-vehicle.png) |
+| ![Vejledning uden køretøj, dag](docs/screenshots/0.2.6/desktop-light-dashboard-vehicles-no-vehicle.png) | ![Vejledning uden køretøj, nat](docs/screenshots/0.2.6/desktop-dark-dashboard-vehicles-no-vehicle.png) |
 
-[Se alle funktioner, editorer og ekstra visninger](docs/screenshots/current/README.md).
+[Se alle funktioner, editorer og ekstra visninger](docs/screenshots/0.2.6/README.md).
 
 De nye og eksisterende kort deler tema, farver og logoer. HA’s indbyggede kort bruger Home Assistants eget markør- og kortdesign. Den visuelle test kontrollerer også åbning, gemning og genåbning af det oprindelige kort gennem Home Assistants korteditor.
 
@@ -389,7 +389,7 @@ HACS-afinstallation eller fjernelse af integrationen sletter ikke automatisk de 
 
 Minimum Home Assistant: **2025.11.2**.
 
-Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**. Version **0.2.6** er kontrolleret med **160 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.6-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/41427441191) består med **182 screenshots**. 0.2.6-billederne bevares i versionsarkivet. Galleriet ovenfor viser de seneste beståede visuelle tests af udviklingsversionen.
+Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**. Version **0.2.6** er kontrolleret med **160 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.6-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/41429691966) består med **182 screenshots**. Galleriet ovenfor viser den opdaterede 0.2.6-release med udfyldte eksempeldata og kontrolleret tekstkontrast.
 
 Teknisk integrationsversion: **0.2.6**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.6` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
