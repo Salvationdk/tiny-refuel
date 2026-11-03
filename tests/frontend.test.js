@@ -716,7 +716,7 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   assert.ok(panel.innerHTML.includes(
     '<span class="trf-subtxt">Station 0 · Vej 0 · også: V-Power ' + safeProduct + ' 18,75</span>'),
     'Shell product name must be escaped in the visible station line');
-  assert.ok([...panel.innerHTML.matchAll(/\\btitle="([^"]*)"/g)]
+  assert.ok([...panel.innerHTML.matchAll(/\btitle="([^"]*)"/g)]
     .some(match => match[1].includes('V-Power ' + safeProduct + ' 18,75')),
     'Shell product name must be escaped in a tooltip');
   assert.ok(!panel.innerHTML.includes('<img src=x onerror=alert(1)>'));
