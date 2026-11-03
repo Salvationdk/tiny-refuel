@@ -1,4 +1,6 @@
-# Tiny Refuel v0.2.6
+# Tiny Refuel v0.2.7
+
+**Nyt i 0.2.7:** Sikkerhedsrettelse i stationskortet: Produktnavne fra Shells pris-API HTML-escapes i stationslinjen (og fortsat i tooltippen). Udgivelseshistorikken beskyttes: gamle versionstags overskrives ikke. Se [releasebeskrivelsen](docs/releases/0.2.7.md).
 
 **Nyt i 0.2.6:** Fælles Tiny-neontema på alle ni kort, også kompakt, og tydelig vejledning ved manglende køretøj. Shell bruger det officielle pris-API; E.ON-fordele og fejlrapportering er rettet. Se [releasebeskrivelsen](docs/releases/0.2.6.md).
 
