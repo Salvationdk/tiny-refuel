@@ -1215,7 +1215,7 @@
           } else if (row.stName || row.stAddr) {
             sub = '<div class="trf-station"><span class="trf-subtxt">' + esc(row.stName || "") +
               (row.stName && row.stAddr ? " · " : "") + esc(row.stAddr || "") +
-              this._altTitle(row.alt, visBenzin, visDiesel) + "</span>" + fbtn + "</div>";
+              esc(this._altTitle(row.alt, visBenzin, visDiesel)) + "</span>" + fbtn + "</div>";
           } else if (fbtn) {
             sub = '<div class="trf-station"><span class="trf-subtxt"></span>' + fbtn + "</div>";
           }
