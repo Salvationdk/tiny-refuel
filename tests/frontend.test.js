@@ -713,8 +713,12 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
   panel.setConfig(config);
   assert.equal(rowCount(), 6);
   const safeProduct = '&lt;img src=x onerror=alert(1)&gt;&amp;';
-  assert.equal(panel.innerHTML.split(safeProduct).length - 1, 2,
-    'Shell product names must be escaped once in the tooltip and station line');
+  assert.ok(panel.innerHTML.includes(
+    '<span class="trf-subtxt">Station 0 · Vej 0 · også: V-Power ' + safeProduct + ' 18,75</span>'),
+    'Shell product name must be escaped in the visible station line');
+  assert.ok([...panel.innerHTML.matchAll(/\\btitle="([^"]*)"/g)]
+    .some(match => match[1].includes('V-Power ' + safeProduct + ' 18,75')),
+    'Shell product name must be escaped in a tooltip');
   assert.ok(!panel.innerHTML.includes('<img src=x onerror=alert(1)>'));
   assert.ok(!panel.innerHTML.includes('&amp;lt;img src=x'));
   assert.ok(panel.innerHTML.includes('data-car="0"'));
