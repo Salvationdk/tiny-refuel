@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tiny Refuel v0.2.6 – self-scraped petrol, diesel and EV charging data.
+"""Tiny Refuel v0.2.7 – self-scraped petrol, diesel and EV charging data.
 
 Sources (all keyless):
   Circle K + Ingo : official public API  https://api.circlek.com/eu/prices
@@ -1672,7 +1672,7 @@ def _collect(progress_callback=None, fuel_types=None):
 
     save_json(OUT, {
         "project": "Tiny Refuel",
-        "scraper_version": "0.2.6",
+        "scraper_version": "0.2.7",
         "updated": updated,
         "errors": errors,
         "snittet": snittet,
