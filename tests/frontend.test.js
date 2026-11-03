@@ -704,11 +704,19 @@ console.log('PASS: full vehicle catalog, bounded make search, manual types and m
     v95: 15 + i, v100: 17 + i, diesel: null, km: 6 - i, ll: '55,12',
     stName: 'Station ' + i, stAddr: 'Vej ' + i, chg: '',
   }));
+  // Shell product names originate from a remote API. The tooltip and station text
+  // must each be escaped once, without injecting HTML into the dashboard.
+  rows[0].alt = { 'V-Power <img src=x onerror=alert(1)>&': 18.75 };
   panel._buildRows = () => rows.slice();
   const config = { vis_el: false, biler: [{ mærke: 'Volkswagen', model: 'up!', brændstof: 'benzin', tank_liters: 35 }] };
   const rowCount = () => (panel.innerHTML.match(/class="trf-row"/g) || []).length;
   panel.setConfig(config);
   assert.equal(rowCount(), 6);
+  const safeProduct = '&lt;img src=x onerror=alert(1)&gt;&amp;';
+  assert.equal(panel.innerHTML.split(safeProduct).length - 1, 2,
+    'Shell product names must be escaped once in the tooltip and station line');
+  assert.ok(!panel.innerHTML.includes('<img src=x onerror=alert(1)>'));
+  assert.ok(!panel.innerHTML.includes('&amp;lt;img src=x'));
   assert.ok(panel.innerHTML.includes('data-car="0"'));
   assert.ok(panel.innerHTML.includes('data-scrape'));
   panel.setConfig({ ...config, kompakt: true });
