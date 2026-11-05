@@ -5,6 +5,7 @@
     "@Salvationdk"
   ],
   "config_flow": true,
+  "categories": ["energy.energy_prices", "energy.ev_charging"],
   "dependencies": [
     "frontend",
     "http"
@@ -14,5 +15,5 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/Salvationdk/tiny-refuel/issues",
   "requirements": [],
-  "version": "0.2.7"
+  "version": "0.2.8"
 }
