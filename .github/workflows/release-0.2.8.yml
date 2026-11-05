@@ -1,0 +1,46 @@
+name: Publish 0.2.8 after validation
+on:
+  workflow_run:
+    workflows: [Checks, Visual Home Assistant]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: publish-0.2.8
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const repo = context.repo;
+            const sha = context.payload.workflow_run.head_sha;
+            const {data: branch} = await github.rest.repos.getBranch({...repo, branch:'main'});
+            if (branch.commit.sha !== sha) return;
+            const read = async path => {
+              const {data} = await github.rest.repos.getContent({...repo,path,ref:sha});
+              return Buffer.from(data.content,'base64').toString('utf8');
+            };
+            if (JSON.parse(await read('custom_components/tiny_refuel/manifest.json')).version !== '0.2.8') return;
+            const {data} = await github.rest.actions.listWorkflowRunsForRepo({...repo,head_sha:sha,event:'push',per_page:100});
+            for (const name of ['Checks', 'Visual Home Assistant']) {
+              const run = data.workflow_runs.filter(r => r.name === name).sort((a,b) => b.id-a.id)[0];
+              if (!run || run.conclusion !== 'success') { core.info(`Waiting for ${name}`); return; }
+            }
+            const tag = 'v0.2.8';
+            try {
+              await github.rest.repos.getReleaseByTag({...repo,tag});
+              core.info('Release already exists; leaving it unchanged.'); return;
+            } catch (e) { if (e.status !== 404) throw e; }
+            try {
+              await github.rest.git.getRef({...repo,ref:'tags/'+tag});
+              throw new Error('Tag already exists: never move or reuse a published tag.');
+            } catch (e) { if (e.status !== 404) throw e; }
+            await github.rest.repos.createRelease({...repo,tag_name:tag,target_commitish:sha,
+              name:'Tiny Refuel 0.2.8 – Marketplace kompatibilitet og test',
+              body:await read('docs/releases/0.2.8.md'),draft:false,prerelease:false,make_latest:'true'});
