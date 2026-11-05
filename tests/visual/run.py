@@ -4,6 +4,7 @@ Run from any directory with Python 3.14 and requirements.txt installed.
 No real account, source scraper, location or Home Assistant installation is used.
 """
 import json
+from importlib.metadata import version as installed_package_version
 import hashlib
 import os
 from pathlib import Path
@@ -20,6 +21,7 @@ import requests
 import yaml
 from playwright.sync_api import sync_playwright, expect
 
+HA_VERSION = installed_package_version("homeassistant")
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "visual-results"
 BASE = "http://127.0.0.1:8123"
@@ -292,7 +294,7 @@ def browsers(tokens):
         page.expose_function("visualReportRejection", lambda message: rejections.append(message))
         page.on("pageerror", lambda error: errors.append({"message": str(error), "stack": error.stack}))
         page.goto(BASE + "/lovelace/test")
-        # HA 2026.10 asks the test owner to confirm the localhost HTTP binding.
+        # Home Assistant asks the test owner to confirm the localhost HTTP binding.
         # Resolve that real setup dialog before taking pictures or clicking cards.
         pending = page.locator("dialog-http-pending-config")
         confirm = pending.locator('ha-button[slot="primaryAction"]')
@@ -739,13 +741,13 @@ def main():
             try:
                 tokens = onboard(folder)
                 screenshots = browsers(tokens)
-                (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": "2026.10.0", "screenshots": screenshots,
+                (OUT / "report.json").write_text(json.dumps({"status": "passed", "home_assistant": HA_VERSION, "screenshots": screenshots,
                     "data": "Synthetic station prices and position; production integration, catalog and editor", "browser": "Chromium", "native_editor_save_reopen": True, "automatic_module_loading": True, "shared_vehicle_options": True, "themes": ["light", "dark"], "theme_pairs": len(screenshots) // 2}, indent=2))
                 gallery = ''.join(f'<figure><a href="{name}.png"><img src="{name}.png" loading="lazy"></a><figcaption>{name}</figcaption></figure>' for name in screenshots)
-                (OUT / "index.html").write_text('<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tiny Refuel screenshots</title><style>body{font:16px system-ui;margin:24px;background:#eee;color:#222}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0;padding:12px;background:white;border-radius:12px}img{max-width:100%;max-height:600px;object-fit:contain;object-position:top}figcaption{margin-top:8px}</style><h1>Tiny Refuel · Home Assistant 2026.10</h1><p>Fiktive priser og position. Klik på et billede for fuld størrelse.</p><main>' + gallery + '</main></html>')
+                (OUT / "index.html").write_text('<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tiny Refuel screenshots</title><style>body{font:16px system-ui;margin:24px;background:#eee;color:#222}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0;padding:12px;background:white;border-radius:12px}img{max-width:100%;max-height:600px;object-fit:contain;object-position:top}figcaption{margin-top:8px}</style><h1>Tiny Refuel · Home Assistant 2026.11</h1><p>Fiktive priser og position. Klik på et billede for fuld størrelse.</p><main>' + gallery + '</main></html>')
                 print(f"PASS: {len(screenshots)} screenshots; real Home Assistant, desktop/mobile, light/dark")
             except Exception:
-                (OUT / "report.json").write_text(json.dumps({"status": "failed", "home_assistant": "2026.10.0"}))
+                (OUT / "report.json").write_text(json.dumps({"status": "failed", "home_assistant": HA_VERSION}))
                 print((OUT / "home-assistant.log").read_text()[-16000:])
                 raise
             finally:
