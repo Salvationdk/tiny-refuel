@@ -1,11 +1,11 @@
 {
   "domain": "tiny_refuel",
   "name": "Tiny Refuel",
+  "categories": ["energy.energy_prices", "energy.ev_charging"],
   "codeowners": [
     "@Salvationdk"
   ],
   "config_flow": true,
-  "categories": ["energy.energy_prices", "energy.ev_charging"],
   "dependencies": [
     "frontend",
     "http"
