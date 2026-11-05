@@ -1,9 +1,14 @@
 # Visuel test i Home Assistant
 
 GitHub Actions-workflowet **Visual Home Assistant** starter en midlertidig Home
-Assistant 2026.10-installation og Chromium. Det installerer Tiny Refuel gennem
+Assistant 2026.11-installation og Chromium. Det indlæser Tiny Refuel i et isoleret testmiljø gennem
 integrationen, opretter et Lovelace-dashboard og bruger det indbyggede
 `katalog.json`. Ingen privat Home Assistant-adgang eller API-nøgler er nødvendige.
+
+Den visuelle test indlæser koden lokalt i Home Assistant; den downloader ikke
+Marketplace-releases. Native Marketplace-validering af manifestet ved både
+ny installation og opdatering testes særskilt i CI på 2026.11. Et fuldt
+Marketplace-download og opdatering skal fortsat afprøves i en Home Assistant-instans.
 
 Priser, ladesteder og GPS-position er faste, fiktive testdata. Kun indsamlingen af
 eksterne data erstattes i testmiljøet. Testen kontrollerer derfor visning og
