@@ -1,4 +1,6 @@
-# Tiny Refuel v0.2.7
+# Tiny Refuel v0.2.8
+
+**Nyt i 0.2.8:** Kompatibilitetstest med Home Assistant 2026.11 og indbygget Marketplace, nye installationslinks samt integrationens energikategorier. Se [releasebeskrivelsen](docs/releases/0.2.8.md).
 
 **Nyt i 0.2.7:** Sikkerhedsrettelse i stationskortet: Produktnavne fra Shells pris-API HTML-escapes i stationslinjen (og fortsat i tooltippen). Udgivelseshistorikken beskyttes: gamle versionstags overskrives ikke. Se [releasebeskrivelsen](docs/releases/0.2.7.md).
 
@@ -8,7 +10,7 @@
 
 **Nyt i 0.2.4:** brug alle Tiny Refuels indsamlede data i andre Home Assistant-kort, templates, scripts og automatiseringer. Vælg stationssensorer i integrationsindstillingerne, brug de nye køretøjsentiteter, eller hent data gennem seks svarhandlinger. Eksisterende kort og opsætninger bevares. Se [dataadgang og eksempler](docs/data-access.md).
 
-Benzin, diesel og opladning i Home Assistant – med eller uden køretøj. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én HACS-integration.
+Benzin, diesel og opladning i Home Assistant – med eller uden køretøj. Tiny Refuel samler kort, visuel editor, selskabslogoer, køretøjskatalog og scraping i én integration til Marketplace og HACS.
 
 ## Fælles Tiny-neontema
 
@@ -29,30 +31,36 @@ genforsøg uden rå svardata; periodiske fejl hos kilden kan fortsat forekomme.
 
 ## Installation
 
-### HACS
+### Marketplace – Home Assistant 2026.11 og nyere
 
-Tiny Refuel kan installeres gennem [HACS](https://hacs.xyz/) (Home Assistant Community Store).
+Tiny Refuel er optaget i det fælles HACS/Marketplace-katalog. På Home Assistant
+2026.11 og nyere er Marketplace indbygget under **Indstillinger → Marketplace**.
+Ingen separat HACS-installation er nødvendig.
 
-Brug knappen til at åbne Tiny Refuel direkte i HACS:
+[![Åbn Tiny Refuel i Marketplace](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
+1. Åbn **Indstillinger → Marketplace**, og søg efter **Tiny Refuel**.
+2. Vælg **Installér**, og følg integrationsopsætningen. Ved første installation
+   åbner Marketplace normalt opsætningsflowet uden genstart.
+3. Vælg opdateringsinterval (standard 6 timer), og tilføj et Tiny Refuel-kort.
+4. Genindlæs browseren, hvis kortet ikke vises. Efter opdateringer skal
+   Home Assistant fortsat genstartes.
 
-*eller*
+### HACS – Home Assistant før 2026.11
 
-1. Installér HACS, hvis du ikke allerede har det.
-2. Åbn HACS i Home Assistant.
-3. Vælg **menuen med tre prikker → Brugerdefinerede repositories**.
-4. Tilføj `https://github.com/Salvationdk/tiny-refuel` med typen **Integration**.
-5. Søg efter **Tiny Refuel**, og tryk på **Download**.
+På ældre understøttede versioner (fra 2025.11.2) installeres Tiny Refuel via HACS.
 
-### Opsætning efter download
+[![Åbn Tiny Refuel i HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Salvationdk&repository=tiny-refuel&category=integration)
 
-1. Genstart Home Assistant.
-2. Gå til **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**.
-3. Vælg opdateringsinterval. Standard er hver 6. time.
-4. Genindlæs browseren med **Ctrl+F5**.
-5. Tilføj **Tiny Refuel** eller et af de valgfrie ekstra kort fra dashboardets kortvælger.
-6. Vælg selskaber, stationer, position eller fælles køretøjer i det valgte korts visuelle editor. Prisoversigt, stationskort, favoritter og opladning kræver ikke et køretøj.
+1. Installér HACS, hvis det ikke allerede er installeret.
+2. Åbn **HACS**, søg efter **Tiny Refuel**, og vælg **Download**.
+3. Genstart Home Assistant, og vælg **Indstillinger → Enheder og tjenester → Tilføj integration → Tiny Refuel**.
+4. Vælg opdateringsinterval, og tilføj et kort fra dashboardets kortvælger.
+
+### Opsætning
+
+Vælg selskaber, stationer, position eller fælles køretøjer i det valgte korts
+visuelle editor. Prisoversigt, stationskort, favoritter og opladning kræver ikke et køretøj.
 
 Køretøjskortene genbruger automatisk køretøjer fra eksisterende Tiny Refuel-kort på samme betjeningspanel, når der ikke er opsat fælles køretøjer. Dine eksisterende kortopsætninger bevares.
 
@@ -361,7 +369,7 @@ Din valgte telefonposition bruges i browseren til afstande. Den ønskede destina
 
 ## Filer og opdateringer
 
-HACS installerer kode og medfølgende aktiver under:
+Marketplace (fra 2026.11) eller HACS (ældre versioner) installerer kode og aktiver under:
 
 ```text
 custom_components/tiny_refuel/
@@ -373,11 +381,11 @@ Genererede prisdata, ny historik og koordinatcacher gemmes privat under:
 .storage/tiny_refuel/
 ```
 
-Disse data overlever kodeopdateringer. Scraping ændrer ikke HACS' kodefiler. Data til kortet leveres gennem en Home Assistant-API, der kræver login.
+Disse data overlever kodeopdateringer. Scraping ændrer ikke Marketplace- eller HACS-kodefiler. Data til kortet leveres gennem en Home Assistant-API, der kræver login.
 
 Det medfølgende fallback-katalog og standardlogoer ligger under integrationens `frontend/`. Typekataloger hentes efter behov fra GitHub og gemmes under `.storage/tiny_refuel/catalogs/`. Prishistorikken ligger i `.storage/tiny_refuel/price-history.sqlite3`. Direkte ændringer i integrationens kode- og frontendfiler kan blive overskrevet af en HACS-opdatering. Private cacher og historik bevares. Eget køretøjskatalog kan vælges med en brugerdefineret URL i korteditoren.
 
-Efter en opdatering gennem HACS: genstart Home Assistant, og genindlæs browseren.
+Efter en opdatering gennem Marketplace eller HACS: genstart Home Assistant, og genindlæs browseren.
 
 ### Ren start
 
@@ -385,17 +393,17 @@ Efter en opdatering gennem HACS: genstart Home Assistant, og genindlæs browsere
 2. Slet kun mappen `.storage/tiny_refuel/`, mens integrationen er stoppet.
 3. Tilføj integrationen igen.
 
-HACS-afinstallation eller fjernelse af integrationen sletter ikke automatisk de gemte data.
+Afinstallation gennem Marketplace eller HACS sletter ikke automatisk de gemte data.
 
 ## Udvikling og test
 
 Minimum Home Assistant: **2025.11.2**.
 
-Automatiske tests køres med Home Assistant **2025.11.2** og **2026.10.0**. Version **0.2.6** er kontrolleret med **160 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.6-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/41429691966) består med **182 screenshots**. Galleriet ovenfor viser den opdaterede 0.2.6-release med udfyldte eksempeldata og kontrolleret tekstkontrast.
+Automatiske tests køres med Home Assistant **2025.11.2**, **2026.10.0** og **2026.11.0**. Version **0.2.6** er kontrolleret med **160 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.6-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/41429691966) består med **182 screenshots**. Galleriet ovenfor viser den opdaterede 0.2.6-release med udfyldte eksempeldata og kontrolleret tekstkontrast.
 
-Teknisk integrationsversion: **0.2.6**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.6` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
+Teknisk integrationsversion: **0.2.8**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.8` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
-GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2** og **2026.10.0**.
+GitHub Actions kører integrations- og frontendtests samt HACS-validering. Testmatrixen omfatter Home Assistant **2025.11.2**, **2026.10.0** og **2026.11.0**, herunder Marketplace-manifestvalidering ved installation og opdatering.
 
 Workflowet **Visual Home Assistant** starter desuden en midlertidig Home Assistant og Chromium med faste testdata. Det gemmer screenshots af kort og editor i mobil-/desktopbredde og lyst/mørkt tema samt en rapport. Se [visuel test og download af screenshots](docs/visual-testing.md).
 
