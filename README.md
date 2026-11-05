@@ -399,7 +399,7 @@ Afinstallation gennem Marketplace eller HACS sletter ikke automatisk de gemte da
 
 Minimum Home Assistant: **2025.11.2**.
 
-Automatiske tests køres med Home Assistant **2025.11.2**, **2026.10.0** og **2026.11.0**. Version **0.2.6** er kontrolleret med **160 Python-tests**, frontendtests, HACS, hassfest og katalogkontroller. Den [visuelle 0.2.6-kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/41429691966) består med **182 screenshots**. Galleriet ovenfor viser den opdaterede 0.2.6-release med udfyldte eksempeldata og kontrolleret tekstkontrast.
+Testmatrixen omfatter Home Assistant **2025.11.2**, **2026.10.0** og **2026.11.0**. HACS, hassfest, frontendtests og den native Marketplace-manifestkontrol køres automatisk før udgivelse. Galleriet ovenfor viser fortsat de **182 screenshots fra 0.2.6** ([arkiveret visuel kørsel](https://github.com/Salvationdk/tiny-refuel/actions/runs/41429691966)); nye screenshots for 0.2.8 hentes fra GitHub Actions, når den nye visuelle test er bestået.
 
 Teknisk integrationsversion: **0.2.8**. Kortets footer viser integrationsversionen, mens overskriften fortsat viser den valgte brændstof- eller energitype. Kortets hovedfil hedder `tiny-refuel-card.js`; versionsnummeret tilføjes URL’en som `?v=0.2.8` for at opdatere browserens cache. Det tidligere filnavn `tiny-refuel-card-v0.1.js` bevares som en lille kompatibilitetsfil, der indlæser hovedfilen, så eksisterende manuelle ressourcer fortsat virker.
 
