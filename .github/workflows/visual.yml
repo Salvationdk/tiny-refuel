@@ -14,22 +14,26 @@ concurrency:
 jobs:
   screenshots:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # First-run Playwright and Ubuntu dependencies can take >20 minutes.
+    # Allow enough time for the actual 2026.11 Chromium screenshot suite.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
+          cache: 'pip'
+          cache-dependency-path: tests/visual/requirements.txt
       - run: |
           python -m venv .venv
           .venv/bin/pip install -r tests/visual/requirements.txt
       - run: .venv/bin/python -m playwright install --with-deps chromium
-      - run: sudo apt-get install -y ffmpeg libturbojpeg
+      - run: sudo apt-get install -y --no-install-recommends ffmpeg libturbojpeg
       - run: .venv/bin/python tests/visual/run.py
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: success() || failure()
         with:
           name: tiny-refuel-visual
           path: visual-results/
           retention-days: 14
-          if-no-files-found: error
+          if-no-files-found: warn

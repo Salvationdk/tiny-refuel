@@ -14,6 +14,8 @@ jobs:
             homeassistant: '2025.11.2'
           - python: '3.14'
             homeassistant: '2026.10.0'
+          - python: '3.14'
+            homeassistant: '2026.11.0'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -26,6 +28,9 @@ jobs:
       # HA 2025.11 pins aiodns 3.5, whose annotations require pycares 4.x.
       - if: matrix.homeassistant == '2025.11.2'
         run: pip install 'pycares<5'
+      # Install native Marketplace dependency for its post-install validation test.
+      - if: matrix.homeassistant == '2026.11.0'
+        run: pip install 'aiogithubapi==26.0.0'
       - run: python -m unittest discover -s tests -v
       - run: node tests/frontend.test.js
       - run: node tests/station-cards.test.js
