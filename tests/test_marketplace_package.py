@@ -16,7 +16,7 @@ class MarketplacePackageTests(unittest.TestCase):
         config = json.loads((ROOT / "hacs.json").read_text(encoding="utf-8"))
         manifest = json.loads((SOURCE / "manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(manifest["domain"], DOMAIN)
-        self.assertEqual(manifest["version"], "0.2.8")
+        self.assertEqual(manifest["version"], "0.2.9")
         self.assertEqual(config["country"], "DK")
         self.assertTrue(manifest["config_flow"])
         self.assertTrue(manifest["issue_tracker"].startswith("https://"))
@@ -34,7 +34,7 @@ class MarketplacePackageTests(unittest.TestCase):
             shutil.copytree(SOURCE, installed)
             manifest_file = installed / "manifest.json"
             current = json.loads(manifest_file.read_text(encoding="utf-8"))
-            for version in ("0.2.7", "0.2.8"):
+            for version in ("0.2.8", "0.2.9"):
                 current["version"] = version
                 manifest_file.write_text(json.dumps(current), encoding="utf-8")
                 _check_loadable_manifest(installed, DOMAIN)
