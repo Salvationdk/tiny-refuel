@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tiny Refuel v0.2.8 – self-scraped petrol, diesel and EV charging data.
+"""Tiny Refuel v0.2.9 – self-scraped petrol, diesel and EV charging data.
 
 Sources (all keyless):
   Circle K + Ingo : official public API  https://api.circlek.com/eu/prices
@@ -55,10 +55,8 @@ NOM_SLEEP = 1.2
 
 CK_API = "https://api.circlek.com/eu/prices/v1/fuel/countries/DK"
 CK_SEARCH = "https://circlek.dk/station-search"
-F24_URLS = [
-    "https://www.f24.dk/Station/GetStationPrices?page=1&pageSize=500",
-    "https://www.q8.dk/Station/GetStationPrices?page=1&pageSize=500",
-]
+# Shared public feed for Q8 and F24; old www.* endpoints now return HTTP 404.
+F24_URLS = ["https://beta.q8.dk/Station/GetStationPrices?page=1&pageSize=2000"]
 Q8_EL_URL = "https://www.q8.dk/erhverv/priser/"
 GOON_URL = "https://goon.nu/aktuelle-standerpriser/"
 UNOX_URL = "https://unoxmobility.dk/privat/braendstofpriser"
@@ -639,17 +637,26 @@ def load_station_cache(errors):
 # ---------- F24 + Q8 ----------
 
 def fetch_f24q8(errors):
+    """Collect Q8/F24 station-level prices from their shared public API."""
     last_exc = "no URLs tried"
     for url in F24_URLS:
-        for _ in (1, 2):
+        for attempt in range(2):
             try:
                 data = json.loads(get_text(url))
                 recs = (data.get("data") or {}).get("stationsPrices") or []
                 if recs:
-                    return [parse_f24(r) for r in recs], True
-                last_exc = "empty stationsPrices"
+                    rows = [parse_f24(r) for r in recs]
+                    if any(to_float(row.get("p95")) or to_float(row.get("diesel")) for row in rows):
+                        return rows, True
+                last_exc = "empty or invalid stationsPrices"
+            except urllib.error.HTTPError as exc:
+                last_exc = "HTTP " + str(exc.code)
+                # Do not retry removed/forbidden endpoints.
+                if 400 <= exc.code < 500:
+                    break
             except Exception as exc:  # noqa: BLE001
                 last_exc = str(exc)[:120]
+            if not attempt:
                 time.sleep(2)
     errors.append({"f24q8": last_exc})
     return [], False
@@ -685,21 +692,35 @@ def parse_f24(rec):
 
 # ---------- Go'on ----------
 
+def parse_q8_el_tariffs(page):
+    """Read the Q8 business price table from rendered HTML, not escaped app state.
+
+    The table must explicitly label both the 150 kW and 22 kW columns.
+    Never substitute a 22 kW-only price for the HPC tariff.
+    """
+    for table in re.findall(r"<table\b[^>]*>(.*?)</table\s*>", page, re.I | re.S):
+        plain = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", table))).strip()
+        if not re.search(r"Pris på lynlader\s*150\s*kW\s+Pris på\s*22\s*kW", plain, re.I):
+            continue
+        values = re.findall(r"(?<![0-9])([0-9]{1,2}[,.][0-9]{1,2})\s*kr\s*/\s*kWh", plain, re.I)
+        if len(values) < 2:
+            continue
+        hpc, ac = to_float(values[0]), to_float(values[1])
+        if hpc is None or ac is None or not (0 < hpc < 100 and 0 < ac < 100):
+            continue
+        return [
+            {"brand": "Q8", "kind": "Lyn (150 kW)", "kwh": hpc,
+             "source": "q8.dk", "tariff_note": "Vejledende Q8-erhvervspris"},
+            {"brand": "Q8", "kind": "Normal (22 kW)", "kwh": ac,
+             "source": "q8.dk", "tariff_note": "Vejledende Q8-erhvervspris"},
+        ]
+    raise ValueError("Q8 charging price table not found or incomplete")
+
+
 def fetch_q8_el(errors):
-    """Chain-level Q8 charging tariffs (lyn 150 kW / 22 kW)."""
+    """Read Q8's published indicative charging tariffs."""
     try:
-        page = get_text(Q8_EL_URL)
-        i = page.find("Vores Ladepriser til elbil")
-        if i < 0:
-            raise ValueError("no ladepriser block")
-        seg = page[i:i + 3000]
-        vals = re.findall(r'"text":"\s*([\d,]+)\s*kr/kWh', seg)
-        if len(vals) < 2:
-            raise ValueError("no kwh prices parsed")
-        return [{"brand": "Q8", "kind": "Lyn (150 kW)",
-                 "kwh": to_float(vals[0]), "source": "q8.dk"},
-                {"brand": "Q8", "kind": "Normal (22 kW)",
-                 "kwh": to_float(vals[1]), "source": "q8.dk"}]
+        return parse_q8_el_tariffs(get_text(Q8_EL_URL))
     except Exception as exc:  # noqa: BLE001
         errors.append({"q8_el": str(exc)[:120]})
         return []
@@ -1672,7 +1693,7 @@ def _collect(progress_callback=None, fuel_types=None):
 
     save_json(OUT, {
         "project": "Tiny Refuel",
-        "scraper_version": "0.2.8",
+        "scraper_version": "0.2.9",
         "updated": updated,
         "errors": errors,
         "snittet": snittet,
