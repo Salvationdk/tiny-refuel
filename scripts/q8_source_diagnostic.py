@@ -21,6 +21,15 @@ def inspect(url):
       with urllib.request.urlopen(req,timeout=18) as response:
         body=response.read(3_000_000).decode("utf-8",errors="replace")
         print("STATUS",response.status,"LENGTH",len(body),"TYPE",response.headers.get("content-type"),flush=True)
+        if "/erhverv/priser" in url:
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,str(Path(__file__).resolve().parents[1] / "custom_components" / "tiny_refuel"))
+          import scraper
+          tariffs=scraper.parse_q8_el_tariffs(body)
+          print("LIVE PARSED Q8 TARIFFS",[(r["kind"],r["kwh"]) for r in tariffs],flush=True)
+          assert len(tariffs)==2 and tariffs[0]["kwh"]>0 and tariffs[1]["kwh"]>0
+
         try:
           obj=json.loads(body)
           print("JSON top keys",list(obj)[:12] if isinstance(obj,dict) else type(obj).__name__,flush=True)
