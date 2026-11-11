@@ -35,8 +35,8 @@ Der kan oprettes et separat token til hvert repository, så adgangsomfanget hold
 
 ## Hvor findes data?
 
-- Dashboard: [metrics-history/metrics/dashboard.md](../../blob/metrics-history/metrics/dashboard.md)
-- Historiske data: [metrics-history/metrics/history.json](../../blob/metrics-history/metrics/history.json) (oprettes ved første Action-kørsel)
+- Dashboard: [metrics-history/metrics/dashboard.md](../../../blob/metrics-history/metrics/dashboard.md)
+- Historiske data: [metrics-history/metrics/history.json](../../../blob/metrics-history/metrics/history.json) (oprettes ved første Action-kørsel)
 - Workflow: [repository-metrics.yml](../.github/workflows/repository-metrics.yml)
 
 ## Sikkerhed
