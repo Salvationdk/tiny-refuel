@@ -27,3 +27,28 @@ Public-repository badges use third-party Shields.io. Private repositories should
 - [GitHub repository traffic documentation](https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/viewing-traffic-to-a-repository)
 - [GitHub traffic REST API](https://docs.github.com/en/rest/metrics/traffic)
 - [Shields.io downloads badge](https://shields.io/badges/git-hub-downloads-all-releases)
+
+## Copy-and-paste template for a new public repository
+
+Replace `OWNER/REPO` with the repository's exact GitHub path. The counters update without running any GitHub Actions:
+
+```markdown
+<!-- BEGIN: Salvationdk repository metrics -->
+[![Release downloads](https://img.shields.io/github/downloads/OWNER/REPO/total?label=Release%20downloads&style=flat-square)](https://github.com/OWNER/REPO/releases)
+[![Stars](https://img.shields.io/github/stars/OWNER/REPO?style=flat-square)](https://github.com/OWNER/REPO/stargazers)
+[![Forks](https://img.shields.io/github/forks/OWNER/REPO?style=flat-square)](https://github.com/OWNER/REPO/forks)
+[![Issues](https://img.shields.io/github/issues/OWNER/REPO?style=flat-square)](https://github.com/OWNER/REPO/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/OWNER/REPO?style=flat-square)](https://github.com/OWNER/REPO/pulls)
+[![Last commit](https://img.shields.io/github/last-commit/OWNER/REPO?style=flat-square)](https://github.com/OWNER/REPO/commits)
+<!-- END: Salvationdk repository metrics -->
+```
+
+For **private** repositories do not embed third-party badge images. Instead link to their GitHub-native Issues, Pull requests, Actions, Releases and Insights → Traffic pages, which require the reader's GitHub access.
+
+## Before adding a historical traffic collector
+
+- Decide where the collected information may be stored and who may see it.
+- Create a fine-grained, expiry-limited access token with `Administration: read` on only the intended repositories.
+- Store the token as a GitHub Actions secret, never as a committed file. Installing the collector is a separate, explicit action after that secret is available.
+- Collect the per-day UTC breakdown and merge by date; never add the 14-day rolling totals to a historical grand total as that double-counts visits and clones.
+- If a token is not configured, the traffic collector must report "not configured", not a misleading zero.
