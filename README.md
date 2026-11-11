@@ -9,6 +9,13 @@
 [![Last commit](https://img.shields.io/github/last-commit/Salvationdk/tiny-refuel?style=flat-square)](https://github.com/Salvationdk/tiny-refuel/commits)
 
 <sub>“Release downloads” tæller kun filer vedhæftet GitHub Releases, ikke ZIP fra Code-menuen, HACS-installationer eller Actions-artefakter. [Besøg og kloninger](https://github.com/Salvationdk/tiny-refuel/graphs/traffic) kræver GitHub-adgang til repository-statistik.</sub>
+
+[![Registrerede visninger](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/metrics-history/metrics/badges/visits.svg)](https://github.com/Salvationdk/tiny-refuel/blob/metrics-history/metrics/dashboard.md)
+[![Registrerede kloninger](https://raw.githubusercontent.com/Salvationdk/tiny-refuel/metrics-history/metrics/badges/clones.svg)](https://github.com/Salvationdk/tiny-refuel/blob/metrics-history/metrics/dashboard.md)
+
+**[Historisk statistik og downloads pr. version](https://github.com/Salvationdk/tiny-refuel/blob/metrics-history/metrics/dashboard.md)** · [Daglig dataindsamling](https://github.com/Salvationdk/tiny-refuel/actions/workflows/repository-metrics.yml)
+
+<sub>Besøgs- og kloningstællerne starter først efter opsætning af det private METRICS_TRAFFIC_TOKEN; indtil da viser de "afventer token".</sub>
 <!-- END: Salvationdk repository metrics -->
 
 
