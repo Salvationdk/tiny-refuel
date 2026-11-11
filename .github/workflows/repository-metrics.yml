@@ -1,6 +1,11 @@
 name: Repository metrics history
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/repository_metrics.py'
+      - '.github/workflows/repository-metrics.yml'
   schedule:
     - cron: '17 4 * * *'
   workflow_dispatch:
