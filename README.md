@@ -1,5 +1,17 @@
 # Tiny Refuel v0.2.9
 
+<!-- BEGIN: Salvationdk repository metrics -->
+[![Release downloads](https://img.shields.io/github/downloads/Salvationdk/tiny-refuel/total?label=Release%20downloads&style=flat-square)](https://github.com/Salvationdk/tiny-refuel/releases)
+[![Stars](https://img.shields.io/github/stars/Salvationdk/tiny-refuel?style=flat-square)](https://github.com/Salvationdk/tiny-refuel/stargazers)
+[![Forks](https://img.shields.io/github/forks/Salvationdk/tiny-refuel?style=flat-square)](https://github.com/Salvationdk/tiny-refuel/forks)
+[![Issues](https://img.shields.io/github/issues/Salvationdk/tiny-refuel?style=flat-square)](https://github.com/Salvationdk/tiny-refuel/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/Salvationdk/tiny-refuel?style=flat-square)](https://github.com/Salvationdk/tiny-refuel/pulls)
+[![Last commit](https://img.shields.io/github/last-commit/Salvationdk/tiny-refuel?style=flat-square)](https://github.com/Salvationdk/tiny-refuel/commits)
+
+<sub>“Release downloads” tæller kun filer vedhæftet GitHub Releases, ikke ZIP fra Code-menuen, HACS-installationer eller Actions-artefakter. [Besøg og kloninger](https://github.com/Salvationdk/tiny-refuel/graphs/traffic) kræver GitHub-adgang til repository-statistik.</sub>
+<!-- END: Salvationdk repository metrics -->
+
+
 **Nyt i 0.2.9:** Rettelse af [Issue #23](https://github.com/Salvationdk/tiny-refuel/issues/23): F24/Q8-brændstofpriser hentes igen fra Q8's fælles offentlige JSON-API, og Q8's 150 kW-/22 kW-ladepriser læses fra den aktuelle HTML-tabel i stedet for den gamle datablok. En manglende 150 kW-pris gættes aldrig ud fra 22 kW-prisen. Se [releasebeskrivelsen](docs/releases/0.2.9.md).
 
 **Nyt i 0.2.8:** Kompatibilitetstest med Home Assistant 2026.11 og indbygget Marketplace, nye installationslinks samt integrationens energikategorier. Se [releasebeskrivelsen](docs/releases/0.2.8.md).
