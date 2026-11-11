@@ -1,0 +1,54 @@
+name: Repository metrics history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/repository_metrics.py'
+      - '.github/workflows/repository-metrics.yml'
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-metrics-history
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout collector
+        uses: actions/checkout@v4
+        with:
+          path: source
+          persist-credentials: false
+
+      - name: Checkout metrics branch
+        uses: actions/checkout@v4
+        with:
+          ref: metrics-history
+          path: history
+
+      - name: Collect release downloads and permitted traffic
+        run: python3 source/scripts/repository_metrics.py history/metrics
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          METRICS_TRAFFIC_TOKEN: ${{ secrets.METRICS_TRAFFIC_TOKEN }}
+
+      - name: Commit only metrics history
+        working-directory: history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add metrics/
+          if git diff --cached --quiet; then
+            echo "No changes to metrics"
+            exit 0
+          fi
+          git commit -m "metrics: update daily GitHub history"
+          git push origin HEAD:metrics-history
