@@ -1,0 +1,65 @@
+{
+  "release_snapshots": {
+    "2026-11-11": 0
+  },
+  "release_status": "ok",
+  "releases": [
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-11-09T18:51:27Z",
+      "tag": "v0.2.9"
+    },
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-11-06T00:10:16Z",
+      "tag": "v0.2.8"
+    },
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-11-03T21:39:25Z",
+      "tag": "v0.2.7"
+    },
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-11-01T23:49:51Z",
+      "tag": "v0.2.6"
+    },
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-10-20T17:59:05Z",
+      "tag": "v0.2.5"
+    },
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-10-20T17:19:10Z",
+      "tag": "v0.2.4"
+    },
+    {
+      "assets": 0,
+      "downloads": 0,
+      "prerelease": false,
+      "published_at": "2026-10-20T16:20:41Z",
+      "tag": "v0.2.3"
+    }
+  ],
+  "repository": "Salvationdk/tiny-refuel",
+  "schema_version": 1,
+  "traffic": {
+    "clones": {},
+    "views": {}
+  },
+  "traffic_status": "ikke konfigureret",
+  "updated_at": "2026-11-11 14:41 UTC"
+}
