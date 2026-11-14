@@ -2,7 +2,8 @@
   "release_snapshots": {
     "2026-11-11": 0,
     "2026-11-12": 0,
-    "2026-11-13": 0
+    "2026-11-13": 0,
+    "2026-11-14": 0
   },
   "release_status": "ok",
   "releases": [
@@ -63,5 +64,5 @@
     "views": {}
   },
   "traffic_status": "ikke konfigureret",
-  "updated_at": "2026-11-13 12:10 UTC"
+  "updated_at": "2026-11-14 11:26 UTC"
 }
